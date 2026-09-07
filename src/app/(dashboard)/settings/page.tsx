@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -103,18 +104,35 @@ export default function SettingsPage() {
       <PageHeader title="الإعدادات" />
       <div className="max-w-2xl mx-auto lg:max-w-none">
         {/* Account */}
-        <SectionLabel>الحساب</SectionLabel>
-        <div className="rounded-xl border border-border bg-card overflow-hidden mx-4">
+        <SectionLabel>الحساب الشخصي</SectionLabel>
+        <div className="rounded-xl border border-border bg-card overflow-hidden mx-4 divide-y divide-border">
+          <Link
+            href="/profile"
+            className="flex items-center justify-between p-4 hover:bg-secondary/50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-medium text-sm border border-primary/20">
+                ض
+              </div>
+              <div className="text-start">
+                <p className="text-sm font-medium text-foreground">ضياء الدين عبدالرحمن</p>
+                <p className="text-xs text-muted-foreground">جامعة عمان الأهلية · 202510377</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-primary font-medium">
+              <span>عرض الحساب</span>
+              <ChevronLeft className="h-4 w-4" />
+            </div>
+          </Link>
           <SettingRow
             icon={BookOpen}
-            label="حساب موودل"
-            description={moodleConnected ? "متصل — الجامعة الأردنية" : "غير متصل"}
+            label="ربط نظام Moodle (V-Class)"
+            description={moodleConnected ? "متصل ومُزامن — جامعة عمان الأهلية" : "غير متصل"}
             control={
-              <Switch
-                checked={moodleConnected}
-                onCheckedChange={setMoodleConnected}
-                aria-label="تفعيل ربط موودل"
-              />
+              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-xs gap-1">
+                <CheckCircle2 className="h-3 w-3" />
+                متصل
+              </Badge>
             }
           />
         </div>

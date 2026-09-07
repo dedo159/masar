@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,14 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
           </Button>
           <NotificationsDropdown />
+          <Link
+            href="/profile"
+            className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all text-xs font-medium border border-border mr-1"
+            title="حساب المستخدم"
+            aria-label="حساب المستخدم"
+          >
+            ض
+          </Link>
         </div>
       </div>
     </header>

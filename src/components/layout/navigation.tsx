@@ -9,15 +9,24 @@ import {
   GraduationCap,
   Briefcase,
   Settings,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+const desktopNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
   { href: "/courses", icon: BookOpen, label: "المواد" },
   { href: "/degree", icon: GraduationCap, label: "التخرج" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
   { href: "/settings", icon: Settings, label: "الإعدادات" },
+];
+
+const mobileNavItems = [
+  { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
+  { href: "/courses", icon: BookOpen, label: "المواد" },
+  { href: "/degree", icon: GraduationCap, label: "التخرج" },
+  { href: "/internships", icon: Briefcase, label: "تدريب" },
+  { href: "/profile", icon: User, label: "حسابي" },
 ];
 
 // Bottom navigation for mobile
@@ -27,7 +36,7 @@ export function BottomNav() {
   return (
     <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
       <div className="flex items-center justify-around px-2 py-1.5">
-        {navItems.map(({ href, icon: Icon, label }) => {
+        {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
             <Link
@@ -83,7 +92,7 @@ export function Sidebar() {
 
       {/* Nav items */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {navItems.map(({ href, icon: Icon, label }) => {
+        {desktopNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
             <Link
