@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { ErrorState } from "@/components/ui/error-state";
 import type { DegreeRequirementCourse } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const categoryColors: Record<string, string> = {
   mandatory: "#6366F1",

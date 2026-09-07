@@ -5,7 +5,7 @@ import { getDayLabel, formatTime } from "@/lib/utils";
 import { ChevronLeft, BookOpen } from "lucide-react";
 import { ErrorState } from "@/components/ui/error-state";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function CoursesPage() {
   let enrolledCourses = [];

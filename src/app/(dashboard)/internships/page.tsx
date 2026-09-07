@@ -5,7 +5,7 @@ import { MapPin, Clock, ExternalLink, Sparkles, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 const typeLabel: Record<string, string> = {
   remote: "عن بُعد",

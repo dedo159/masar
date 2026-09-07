@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type {
   Student,
@@ -18,9 +19,9 @@ export const DEFAULT_STUDENT_ID = "s-001";
 // ----------------------------------------------------
 // 1. بيانات الطالب (Student Profile)
 // ----------------------------------------------------
-export async function getStudentProfile(
+export const getStudentProfile = cache(async (
   studentId = DEFAULT_STUDENT_ID
-): Promise<Student | null> {
+): Promise<Student | null> => {
   const student = await prisma.student.findFirst({
     where: { id: studentId },
     include: { university: true },
@@ -51,14 +52,14 @@ export async function getStudentProfile(
     portfolio: student.portfolio || undefined,
     skills: parsedSkills,
   };
-}
+});
 
 // ----------------------------------------------------
 // 2. المواد المسجلة (Courses)
 // ----------------------------------------------------
-export async function getEnrolledCourses(
+export const getEnrolledCourses = cache(async (
   studentId = DEFAULT_STUDENT_ID
-): Promise<Course[]> {
+): Promise<Course[]> => {
   const enrollments = await prisma.enrollment.findMany({
     where: { studentId },
     include: {
@@ -139,15 +140,15 @@ export async function getEnrolledCourses(
       files,
     };
   });
-}
+});
 
 // ----------------------------------------------------
 // 3. تفاصيل مادة محددة (Course by ID)
 // ----------------------------------------------------
-export async function getCourseById(
+export const getCourseById = cache(async (
   courseId: string,
   studentId = DEFAULT_STUDENT_ID
-): Promise<Course | null> {
+): Promise<Course | null> => {
   const enrollment = await prisma.enrollment.findFirst({
     where: {
       courseId,
@@ -281,14 +282,14 @@ export async function getCourseById(
     assignments,
     files,
   };
-}
+});
 
 // ----------------------------------------------------
 // 4. متطلبات التخرج (Degree Requirements)
 // ----------------------------------------------------
-export async function getDegreeRequirements(
+export const getDegreeRequirements = cache(async (
   studentId = DEFAULT_STUDENT_ID
-): Promise<DegreeRequirement[]> {
+): Promise<DegreeRequirement[]> => {
   const reqs = await prisma.degreeRequirement.findMany({
     where: { studentId },
     orderBy: { order: "asc" },
@@ -314,12 +315,12 @@ export async function getDegreeRequirements(
       grade: c.grade || undefined,
     })),
   }));
-}
+});
 
 // ----------------------------------------------------
 // 5. فرص التدريب (Internships)
 // ----------------------------------------------------
-export async function getInternships(): Promise<Internship[]> {
+export const getInternships = cache(async (): Promise<Internship[]> => {
   const internships = await prisma.internship.findMany({
     orderBy: { createdAt: "desc" },
   });
@@ -345,14 +346,14 @@ export async function getInternships(): Promise<Internship[]> {
       isNew: i.isNew,
     };
   });
-}
+});
 
 // ----------------------------------------------------
 // 6. الإشعارات (Notifications)
 // ----------------------------------------------------
-export async function getNotifications(
+export const getNotifications = cache(async (
   studentId = DEFAULT_STUDENT_ID
-): Promise<Notification[]> {
+): Promise<Notification[]> => {
   const notifications = await prisma.notification.findMany({
     where: {
       OR: [{ studentId }, { studentId: null }],
@@ -369,14 +370,14 @@ export async function getNotifications(
     read: n.read,
     link: n.link || undefined,
   }));
-}
+});
 
 // ----------------------------------------------------
 // 7. محاضرات اليوم (Today Schedule)
 // ----------------------------------------------------
-export async function getTodayClasses(
+export const getTodayClasses = cache(async (
   studentId = DEFAULT_STUDENT_ID
-): Promise<TodayClass[]> {
+): Promise<TodayClass[]> => {
   const courses = await getEnrolledCourses(studentId);
   const today = getTodayDay(); // e.g. "sun", "mon", etc.
 
@@ -418,4 +419,4 @@ export async function getTodayClasses(
 
   // Sort by start time
   return classes.sort((a, b) => a.startTime.localeCompare(b.startTime));
-}
+});

@@ -2,11 +2,16 @@ import { NextResponse } from "next/server";
 import { getNotifications } from "@/lib/db-queries";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 30;
+
 export async function GET() {
   try {
     const notifications = await getNotifications();
-    // Return exact Notification[] array shape
-    return NextResponse.json(notifications);
+    return NextResponse.json(notifications, {
+      headers: {
+        "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+      },
+    });
   } catch (error) {
     console.error("GET /api/notifications error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

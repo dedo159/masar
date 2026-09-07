@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Code2, ExternalLink, Star, BookOpen, Award, Globe } from "lucide-react";
 import { ErrorState } from "@/components/ui/error-state";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ProfilePage() {
   const student = await getStudentProfile();

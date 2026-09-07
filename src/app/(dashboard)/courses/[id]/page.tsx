@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { getCourseById } from "@/lib/db-queries";
 import { PageHeader } from "@/components/layout/page-header";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
+export const revalidate = 60;
 import { Badge } from "@/components/ui/badge";
 import { getDayLabel, formatTime, getDeadlineStatus, getRelativeTime } from "@/lib/utils";
 import {
