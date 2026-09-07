@@ -55,6 +55,7 @@ model Student {
   submissions        Submission[]
   notifications      Notification[]
   degreeRequirements DegreeRequirement[]
+  moodleConnection   MoodleConnection?
 
   @@index([studentId])
   @@index([email])
@@ -266,4 +267,25 @@ model Notification {
   @@index([studentId])
   @@index([read])
   @@map("notifications")
+}
+
+// --------------------------------------------
+// 12. اتصالات Moodle (Moodle Connections)
+// --------------------------------------------
+model MoodleConnection {
+  id             String    @id @default(uuid())
+  studentId      String    @unique
+  moodleBaseUrl  String
+  encryptedToken String
+  moodleUserId   Int?
+  connectedAt    DateTime  @default(now())
+  lastSyncedAt   DateTime?
+  syncStatus     String    @default("connected") // "connected" | "error"
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  student        Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@map("moodle_connections")
 }
