@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/*
+  Tailwind v4 — @theme inline:
+  ربط tokens الـ Tailwind بـ CSS variables الديناميكية
+  هذا يخلي bg-background, text-foreground, border-border... تشتغل
+*/
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-ibm-arabic), system-ui, sans-serif;
+
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/* ========== Light Mode ========== */
+:root {
+  --background:        oklch(1 0 0);
+  --foreground:        oklch(0.145 0.012 264);
+  --card:              oklch(0.99 0 0);
+  --card-foreground:   oklch(0.145 0.012 264);
+  --primary:           oklch(0.585 0.233 264);
+  --primary-foreground:oklch(0.98 0 0);
+  --secondary:         oklch(0.96 0.004 264);
+  --secondary-foreground: oklch(0.2 0.01 264);
+  --muted:             oklch(0.96 0.004 264);
+  --muted-foreground:  oklch(0.52 0.01 264);
+  --accent:            oklch(0.96 0.004 264);
+  --accent-foreground: oklch(0.2 0.01 264);
+  --destructive:       oklch(0.577 0.245 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border:            oklch(0.9 0.005 264);
+  --input:             oklch(0.9 0.005 264);
+  --ring:              oklch(0.585 0.233 264);
+}
+
+/* ========== Dark Mode ========== */
+.dark {
+  --background:        oklch(0.13 0.012 264);
+  --foreground:        oklch(0.985 0 0);
+  --card:              oklch(0.17 0.012 264);
+  --card-foreground:   oklch(0.985 0 0);
+  --primary:           oklch(0.585 0.233 264);
+  --primary-foreground:oklch(0.98 0 0);
+  --secondary:         oklch(0.22 0.01 264);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted:             oklch(0.22 0.01 264);
+  --muted-foreground:  oklch(0.6 0.01 264);
+  --accent:            oklch(0.22 0.01 264);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive:       oklch(0.5 0.22 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border:            oklch(0.25 0.01 264);
+  --input:             oklch(0.25 0.01 264);
+  --ring:              oklch(0.585 0.233 264);
+}
+
+/* ========== Base ========== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-ibm-arabic), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}

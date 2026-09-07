@@ -1,0 +1,269 @@
+// ============================================
+// Masar Student Platform — Prisma Database Schema
+// ============================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --------------------------------------------
+// 1. الجامعات (Universities)
+// --------------------------------------------
+model University {
+  id        String    @id @default(uuid())
+  code      String    @unique // e.g. "ju", "just", "yu"
+  name      String    // Arabic name: "الجامعة الأردنية"
+  nameEn    String    // English name: "University of Jordan"
+  logo      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  students  Student[]
+
+  @@map("universities")
+}
+
+// --------------------------------------------
+// 2. الطلاب (Students)
+// --------------------------------------------
+model Student {
+  id               String       @id @default(uuid())
+  studentId        String       @unique // Academic ID: "2110456"
+  name             String       // "أحمد الخالدي"
+  email            String       @unique
+  major            String       // "هندسة الحاسوب"
+  year             Int          // 3
+  gpa              Float        @default(0.0) // 3.42
+  totalCredits     Int          @default(136)
+  completedCredits Int          @default(0)
+  avatar           String?
+  github           String?
+  portfolio        String?
+  skills           String       @default("[]") // JSON string of string[]: '["Python","React"]'
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  universityId     String
+  university       University   @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  enrollments        Enrollment[]
+  submissions        Submission[]
+  notifications      Notification[]
+  degreeRequirements DegreeRequirement[]
+
+  @@index([studentId])
+  @@index([email])
+  @@index([universityId])
+  @@map("students")
+}
+
+// --------------------------------------------
+// 3. المواد الدراسية (Courses)
+// --------------------------------------------
+model Course {
+  id          String       @id @default(uuid())
+  code        String       @unique // e.g. "CS301"
+  nameAr      String       // "هياكل البيانات"
+  nameEn      String       // "Data Structures"
+  credits     Int          @default(3)
+  instructor  String       // "د. محمد الشريف"
+  room        String       // "C2-304"
+  color       String       @default("#6366F1") // Indigo
+  semester    String       // "الفصل الثاني 2024-2025"
+  schedule    String       @default("[]") // JSON array of CourseSchedule: '[{"day":"sun","startTime":"08:00","endTime":"09:30","type":"lecture"}]'
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  assignments Assignment[]
+  files       CourseFile[]
+  enrollments Enrollment[]
+
+  @@index([code])
+  @@map("courses")
+}
+
+// --------------------------------------------
+// 4. تسجيل المواد والدرجات (Enrollments & Grades)
+// --------------------------------------------
+model Enrollment {
+  id                 String    @id @default(uuid())
+  studentId          String
+  courseId           String
+  status             String    @default("enrolled") // "enrolled" | "completed" | "failed"
+  semester           String    @default("الفصل الثاني 2024-2025")
+  
+  // الدرجات
+  midtermGrade       Float?
+  finalGrade         Float?
+  assignmentsGrade   Float?
+  participationGrade Float?
+  totalGrade         Float?
+  letterGrade        String?   // "A", "B+", etc.
+
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  student            Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course             Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+// --------------------------------------------
+// 5. الواجبات والمشاريع (Assignments)
+// --------------------------------------------
+model Assignment {
+  id          String       @id @default(uuid())
+  courseId    String
+  title       String       // "تنفيذ شجرة AVL"
+  description String?
+  dueDate     String       // "2025-04-15"
+  dueTime     String       @default("23:59")
+  maxGrade    Float        @default(20)
+  type        String       @default("assignment") // "assignment" | "quiz" | "project" | "exam"
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  submissions Submission[]
+
+  @@index([courseId])
+  @@index([dueDate])
+  @@map("assignments")
+}
+
+// --------------------------------------------
+// 6. تسليمات الطلاب (Submissions)
+// --------------------------------------------
+model Submission {
+  id           String      @id @default(uuid())
+  assignmentId String
+  studentId    String
+  status       String      @default("pending") // "pending" | "submitted" | "graded" | "late"
+  grade        Float?
+  feedback     String?
+  fileUrl      String?
+  submittedAt  DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  assignment   Assignment  @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student      Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, assignmentId])
+  @@index([studentId])
+  @@index([assignmentId])
+  @@map("submissions")
+}
+
+// --------------------------------------------
+// 7. ملفات ومحاضرات المواد (Course Files)
+// --------------------------------------------
+model CourseFile {
+  id         String   @id @default(uuid())
+  courseId   String
+  name       String   // "محاضرة 1 — مقدمة"
+  type       String   // "pdf" | "pptx" | "docx" | "zip" | "link"
+  url        String   // URL or path
+  week       Int?     // Week number
+  uploadedAt String   // "2025-02-10"
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@map("course_files")
+}
+
+// --------------------------------------------
+// 8. فئات متطلبات التخرج (Degree Requirements)
+// --------------------------------------------
+model DegreeRequirement {
+  id               String                   @id @default(uuid())
+  studentId        String
+  category         String                   // "mandatory" | "university" | "elective" | "major"
+  categoryLabel    String                   // "متطلبات الكلية الإجبارية"
+  totalCredits     Int                      // 30
+  completedCredits Int                      @default(0) // 21
+  order            Int                      @default(0)
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+
+  student          Student                  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courses          DegreeRequirementCourse[]
+
+  @@index([studentId])
+  @@map("degree_requirements")
+}
+
+// --------------------------------------------
+// 9. مواد متطلبات التخرج (Degree Requirement Courses)
+// --------------------------------------------
+model DegreeRequirementCourse {
+  id            String            @id @default(uuid())
+  requirementId String
+  code          String            // "CS101"
+  nameAr        String            // "مقدمة في علم الحاسوب"
+  credits       Int               @default(3)
+  status        String            @default("available") // "completed" | "enrolled" | "available" | "locked"
+  grade         String?           // "A", "B+", etc.
+  order         Int               @default(0)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  requirement   DegreeRequirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  @@index([requirementId])
+  @@index([code])
+  @@map("degree_requirement_courses")
+}
+
+// --------------------------------------------
+// 10. فرص التدريب (Internships)
+// --------------------------------------------
+model Internship {
+  id        String   @id @default(uuid())
+  company   String   // "زين الأردن"
+  title     String   // "متدرب — هندسة البرمجيات"
+  location  String   // "عمان، الأردن"
+  type      String   @default("onsite") // "remote" | "onsite" | "hybrid"
+  duration  String   // "3 أشهر"
+  deadline  String?  // "2025-04-30"
+  applyUrl  String   // "https://zain.com/careers"
+  tags      String   @default("[]") // JSON string of string[]: '["Backend","Java"]'
+  isNew     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("internships")
+}
+
+// --------------------------------------------
+// 11. الإشعارات (Notifications)
+// --------------------------------------------
+model Notification {
+  id        String   @id @default(uuid())
+  studentId String?
+  type      String   // "deadline" | "grade" | "announcement" | "reminder"
+  title     String   // "تسليم قريب — هندسة البرمجيات"
+  body      String   // "مخطط UML للمشروع — يُسلَّم خلال ساعات"
+  read      Boolean  @default(false)
+  link      String?  // "/courses/c-005"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student   Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([read])
+  @@map("notifications")
+}

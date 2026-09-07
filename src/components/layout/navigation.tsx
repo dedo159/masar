@@ -1,0 +1,128 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  BookOpen,
+  GraduationCap,
+  Briefcase,
+  Settings,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const navItems = [
+  { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
+  { href: "/courses", icon: BookOpen, label: "المواد" },
+  { href: "/degree", icon: GraduationCap, label: "التخرج" },
+  { href: "/internships", icon: Briefcase, label: "تدريب" },
+  { href: "/settings", icon: Settings, label: "الإعدادات" },
+];
+
+// Bottom navigation for mobile
+export function BottomNav() {
+  const pathname = usePathname();
+
+  return (
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
+      <div className="flex items-center justify-around px-2 py-1.5">
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex flex-col items-center gap-0.5 rounded-lg px-3 py-2 transition-all duration-150",
+                isActive
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <Icon
+                className={cn("h-5 w-5 transition-all duration-150", isActive && "scale-110")}
+                strokeWidth={isActive ? 2 : 1.5}
+              />
+              <span className="text-[10px] font-medium">{label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
+// Sidebar for desktop
+export function Sidebar() {
+  const pathname = usePathname();
+  const [student, setStudent] = useState<{ name: string; major: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/students/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.name) setStudent({ name: data.name, major: data.major });
+      })
+      .catch(() => {});
+  }, []);
+
+  const studentName = student?.name || "أحمد الخالدي";
+  const studentMajor = student?.major || "هندسة الحاسوب";
+  const initial = studentName[0] || "أ";
+
+  return (
+    <aside className="hidden lg:flex flex-col fixed right-0 top-0 h-full w-60 border-l border-border bg-card z-40">
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
+        <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
+          <span className="text-primary-foreground text-xs font-medium">م</span>
+        </div>
+        <span className="text-base font-medium tracking-tight">مسار</span>
+      </div>
+
+      {/* Nav items */}
+      <nav className="flex-1 px-3 py-4 space-y-0.5">
+        {navItems.map(({ href, icon: Icon, label }) => {
+          const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-150",
+                isActive
+                  ? "bg-primary/10 text-primary font-medium"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+              )}
+            >
+              <Icon className="h-4 w-4" strokeWidth={isActive ? 2 : 1.5} />
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Profile link */}
+      <div className="px-3 py-4 border-t border-border">
+        <Link
+          href="/profile"
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-150",
+            pathname === "/profile"
+              ? "bg-primary/10 text-primary font-medium"
+              : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+          )}
+        >
+          <div className="h-7 w-7 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-medium">
+            {initial}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-medium text-foreground truncate">{studentName}</p>
+            <p className="text-[10px] text-muted-foreground truncate">{studentMajor}</p>
+          </div>
+        </Link>
+      </div>
+    </aside>
+  );
+}

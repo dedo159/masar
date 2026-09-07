@@ -1,0 +1,25 @@
+import { PageHeader } from "@/components/layout/page-header";
+import { TodayScheduleSection } from "@/components/dashboard/today-schedule";
+import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines";
+import { DegreeProgressCard } from "@/components/dashboard/degree-progress-card";
+import { QuickStatsSection } from "@/components/dashboard/quick-stats";
+
+export default function HomePage() {
+  const today = new Date().toLocaleDateString("ar-JO", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+
+  return (
+    <>
+      <PageHeader title="مسار" subtitle={today} />
+      <div className="px-4 py-4 space-y-5 max-w-2xl mx-auto lg:max-w-none">
+        <QuickStatsSection />
+        <TodayScheduleSection />
+        <UrgentDeadlinesSection />
+        <DegreeProgressCard />
+      </div>
+    </>
+  );
+}
