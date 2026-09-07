@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encryptToken } from "@/lib/crypto";
+import { syncMoodleDataForStudent } from "@/lib/moodle-sync";
 
 export async function POST(request: Request) {
   try {
@@ -145,9 +146,18 @@ export async function POST(request: Request) {
       },
     });
 
+    // 8. استيراد وتحديث بيانات الطالب ومواده وواجباته الحقيقية من موودل
+    let syncResult = null;
+    try {
+      syncResult = await syncMoodleDataForStudent(rawToken, cleanUrl, student.id);
+    } catch (syncErr) {
+      console.warn("Moodle data sync error:", syncErr);
+    }
+
     return NextResponse.json({
       success: true,
-      message: "تم الاتصال بنجاح واستخراج الـ Token وتشفيره وحفظه بأمان.",
+      message: "تم الاتصال بنجاح واستيراد بيانات حسابك من Moodle.",
+      student: syncResult,
       siteInfo: siteInfoSummary,
     });
   } catch (error: any) {
