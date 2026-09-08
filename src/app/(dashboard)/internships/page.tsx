@@ -1,11 +1,13 @@
-import { getInternships } from "@/lib/db-queries";
+import { getInternships, DEFAULT_STUDENT_ID } from "@/lib/db-queries";
+import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/layout/page-header";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, ExternalLink, Sparkles, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
+import { ApplyButton } from "./apply-button";
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 const typeLabel: Record<string, string> = {
   remote: "عن بُعد",
@@ -21,8 +23,18 @@ const typeVariant: Record<string, "default" | "success" | "secondary"> = {
 
 export default async function InternshipsPage() {
   let internships = [];
+  let appliedSet = new Set<string>();
+
   try {
-    internships = await getInternships();
+    const [fetchedInternships, applications] = await Promise.all([
+      getInternships(),
+      prisma.internshipApplication.findMany({
+        where: { studentId: DEFAULT_STUDENT_ID },
+        select: { internshipId: true },
+      }),
+    ]);
+    internships = fetchedInternships;
+    appliedSet = new Set(applications.map((a) => a.internshipId));
   } catch (error) {
     console.error("InternshipsPage fetch error:", error);
     return (
@@ -116,18 +128,19 @@ export default async function InternshipsPage() {
                     <span className="text-xs text-muted-foreground">التقديم مفتوح</span>
                   )}
 
-                  {hasValidLink ? (
-                    <Button size="sm" asChild>
-                      <a href={internship.applyUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-3 w-3" />
-                        تقدّم الآن
-                      </a>
-                    </Button>
-                  ) : (
-                    <Button size="sm" variant="outline" disabled className="text-xs opacity-50 cursor-not-allowed">
-                      التقديم غير متاح
-                    </Button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {hasValidLink && (
+                      <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground" asChild>
+                        <a href={internship.applyUrl} target="_blank" rel="noopener noreferrer" title="رابط خارجي للشركة">
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      </Button>
+                    )}
+                    <ApplyButton
+                      internshipId={internship.id}
+                      initialApplied={appliedSet.has(internship.id)}
+                    />
+                  </div>
                 </div>
               </div>
             );

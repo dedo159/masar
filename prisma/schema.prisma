@@ -24,6 +24,7 @@ model University {
   updatedAt DateTime  @updatedAt
 
   students  Student[]
+  staff     UniversityStaff[]
 
   @@map("universities")
 }
@@ -51,11 +52,13 @@ model Student {
   universityId     String
   university       University   @relation(fields: [universityId], references: [id], onDelete: Cascade)
 
-  enrollments        Enrollment[]
-  submissions        Submission[]
-  notifications      Notification[]
-  degreeRequirements DegreeRequirement[]
-  moodleConnection   MoodleConnection?
+  enrollments             Enrollment[]
+  submissions             Submission[]
+  notifications           Notification[]
+  degreeRequirements      DegreeRequirement[]
+  moodleConnection        MoodleConnection?
+  internshipApplications  InternshipApplication[]
+  engagementSnapshots     StudentEngagementSnapshot[]
 
   @@index([studentId])
   @@index([email])
@@ -233,7 +236,8 @@ model DegreeRequirementCourse {
 // --------------------------------------------
 model Internship {
   id        String   @id @default(uuid())
-  company   String   // "زين الأردن"
+  companyId String?
+  company   String   // "زين الأردن" — اسم الشركة (نص)
   title     String   // "متدرب — هندسة البرمجيات"
   location  String   // "عمان، الأردن"
   type      String   @default("onsite") // "remote" | "onsite" | "hybrid"
@@ -245,6 +249,10 @@ model Internship {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  companyRef    Company?                @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  applications  InternshipApplication[]
+
+  @@index([companyId])
   @@map("internships")
 }
 
@@ -288,4 +296,108 @@ model MoodleConnection {
 
   @@index([studentId])
   @@map("moodle_connections")
+}
+
+// --------------------------------------------
+// 13. موظفو الجامعة (University Staff)
+// --------------------------------------------
+model UniversityStaff {
+  id           String    @id @default(uuid())
+  universityId String
+  name         String    // "د. سامي الحموري"
+  email        String    @unique
+  passwordHash String
+  role         String    @default("viewer") // "admin" | "viewer"
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  university   University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+
+  @@index([universityId])
+  @@index([email])
+  @@map("university_staff")
+}
+
+// --------------------------------------------
+// 14. الشركات (Companies)
+// --------------------------------------------
+model Company {
+  id          String   @id @default(uuid())
+  name        String   // "زين الأردن"
+  nameEn      String?  // "Zain Jordan"
+  logo        String?
+  website     String?
+  industry    String?  // "اتصالات"
+  description String?
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  recruiters   CompanyRecruiter[]
+  internships  Internship[]
+
+  @@map("companies")
+}
+
+// --------------------------------------------
+// 15. مسؤولو التوظيف (Company Recruiters)
+// --------------------------------------------
+model CompanyRecruiter {
+  id           String   @id @default(uuid())
+  companyId    String
+  name         String   // "أحمد يوسف"
+  email        String   @unique
+  passwordHash String
+  role         String   @default("recruiter") // "admin" | "recruiter"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([email])
+  @@map("company_recruiters")
+}
+
+// --------------------------------------------
+// 16. طلبات التقديم على التدريب (Internship Applications)
+// --------------------------------------------
+model InternshipApplication {
+  id           String    @id @default(uuid())
+  internshipId String
+  studentId    String
+  status       String    @default("pending") // "pending" | "reviewed" | "accepted" | "rejected"
+  coverLetter  String?
+  resumeUrl    String?
+  appliedAt    DateTime  @default(now())
+  reviewedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  internship   Internship @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, internshipId])
+  @@index([internshipId])
+  @@index([studentId])
+  @@map("internship_applications")
+}
+
+// --------------------------------------------
+// 17. لقطات التفاعل الطلابي (Student Engagement Snapshots)
+// --------------------------------------------
+model StudentEngagementSnapshot {
+  id              String   @id @default(uuid())
+  studentId       String
+  lastLoginAt     DateTime?
+  lateAssignments Int      @default(0)
+  riskFlag        Boolean  @default(false)
+  snapshotDate    DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([riskFlag])
+  @@map("student_engagement_snapshots")
 }

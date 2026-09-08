@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifyToken } from "@/lib/auth";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // حماية صفحة ومسارات اختبار موودل بالكامل عبر HTTP Basic Auth
+  // ================================================
+  // 1. حماية صفحة ومسارات اختبار موودل (Basic Auth)
+  // ================================================
   if (pathname.startsWith("/moodle-test") || pathname.startsWith("/api/moodle-test")) {
-    // في حال تعطيل الوصول التجريبي بالكامل عبر متغير البيئة
     if (process.env.MOODLE_TEST_ENABLED === "false") {
       return new NextResponse("Not Found", { status: 404 });
     }
@@ -33,7 +35,6 @@ export function middleware(request: NextRequest) {
       }
     }
 
-    // طلب تسجيل الدخول بنافذة المصادقة في المتصفح، مع حجب المحتوى تماماً
     return new NextResponse("Access Restricted: Authentication Required", {
       status: 401,
       headers: {
@@ -42,9 +43,81 @@ export function middleware(request: NextRequest) {
     });
   }
 
+  // ================================================
+  // 2. حماية بوابة الجامعة (JWT Session)
+  // ================================================
+  if (pathname.startsWith("/university") && !pathname.startsWith("/university/login")) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/university/login", request.url));
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "staff") {
+      return NextResponse.redirect(new URL("/university/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // ================================================
+  // 3. حماية API بوابة الجامعة (JWT Session)
+  // ================================================
+  if (pathname.startsWith("/api/university") && !pathname.startsWith("/api/university/auth")) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "staff") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    return NextResponse.next();
+  }
+
+  // ================================================
+  // 4. حماية بوابة الشركات (JWT Session)
+  // ================================================
+  if (
+    pathname.startsWith("/company") &&
+    !pathname.startsWith("/company/login") &&
+    !pathname.startsWith("/company/register")
+  ) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/company/login", request.url));
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "recruiter") {
+      return NextResponse.redirect(new URL("/company/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // ================================================
+  // 5. حماية API بوابة الشركات (JWT Session)
+  // ================================================
+  if (pathname.startsWith("/api/company") && !pathname.startsWith("/api/company/auth")) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "recruiter") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/moodle-test", "/moodle-test/:path*", "/api/moodle-test/:path*"],
+  matcher: [
+    "/moodle-test",
+    "/moodle-test/:path*",
+    "/api/moodle-test/:path*",
+    "/university/:path*",
+    "/api/university/:path*",
+    "/company/:path*",
+    "/api/company/:path*",
+  ],
 };
