@@ -33,10 +33,15 @@ export default function RegisterPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || "حدث خطأ أثناء التسجيل");
+        throw new Error(data.error || "حدث خطأ أثناء إنشاء الحساب، يرجى المحاولة لاحقاً");
       }
 
       router.push("/company/dashboard");

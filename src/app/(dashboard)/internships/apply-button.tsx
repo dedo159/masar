@@ -24,7 +24,12 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
         method: "POST",
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
       if (res.ok || res.status === 409) {
         setApplied(true);

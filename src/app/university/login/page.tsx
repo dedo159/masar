@@ -22,10 +22,15 @@ export default function UniversityLoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
       if (!res.ok) {
-        setError(data.error || "حدث خطأ أثناء تسجيل الدخول");
+        setError(data.error || "البريد الإلكتروني أو كلمة المرور غير صحيحة");
       } else {
         router.push("/university/dashboard");
         router.refresh();

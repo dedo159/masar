@@ -23,10 +23,15 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      let data: any = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
       if (!res.ok) {
-        throw new Error(data.error || "حدث خطأ أثناء تسجيل الدخول");
+        throw new Error(data.error || "البريد الإلكتروني أو كلمة المرور غير صحيحة");
       }
 
       router.push("/company/dashboard");
