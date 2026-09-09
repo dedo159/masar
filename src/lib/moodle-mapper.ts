@@ -13,7 +13,6 @@
  */
 import { parseMoodleTimestampToZoned, JORDAN_TIMEZONE } from "@/lib/timezone";
 import he from "he";
-import DOMPurify from "isomorphic-dompurify";
 export interface MoodleRawCustomField {
   name?: string;
   shortname?: string;
@@ -168,8 +167,8 @@ export function extractRawArray(payload: unknown, candidateKeys: string[] = []):
 }
 
 /**
- * 1. Safe HTML Sanitizing & Complete Entity Decoding using DOMPurify and he
- * Removes all XSS sinks, cleans HTML tags safely, decodes &nbsp;, &amp;, &quot;, and unicode entities.
+ * 1. Safe HTML Sanitizing & Complete Entity Decoding using he
+ * Strips script/style tags, converts breaks/paragraphs to newlines, decodes &nbsp;, &amp;, &quot;, and numeric entities.
  */
 export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
   if (raw === null || raw === undefined) return fallback;
@@ -177,14 +176,14 @@ export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
   if (!str.trim()) return fallback;
 
   try {
-    // 1. Sanitize HTML tags safely with DOMPurify (prevent XSS)
-    const sanitizedHtml = DOMPurify.sanitize(str, {
-      ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "b", "i", "ul", "ol", "li", "span", "div", "h1", "h2", "h3", "h4", "h5", "h6"],
-      ALLOWED_ATTR: ["dir", "style", "class"],
-    });
+    // 1. Remove dangerous executable scripts, styles, iframes
+    const sanitized = str
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "");
 
     // 2. Replace line-breaking block elements with newline/space before stripping
-    const textWithSpacing = sanitizedHtml
+    const textWithSpacing = sanitized
       .replace(/<br\s*[\/]?>/gi, "\n")
       .replace(/<\/(p|div|tr|li|h[1-6])>/gi, "\n")
       .replace(/<[^>]*>/g, " ");
@@ -213,7 +212,8 @@ export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
 }
 
 /**
- * Safe Rich HTML Sanitizer using DOMPurify (when rendered with HTML styling)
+ * Safe Rich HTML Sanitizer (when rendered with HTML styling)
+ * Strips script tags, on* handlers, and javascript: URLs without needing JSDOM.
  */
 export function safeSanitizeRichHtml(raw: unknown, fallback: string = ""): string {
   if (raw === null || raw === undefined) return fallback;
@@ -221,10 +221,12 @@ export function safeSanitizeRichHtml(raw: unknown, fallback: string = ""): strin
   if (!str.trim()) return fallback;
 
   try {
-    const clean = DOMPurify.sanitize(str, {
-      ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "b", "i", "ul", "ol", "li", "span", "div"],
-      ALLOWED_ATTR: ["dir", "style", "class"],
-    });
+    const clean = str
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+      .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+      .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
+      .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, "")
+      .replace(/href\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*')/gi, 'href="#"');
     return clean || fallback;
   } catch {
     return fallback;
