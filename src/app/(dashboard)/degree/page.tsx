@@ -1,50 +1,42 @@
-import { getDegreeRequirements, getStudentProfile } from "@/lib/db-queries";
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import { getEnrolledCourses } from "@/lib/db-queries";
 import { PageHeader } from "@/components/layout/page-header";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Circle, Lock, BookOpen } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { 
+  GraduationCap, 
+  BookOpen, 
+  AlertCircle, 
+  ArrowLeft
+} from "lucide-react";
 import { ErrorState } from "@/components/ui/error-state";
-import type { DegreeRequirementCourse } from "@/lib/types";
 
-export const revalidate = 60;
-
-const categoryColors: Record<string, string> = {
-  mandatory: "#6366F1",
-  major: "#8B5CF6",
-  university: "#06B6D4",
-  elective: "#10B981",
-};
-
-const courseStatusConfig: Record<DegreeRequirementCourse["status"], {
-  icon: typeof Circle;
-  color: string;
-  badge?: string;
-}> = {
-  completed: { icon: CheckCircle2, color: "text-emerald-500" },
-  enrolled: { icon: BookOpen, color: "text-primary", badge: "مُسجَّل" },
-  available: { icon: Circle, color: "text-muted-foreground" },
-  locked: { icon: Lock, color: "text-muted-foreground" },
-};
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function DegreePage() {
   let student = null;
-  let requirements = [];
+  let enrolledCourses = [];
 
   try {
-    const [st, reqs] = await Promise.all([
-      getStudentProfile(),
-      getDegreeRequirements(),
+    const [st, courses] = await Promise.all([
+      prisma.student.findFirst({
+        where: { id: "s-001" },
+        include: { university: true },
+      }) || prisma.student.findFirst({
+        include: { university: true },
+      }),
+      getEnrolledCourses(),
     ]);
     student = st;
-    requirements = reqs;
+    enrolledCourses = courses.filter((c) => c.status === "enrolled");
   } catch (error) {
     console.error("DegreePage fetch error:", error);
     return (
       <>
-        <PageHeader title="تقدّم التخرج" subtitle="خطأ في الاتصال" />
+        <PageHeader title="مسار التخرج" subtitle="خطأ في الاتصال" />
         <div className="px-4 py-8 max-w-2xl mx-auto lg:max-w-none">
-          <ErrorState message="تعذر تحميل بيانات متطلبات التخرج من الخادم." />
+          <ErrorState message="تعذر تحميل بيانات مسار التخرج من الخادم." />
         </div>
       </>
     );
@@ -53,7 +45,7 @@ export default async function DegreePage() {
   if (!student) {
     return (
       <>
-        <PageHeader title="تقدّم التخرج" />
+        <PageHeader title="مسار التخرج" />
         <div className="px-4 py-8 max-w-2xl mx-auto lg:max-w-none">
           <ErrorState message="لم يتم العثور على سجل الطالب." />
         </div>
@@ -61,113 +53,127 @@ export default async function DegreePage() {
     );
   }
 
-  const { totalCredits, completedCredits } = student;
-  const overallPct = totalCredits > 0 ? Math.round((completedCredits / totalCredits) * 100) : 0;
-
   return (
     <>
       <PageHeader
-        title="تقدّم التخرج"
-        subtitle={`${completedCredits} من ${totalCredits} ساعة مكتملة`}
+        title="مسار التخرج"
+        subtitle={`متابعة المقررات والمسار الأكاديمي — ${student.major}`}
       />
       <div className="px-4 py-4 space-y-5 max-w-2xl mx-auto lg:max-w-none">
 
-        {/* Overall ring */}
-        <div className="flex items-center gap-6 rounded-xl border border-border bg-card p-5">
-          {/* SVG Ring */}
-          <div className="relative h-20 w-20 flex-shrink-0">
-            <svg className="h-20 w-20 -rotate-90" viewBox="0 0 80 80">
-              <circle cx="40" cy="40" r="32" fill="none" stroke="var(--secondary)" strokeWidth="8" />
-              <circle
-                cx="40" cy="40" r="32"
-                fill="none"
-                stroke="var(--primary)"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeDasharray={`${2 * Math.PI * 32}`}
-                strokeDashoffset={`${2 * Math.PI * 32 * (1 - overallPct / 100)}`}
-                className="transition-all duration-700"
-              />
-            </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-lg font-medium tabular-nums">{overallPct}%</span>
+        {/* بطاقة التخصص والأكاديميا الحقيقية */}
+        <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                <GraduationCap className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-foreground">{student.major}</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">{student.university?.name || "الجامعة"}</p>
+              </div>
             </div>
+            <Badge variant="outline" className="text-xs font-normal border-emerald-500/30 text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 ml-1.5 animate-pulse" />
+              متزامن مع Moodle
+            </Badge>
           </div>
 
-          <div className="flex-1">
-            <p className="text-base font-medium">{student.major}</p>
-            <div className="grid grid-cols-2 gap-3 mt-3">
-              <div>
-                <p className="text-lg font-medium tabular-nums">{completedCredits}</p>
-                <p className="text-xs text-muted-foreground">ساعة مكتملة</p>
-              </div>
-              <div>
-                <p className="text-lg font-medium tabular-nums">{totalCredits - completedCredits}</p>
-                <p className="text-xs text-muted-foreground">ساعة متبقية</p>
-              </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 border-t border-border">
+            <div className="p-2.5 rounded-lg bg-secondary/40">
+              <p className="text-xs text-muted-foreground">الرقم الجامعي</p>
+              <p className="text-sm font-medium text-foreground mt-0.5 tabular-nums">{student.studentId}</p>
+            </div>
+            <div className="p-2.5 rounded-lg bg-secondary/40">
+              <p className="text-xs text-muted-foreground">المساقات المسجلة</p>
+              <p className="text-sm font-medium text-foreground mt-0.5 tabular-nums">{enrolledCourses.length} مواد</p>
+            </div>
+            <div className="p-2.5 rounded-lg bg-secondary/40 col-span-2 sm:col-span-1">
+              <p className="text-xs text-muted-foreground">مصدر البيانات</p>
+              <p className="text-sm font-medium text-foreground mt-0.5">LMS / Moodle</p>
             </div>
           </div>
         </div>
 
-        {/* Per category */}
-        {requirements.map((req) => {
-          const pct = Math.round((req.completedCredits / req.totalCredits) * 100);
-          const color = categoryColors[req.category];
+        {/* تنبيه شفاف عن الخطة الشجرية والسجل التراكمي */}
+        <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-blue-900 dark:text-blue-200">
+              اعتماد الساعات والخطة الشجرية للتخرج
+            </p>
+            <p className="text-xs text-blue-800/80 dark:text-blue-300/80 leading-relaxed">
+              الساعات المعتمدة المتبقية والمعدل التراكمي وتوزيع متطلبات التخرج (الإجبارية والاختيارية) تصدر رسمياً عن نظام القبول والتسجيل الجامعي (SIS). المقررات المعروضة أدناه هي المقررات الفعلية المسجلة في حسابك الجامعي عبر Moodle.
+            </p>
+          </div>
+        </div>
 
-          return (
-            <div key={req.id} className="rounded-xl border border-border bg-card overflow-hidden">
-              {/* Category header */}
-              <div className="px-4 py-3 border-b border-border">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="h-2.5 w-2.5 rounded-full"
-                      style={{ backgroundColor: color }}
-                    />
-                    <span className="text-sm font-medium">{req.categoryLabel}</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground tabular-nums">
-                    {req.completedCredits}/{req.totalCredits} ساعة
-                  </span>
-                </div>
-                <Progress value={pct} className="h-1.5" indicatorColor={color} />
-              </div>
+        {/* المقررات الدراسية الحقيقية المسجلة */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-primary" />
+              المقررات المسجلة حالياً
+            </h3>
+            <span className="text-xs text-muted-foreground tabular-nums">
+              {enrolledCourses.length} مساق نشط
+            </span>
+          </div>
 
-              {/* Course list */}
-              <div className="divide-y divide-border">
-                {req.courses.map((course) => {
-                  const config = courseStatusConfig[course.status];
-                  const Icon = config.icon;
-
-                  return (
-                    <div
-                      key={course.id}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3",
-                        course.status === "locked" && "opacity-50"
-                      )}
-                    >
-                      <Icon className={cn("h-4 w-4 flex-shrink-0", config.color)} strokeWidth={1.5} />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm truncate">{course.nameAr}</p>
-                        <p className="text-xs text-muted-foreground">{course.code}</p>
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        {course.grade && (
-                          <span className="text-xs font-medium text-emerald-500">{course.grade}</span>
-                        )}
-                        {config.badge && (
-                          <Badge variant="default" className="text-[10px]">{config.badge}</Badge>
-                        )}
-                        <span className="text-xs text-muted-foreground tabular-nums">{course.credits} س</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+          {enrolledCourses.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border bg-card/50 p-8 text-center">
+              <BookOpen className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-60" />
+              <p className="text-sm font-medium text-foreground">لا توجد مواد مسجلة لهذا الفصل</p>
+              <p className="text-xs text-muted-foreground mt-1">تأكد من تسجيلك في المقررات عبر نظام مودل الجامعي.</p>
             </div>
-          );
-        })}
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {enrolledCourses.map((course) => (
+                <div
+                  key={course.id}
+                  className="rounded-xl border border-border bg-card p-4 hover:border-primary/40 transition-all space-y-3 flex flex-col justify-between"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="h-2.5 w-2.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: course.color || "#6366F1" }}
+                        />
+                        <span className="text-xs font-mono text-muted-foreground">{course.code}</span>
+                      </div>
+                      <Badge variant="secondary" className="text-[10px]">
+                        مُسجَّل
+                      </Badge>
+                    </div>
+                    <h4 className="text-sm font-medium text-foreground leading-snug line-clamp-2">
+                      {course.nameAr || course.nameEn}
+                    </h4>
+                    {course.instructor && (
+                      <p className="text-xs text-muted-foreground">
+                        المدرس: {course.instructor}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="pt-3 border-t border-border flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">
+                      {course.semester || "الفصل الحالي"}
+                    </span>
+                    <Link
+                      href={`/courses/${course.id}`}
+                      className="text-primary hover:underline inline-flex items-center gap-1 font-medium"
+                    >
+                      تفاصيل المادة
+                      <ArrowLeft className="h-3 w-3" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
     </>
   );
