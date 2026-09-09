@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpen,
-  GraduationCap,
   Briefcase,
   Settings,
   User,
@@ -17,7 +16,6 @@ import { cn } from "@/lib/utils";
 const desktopNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
   { href: "/courses", icon: BookOpen, label: "المواد" },
-  { href: "/degree", icon: GraduationCap, label: "التخرج" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
   { href: "/deals", icon: Tag, label: "العروض والخصومات" },
   { href: "/settings", icon: Settings, label: "الإعدادات" },
@@ -26,7 +24,6 @@ const desktopNavItems = [
 const mobileNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
   { href: "/courses", icon: BookOpen, label: "المواد" },
-  { href: "/degree", icon: GraduationCap, label: "التخرج" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
   { href: "/deals", icon: Tag, label: "العروض" },
   { href: "/profile", icon: User, label: "حسابي" },
