@@ -7,13 +7,15 @@ const JWT_EXPIRY = "7d";
 // Bulletproof fallback secret ensuring auth functions work in any deployment environment
 const FALLBACK_JWT_SECRET = "masar-secure-jwt-auth-token-key-2026-production-32bytes-secret";
 
-type UserType = "staff" | "recruiter" | "student";
+type UserType = "staff" | "recruiter" | "student" | "merchant";
 
 export interface SessionPayload {
   userId: string;
   userType: UserType;
   companyId?: string;
   universityId?: string;
+  merchantId?: string;
+  businessName?: string;
   name?: string;
   email?: string;
 }

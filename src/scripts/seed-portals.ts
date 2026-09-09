@@ -147,9 +147,163 @@ async function main() {
       },
     });
   }
-  console.log("✅ Internship linked to company:", internship.title);
+  // 7. Seed Merchants and Deals
+  const merchantPassword = await bcrypt.hash("password123", 12);
 
-  console.log("🎉 All portal seeds completed successfully!");
+  // Merchant 1: Restaurants
+  const merchant1 = await prisma.merchant.upsert({
+    where: { contactEmail: "shawarma@aldiaa.jo" },
+    update: {
+      passwordHash: merchantPassword,
+      businessName: "شاورما الضيعة",
+      category: "مطاعم",
+      verified: true,
+    },
+    create: {
+      businessName: "شاورما الضيعة",
+      category: "مطاعم",
+      contactEmail: "shawarma@aldiaa.jo",
+      passwordHash: merchantPassword,
+      verified: true,
+    },
+  });
+
+  // Merchant 2: Libraries
+  const merchant2 = await prisma.merchant.upsert({
+    where: { contactEmail: "alrowad@library.jo" },
+    update: {
+      passwordHash: merchantPassword,
+      businessName: "مكتبة ومطبعة الرواد الجامعية",
+      category: "مكتبات",
+      verified: true,
+    },
+    create: {
+      businessName: "مكتبة ومطبعة الرواد الجامعية",
+      category: "مكتبات",
+      contactEmail: "alrowad@library.jo",
+      passwordHash: merchantPassword,
+      verified: true,
+    },
+  });
+
+  // Merchant 3: Transportation
+  const merchant3 = await prisma.merchant.upsert({
+    where: { contactEmail: "alaman@transport.jo" },
+    update: {
+      passwordHash: merchantPassword,
+      businessName: "شركة الأمان للمواصلات والرحلات الجامعية",
+      category: "مواصلات",
+      verified: true,
+    },
+    create: {
+      businessName: "شركة الأمان للمواصلات والرحلات الجامعية",
+      category: "مواصلات",
+      contactEmail: "alaman@transport.jo",
+      passwordHash: merchantPassword,
+      verified: true,
+    },
+  });
+
+  console.log("✅ 3 Merchants seeded successfully");
+
+  // Clean and recreate active deals for these merchants
+  await prisma.merchantDeal.deleteMany({
+    where: { merchantId: { in: [merchant1.id, merchant2.id, merchant3.id] } },
+  });
+
+  const now = new Date();
+  const in20Days = new Date(now.getTime() + 20 * 24 * 60 * 60 * 1000);
+  const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+  const in45Days = new Date(now.getTime() + 45 * 24 * 60 * 60 * 1000);
+  const in60Days = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
+
+  // Deals for Shawarma Al-Diaa
+  await prisma.merchantDeal.createMany({
+    data: [
+      {
+        merchantId: merchant1.id,
+        title: "خصم 20% على جميع الوجبات العائلية والفردية",
+        description: "استمتع بأشهى وجبات الشاورما الإيطالية والعربية مع خصم خاص وحصري لجميع طلاب الجامعات.",
+        discountLabel: "خصم 20%",
+        termsConditions: "يسري العرض يومياً من الساعة 12 ظهراً حتى 8 مساءً عند إبراز البطاقة الجامعية داخل الصالة، غير شامل التوصيل.",
+        validFrom: now,
+        validUntil: in30Days,
+        isActive: true,
+        redemptionCount: 14,
+      },
+      {
+        merchantId: merchant1.id,
+        title: "اشترِ وجبة سوبر شاورما واحصل على الثانية بنصف السعر",
+        description: "عرض التوفير للطلاب والأصدقاء — وجبة سوبر شاورما دجاج أو لحم والثانية بنصف السعر فوراً.",
+        discountLabel: "50% على الوجبة الثانية",
+        termsConditions: "العرض متاح أيام الأحد والثلاثاء والخميس للطلبة، يسري على وجبات الحجم السوبر فقط.",
+        validFrom: now,
+        validUntil: in45Days,
+        isActive: true,
+        redemptionCount: 8,
+      },
+    ],
+  });
+
+  // Deals for Al-Rowad Library
+  await prisma.merchantDeal.createMany({
+    data: [
+      {
+        merchantId: merchant2.id,
+        title: "خصم 30% على طباعة وتجليد مشاريع التخرج والأبحاث",
+        description: "طباعة ليزرية عالية الدقة بالألوان وتجليد كرتوني ومخملي معتمد لدى كافة الكليات والجامعات.",
+        discountLabel: "خصم 30%",
+        termsConditions: "يسري الخصم على أبحاث ومشاريع التخرج التي تتجاوز 40 صفحة، يشمل التدقيق التنسيقي المبدئي مجاناً.",
+        validFrom: now,
+        validUntil: in60Days,
+        isActive: true,
+        redemptionCount: 29,
+      },
+      {
+        merchantId: merchant2.id,
+        title: "خصم 15% على الدفاتر والقرطاسية ومستلزمات الهندسة والعمارة",
+        description: "جميع الأدوات الهندسية، أقلام التحبير، أوراق الرسم الهندسي، والملازم الدراسية بأسعار طلابية خاصة.",
+        discountLabel: "خصم 15%",
+        termsConditions: "العرض ساري طوال الفصل الدراسي لطلبة الهندسة والفنون والعلوم.",
+        validFrom: now,
+        validUntil: in20Days,
+        isActive: true,
+        redemptionCount: 42,
+      },
+    ],
+  });
+
+  // Deals for Al-Aman Transport
+  await prisma.merchantDeal.createMany({
+    data: [
+      {
+        merchantId: merchant3.id,
+        title: "خصم 25% على اشتراكات الباصات والخطوط الجامعية الشهرية",
+        description: "خدمة نقل يومية مريحة ومكيفة من مختلف محافظات المملكة إلى بوابات الكليات مباشرة مع إنترنت مجاني.",
+        discountLabel: "خصم 25%",
+        termsConditions: "مخصص للاشتراكات الفصلية والشهرية الجديدة للطلبة النظاميين.",
+        validFrom: now,
+        validUntil: in30Days,
+        isActive: true,
+        redemptionCount: 19,
+      },
+      {
+        merchantId: merchant3.id,
+        title: "رحلتك الأولى مجاناً داخل الحرم ومحيط البوابات الجامعية",
+        description: "جرب خدمة التوصيل السريع بين مجمعات الكليات والشارع التجاري مجاناً للرحلة الأولى.",
+        discountLabel: "رحلة أولى مجاناً",
+        termsConditions: "صالحة لرحلة فردية واحدة بحد أقصى 3 دنانير عبر تطبيق الأمان مع إبراز كود مسار.",
+        validFrom: now,
+        validUntil: in45Days,
+        isActive: true,
+        redemptionCount: 31,
+      },
+    ],
+  });
+
+  console.log("✅ 6 Active Deals seeded successfully");
+
+  console.log("🎉 All portal & merchant seeds completed successfully!");
 }
 
 main()

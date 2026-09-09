@@ -59,6 +59,7 @@ model Student {
   moodleConnection        MoodleConnection?
   internshipApplications  InternshipApplication[]
   engagementSnapshots     StudentEngagementSnapshot[]
+  dealRedemptions         DealRedemption[]
 
   @@index([studentId])
   @@index([email])
@@ -400,4 +401,69 @@ model StudentEngagementSnapshot {
   @@index([studentId])
   @@index([riskFlag])
   @@map("student_engagement_snapshots")
+}
+
+// --------------------------------------------
+// 18. الشركاء التجاريون (Merchants)
+// --------------------------------------------
+model Merchant {
+  id           String         @id @default(uuid())
+  businessName String         // "مكتبة ومطبعة الجامعة"
+  logoUrl      String?
+  category     String         // "مطاعم" | "مكتبات" | "مواصلات" | "متاجر" | "كورسات" | "أخرى"
+  contactEmail String         @unique
+  passwordHash String
+  verified     Boolean        @default(false) // يحتاج مراجعة يدوية لاحقاً // TODO: manual verification
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  deals        MerchantDeal[]
+
+  @@index([category])
+  @@index([contactEmail])
+  @@map("merchants")
+}
+
+// --------------------------------------------
+// 19. عروض وخصومات الشركاء (Merchant Deals)
+// --------------------------------------------
+model MerchantDeal {
+  id              String           @id @default(uuid())
+  merchantId      String
+  title           String           // "خصم 20% على جميع القرطاسية ومستلزمات الهندسة"
+  description     String?          // تفاصيل العرض
+  discountLabel   String           // "20%" أو "وجبة مجانية" أو "خصم 15%"
+  termsConditions String?          // شروط الاستخدام (إبراز الهوية الجامعية...)
+  validFrom       DateTime         @default(now())
+  validUntil      DateTime
+  isActive        Boolean          @default(true)
+  redemptionCount Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  merchant        Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  redemptions     DealRedemption[]
+
+  @@index([merchantId])
+  @@index([isActive])
+  @@index([validUntil])
+  @@map("merchant_deals")
+}
+
+// --------------------------------------------
+// 20. استخدامات العروض (Deal Redemptions)
+// --------------------------------------------
+model DealRedemption {
+  id         String       @id @default(uuid())
+  dealId     String
+  studentId  String
+  redeemedAt DateTime     @default(now())
+
+  deal       MerchantDeal @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  student    Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([dealId])
+  @@index([studentId])
+  @@index([redeemedAt])
+  @@map("deal_redemptions")
 }

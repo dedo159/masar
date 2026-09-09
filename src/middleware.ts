@@ -107,6 +107,40 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // ================================================
+  // 6. حماية بوابة الشركاء التجاريين (JWT Session)
+  // ================================================
+  if (
+    pathname.startsWith("/merchant") &&
+    !pathname.startsWith("/merchant/login") &&
+    !pathname.startsWith("/merchant/register")
+  ) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/merchant/login", request.url));
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "merchant") {
+      return NextResponse.redirect(new URL("/merchant/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // ================================================
+  // 7. حماية API بوابة الشركاء التجاريين (JWT Session)
+  // ================================================
+  if (pathname.startsWith("/api/merchant") && !pathname.startsWith("/api/merchant/auth")) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "merchant") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
@@ -119,5 +153,7 @@ export const config = {
     "/api/university/:path*",
     "/company/:path*",
     "/api/company/:path*",
+    "/merchant/:path*",
+    "/api/merchant/:path*",
   ],
 };

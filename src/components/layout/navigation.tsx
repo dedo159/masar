@@ -10,6 +10,7 @@ import {
   Briefcase,
   Settings,
   User,
+  Tag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ const desktopNavItems = [
   { href: "/courses", icon: BookOpen, label: "المواد" },
   { href: "/degree", icon: GraduationCap, label: "التخرج" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
+  { href: "/deals", icon: Tag, label: "العروض والخصومات" },
   { href: "/settings", icon: Settings, label: "الإعدادات" },
 ];
 
@@ -26,6 +28,7 @@ const mobileNavItems = [
   { href: "/courses", icon: BookOpen, label: "المواد" },
   { href: "/degree", icon: GraduationCap, label: "التخرج" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
+  { href: "/deals", icon: Tag, label: "العروض" },
   { href: "/profile", icon: User, label: "حسابي" },
 ];
 
