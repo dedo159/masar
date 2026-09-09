@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ============================================================================
  * Permissive & Fault-Tolerant Moodle LMS Data Normalizer (TypeScript)
  * ============================================================================
@@ -11,7 +11,9 @@
  * - Forgiving date & number parsing with zero NaN or Invalid Date crashes.
  * - Retains raw payload references (_raw) on every normalized object.
  */
-
+import { parseMoodleTimestampToZoned, JORDAN_TIMEZONE } from "@/lib/timezone";
+import he from "he";
+import DOMPurify from "isomorphic-dompurify";
 export interface MoodleRawCustomField {
   name?: string;
   shortname?: string;
@@ -103,8 +105,10 @@ export interface NormalizedAssignment {
   title: string;
   description: string;
   dueDateIso: string | null;
+  dateStr: string;
   dueDateFormatted: string;
   dueTimeFormatted: string;
+  dueTimeFormattedAr: string;
   isOverdue: boolean;
   maxGrade: number;
   type: "assignment" | "project" | "quiz" | "exam";
@@ -164,7 +168,8 @@ export function extractRawArray(payload: unknown, candidateKeys: string[] = []):
 }
 
 /**
- * 1. Permissive HTML Stripping & Entity Decoding
+ * 1. Safe HTML Sanitizing & Complete Entity Decoding using DOMPurify and he
+ * Removes all XSS sinks, cleans HTML tags safely, decodes &nbsp;, &amp;, &quot;, and unicode entities.
  */
 export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
   if (raw === null || raw === undefined) return fallback;
@@ -172,46 +177,57 @@ export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
   if (!str.trim()) return fallback;
 
   try {
-    let clean = str
-      .replace(/<br\s*[\/]?>/gi, " ")
-      .replace(/<\/(p|div|tr|li)>/gi, " ")
+    // 1. Sanitize HTML tags safely with DOMPurify (prevent XSS)
+    const sanitizedHtml = DOMPurify.sanitize(str, {
+      ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "b", "i", "ul", "ol", "li", "span", "div", "h1", "h2", "h3", "h4", "h5", "h6"],
+      ALLOWED_ATTR: ["dir", "style", "class"],
+    });
+
+    // 2. Replace line-breaking block elements with newline/space before stripping
+    const textWithSpacing = sanitizedHtml
+      .replace(/<br\s*[\/]?>/gi, "\n")
+      .replace(/<\/(p|div|tr|li|h[1-6])>/gi, "\n")
       .replace(/<[^>]*>/g, " ");
 
-    const entities: Record<string, string> = {
-      "&nbsp;": " ",
-      "&amp;": "&",
-      "&quot;": '"',
-      "&#039;": "'",
-      "&apos;": "'",
-      "&lt;": "<",
-      "&gt;": ">",
-      "&rlm;": "",
-      "&lrm;": "",
-    };
+    // 3. Complete entity decoding using 'he' library (handles &nbsp;, &amp;, &quot;, numeric entities, etc.)
+    let decoded = he.decode(textWithSpacing);
 
-    for (const [k, v] of Object.entries(entities)) {
-      clean = clean.replaceAll(k, v);
+    // 4. Normalize special whitespace characters and cleanup
+    decoded = decoded
+      .replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, " ") // Non-breaking spaces to standard space
+      .replace(/[\u200B-\u200D\uFEFF\u200E\u200F]/g, "") // Strip zero-width & bidi marks
+      .replace(/\\\\/g, "/") // Fix double backslashes in dates (e.g. 2025\\2026 -> 2025/2026)
+      .replace(/[ \t]+/g, " ") // Collapse consecutive spaces/tabs
+      .replace(/\n\s*\n+/g, "\n") // Collapse consecutive newlines
+      .trim();
+
+    return decoded || fallback;
+  } catch (err) {
+    console.warn("[safeSanitizeHtml] Error sanitizing HTML text:", err);
+    try {
+      return he.decode(str.replace(/<[^>]*>/g, " ")).trim() || fallback;
+    } catch {
+      return str || fallback;
     }
+  }
+}
 
-    clean = clean.replace(/&#(\d+);/g, (_, dec) => {
-      try {
-        return String.fromCharCode(parseInt(dec, 10));
-      } catch {
-        return "";
-      }
+/**
+ * Safe Rich HTML Sanitizer using DOMPurify (when rendered with HTML styling)
+ */
+export function safeSanitizeRichHtml(raw: unknown, fallback: string = ""): string {
+  if (raw === null || raw === undefined) return fallback;
+  const str = String(raw);
+  if (!str.trim()) return fallback;
+
+  try {
+    const clean = DOMPurify.sanitize(str, {
+      ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "b", "i", "ul", "ol", "li", "span", "div"],
+      ALLOWED_ATTR: ["dir", "style", "class"],
     });
-
-    clean = clean.replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
-      try {
-        return String.fromCharCode(parseInt(hex, 16));
-      } catch {
-        return "";
-      }
-    });
-
-    return clean.replace(/\s+/g, " ").trim() || fallback;
+    return clean || fallback;
   } catch {
-    return str || fallback;
+    return fallback;
   }
 }
 
@@ -225,86 +241,28 @@ export function safeNumber(val: unknown, fallback: number = 0): number {
 }
 
 /**
- * 4. Forgiving Date Parsing (Zero Invalid Date Guarantee)
+ * 4. Forgiving Date Parsing strictly converted to Asia/Amman timezone using date-fns-tz
  */
 export function safeDate(
   raw: unknown,
-  timeZone: string = "Asia/Amman"
+  timeZone: string = JORDAN_TIMEZONE
 ): {
   iso: string | null;
   formattedDate: string;
   formattedTime: string;
+  formattedTimeAr: string;
   isPast: boolean;
+  dateStr: string;
 } {
-  const empty = {
-    iso: null,
-    formattedDate: "غير محدد",
-    formattedTime: "--:--",
-    isPast: false,
+  const res = parseMoodleTimestampToZoned(raw, timeZone);
+  return {
+    iso: res.iso,
+    formattedDate: res.formattedDateAr,
+    formattedTime: res.timeStr,
+    formattedTimeAr: res.formattedTimeAr,
+    isPast: res.isPast,
+    dateStr: res.dateStr,
   };
-
-  if (raw === null || raw === undefined || raw === 0 || raw === "0" || raw === "") {
-    return empty;
-  }
-
-  try {
-    let millis: number;
-
-    if (typeof raw === "number") {
-      millis = raw > 100_000_000_000 ? raw : raw * 1000;
-    } else if (typeof raw === "string") {
-      const num = Number(raw);
-      if (!isNaN(num) && num > 0) {
-        millis = num > 100_000_000_000 ? num : num * 1000;
-      } else {
-        millis = Date.parse(raw);
-      }
-    } else {
-      return empty;
-    }
-
-    if (!Number.isFinite(millis) || millis <= 0) {
-      return empty;
-    }
-
-    const date = new Date(millis);
-    if (isNaN(date.getTime())) {
-      return empty;
-    }
-
-    const iso = date.toISOString();
-    const isPast = date.getTime() < Date.now();
-
-    let formattedDate = iso.split("T")[0];
-    let formattedTime = "00:00";
-
-    try {
-      formattedDate = new Intl.DateTimeFormat("ar-JO", {
-        timeZone,
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(date);
-
-      formattedTime = new Intl.DateTimeFormat("en-GB", {
-        timeZone,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      }).format(date);
-    } catch {
-      // Fallback already assigned
-    }
-
-    return {
-      iso,
-      formattedDate,
-      formattedTime,
-      isPast,
-    };
-  } catch {
-    return empty;
-  }
 }
 
 /**
@@ -390,13 +348,14 @@ export function safeParseCourseTitle(
 
   let courseName = full || short || `مادة دراسية ${fallbackIndex}`;
   try {
+    const separatorPattern = "[\\u2013\\u2014\\-:|]";
     courseName = courseName
-      .replace(new RegExp(`^${courseCode}\\s*[-:–—|]\\s*`, "i"), "")
-      .replace(new RegExp(`[-:–—|]\\s*${courseCode}\\b`, "i"), "")
+      .replace(new RegExp(`^${courseCode}\\s*${separatorPattern}\\s*`, "i"), "")
+      .replace(new RegExp(`${separatorPattern}\\s*${courseCode}\\b`, "i"), "")
       .replace(/(?:شعبة|sec(?:tion)?)\s*[:#]?\s*[0-9]+/gi, "")
-      .replace(/(?:الفصل|semester)\s*[^–—|-]+/gi, "")
+      .replace(/(?:الفصل|semester)\s*[^–—|\-]+/gi, "")
       .replace(/20\d\d\s*[\/-]\s*20\d\d/g, "")
-      .replace(/[\(\)\[\]]/g, " ")
+      .replace(/[()[\]]/g, " ")
       .replace(/\s+/g, " ")
       .trim();
   } catch {
@@ -603,8 +562,10 @@ export class MoodleDataMapper {
         title,
         description,
         dueDateIso: dateResult.iso,
+        dateStr: dateResult.dateStr,
         dueDateFormatted: dateResult.formattedDate,
         dueTimeFormatted: dateResult.formattedTime,
+        dueTimeFormattedAr: dateResult.formattedTimeAr,
         isOverdue: dateResult.isPast,
         maxGrade,
         type,
@@ -618,8 +579,10 @@ export class MoodleDataMapper {
         title: fallbackTitle,
         description: "",
         dueDateIso: null,
+        dateStr: "بدون موعد تسليم محدد",
         dueDateFormatted: "غير محدد",
         dueTimeFormatted: "--:--",
+        dueTimeFormattedAr: "--:--",
         isOverdue: false,
         maxGrade: 20,
         type: "assignment",

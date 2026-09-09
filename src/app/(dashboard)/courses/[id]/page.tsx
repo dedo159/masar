@@ -171,12 +171,28 @@ export default async function CourseDetailPage({
                           >
                             {urgency === "urgent" && <AlertTriangle className="h-3 w-3" />}
                             <Clock className="h-3 w-3" />
-                            {getRelativeTime(assignment.dueDate)}
+                            {getRelativeTime(assignment.dueDate, assignment.dueTime)}
+                            {assignment.dueTime && assignment.dueTime !== "--:--" && (
+                              <span className="font-semibold text-foreground/85">
+                                ({assignment.dueTime} بتوقيت الأردن)
+                              </span>
+                            )}
                           </span>
-                          <span className="text-xs text-muted-foreground">
-                            {assignment.maxGrade} درجة
-                          </span>
+                          {assignment.grade !== undefined ? (
+                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/60">
+                              الدرجة: {assignment.grade} / {assignment.maxGrade}
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">
+                              {assignment.maxGrade} درجة
+                            </span>
+                          )}
                         </div>
+                        {assignment.description && assignment.description.trim() !== "" && assignment.description !== assignment.title && (
+                          <div className="mt-2.5 p-3 rounded-lg bg-secondary/40 border border-border/60 text-xs text-foreground/85 leading-relaxed whitespace-pre-line">
+                            {assignment.description}
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -234,16 +250,16 @@ export default async function CourseDetailPage({
                 <div className="space-y-2.5 divide-y divide-border">
                   {course.grade?.midterm !== undefined && (
                     <div className="flex items-center justify-between pt-2">
-                      <span className="text-sm text-muted-foreground">الامتحان النصفي</span>
-                      <span className="text-sm font-medium tabular-nums">
-                        {course.grade.midterm} / 50
+                      <span className="text-sm text-muted-foreground">الامتحان النصفي / تقييم الفئة التراكمي</span>
+                      <span className="text-sm font-semibold tabular-nums text-foreground">
+                        {course.grade.midterm} / 30
                       </span>
                     </div>
                   )}
                   {course.grade?.assignments !== undefined && (
                     <div className="flex items-center justify-between pt-2">
                       <span className="text-sm text-muted-foreground">الواجبات والمشاريع</span>
-                      <span className="text-sm font-medium tabular-nums">
+                      <span className="text-sm font-semibold tabular-nums text-foreground">
                         {course.grade.assignments} / 20
                       </span>
                     </div>
@@ -267,12 +283,34 @@ export default async function CourseDetailPage({
                   {course.grade?.total !== undefined && (
                     <div className="flex items-center justify-between pt-3 border-t border-border">
                       <span className="text-sm font-medium">المجموع التراكمي للمادة</span>
-                      <span className="text-lg font-medium tabular-nums text-primary">
+                      <span className="text-lg font-bold tabular-nums text-primary">
                         {course.grade.total} / 100
                       </span>
                     </div>
                   )}
                 </div>
+
+                {/* قائمة التقييمات الفردية المرصودة من Moodle */}
+                {course.assignments.some((a) => a.grade !== undefined) && (
+                  <div className="pt-3 mt-3 border-t border-border space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground">الأنشطة والواجبات المرصودة تفصيلياً</p>
+                    <div className="space-y-1.5">
+                      {course.assignments
+                        .filter((a) => a.grade !== undefined)
+                        .map((a) => (
+                          <div
+                            key={a.id}
+                            className="flex items-center justify-between p-2.5 rounded-lg bg-secondary/40 text-xs border border-border/50"
+                          >
+                            <span className="font-medium text-foreground">{a.title}</span>
+                            <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                              {a.grade} / {a.maxGrade}
+                            </span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>

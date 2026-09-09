@@ -1,16 +1,19 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { getTodayDayInAmman, JORDAN_TIMEZONE } from "@/lib/timezone";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function formatTime(time: string): string {
+  if (!time || time === "--:--") return "--:--";
   const [hours, minutes] = time.split(":");
-  const h = parseInt(hours);
+  const h = parseInt(hours, 10);
+  if (isNaN(h)) return time;
   const period = h >= 12 ? "م" : "ص";
   const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
-  return `${h12}:${minutes} ${period}`;
+  return `${h12}:${minutes || "00"} ${period}`;
 }
 
 export function getDayLabel(day: string): string {
@@ -27,12 +30,27 @@ export function getDayLabel(day: string): string {
 }
 
 export function getTodayDay(): string {
-  const days = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-  return days[new Date().getDay()];
+  return getTodayDayInAmman();
 }
 
-export function getRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
+export function getRelativeTime(dateString: string, timeString?: string): string {
+  if (!dateString || dateString === "بدون موعد تسليم محدد" || dateString === "غير محدد") {
+    return "بدون موعد تسليم محدد";
+  }
+
+  // Construct precise ISO with Jordan offset (+03:00)
+  const fullIso = (timeString && timeString !== "--:--")
+    ? `${dateString}T${timeString}:00+03:00`
+    : `${dateString}T23:59:59+03:00`;
+
+  let date = new Date(fullIso);
+  if (isNaN(date.getTime())) {
+    date = new Date(dateString);
+  }
+  if (isNaN(date.getTime())) {
+    return "بدون موعد تسليم محدد";
+  }
+
   const now = new Date();
   const diffMs = date.getTime() - now.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -43,11 +61,30 @@ export function getRelativeTime(dateString: string): string {
   if (diffHours < 24) return `خلال ${diffHours} ساعة`;
   if (diffDays === 1) return "غداً";
   if (diffDays < 7) return `خلال ${diffDays} أيام`;
-  return date.toLocaleDateString("ar-JO", { month: "short", day: "numeric" });
+  return date.toLocaleDateString("ar-JO", {
+    timeZone: JORDAN_TIMEZONE,
+    month: "short",
+    day: "numeric",
+  });
 }
 
-export function getDeadlineStatus(dueDate: string): "urgent" | "soon" | "normal" {
-  const date = new Date(dueDate);
+export function getDeadlineStatus(dueDate: string, dueTime?: string): "urgent" | "soon" | "normal" {
+  if (!dueDate || dueDate === "بدون موعد تسليم محدد" || dueDate === "غير محدد") {
+    return "normal";
+  }
+
+  const fullIso = (dueTime && dueTime !== "--:--")
+    ? `${dueDate}T${dueTime}:00+03:00`
+    : `${dueDate}T23:59:59+03:00`;
+
+  let date = new Date(fullIso);
+  if (isNaN(date.getTime())) {
+    date = new Date(dueDate);
+  }
+  if (isNaN(date.getTime())) {
+    return "normal";
+  }
+
   const now = new Date();
   const diffMs = date.getTime() - now.getTime();
   const diffHours = diffMs / (1000 * 60 * 60);
@@ -86,5 +123,9 @@ export function getTimeAgo(dateString: string): string {
   if (diffHours < 24) return `منذ ${diffHours} ساعات`;
   if (diffDays === 1) return "منذ يوم";
   if (diffDays < 7) return `منذ ${diffDays} أيام`;
-  return date.toLocaleDateString("ar-JO", { month: "short", day: "numeric" });
+  return date.toLocaleDateString("ar-JO", {
+    timeZone: JORDAN_TIMEZONE,
+    month: "short",
+    day: "numeric",
+  });
 }

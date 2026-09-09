@@ -12,6 +12,7 @@ import type {
   TodayClass,
 } from "@/lib/types";
 import { getTodayDay } from "@/lib/utils";
+import { getCurrentTimeInAmman } from "@/lib/timezone";
 
 // Mock authenticated student ID (// TODO: replace with real auth session later)
 export const DEFAULT_STUDENT_ID = "s-001";
@@ -112,7 +113,7 @@ export const getEnrolledCourses = cache(async (
     }));
 
     const grade: CourseGrade | undefined =
-      e.midtermGrade !== null || e.totalGrade !== null
+      e.midtermGrade !== null || e.totalGrade !== null || e.assignmentsGrade !== null || e.finalGrade !== null
         ? {
             midterm: e.midtermGrade !== null && e.midtermGrade !== undefined ? e.midtermGrade : undefined,
             final: e.finalGrade !== null && e.finalGrade !== undefined ? e.finalGrade : undefined,
@@ -255,7 +256,10 @@ export const getCourseById = cache(async (
   }));
 
   const grade: CourseGrade | undefined =
-    enrollment.midtermGrade !== null || enrollment.totalGrade !== null
+    enrollment.midtermGrade !== null ||
+    enrollment.totalGrade !== null ||
+    enrollment.assignmentsGrade !== null ||
+    enrollment.finalGrade !== null
       ? {
           midterm: enrollment.midtermGrade !== null && enrollment.midtermGrade !== undefined ? enrollment.midtermGrade : undefined,
           final: enrollment.finalGrade !== null && enrollment.finalGrade !== undefined ? enrollment.finalGrade : undefined,
@@ -383,13 +387,11 @@ export const getTodayClasses = cache(async (
 
   const classes: TodayClass[] = [];
 
+  const { totalMinutes: currentMinutes } = getCurrentTimeInAmman();
+
   for (const c of courses) {
     const todaySessions = c.schedule.filter((s) => s.day === today);
     for (const s of todaySessions) {
-      // Calculate ongoing / done / upcoming
-      const now = new Date();
-      const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
       const [startH, startM] = s.startTime.split(":").map(Number);
       const [endH, endM] = s.endTime.split(":").map(Number);
       const startMinutes = startH * 60 + startM;

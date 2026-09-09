@@ -63,8 +63,8 @@ export async function UrgentDeadlinesSection() {
       ) : (
         <div className="space-y-2">
           {upcoming.map((assignment) => {
-            const status = getDeadlineStatus(assignment.dueDate);
-            const relTime = getRelativeTime(assignment.dueDate);
+            const status = getDeadlineStatus(assignment.dueDate, assignment.dueTime);
+            const relTime = getRelativeTime(assignment.dueDate, assignment.dueTime);
 
             return (
               <Link
@@ -97,6 +97,11 @@ export async function UrgentDeadlinesSection() {
                     <Clock className="h-3 w-3" />
                     {relTime}
                   </div>
+                  {assignment.dueTime && assignment.dueTime !== "--:--" && (
+                    <p className="text-[11px] text-muted-foreground tabular-nums text-left mt-0.5">
+                      الساعة {assignment.dueTime}
+                    </p>
+                  )}
                 </div>
               </Link>
             );

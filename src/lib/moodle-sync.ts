@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { moodleDataMapper } from "@/lib/moodle-mapper";
+import { moodleDataMapper, safeDate } from "@/lib/moodle-mapper";
 
 export async function syncMoodleDataForStudent(
   token: string,
@@ -195,10 +195,8 @@ export async function syncMoodleDataForStudent(
 
           if (!course) continue;
 
-          const dueDate = na.dueDateIso
-            ? na.dueDateIso.split("T")[0]
-            : new Date().toISOString().split("T")[0];
-          const dueTime = na.dueTimeFormatted || "23:59";
+          const dueDate = na.dateStr || (na.dueDateIso ? na.dueDateIso.split("T")[0] : "بدون موعد تسليم محدد");
+          const dueTime = na.dueTimeFormatted && na.dueTimeFormatted !== "--:--" ? na.dueTimeFormatted : "--:--";
 
           await prisma.assignment.upsert({
             where: { id: `moodle-assign-${na.moodleAssignmentId}` },
@@ -260,16 +258,11 @@ export async function syncMoodleDataForStudent(
           const quizId = Number(quiz?.id ?? 0);
           const quizName = String(quiz?.name ?? `اختبار (${quizId})`);
           
-          // تاريخ الاستحقاق (timeclose) أو تاريخ الفتح (timeopen)
-          let dueDate = new Date().toISOString().split("T")[0];
-          let dueTime = "23:59";
-          
+          // تاريخ الاستحقاق محسوب بمنطقة Asia/Amman بشكل صريح
           const closeTime = Number(quiz?.timeclose ?? 0);
-          if (closeTime > 0) {
-            const d = new Date(closeTime * 1000);
-            dueDate = d.toISOString().split("T")[0];
-            dueTime = d.toISOString().split("T")[1]?.substring(0, 5) || "23:59";
-          }
+          const quizDateResult = safeDate(closeTime, "Asia/Amman");
+          const dueDate = quizDateResult.dateStr || "بدون موعد تسليم محدد";
+          const dueTime = quizDateResult.formattedTime !== "--:--" ? quizDateResult.formattedTime : "--:--";
 
           const maxGrade = Number(quiz?.grade ?? 20);
 
@@ -299,6 +292,122 @@ export async function syncMoodleDataForStudent(
       }
     } catch (quizErr) {
       console.warn("Could not sync quizzes (mod_quiz may not be available):", quizErr);
+    }
+
+    // 7. استدعاء ومزامنة درجات الطالب عبر gradereport_user_get_grade_items
+    try {
+      for (const moodleCourseId of courseMoodleIds) {
+        try {
+          const gradesUrl = `${cleanUrl}/webservice/rest/server.php?wstoken=${encodeURIComponent(
+            token
+          )}&wsfunction=gradereport_user_get_grade_items&courseid=${moodleCourseId}&userid=${moodleUserId}&moodlewsrestformat=json`;
+
+          const gradesRes = await fetch(gradesUrl);
+          const gradesData = await gradesRes.json();
+          const gradeItems = gradesData?.usergrades?.[0]?.gradeitems || [];
+
+          const course =
+            (await prisma.course.findFirst({
+              where: { id: `moodle-${moodleCourseId}` },
+            })) ||
+            (await prisma.course.findFirst({
+              where: { code: { contains: String(moodleCourseId) } },
+            }));
+
+          if (!course) continue;
+
+          let detectedMidtermGrade: number | null = null;
+          let detectedAssignmentsGrade: number | null = null;
+          let detectedTotalGrade: number | null = null;
+
+          for (const item of gradeItems) {
+            const rawGrade = item.graderaw !== null && item.graderaw !== undefined ? Number(item.graderaw) : null;
+            const maxGrade = Number(item.grademax ?? 100);
+            const itemType = String(item.itemtype || "");
+            const itemModule = String(item.itemmodule || "");
+            const itemInstance = item.iteminstance;
+
+            // أ. درجات الأنشطة والواجبات الفردية (itemtype === 'mod')
+            if (itemType === "mod" && itemInstance) {
+              const targetAssignId = itemModule === "assign"
+                ? `moodle-assign-${itemInstance}`
+                : `moodle-quiz-${itemInstance}`;
+
+              if (rawGrade !== null) {
+                const existingAssign = await prisma.assignment.findUnique({
+                  where: { id: targetAssignId },
+                });
+
+                if (existingAssign) {
+                  // تحديث العلامة العظمى إذا كانت محددة بدقة في بند الدرجة
+                  if (maxGrade > 0 && existingAssign.maxGrade !== maxGrade) {
+                    await prisma.assignment.update({
+                      where: { id: targetAssignId },
+                      data: { maxGrade },
+                    });
+                  }
+
+                  // حفظ تسليم الطالب ودرجته
+                  await prisma.submission.upsert({
+                    where: {
+                      studentId_assignmentId: {
+                        studentId: student.id,
+                        assignmentId: targetAssignId,
+                      },
+                    },
+                    create: {
+                      assignmentId: targetAssignId,
+                      studentId: student.id,
+                      grade: rawGrade,
+                      status: "graded",
+                      submittedAt: item.gradedategraded ? new Date(item.gradedategraded * 1000) : new Date(),
+                    },
+                    update: {
+                      grade: rawGrade,
+                      status: "graded",
+                      submittedAt: item.gradedategraded ? new Date(item.gradedategraded * 1000) : undefined,
+                    },
+                  });
+
+                  if (itemModule === "assign") {
+                    detectedAssignmentsGrade = rawGrade;
+                  }
+                }
+              }
+            }
+
+            // ب. درجة فئة التقييم / الامتحان النصفي (itemtype === 'category')
+            if (itemType === "category" && rawGrade !== null) {
+              // الفئة التراكمية (عادة 30 درجة للامتحان النصفي وأعمال الفصل)
+              detectedMidtermGrade = rawGrade;
+            }
+
+            // ج. المجموع النهائي للمساق (itemtype === 'course')
+            if (itemType === "course") {
+              if (rawGrade !== null) {
+                detectedTotalGrade = rawGrade;
+              }
+            }
+          }
+
+          // تحديث درجات التسجيل في جدول Enrollment
+          await prisma.enrollment.updateMany({
+            where: {
+              studentId: student.id,
+              courseId: course.id,
+            },
+            data: {
+              midtermGrade: detectedMidtermGrade !== null ? detectedMidtermGrade : undefined,
+              assignmentsGrade: detectedAssignmentsGrade !== null ? detectedAssignmentsGrade : undefined,
+              totalGrade: detectedTotalGrade !== null ? detectedTotalGrade : undefined,
+            },
+          });
+        } catch (singleGradeErr) {
+          console.warn(`[MoodleSync] Error fetching grades for course ${moodleCourseId}:`, singleGradeErr);
+        }
+      }
+    } catch (gradesErr) {
+      console.warn("[MoodleSync] Error in grade sync process:", gradesErr);
     }
   }
 
