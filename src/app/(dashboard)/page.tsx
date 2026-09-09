@@ -1,5 +1,4 @@
 import { PageHeader } from "@/components/layout/page-header";
-import { TodayScheduleSection } from "@/components/dashboard/today-schedule";
 import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines";
 import { QuickStatsSection } from "@/components/dashboard/quick-stats";
 
@@ -17,7 +16,6 @@ export default function HomePage() {
       <PageHeader title="مسار" subtitle={today} />
       <div className="px-4 py-4 space-y-5 max-w-2xl mx-auto lg:max-w-none">
         <QuickStatsSection />
-        <TodayScheduleSection />
         <UrgentDeadlinesSection />
       </div>
     </>

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { getEnrolledCourses } from "@/lib/db-queries";
 import { PageHeader } from "@/components/layout/page-header";
-import { getDayLabel, formatTime } from "@/lib/utils";
 import { ChevronLeft, BookOpen } from "lucide-react";
 import { ErrorState } from "@/components/ui/error-state";
 
@@ -24,13 +23,11 @@ export default async function CoursesPage() {
     );
   }
 
-  const totalCredits = enrolledCourses.reduce((sum, c) => sum + c.credits, 0);
-
   return (
     <>
       <PageHeader
         title="المواد"
-        subtitle={`${enrolledCourses.length} مواد · ${totalCredits} ساعة معتمدة`}
+        subtitle={`${enrolledCourses.length} مواد مسجلة`}
       />
       <div className="px-4 py-4 space-y-2 max-w-2xl mx-auto lg:max-w-none">
         {enrolledCourses.length === 0 ? (
@@ -45,7 +42,6 @@ export default async function CoursesPage() {
           </div>
         ) : (
           enrolledCourses.map((course) => {
-            const firstLecture = course.schedule.find((s) => s.type === "lecture");
             const gradePercent = course.grade?.total;
 
             return (
@@ -80,15 +76,10 @@ export default async function CoursesPage() {
 
                   <div className="flex items-center gap-3 mt-2">
                     <span className="text-xs text-muted-foreground">
-                      {course.credits} ساعات
+                      {course.semester}
                     </span>
-                    {firstLecture && (
-                      <span className="text-xs text-muted-foreground">
-                        {getDayLabel(firstLecture.day)} {formatTime(firstLecture.startTime)}
-                      </span>
-                    )}
                     <span className="text-xs text-muted-foreground">
-                      {course.room}
+                      {course.assignments?.length || 0} واجبات
                     </span>
                   </div>
                 </div>

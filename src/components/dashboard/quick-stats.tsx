@@ -1,12 +1,18 @@
 import Link from "next/link";
-import { getEnrolledCourses, getTodayClasses, getInternships } from "@/lib/db-queries";
-import { BookOpen, Calendar, Briefcase, Clock } from "lucide-react";
+import { getEnrolledCourses, getInternships } from "@/lib/db-queries";
+import { prisma } from "@/lib/prisma";
+import { BookOpen, Briefcase, Clock, Tag } from "lucide-react";
 
 export async function QuickStatsSection() {
-  const [courses, todayClasses, internships] = await Promise.all([
+  const [courses, internships, dealsCount] = await Promise.all([
     getEnrolledCourses(),
-    getTodayClasses(),
     getInternships(),
+    prisma.merchantDeal.count({
+      where: {
+        isActive: true,
+        validUntil: { gte: new Date() },
+      },
+    }),
   ]);
 
   const now = new Date();
@@ -36,6 +42,14 @@ export async function QuickStatsSection() {
       href: "/courses",
     },
     {
+      label: "واجبات تسليم اليوم",
+      value: todayDueAssignmentsCount,
+      icon: Clock,
+      color: todayDueAssignmentsCount > 0 ? "text-rose-500" : "text-emerald-500",
+      bg: todayDueAssignmentsCount > 0 ? "bg-rose-500/10" : "bg-emerald-500/10",
+      href: "/courses",
+    },
+    {
       label: "فرص التدريب المتاحة",
       value: internships.length,
       icon: Briefcase,
@@ -44,19 +58,12 @@ export async function QuickStatsSection() {
       href: "/internships",
     },
     {
-      label: "محاضرات اليوم",
-      value: todayClasses.length,
-      icon: Calendar,
+      label: "العروض والخصومات",
+      value: dealsCount,
+      icon: Tag,
       color: "text-violet-500",
       bg: "bg-violet-500/10",
-    },
-    {
-      label: "واجبات تسليم اليوم",
-      value: todayDueAssignmentsCount,
-      icon: Clock,
-      color: todayDueAssignmentsCount > 0 ? "text-rose-500" : "text-emerald-500",
-      bg: todayDueAssignmentsCount > 0 ? "bg-rose-500/10" : "bg-emerald-500/10",
-      href: "/courses",
+      href: "/deals",
     },
   ];
 

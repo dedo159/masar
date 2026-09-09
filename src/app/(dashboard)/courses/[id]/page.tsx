@@ -5,10 +5,10 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export const revalidate = 60;
 import { Badge } from "@/components/ui/badge";
-import { getDayLabel, formatTime, getDeadlineStatus, getRelativeTime } from "@/lib/utils";
+import { getDeadlineStatus, getRelativeTime } from "@/lib/utils";
 import {
   Clock,
-  MapPin,
+  BookOpen,
   FileText,
   Link as LinkIcon,
   AlertTriangle,
@@ -93,20 +93,14 @@ export default async function CourseDetailPage({
               className="h-10 w-10 rounded-lg flex-shrink-0 flex items-center justify-center"
               style={{ backgroundColor: course.color + "20" }}
             >
-              <span className="text-sm font-medium" style={{ color: course.color }}>
-                {course.credits}
-              </span>
+              <BookOpen className="h-5 w-5" style={{ color: course.color }} />
             </div>
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-medium truncate">{course.nameAr}</h2>
               <p className="text-xs text-muted-foreground mt-0.5">{course.nameEn}</p>
               <div className="flex flex-wrap items-center gap-3 mt-2.5">
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <MapPin className="h-3 w-3" />
-                  {course.room}
-                </span>
-                <span className="text-xs text-muted-foreground">{course.credits} ساعات معتمدة</span>
                 <span className="text-xs text-muted-foreground">{course.semester}</span>
+                <span className="text-xs text-muted-foreground">المدرس: {course.instructor}</span>
               </div>
             </div>
             {course.grade?.total !== undefined && (
@@ -115,28 +109,6 @@ export default async function CourseDetailPage({
                 <p className="text-[10px] text-muted-foreground text-center">من 100</p>
               </div>
             )}
-          </div>
-
-          {/* Schedule */}
-          <div className="mt-4 pt-3 border-t border-border">
-            <p className="text-xs font-medium text-muted-foreground mb-2">مواعيد المحاضرات والقاعات</p>
-            <div className="flex flex-wrap gap-2">
-              {course.schedule.map((s, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-1.5 rounded-lg bg-secondary px-2.5 py-1.5 text-xs"
-                >
-                  <Clock className="h-3 w-3 text-muted-foreground" />
-                  <span className="font-medium">{getDayLabel(s.day)}</span>
-                  <span className="text-muted-foreground tabular-nums">
-                    {formatTime(s.startTime)} – {formatTime(s.endTime)}
-                  </span>
-                  <Badge variant="secondary" className="text-[10px] py-0 px-1.5 font-normal">
-                    {s.type === "lecture" ? "محاضرة" : s.type === "lab" ? "مختبر" : "درس"}
-                  </Badge>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
