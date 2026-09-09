@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { getStudentProfile } from "@/lib/db-queries";
+import { getStudentProfile, DEFAULT_STUDENT_ID } from "@/lib/db-queries";
+import { prisma } from "@/lib/prisma";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -11,11 +13,36 @@ export async function GET() {
     }
     return NextResponse.json(student, {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=120",
+        "Cache-Control": "no-store, no-cache, must-revalidate",
       },
     });
   } catch (error) {
     console.error("GET /api/students/me error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { major, name } = body;
+
+    const updated = await prisma.student.updateMany({
+      where: {
+        OR: [
+          { id: DEFAULT_STUDENT_ID },
+          { id: "s-001" },
+        ],
+      },
+      data: {
+        ...(major && typeof major === "string" ? { major: major.trim() } : {}),
+        ...(name && typeof name === "string" ? { name: name.trim() } : {}),
+      },
+    });
+
+    return NextResponse.json({ success: true, updated });
+  } catch (error) {
+    console.error("PATCH /api/students/me error:", error);
+    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
   }
 }

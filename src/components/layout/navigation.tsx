@@ -71,17 +71,36 @@ export function Sidebar() {
   const [student, setStudent] = useState<{ name: string; major: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/students/me")
+    // 1. قراءة التخصص والاسم فوراً من التخزين المحلي لمنع أي تأخير في العرض
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("masar_user_name");
+      const storedMajor = localStorage.getItem("masar_user_major");
+      if (storedName || storedMajor) {
+        setStudent({
+          name: storedName || "طالب مسار",
+          major: storedMajor || "تكنولوجيا المعلومات",
+        });
+      }
+    }
+
+    // 2. جلب أحدث بيانات من الخادم بدون كاش
+    fetch("/api/students/me", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
-        if (data?.name) setStudent({ name: data.name, major: data.major });
+        if (data?.name) {
+          const storedMajor = typeof window !== "undefined" ? localStorage.getItem("masar_user_major") : null;
+          setStudent({
+            name: data.name,
+            major: storedMajor || data.major,
+          });
+        }
       })
       .catch(() => {});
   }, []);
 
-  const studentName = student?.name || "أحمد الخالدي";
-  const studentMajor = student?.major || "هندسة الحاسوب";
-  const initial = studentName[0] || "أ";
+  const studentName = student?.name || "طالب مسار";
+  const studentMajor = student?.major || "تكنولوجيا المعلومات";
+  const initial = studentName[0] || "ط";
 
   return (
     <aside className="hidden lg:flex flex-col fixed right-0 top-0 h-full w-60 border-l border-border bg-card z-40">

@@ -114,17 +114,43 @@ export async function POST(request: Request) {
       console.warn("Could not fetch site_info during connect (optional step):", e);
     }
 
-    // 7. حفظ / تحديث بيانات الاتصال في قاعدة البيانات للطالب الحالي
-    // الطالب الافتراضي أحمد الخالدي id: "s-001"
-    const student = await prisma.student.findFirst({
+    // 7. حفظ / تحديث بيانات الاتصال في قاعدة البيانات للطالب الحالي (s-001)
+    let student = await prisma.student.findFirst({
+      where: {
+        OR: [
+          { id: "s-001" },
+          { studentId: username.trim() },
+        ],
+      },
       select: { id: true },
     });
+
+    if (!student) {
+      student = await prisma.student.findFirst({
+        select: { id: true },
+      });
+    }
 
     if (!student) {
       return NextResponse.json(
         { success: false, error: "لم يتم العثور على سجل الطالب في قاعدة البيانات." },
         { status: 404 }
       );
+    }
+
+    // حفظ التخصص فوراً في قاعدة البيانات إذا تم إدخاله
+    if (major && typeof major === "string" && major.trim()) {
+      await prisma.student.updateMany({
+        where: {
+          OR: [
+            { id: student.id },
+            { id: "s-001" },
+          ],
+        },
+        data: {
+          major: major.trim(),
+        },
+      });
     }
 
     await prisma.moodleConnection.upsert({

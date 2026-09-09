@@ -20,10 +20,12 @@ import {
 import Link from "next/link";
 import { ErrorState } from "@/components/ui/error-state";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ProfilePage() {
-  const student = await prisma.student.findFirst({
+  const student = (await prisma.student.findFirst({
+    where: { id: "s-001" },
     include: {
       university: true,
       moodleConnection: true,
@@ -33,7 +35,17 @@ export default async function ProfilePage() {
         },
       },
     },
-  });
+  })) || (await prisma.student.findFirst({
+    include: {
+      university: true,
+      moodleConnection: true,
+      enrollments: {
+        include: {
+          course: true,
+        },
+      },
+    },
+  }));
 
   if (!student) {
     return (
