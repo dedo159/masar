@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { moodleDataMapper } from "@/lib/moodle-mapper";
 
 export async function syncMoodleDataForStudent(
   token: string,
@@ -22,11 +23,6 @@ export async function syncMoodleDataForStudent(
     throw new Error(siteInfo.error || "Failed to fetch user site info from Moodle");
   }
 
-  const moodleUserId = Number(siteInfo.userid);
-  const fullName = siteInfo.fullname || "ضياء الدين محمد محمود عبدالرحمن";
-  const academicId = siteInfo.username || "202510377";
-  const avatarUrl = siteInfo.userpictureurl || null;
-
   // 2. تحديث / إنشاء سجل الجامعة
   let university = await prisma.university.findFirst({
     where: { code: "aau" },
@@ -42,20 +38,38 @@ export async function syncMoodleDataForStudent(
     });
   }
 
-  // 3. تحديث بيانات الطالب في قاعدة البيانات
+  // 3. استدعاء المواد المسجلة من Moodle
+  const moodleUserId = Number(siteInfo.userid);
+  const coursesUrl = `${cleanUrl}/webservice/rest/server.php?wstoken=${encodeURIComponent(
+    token
+  )}&wsfunction=core_enrol_get_users_courses&userid=${moodleUserId}&moodlewsrestformat=json`;
+
+  const coursesRes = await fetch(coursesUrl);
+  const enrolledCourses = await coursesRes.json();
+
+  // تطبيق الطبقة الدفاعية لتنظيف وتطبيع بيانات المواد وحساب الساعات بدقة
+  const { courses: normalizedCourses, completedCredits } =
+    moodleDataMapper.normalizeCourses(enrolledCourses);
+
+  // تطبيق الطبقة الدفاعية لتطبيع بيانات الطالب
+  const normalizedStudent = moodleDataMapper.normalizeStudentProfile(siteInfo, {
+    completedCredits,
+  });
+
+  // 4. تحديث بيانات الطالب في قاعدة البيانات
   const student = await prisma.student.upsert({
     where: { id: studentId },
     create: {
       id: studentId,
-      studentId: academicId,
-      name: fullName,
-      email: `${academicId}@ammanu.edu.jo`,
-      major: "نظم المعلومات الإدارية",
-      year: 2,
-      gpa: 3.55,
-      totalCredits: 132,
-      completedCredits: 45,
-      avatar: avatarUrl,
+      studentId: normalizedStudent.academicId,
+      name: normalizedStudent.fullName,
+      email: `${normalizedStudent.academicId}@ammanu.edu.jo`,
+      major: normalizedStudent.major,
+      year: normalizedStudent.academicYear,
+      gpa: normalizedStudent.gpa,
+      totalCredits: normalizedStudent.totalCreditsRequired,
+      completedCredits: normalizedStudent.completedCredits,
+      avatar: normalizedStudent.avatarUrl,
       universityId: university.id,
       skills: JSON.stringify([
         "Moodle",
@@ -65,95 +79,80 @@ export async function syncMoodleDataForStudent(
       ]),
     },
     update: {
-      studentId: academicId,
-      name: fullName,
-      avatar: avatarUrl,
+      studentId: normalizedStudent.academicId,
+      name: normalizedStudent.fullName,
+      major: normalizedStudent.major,
+      avatar: normalizedStudent.avatarUrl,
+      completedCredits: normalizedStudent.completedCredits,
       universityId: university.id,
     },
   });
 
-  // 4. استدعاء المواد المسجلة من Moodle
-  const coursesUrl = `${cleanUrl}/webservice/rest/server.php?wstoken=${encodeURIComponent(
-    token
-  )}&wsfunction=core_enrol_get_users_courses&userid=${moodleUserId}&moodlewsrestformat=json`;
-
-  const coursesRes = await fetch(coursesUrl);
-  const enrolledCourses = await coursesRes.json();
-
   const colors = ["#8B5CF6", "#F59E0B", "#10B981", "#06B6D4", "#6366F1"];
   const courseMoodleIds: number[] = [];
 
-  if (Array.isArray(enrolledCourses) && enrolledCourses.length > 0) {
-    for (let i = 0; i < enrolledCourses.length; i++) {
-      const c = enrolledCourses[i];
-      courseMoodleIds.push(c.id);
+  for (let i = 0; i < normalizedCourses.length; i++) {
+    const nc = normalizedCourses[i];
+    courseMoodleIds.push(nc.moodleCourseId);
 
-      const courseCode = c.shortname || `MDL-${c.id}`;
-      const courseId = `moodle-${c.id}`;
-      const color = colors[i % colors.length];
+    const courseId = `moodle-${nc.moodleCourseId}`;
+    const color = colors[i % colors.length];
 
-      let instructor = "د. أستاذ المادة";
-      if (c.fullname.includes("المهارات")) instructor = "أ.د. سوسن بدرخان";
-      else if (c.fullname.includes("قانونية")) instructor = "د. أستاذ القانون";
-      else if (c.fullname.includes("العربية")) instructor = "د. أستاذ اللغة العربية";
-      else if (c.fullname.includes("إعلام")) instructor = "د. أستاذ الإعلام";
-
-      const course = await prisma.course.upsert({
-        where: { code: courseCode },
-        create: {
-          id: courseId,
-          code: courseCode,
-          nameAr: c.fullname,
-          nameEn: c.shortname || c.fullname,
-          credits: 3,
-          instructor,
-          room: "قاعة إلكترونية (V-Class)",
-          color,
-          semester: "الفصل الصيفي 2025/2026",
-          schedule: JSON.stringify([
-            {
-              day: i % 2 === 0 ? "sun" : "mon",
-              startTime: "10:00",
-              endTime: "11:30",
-              type: "lecture",
-            },
-            {
-              day: i % 2 === 0 ? "tue" : "wed",
-              startTime: "10:00",
-              endTime: "11:30",
-              type: "lecture",
-            },
-          ]),
-        },
-        update: {
-          nameAr: c.fullname,
-          nameEn: c.shortname || c.fullname,
-          instructor,
-          semester: "الفصل الصيفي 2025/2026",
-        },
-      });
-
-      await prisma.enrollment.upsert({
-        where: {
-          studentId_courseId: {
-            studentId: student.id,
-            courseId: course.id,
+    const course = await prisma.course.upsert({
+      where: { code: nc.courseCode },
+      create: {
+        id: courseId,
+        code: nc.courseCode,
+        nameAr: nc.courseName,
+        nameEn: nc.courseCode,
+        credits: nc.credits,
+        instructor: nc.instructorName,
+        room: "قاعة إلكترونية (V-Class)",
+        color,
+        semester: nc.semester || "الفصل الصيفي 2025/2026",
+        schedule: JSON.stringify([
+          {
+            day: i % 2 === 0 ? "sun" : "mon",
+            startTime: "10:00",
+            endTime: "11:30",
+            type: "lecture",
           },
-        },
-        create: {
+          {
+            day: i % 2 === 0 ? "tue" : "wed",
+            startTime: "10:00",
+            endTime: "11:30",
+            type: "lecture",
+          },
+        ]),
+      },
+      update: {
+        nameAr: nc.courseName,
+        credits: nc.credits,
+        instructor: nc.instructorName,
+        semester: nc.semester || "الفصل الصيفي 2025/2026",
+      },
+    });
+
+    await prisma.enrollment.upsert({
+      where: {
+        studentId_courseId: {
           studentId: student.id,
           courseId: course.id,
-          status: "enrolled",
-          semester: "الفصل الصيفي 2025/2026",
         },
-        update: {
-          status: "enrolled",
-        },
-      });
-    }
+      },
+      create: {
+        studentId: student.id,
+        courseId: course.id,
+        status: nc.status,
+        semester: nc.semester || "الفصل الصيفي 2025/2026",
+      },
+      update: {
+        status: nc.status,
+      },
+    });
   }
 
-  // 5. استدعاء الواجبات والتسليمات القادمة من Moodle
+  // 5. استدعاء الواجبات والتسليمات وتطبيعها بدقة
   if (courseMoodleIds.length > 0) {
     try {
       const assignParams = courseMoodleIds
@@ -170,40 +169,39 @@ export async function syncMoodleDataForStudent(
         for (const c of assignData.courses) {
           const course =
             (await prisma.course.findFirst({
-              where: { code: { contains: String(c.id) } },
-            })) ||
-            (await prisma.course.findUnique({
               where: { id: `moodle-${c.id}` },
+            })) ||
+            (await prisma.course.findFirst({
+              where: { code: { contains: String(c.id) } },
             }));
 
           if (!course || !Array.isArray(c.assignments)) continue;
 
-          for (const a of c.assignments) {
-            const cleanIntro = a.intro
-              ? a.intro.replace(/<[^>]*>?/gm, "").trim().slice(0, 200)
-              : "";
-            const d = a.duedate ? new Date(a.duedate * 1000) : new Date(Date.now() + 7 * 86400000);
-            const dueDate = d.toISOString().split("T")[0];
-            const dueTime = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+          for (const rawAssign of c.assignments) {
+            const na = moodleDataMapper.normalizeAssignment(rawAssign);
+
+            const dueDate = na.dueDateIso ? na.dueDateIso.split("T")[0] : new Date().toISOString().split("T")[0];
+            const dueTime = na.dueTimeFormatted || "23:59";
 
             await prisma.assignment.upsert({
-              where: { id: `moodle-assign-${a.id}` },
+              where: { id: `moodle-assign-${na.moodleAssignmentId}` },
               create: {
-                id: `moodle-assign-${a.id}`,
+                id: `moodle-assign-${na.moodleAssignmentId}`,
                 courseId: course.id,
-                title: a.name,
-                description: cleanIntro || a.name,
+                title: na.title,
+                description: na.description || na.title,
                 dueDate,
-                dueTime: dueTime || "23:59",
-                maxGrade: a.grade || 20,
-                type: a.name.includes("بحث") ? "project" : "assignment",
+                dueTime,
+                maxGrade: na.maxGrade,
+                type: na.type,
               },
               update: {
-                title: a.name,
-                description: cleanIntro || a.name,
+                title: na.title,
+                description: na.description || na.title,
                 dueDate,
-                dueTime: dueTime || "23:59",
-                maxGrade: a.grade || 20,
+                dueTime,
+                maxGrade: na.maxGrade,
+                type: na.type,
               },
             });
           }
