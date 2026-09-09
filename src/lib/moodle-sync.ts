@@ -100,60 +100,72 @@ export async function syncMoodleDataForStudent(
     courseMoodleIds.push(nc.moodleCourseId);
 
     const courseId = `moodle-${nc.moodleCourseId}`;
+    const courseCode = nc.courseCode || `MDL-${nc.moodleCourseId}`;
     const color = colors[i % colors.length];
 
-    const course = await prisma.course.upsert({
-      where: { code: nc.courseCode },
-      create: {
-        id: courseId,
-        code: nc.courseCode,
-        nameAr: nc.courseName,
-        nameEn: nc.courseCode,
-        credits: nc.credits,
-        instructor: nc.instructorName,
-        room: "قاعة إلكترونية (V-Class)",
-        color,
-        semester: nc.semester || "الفصل الصيفي 2025/2026",
-        schedule: JSON.stringify([
-          {
-            day: i % 2 === 0 ? "sun" : "mon",
-            startTime: "10:00",
-            endTime: "11:30",
-            type: "lecture",
-          },
-          {
-            day: i % 2 === 0 ? "tue" : "wed",
-            startTime: "10:00",
-            endTime: "11:30",
-            type: "lecture",
-          },
-        ]),
-      },
-      update: {
-        nameAr: nc.courseName,
-        credits: nc.credits,
-        instructor: nc.instructorName,
-        semester: nc.semester || "الفصل الصيفي 2025/2026",
-      },
-    });
+    try {
+      const existing =
+        (await prisma.course.findUnique({ where: { id: courseId } })) ||
+        (await prisma.course.findUnique({ where: { code: courseCode } }));
 
-    await prisma.enrollment.upsert({
-      where: {
-        studentId_courseId: {
+      const course = existing
+        ? await prisma.course.update({
+            where: { id: existing.id },
+            data: {
+              nameAr: nc.courseName,
+              credits: nc.credits,
+              instructor: nc.instructorName,
+              semester: nc.semester || "الفصل الصيفي 2025/2026",
+            },
+          })
+        : await prisma.course.create({
+            data: {
+              id: courseId,
+              code: courseCode,
+              nameAr: nc.courseName,
+              nameEn: courseCode,
+              credits: nc.credits,
+              instructor: nc.instructorName,
+              room: "قاعة إلكترونية (V-Class)",
+              color,
+              semester: nc.semester || "الفصل الصيفي 2025/2026",
+              schedule: JSON.stringify([
+                {
+                  day: i % 2 === 0 ? "sun" : "mon",
+                  startTime: "10:00",
+                  endTime: "11:30",
+                  type: "lecture",
+                },
+                {
+                  day: i % 2 === 0 ? "tue" : "wed",
+                  startTime: "10:00",
+                  endTime: "11:30",
+                  type: "lecture",
+                },
+              ]),
+            },
+          });
+
+      await prisma.enrollment.upsert({
+        where: {
+          studentId_courseId: {
+            studentId: student.id,
+            courseId: course.id,
+          },
+        },
+        create: {
           studentId: student.id,
           courseId: course.id,
+          status: nc.status,
+          semester: nc.semester || "الفصل الصيفي 2025/2026",
         },
-      },
-      create: {
-        studentId: student.id,
-        courseId: course.id,
-        status: nc.status,
-        semester: nc.semester || "الفصل الصيفي 2025/2026",
-      },
-      update: {
-        status: nc.status,
-      },
-    });
+        update: {
+          status: nc.status,
+        },
+      });
+    } catch (courseErr) {
+      console.warn(`[MoodleSync] Isolated error saving course ${nc.moodleCourseId}:`, courseErr);
+    }
   }
 
   // 5. استدعاء الواجبات والتسليمات وتطبيعها بدقة
@@ -169,46 +181,48 @@ export async function syncMoodleDataForStudent(
       const assignRes = await fetch(assignUrl);
       const assignData = await assignRes.json();
 
-      if (assignData && Array.isArray(assignData.courses)) {
-        for (const c of assignData.courses) {
+      const normalizedAssignments = moodleDataMapper.normalizeAssignments(assignData);
+
+      for (const na of normalizedAssignments) {
+        try {
           const course =
             (await prisma.course.findFirst({
-              where: { id: `moodle-${c.id}` },
+              where: { id: `moodle-${na.moodleCourseId}` },
             })) ||
             (await prisma.course.findFirst({
-              where: { code: { contains: String(c.id) } },
+              where: { code: { contains: String(na.moodleCourseId) } },
             }));
 
-          if (!course || !Array.isArray(c.assignments)) continue;
+          if (!course) continue;
 
-          for (const rawAssign of c.assignments) {
-            const na = moodleDataMapper.normalizeAssignment(rawAssign);
+          const dueDate = na.dueDateIso
+            ? na.dueDateIso.split("T")[0]
+            : new Date().toISOString().split("T")[0];
+          const dueTime = na.dueTimeFormatted || "23:59";
 
-            const dueDate = na.dueDateIso ? na.dueDateIso.split("T")[0] : new Date().toISOString().split("T")[0];
-            const dueTime = na.dueTimeFormatted || "23:59";
-
-            await prisma.assignment.upsert({
-              where: { id: `moodle-assign-${na.moodleAssignmentId}` },
-              create: {
-                id: `moodle-assign-${na.moodleAssignmentId}`,
-                courseId: course.id,
-                title: na.title,
-                description: na.description || na.title,
-                dueDate,
-                dueTime,
-                maxGrade: na.maxGrade,
-                type: na.type,
-              },
-              update: {
-                title: na.title,
-                description: na.description || na.title,
-                dueDate,
-                dueTime,
-                maxGrade: na.maxGrade,
-                type: na.type,
-              },
-            });
-          }
+          await prisma.assignment.upsert({
+            where: { id: `moodle-assign-${na.moodleAssignmentId}` },
+            create: {
+              id: `moodle-assign-${na.moodleAssignmentId}`,
+              courseId: course.id,
+              title: na.title,
+              description: na.description || na.title,
+              dueDate,
+              dueTime,
+              maxGrade: na.maxGrade,
+              type: na.type,
+            },
+            update: {
+              title: na.title,
+              description: na.description || na.title,
+              dueDate,
+              dueTime,
+              maxGrade: na.maxGrade,
+              type: na.type,
+            },
+          });
+        } catch (assignErr) {
+          console.warn(`[MoodleSync] Isolated error saving assignment ${na.moodleAssignmentId}:`, assignErr);
         }
       }
     } catch (assignErr) {

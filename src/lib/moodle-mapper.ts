@@ -1,33 +1,17 @@
 ﻿/**
  * ============================================================================
- * Moodle LMS Defensive Data Mapper & Normalizer (TypeScript)
+ * Permissive & Fault-Tolerant Moodle LMS Data Normalizer (TypeScript)
  * ============================================================================
  * 
- * Provides robust, null-safe, enterprise-grade mapping and sanitization
- * for raw JSON payloads returned by Moodle Web Services API endpoints:
- * - core_webservice_get_site_info
- * - core_enrol_get_users_courses
- * - core_completion_get_course_completion_status
- * - mod_assign_get_assignments
- * - gradereport_user_get_grade_items
- * 
- * Features:
- * 1. Comprehensive HTML entity decoding & tag stripping (RTL/LTR & entity safe).
- * 2. Timezone-aware, safe Unix timestamp parsing (guards against epoch 0 & NaN).
- * 3. Bulletproof null/undefined/type fallbacks with zero crash guarantees.
- * 4. Flexible Custom Fields extractor for user and course metadata.
- * 5. Robust Course Code & Title Regex parser (extracts clean codes, names, sections).
- * 6. Deterministic course completion & credit hours calculator.
- * 7. End-to-end typed DTOs & Schemas.
+ * ZERO DATA DROP POLICY:
+ * - Never filters out or drops any item (Course, Assignment, Grade, User).
+ * - Isolated try/catch per item mapping with console.warn logging.
+ * - Auto-detects nested response shapes (e.g. data.courses, data.enrolledcourses, data.assignments).
+ * - Safe optional chaining (?.) and nullish coalescing (??) throughout.
+ * - Forgiving date & number parsing with zero NaN or Invalid Date crashes.
+ * - Retains raw payload references (_raw) on every normalized object.
  */
 
-// ============================================================================
-// 1. TypeScript Interfaces & DTOs (Data Transfer Objects)
-// ============================================================================
-
-/**
- * Raw Moodle Custom Field representation
- */
 export interface MoodleRawCustomField {
   name?: string;
   shortname?: string;
@@ -35,11 +19,9 @@ export interface MoodleRawCustomField {
   valuenum?: number | null;
   value?: string | number | null;
   valueformatted?: string | null;
+  [key: string]: any;
 }
 
-/**
- * Raw Moodle Course payload from `core_enrol_get_users_courses`
- */
 export interface MoodleRawCourse {
   id?: number | string | null;
   shortname?: string | null;
@@ -50,73 +32,37 @@ export interface MoodleRawCourse {
   startdate?: number | string | null;
   enddate?: number | string | null;
   visible?: number | boolean | null;
-  showactivitydates?: boolean | null;
-  showcompletionconditions?: boolean | null;
-  pdfexportfont?: string | null;
-  category?: number | null;
-  progress?: number | null;
+  progress?: number | string | null;
   completed?: boolean | null;
   iscompleted?: boolean | null;
-  timecompleted?: number | null;
+  timecompleted?: number | string | null;
   customfields?: MoodleRawCustomField[] | null;
+  [key: string]: any;
 }
 
-/**
- * Raw Moodle Site Info payload from `core_webservice_get_site_info`
- */
+export interface MoodleRawAssignment {
+  id?: number | string | null;
+  cmid?: number | null;
+  course?: number | string | null;
+  name?: string | null;
+  duedate?: number | string | null;
+  grade?: number | string | null;
+  intro?: string | null;
+  [key: string]: any;
+}
+
 export interface MoodleRawSiteInfo {
   sitename?: string | null;
   username?: string | null;
   firstname?: string | null;
   lastname?: string | null;
   fullname?: string | null;
-  lang?: string | null;
   userid?: number | string | null;
   userpictureurl?: string | null;
-  functions?: Array<{ name: string; version: string }> | null;
   customfields?: MoodleRawCustomField[] | null;
+  [key: string]: any;
 }
 
-/**
- * Raw Moodle Assignment payload from `mod_assign_get_assignments`
- */
-export interface MoodleRawAssignment {
-  id?: number | string | null;
-  cmid?: number | null;
-  course?: number | null;
-  name?: string | null;
-  nosubmissions?: number | null;
-  submissiondrafts?: number | null;
-  sendnotifications?: number | null;
-  duedate?: number | string | null;
-  allowsubmissionsfromdate?: number | string | null;
-  grade?: number | string | null;
-  timemodified?: number | null;
-  cutoffdate?: number | string | null;
-  intro?: string | null;
-  introformat?: number | null;
-  introattachments?: Array<{ fileurl: string; filename: string }> | null;
-}
-
-/**
- * Raw Moodle Completion Status from `core_completion_get_course_completion_status`
- */
-export interface MoodleRawCompletionStatus {
-  completed?: boolean | null;
-  aggregation?: number | null;
-  timecompleted?: number | null;
-  completions?: Array<{
-    type?: number;
-    title?: string;
-    status?: string | number;
-    complete?: boolean;
-    timecompleted?: number | null;
-  }> | null;
-}
-
-/**
- * Clean, Normalized Student Profile DTO
- */
 export interface NormalizedStudentProfile {
   moodleUserId: number;
   academicId: string;
@@ -130,11 +76,9 @@ export interface NormalizedStudentProfile {
   completedCredits: number;
   remainingCredits: number;
   progressPercentage: number;
+  _raw?: any;
 }
 
-/**
- * Clean, Normalized Course DTO
- */
 export interface NormalizedCourse {
   moodleCourseId: number;
   courseCode: string;
@@ -150,11 +94,9 @@ export interface NormalizedCourse {
   startDateIso: string | null;
   endDateIso: string | null;
   completedDateIso: string | null;
+  _raw?: any;
 }
 
-/**
- * Clean, Normalized Assignment DTO
- */
 export interface NormalizedAssignment {
   moodleAssignmentId: number;
   moodleCourseId: number;
@@ -166,11 +108,9 @@ export interface NormalizedAssignment {
   isOverdue: boolean;
   maxGrade: number;
   type: "assignment" | "project" | "quiz" | "exam";
+  _raw?: any;
 }
 
-/**
- * Clean Normalized Sync Summary DTO
- */
 export interface NormalizedMoodleSyncData {
   student: NormalizedStudentProfile;
   courses: NormalizedCourse[];
@@ -179,161 +119,200 @@ export interface NormalizedMoodleSyncData {
 }
 
 // ============================================================================
-// 2. Defensive Utility Helpers
+// Robust Helper Utilities
 // ============================================================================
 
-const HTML_ENTITY_MAP: Record<string, string> = {
-  "&amp;": "&",
-  "&lt;": "<",
-  "&gt;": ">",
-  "&quot;": '"',
-  "&#039;": "'",
-  "&apos;": "'",
-  "&nbsp;": " ",
-  "&rlm;": "",
-  "&lrm;": "",
-  "&ndash;": "-",
-  "&mdash;": "—",
-  "&hellip;": "...",
-  "&bull;": "•",
-  "&copy;": "©",
-  "&reg;": "®",
-};
-
 /**
- * 1. HTML Stripping & Sanitization
+ * 5. Preserving Raw Keys: Auto-detects arrays inside nested wrappers
+ * Checks if input is an array, or wrapped inside data.courses, data.assignments, etc.
  */
-export function sanitizeHtml(raw: unknown, fallback: string = ""): string {
-  if (typeof raw !== "string" || !raw.trim()) {
-    return fallback;
+export function extractRawArray(payload: unknown, candidateKeys: string[] = []): any[] {
+  if (!payload) return [];
+
+  // 1. Direct Array
+  if (Array.isArray(payload)) {
+    return payload;
   }
 
-  let text = raw
-    .replace(/<br\s*[\/]?>/gi, "\n")
-    .replace(/<\/(p|div|tr|li)>/gi, "\n")
-    .replace(/<[^>]+>/g, " ");
+  // 2. Object with nested array
+  if (typeof payload === "object" && payload !== null) {
+    const obj = payload as Record<string, any>;
+    const keysToCheck = [
+      ...candidateKeys,
+      "courses",
+      "enrolledcourses",
+      "assignments",
+      "data",
+      "items",
+      "result",
+      "response",
+    ];
 
-  for (const [entity, replacement] of Object.entries(HTML_ENTITY_MAP)) {
-    text = text.replaceAll(entity, replacement);
+    for (const key of keysToCheck) {
+      if (Array.isArray(obj?.[key])) {
+        return obj[key];
+      }
+    }
+
+    // 3. If payload itself is a single object with an ID, wrap in single-item array
+    if (obj?.id !== undefined || obj?.fullname !== undefined || obj?.name !== undefined) {
+      return [obj];
+    }
   }
 
-  text = text.replace(/&#(\d+);/g, (_, dec) => {
-    try {
-      return String.fromCharCode(parseInt(dec, 10));
-    } catch {
-      return "";
-    }
-  });
-
-  text = text.replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
-    try {
-      return String.fromCharCode(parseInt(hex, 16));
-    } catch {
-      return "";
-    }
-  });
-
-  return text
-    .replace(/[ \t\f\r]+/g, " ")
-    .replace(/\n\s*\n+/g, "\n")
-    .trim();
+  return [];
 }
 
 /**
- * 2. Safe Date Parsing & Timezone Handling
+ * 1. Permissive HTML Stripping & Entity Decoding
  */
-export function parseMoodleTimestamp(
+export function safeSanitizeHtml(raw: unknown, fallback: string = ""): string {
+  if (raw === null || raw === undefined) return fallback;
+  const str = String(raw);
+  if (!str.trim()) return fallback;
+
+  try {
+    let clean = str
+      .replace(/<br\s*[\/]?>/gi, " ")
+      .replace(/<\/(p|div|tr|li)>/gi, " ")
+      .replace(/<[^>]*>/g, " ");
+
+    const entities: Record<string, string> = {
+      "&nbsp;": " ",
+      "&amp;": "&",
+      "&quot;": '"',
+      "&#039;": "'",
+      "&apos;": "'",
+      "&lt;": "<",
+      "&gt;": ">",
+      "&rlm;": "",
+      "&lrm;": "",
+    };
+
+    for (const [k, v] of Object.entries(entities)) {
+      clean = clean.replaceAll(k, v);
+    }
+
+    clean = clean.replace(/&#(\d+);/g, (_, dec) => {
+      try {
+        return String.fromCharCode(parseInt(dec, 10));
+      } catch {
+        return "";
+      }
+    });
+
+    clean = clean.replace(/&#x([0-9a-f]+);/gi, (_, hex) => {
+      try {
+        return String.fromCharCode(parseInt(hex, 16));
+      } catch {
+        return "";
+      }
+    });
+
+    return clean.replace(/\s+/g, " ").trim() || fallback;
+  } catch {
+    return str || fallback;
+  }
+}
+
+/**
+ * 4. Forgiving Number Sanitizer (Zero NaN Guarantee)
+ */
+export function safeNumber(val: unknown, fallback: number = 0): number {
+  if (val === null || val === undefined || val === "") return fallback;
+  const num = Number(val);
+  return Number.isFinite(num) ? num : fallback;
+}
+
+/**
+ * 4. Forgiving Date Parsing (Zero Invalid Date Guarantee)
+ */
+export function safeDate(
   raw: unknown,
-  targetTimeZone: string = "Asia/Amman"
+  timeZone: string = "Asia/Amman"
 ): {
   iso: string | null;
   formattedDate: string;
   formattedTime: string;
   isPast: boolean;
 } {
-  const nullResult = {
+  const empty = {
     iso: null,
     formattedDate: "غير محدد",
     formattedTime: "--:--",
     isPast: false,
   };
 
-  if (raw === null || raw === undefined || raw === "" || raw === 0 || raw === "0") {
-    return nullResult;
+  if (raw === null || raw === undefined || raw === 0 || raw === "0" || raw === "") {
+    return empty;
   }
-
-  let millis: number;
-  if (typeof raw === "number") {
-    millis = raw > 100_000_000_000 ? raw : raw * 1000;
-  } else if (typeof raw === "string") {
-    const num = Number(raw);
-    if (!isNaN(num) && num > 0) {
-      millis = num > 100_000_000_000 ? num : num * 1000;
-    } else {
-      millis = Date.parse(raw);
-    }
-  } else {
-    return nullResult;
-  }
-
-  if (!Number.isFinite(millis) || millis <= 0) {
-    return nullResult;
-  }
-
-  const date = new Date(millis);
-  if (isNaN(date.getTime())) {
-    return nullResult;
-  }
-
-  const iso = date.toISOString();
-  const now = new Date();
-  const isPast = date < now;
-
-  let formattedDate: string;
-  let formattedTime: string;
 
   try {
-    formattedDate = new Intl.DateTimeFormat("ar-JO", {
-      timeZone: targetTimeZone,
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date);
+    let millis: number;
 
-    formattedTime = new Intl.DateTimeFormat("en-GB", {
-      timeZone: targetTimeZone,
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).format(date);
+    if (typeof raw === "number") {
+      millis = raw > 100_000_000_000 ? raw : raw * 1000;
+    } else if (typeof raw === "string") {
+      const num = Number(raw);
+      if (!isNaN(num) && num > 0) {
+        millis = num > 100_000_000_000 ? num : num * 1000;
+      } else {
+        millis = Date.parse(raw);
+      }
+    } else {
+      return empty;
+    }
+
+    if (!Number.isFinite(millis) || millis <= 0) {
+      return empty;
+    }
+
+    const date = new Date(millis);
+    if (isNaN(date.getTime())) {
+      return empty;
+    }
+
+    const iso = date.toISOString();
+    const isPast = date.getTime() < Date.now();
+
+    let formattedDate = iso.split("T")[0];
+    let formattedTime = "00:00";
+
+    try {
+      formattedDate = new Intl.DateTimeFormat("ar-JO", {
+        timeZone,
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(date);
+
+      formattedTime = new Intl.DateTimeFormat("en-GB", {
+        timeZone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }).format(date);
+    } catch {
+      // Fallback already assigned
+    }
+
+    return {
+      iso,
+      formattedDate,
+      formattedTime,
+      isPast,
+    };
   } catch {
-    formattedDate = iso.split("T")[0];
-    formattedTime = "00:00";
+    return empty;
   }
-
-  return {
-    iso,
-    formattedDate,
-    formattedTime,
-    isPast,
-  };
 }
 
 /**
- * 3. Strict Number Sanitizer
+ * Safe Custom Field Extractor
  */
-export function sanitizeNumber(val: unknown, fallback: number = 0): number {
-  if (val === null || val === undefined || val === "") return fallback;
-  const parsed = Number(val);
-  return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-/**
- * 4. Custom Fields Extractor
- */
-export function extractCustomField<T extends string | number | boolean>(
+export function safeExtractCustomField<T extends string | number | boolean>(
   customfields: unknown,
-  targetShortname: string,
+  shortname: string,
   type: "string" | "number" | "boolean",
   fallback: T
 ): T {
@@ -341,78 +320,91 @@ export function extractCustomField<T extends string | number | boolean>(
     return fallback;
   }
 
-  const field = customfields.find((f: any) => {
-    if (!f || typeof f !== "object") return false;
-    const nameMatch =
-      typeof f.shortname === "string" &&
-      f.shortname.toLowerCase() === targetShortname.toLowerCase();
-    const altMatch =
-      typeof f.name === "string" &&
-      f.name.toLowerCase() === targetShortname.toLowerCase();
-    return nameMatch || altMatch;
-  });
+  try {
+    const target = shortname.toLowerCase();
+    const field = customfields.find((f: any) => {
+      const sn = String(f?.shortname ?? "").toLowerCase();
+      const n = String(f?.name ?? "").toLowerCase();
+      return sn === target || n === target;
+    });
 
-  if (!field) return fallback;
+    if (!field) return fallback;
 
-  const rawValue = field.value ?? field.valueformatted ?? field.valuenum;
-  if (rawValue === null || rawValue === undefined) return fallback;
+    const rawVal = field?.value ?? field?.valueformatted ?? field?.valuenum;
+    if (rawVal === null || rawVal === undefined) return fallback;
 
-  if (type === "number") {
-    const num = Number(rawValue);
-    return (Number.isFinite(num) ? num : fallback) as T;
+    if (type === "number") {
+      return safeNumber(rawVal, fallback as number) as T;
+    }
+
+    if (type === "boolean") {
+      const s = String(rawVal).toLowerCase();
+      return (s === "1" || s === "true" || s === "yes") as T;
+    }
+
+    const str = safeSanitizeHtml(rawVal, "");
+    return (str.length > 0 ? str : fallback) as T;
+  } catch {
+    return fallback;
   }
-
-  if (type === "boolean") {
-    const str = String(rawValue).trim().toLowerCase();
-    return (str === "1" || str === "true" || str === "yes") as T;
-  }
-
-  const cleanStr = sanitizeHtml(String(rawValue));
-  return (cleanStr.length > 0 ? cleanStr : fallback) as T;
 }
 
 /**
- * 5. Course Code & Title Parser
+ * Permissive Course Code & Name Parser
  */
-export function parseCourseCodeAndTitle(
+export function safeParseCourseTitle(
   shortname: unknown,
-  fullname: unknown
+  fullname: unknown,
+  fallbackIndex: number = 1
 ): {
   courseCode: string;
   courseName: string;
   sectionNumber: string | null;
 } {
-  const cleanShort = sanitizeHtml(shortname, "");
-  const cleanFull = sanitizeHtml(fullname, "");
-  const candidateText = `${cleanShort} | ${cleanFull}`;
+  const short = safeSanitizeHtml(shortname, "");
+  const full = safeSanitizeHtml(fullname, "");
+  const combined = `${short} ${full}`.trim();
 
-  const codeRegex = /\b([a-zA-Z]{2,5}[-_]?[0-9]{3,4}|[0-9]{7})\b/i;
-  const codeMatch = cleanShort.match(codeRegex) || cleanFull.match(codeRegex);
+  let courseCode = "";
+  let sectionNumber: string | null = null;
 
-  let courseCode = codeMatch ? codeMatch[1].toUpperCase().replace("_", "-") : "";
-  if (!courseCode) {
-    courseCode = cleanShort.split(/[\s_-]+/)[0] || "COURSE";
+  try {
+    // Academic Code Regex: CS101, MIS-201, 0101101
+    const codeMatch = combined.match(/\b([a-zA-Z]{2,5}[-_]?[0-9]{3,4}|[0-9]{6,8})\b/i);
+    if (codeMatch?.[1]) {
+      courseCode = codeMatch[1].toUpperCase().replace("_", "-");
+    }
+
+    // Section Regex
+    const secMatch = combined.match(/(?:شعبة|sec(?:tion)?)\s*[:#]?\s*([0-9]+)/i);
+    if (secMatch?.[1]) {
+      sectionNumber = secMatch[1];
+    }
+  } catch {
+    // ignore regex issues
   }
 
-  const sectionRegex = /(?:شعبة|شعبة:?|sec(?:tion)?)\s*[:#]?\s*([0-9]+)/i;
-  const sectionMatch = candidateText.match(sectionRegex);
-  const sectionNumber = sectionMatch ? sectionMatch[1] : null;
+  if (!courseCode) {
+    courseCode = short.split(/[\s_-]+/)[0] || `CRS-${fallbackIndex}`;
+  }
 
-  let courseName = cleanFull || cleanShort || "مادة دراسية";
-
-  courseName = courseName
-    .replace(new RegExp(`^${courseCode}\\s*[-:–—|]\\s*`, "i"), "")
-    .replace(new RegExp(`[-:–—|]\\s*${courseCode}\\b`, "i"), "")
-    .replace(/(?:شعبة|sec(?:tion)?)\s*[:#]?\s*[0-9]+/gi, "")
-    .replace(/(?:الفصل|semester)\s*[^–—|-]+/gi, "")
-    .replace(/20\d\d\s*[\/-]\s*20\d\d/g, "")
-    .replace(/[\(\)\[\]]/g, " ")
-    .replace(/[-:–—|]{2,}/g, "-")
-    .replace(/\s+/g, " ")
-    .trim();
+  let courseName = full || short || `مادة دراسية ${fallbackIndex}`;
+  try {
+    courseName = courseName
+      .replace(new RegExp(`^${courseCode}\\s*[-:–—|]\\s*`, "i"), "")
+      .replace(new RegExp(`[-:–—|]\\s*${courseCode}\\b`, "i"), "")
+      .replace(/(?:شعبة|sec(?:tion)?)\s*[:#]?\s*[0-9]+/gi, "")
+      .replace(/(?:الفصل|semester)\s*[^–—|-]+/gi, "")
+      .replace(/20\d\d\s*[\/-]\s*20\d\d/g, "")
+      .replace(/[\(\)\[\]]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  } catch {
+    // ignore clean error
+  }
 
   if (courseName.length < 2) {
-    courseName = cleanFull || cleanShort;
+    courseName = full || short || `مادة دراسية ${fallbackIndex}`;
   }
 
   return {
@@ -422,76 +414,107 @@ export function parseCourseCodeAndTitle(
   };
 }
 
-/**
- * 6. Course Completion & Credits Logic
- */
-export function evaluateCourseCompletion(rawCourse: MoodleRawCourse): {
-  isCompleted: boolean;
-  status: "enrolled" | "completed" | "dropped" | "failed";
-  progressPercent: number;
-} {
-  const progress = Math.min(
-    100,
-    Math.max(0, sanitizeNumber(rawCourse.progress, 0))
-  );
-
-  const explicitCompleted =
-    rawCourse.completed === true ||
-    rawCourse.iscompleted === true ||
-    (typeof rawCourse.timecompleted === "number" && rawCourse.timecompleted > 0);
-
-  const endDateParsed = parseMoodleTimestamp(rawCourse.enddate);
-  const isPastEndDate = endDateParsed.isPast;
-
-  let isCompleted = false;
-  let status: "enrolled" | "completed" | "dropped" | "failed" = "enrolled";
-
-  if (explicitCompleted || progress >= 100) {
-    isCompleted = true;
-    status = "completed";
-  } else if (isPastEndDate && progress < 50 && rawCourse.enddate) {
-    isCompleted = false;
-    status = "dropped";
-  } else {
-    isCompleted = false;
-    status = "enrolled";
-  }
-
-  return {
-    isCompleted,
-    status,
-    progressPercent: progress,
-  };
-}
-
 // ============================================================================
-// 3. Main Enterprise Data Mapper Class
+// Main Resilient Mapper Class
 // ============================================================================
 
 export class MoodleDataMapper {
   private readonly defaultTimeZone: string;
-  private readonly defaultCreditHoursPerCourse: number;
-  private readonly defaultTotalDegreeCredits: number;
+  private readonly defaultCredits: number;
 
-  constructor(options?: {
-    timeZone?: string;
-    defaultCreditHoursPerCourse?: number;
-    defaultTotalDegreeCredits?: number;
-  }) {
-    this.defaultTimeZone = options?.timeZone || "Asia/Amman";
-    this.defaultCreditHoursPerCourse = options?.defaultCreditHoursPerCourse || 3;
-    this.defaultTotalDegreeCredits = options?.defaultTotalDegreeCredits || 132;
+  constructor(options?: { timeZone?: string; defaultCredits?: number }) {
+    this.defaultTimeZone = options?.timeZone ?? "Asia/Amman";
+    this.defaultCredits = options?.defaultCredits ?? 3;
   }
 
-  public normalizeCourse(raw: unknown): NormalizedCourse {
-    if (!raw || typeof raw !== "object") {
+  /**
+   * 1. Permissive normalizeCourse (Never crashes, never drops)
+   */
+  public normalizeCourse(raw: any, index: number = 0): NormalizedCourse {
+    // Absolute fallback object
+    const fallbackId = safeNumber(raw?.id, index + 1);
+    const fallbackCode = `MDL-${fallbackId}`;
+    const fallbackName = safeSanitizeHtml(raw?.fullname ?? raw?.displayname ?? raw?.shortname, `مادة غير محددة (${fallbackId})`);
+
+    try {
+      const moodleCourseId = fallbackId;
+      const { courseCode, courseName, sectionNumber } = safeParseCourseTitle(
+        raw?.shortname,
+        raw?.fullname ?? raw?.displayname,
+        index + 1
+      );
+
+      const customCredits = safeExtractCustomField<number>(
+        raw?.customfields,
+        "credits",
+        "number",
+        safeExtractCustomField<number>(
+          raw?.customfields,
+          "credit_hours",
+          "number",
+          this.defaultCredits
+        )
+      );
+      const credits = customCredits > 0 ? customCredits : this.defaultCredits;
+
+      const instructorName = safeExtractCustomField<string>(
+        raw?.customfields,
+        "instructor",
+        "string",
+        "أستاذ المادة"
+      );
+
+      const progress = Math.min(100, Math.max(0, safeNumber(raw?.progress, 0)));
+      const isCompleted =
+        raw?.completed === true ||
+        raw?.iscompleted === true ||
+        (typeof raw?.timecompleted === "number" && raw?.timecompleted > 0) ||
+        progress >= 100;
+
+      const startDate = safeDate(raw?.startdate, this.defaultTimeZone);
+      const endDate = safeDate(raw?.enddate, this.defaultTimeZone);
+      const completedDate = safeDate(raw?.timecompleted, this.defaultTimeZone);
+
+      let status: "enrolled" | "completed" | "dropped" | "failed" = "enrolled";
+      if (isCompleted) {
+        status = "completed";
+      } else if (endDate.isPast && progress < 50 && raw?.enddate) {
+        status = "dropped";
+      }
+
+      const semester = safeExtractCustomField<string>(
+        raw?.customfields,
+        "semester",
+        "string",
+        "الفصل الدراسي الحالي"
+      );
+
       return {
-        moodleCourseId: 0,
-        courseCode: "UNKNOWN",
-        courseName: "مادة غير معرفة",
+        moodleCourseId,
+        courseCode: courseCode || fallbackCode,
+        courseName: courseName || fallbackName,
+        sectionNumber,
+        semester,
+        credits,
+        instructorName,
+        summary: safeSanitizeHtml(raw?.summary, ""),
+        progressPercent: progress,
+        status,
+        isCompleted,
+        startDateIso: startDate.iso,
+        endDateIso: endDate.iso,
+        completedDateIso: completedDate.iso,
+        _raw: raw,
+      };
+    } catch (err) {
+      console.warn(`[MoodleDataMapper] Isolated error normalizing course at index ${index}:`, err);
+      return {
+        moodleCourseId: fallbackId,
+        courseCode: fallbackCode,
+        courseName: fallbackName,
         sectionNumber: null,
-        semester: "الفصل الحالي",
-        credits: this.defaultCreditHoursPerCourse,
+        semester: "الفصل الدراسي الحالي",
+        credits: this.defaultCredits,
         instructorName: "أستاذ المادة",
         summary: "",
         progressPercent: 0,
@@ -500,94 +523,46 @@ export class MoodleDataMapper {
         startDateIso: null,
         endDateIso: null,
         completedDateIso: null,
+        _raw: raw,
       };
     }
-
-    const c = raw as MoodleRawCourse;
-    const moodleCourseId = sanitizeNumber(c.id, 0);
-
-    const { courseCode, courseName, sectionNumber } = parseCourseCodeAndTitle(
-      c.shortname,
-      c.fullname || c.displayname
-    );
-
-    const customCredits = extractCustomField<number>(
-      c.customfields,
-      "credits",
-      "number",
-      extractCustomField<number>(
-        c.customfields,
-        "credit_hours",
-        "number",
-        this.defaultCreditHoursPerCourse
-      )
-    );
-    const credits = customCredits > 0 ? customCredits : this.defaultCreditHoursPerCourse;
-
-    const instructorName = extractCustomField<string>(
-      c.customfields,
-      "instructor",
-      "string",
-      "أستاذ المادة"
-    );
-
-    const startDate = parseMoodleTimestamp(c.startdate, this.defaultTimeZone);
-    const endDate = parseMoodleTimestamp(c.enddate, this.defaultTimeZone);
-    const completedDate = parseMoodleTimestamp(c.timecompleted, this.defaultTimeZone);
-
-    const { isCompleted, status, progressPercent } = evaluateCourseCompletion(c);
-
-    const semesterCustom = extractCustomField<string>(
-      c.customfields,
-      "semester",
-      "string",
-      ""
-    );
-    const semester = semesterCustom || "الفصل الدراسي الحالي";
-
-    return {
-      moodleCourseId,
-      courseCode,
-      courseName,
-      sectionNumber,
-      semester,
-      credits,
-      instructorName,
-      summary: sanitizeHtml(c.summary, ""),
-      progressPercent,
-      status,
-      isCompleted,
-      startDateIso: startDate.iso,
-      endDateIso: endDate.iso,
-      completedDateIso: completedDate.iso,
-    };
   }
 
-  public normalizeCourses(rawCourses: unknown): {
+  /**
+   * 1. ZERO DATA DROP: normalizeCourses
+   * Unnests payloads and uses isolated try/catch per item.
+   */
+  public normalizeCourses(rawPayload: unknown): {
     courses: NormalizedCourse[];
     completedCredits: number;
     enrolledCredits: number;
   } {
-    if (!Array.isArray(rawCourses)) {
+    const rawList = extractRawArray(rawPayload, ["courses", "enrolledcourses"]);
+
+    if (rawList.length === 0) {
       return { courses: [], completedCredits: 0, enrolledCredits: 0 };
     }
 
-    const courses: NormalizedCourse[] = [];
     let completedCredits = 0;
     let enrolledCredits = 0;
 
-    for (const raw of rawCourses) {
-      const normalized = this.normalizeCourse(raw);
-      if (normalized.moodleCourseId > 0) {
-        courses.push(normalized);
-
+    // Map with isolated try/catch per element: ZERO DATA DROP
+    const courses: NormalizedCourse[] = rawList.map((item: any, idx: number) => {
+      try {
+        const normalized = this.normalizeCourse(item, idx);
         if (normalized.isCompleted) {
           completedCredits += normalized.credits;
-        } else if (normalized.status === "enrolled") {
+        } else {
           enrolledCredits += normalized.credits;
         }
+        return normalized;
+      } catch (err) {
+        console.warn(`[MoodleDataMapper] Failed to normalize course [${idx}]:`, err);
+        const fallback = this.normalizeCourse(item, idx);
+        enrolledCredits += fallback.credits;
+        return fallback;
       }
-    }
+    });
 
     return {
       courses,
@@ -596,12 +571,51 @@ export class MoodleDataMapper {
     };
   }
 
-  public normalizeAssignment(raw: unknown): NormalizedAssignment {
-    if (!raw || typeof raw !== "object") {
+  /**
+   * 1. Permissive normalizeAssignment (Never crashes, never drops)
+   */
+  public normalizeAssignment(raw: any, index: number = 0): NormalizedAssignment {
+    const fallbackId = safeNumber(raw?.id, index + 1);
+    const fallbackTitle = safeSanitizeHtml(raw?.name, `واجب دراسي (${fallbackId})`);
+
+    try {
+      const moodleAssignmentId = fallbackId;
+      const moodleCourseId = safeNumber(raw?.course, 0);
+      const title = fallbackTitle;
+      const description = safeSanitizeHtml(raw?.intro, "");
+
+      const dateResult = safeDate(raw?.duedate, this.defaultTimeZone);
+      const maxGrade = safeNumber(raw?.grade, 20);
+
+      let type: "assignment" | "project" | "quiz" | "exam" = "assignment";
+      const t = title.toLowerCase();
+      if (t.includes("مشروع") || t.includes("بحث") || t.includes("project")) {
+        type = "project";
+      } else if (t.includes("كويز") || t.includes("اختبار") || t.includes("quiz")) {
+        type = "quiz";
+      } else if (t.includes("امتحان") || t.includes("exam")) {
+        type = "exam";
+      }
+
       return {
-        moodleAssignmentId: 0,
-        moodleCourseId: 0,
-        title: "واجب غير معرف",
+        moodleAssignmentId,
+        moodleCourseId,
+        title,
+        description,
+        dueDateIso: dateResult.iso,
+        dueDateFormatted: dateResult.formattedDate,
+        dueTimeFormatted: dateResult.formattedTime,
+        isOverdue: dateResult.isPast,
+        maxGrade,
+        type,
+        _raw: raw,
+      };
+    } catch (err) {
+      console.warn(`[MoodleDataMapper] Error normalizing assignment [${index}]:`, err);
+      return {
+        moodleAssignmentId: fallbackId,
+        moodleCourseId: safeNumber(raw?.course, 0),
+        title: fallbackTitle,
         description: "",
         dueDateIso: null,
         dueDateFormatted: "غير محدد",
@@ -609,117 +623,138 @@ export class MoodleDataMapper {
         isOverdue: false,
         maxGrade: 20,
         type: "assignment",
+        _raw: raw,
       };
     }
+  }
 
-    const a = raw as MoodleRawAssignment;
-    const moodleAssignmentId = sanitizeNumber(a.id, 0);
-    const moodleCourseId = sanitizeNumber(a.course, 0);
-    const title = sanitizeHtml(a.name, "واجب جامعي");
-    const description = sanitizeHtml(a.intro, "");
+  /**
+   * 1. ZERO DATA DROP: normalizeAssignments
+   */
+  public normalizeAssignments(rawPayload: unknown): NormalizedAssignment[] {
+    let rawList: any[] = [];
 
-    const dateResult = parseMoodleTimestamp(a.duedate, this.defaultTimeZone);
-    const maxGrade = sanitizeNumber(a.grade, 20);
-
-    let type: "assignment" | "project" | "quiz" | "exam" = "assignment";
-    if (title.includes("مشروع") || title.includes("بحث") || title.toLowerCase().includes("project")) {
-      type = "project";
-    } else if (title.includes("كويز") || title.includes("اختبار قصير") || title.toLowerCase().includes("quiz")) {
-      type = "quiz";
-    } else if (title.includes("امتحان") || title.toLowerCase().includes("exam")) {
-      type = "exam";
+    // Check if assignment data is nested in courses
+    if (typeof rawPayload === "object" && rawPayload !== null) {
+      const obj = rawPayload as Record<string, any>;
+      if (Array.isArray(obj?.courses)) {
+        for (const c of obj.courses) {
+          if (Array.isArray(c?.assignments)) {
+            for (const a of c.assignments) {
+              rawList.push({ ...a, course: a?.course ?? c?.id });
+            }
+          }
+        }
+      }
     }
 
-    return {
-      moodleAssignmentId,
-      moodleCourseId,
-      title,
-      description,
-      dueDateIso: dateResult.iso,
-      dueDateFormatted: dateResult.formattedDate,
-      dueTimeFormatted: dateResult.formattedTime,
-      isOverdue: dateResult.isPast,
-      maxGrade,
-      type,
-    };
+    if (rawList.length === 0) {
+      rawList = extractRawArray(rawPayload, ["assignments"]);
+    }
+
+    return rawList.map((item: any, idx: number) => {
+      try {
+        return this.normalizeAssignment(item, idx);
+      } catch (err) {
+        console.warn(`[MoodleDataMapper] Failed to normalize assignment [${idx}]:`, err);
+        return this.normalizeAssignment(item, idx);
+      }
+    });
   }
 
+  /**
+   * Permissive normalizeStudentProfile
+   */
   public normalizeStudentProfile(
-    siteInfoRaw: unknown,
-    coursesSummary: { completedCredits: number; totalCreditsRequired?: number }
+    rawSiteInfo: any,
+    options?: { completedCredits?: number; totalCredits?: number }
   ): NormalizedStudentProfile {
-    const info = (siteInfoRaw || {}) as MoodleRawSiteInfo;
+    try {
+      const moodleUserId = safeNumber(rawSiteInfo?.userid, 0);
+      const academicId = safeSanitizeHtml(rawSiteInfo?.username, "202510377");
+      const fullName = safeSanitizeHtml(rawSiteInfo?.fullname, "طالب مسار");
+      const email = `${academicId}@university.edu`;
 
-    const moodleUserId = sanitizeNumber(info.userid, 0);
-    const academicId = sanitizeHtml(info.username, "0000000");
-    const fullName = sanitizeHtml(info.fullname, "طالب جامعي");
-    const email = `${academicId}@university.edu`;
-
-    const majorFromCustom = extractCustomField<string>(
-      info.customfields,
-      "major",
-      "string",
-      extractCustomField<string>(
-        info.customfields,
-        "department",
+      const major = safeExtractCustomField<string>(
+        rawSiteInfo?.customfields,
+        "major",
         "string",
-        "تكنولوجيا المعلومات"
-      )
-    );
+        safeExtractCustomField<string>(
+          rawSiteInfo?.customfields,
+          "department",
+          "string",
+          "تكنولوجيا المعلومات"
+        )
+      );
 
-    const gpa = extractCustomField<number>(
-      info.customfields,
-      "gpa",
-      "number",
-      3.5
-    );
+      const gpa = safeExtractCustomField<number>(
+        rawSiteInfo?.customfields,
+        "gpa",
+        "number",
+        3.5
+      );
 
-    const academicYear = extractCustomField<number>(
-      info.customfields,
-      "academic_year",
-      "number",
-      2
-    );
+      const academicYear = safeExtractCustomField<number>(
+        rawSiteInfo?.customfields,
+        "academic_year",
+        "number",
+        2
+      );
 
-    const totalCreditsRequired =
-      coursesSummary.totalCreditsRequired || this.defaultTotalDegreeCredits;
-    const completedCredits = Math.max(0, coursesSummary.completedCredits);
-    const remainingCredits = Math.max(0, totalCreditsRequired - completedCredits);
-    const progressPercentage = Math.min(
-      100,
-      Math.round((completedCredits / (totalCreditsRequired || 1)) * 100)
-    );
+      const totalCreditsRequired = options?.totalCredits ?? 132;
+      const completedCredits = Math.max(0, options?.completedCredits ?? 0);
+      const remainingCredits = Math.max(0, totalCreditsRequired - completedCredits);
+      const progressPercentage = Math.min(
+        100,
+        Math.round((completedCredits / (totalCreditsRequired || 1)) * 100)
+      );
 
-    return {
-      moodleUserId,
-      academicId,
-      fullName,
-      email,
-      major: majorFromCustom,
-      academicYear,
-      avatarUrl: typeof info.userpictureurl === "string" ? info.userpictureurl : null,
-      gpa,
-      totalCreditsRequired,
-      completedCredits,
-      remainingCredits,
-      progressPercentage,
-    };
+      return {
+        moodleUserId,
+        academicId,
+        fullName,
+        email,
+        major,
+        academicYear,
+        avatarUrl: typeof rawSiteInfo?.userpictureurl === "string" ? rawSiteInfo.userpictureurl : null,
+        gpa,
+        totalCreditsRequired,
+        completedCredits,
+        remainingCredits,
+        progressPercentage,
+        _raw: rawSiteInfo,
+      };
+    } catch (err) {
+      console.warn("[MoodleDataMapper] Error normalizing student profile:", err);
+      return {
+        moodleUserId: 0,
+        academicId: "202510377",
+        fullName: "طالب مسار",
+        email: "student@university.edu",
+        major: "تكنولوجيا المعلومات",
+        academicYear: 2,
+        avatarUrl: null,
+        gpa: 3.5,
+        totalCreditsRequired: 132,
+        completedCredits: 0,
+        remainingCredits: 132,
+        progressPercentage: 0,
+        _raw: rawSiteInfo,
+      };
+    }
   }
 
+  /**
+   * Complete End-to-End Fault-Tolerant Sync Normalizer
+   */
   public normalizeFullSync(
     siteInfoRaw: unknown,
     coursesRaw: unknown,
-    assignmentsRaw: unknown[] = []
+    assignmentsRaw: unknown = []
   ): NormalizedMoodleSyncData {
     const { courses, completedCredits } = this.normalizeCourses(coursesRaw);
     const student = this.normalizeStudentProfile(siteInfoRaw, { completedCredits });
-
-    const assignments: NormalizedAssignment[] = [];
-    if (Array.isArray(assignmentsRaw)) {
-      for (const raw of assignmentsRaw) {
-        assignments.push(this.normalizeAssignment(raw));
-      }
-    }
+    const assignments = this.normalizeAssignments(assignmentsRaw);
 
     return {
       student,
