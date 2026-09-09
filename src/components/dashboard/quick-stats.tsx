@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getEnrolledCourses, getTodayClasses, getInternships } from "@/lib/db-queries";
-import { BookOpen, Calendar, Briefcase, CheckCircle2 } from "lucide-react";
+import { BookOpen, Calendar, Briefcase, Clock } from "lucide-react";
 
 export async function QuickStatsSection() {
   const [courses, todayClasses, internships] = await Promise.all([
@@ -8,6 +8,23 @@ export async function QuickStatsSection() {
     getTodayClasses(),
     getInternships(),
   ]);
+
+  const now = new Date();
+  const todayDateString = now.toDateString();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+
+  const todayDueAssignmentsCount = courses
+    .flatMap((c) => c.assignments || [])
+    .filter((a) => {
+      if (a.status === "submitted" || a.status === "graded") return false;
+      if (!a.dueDate) return false;
+      if (a.dueDate.startsWith(todayStr)) return true;
+      try {
+        return new Date(a.dueDate).toDateString() === todayDateString;
+      } catch {
+        return false;
+      }
+    }).length;
 
   const stats = [
     {
@@ -34,11 +51,12 @@ export async function QuickStatsSection() {
       bg: "bg-violet-500/10",
     },
     {
-      label: "بوابة Moodle",
-      value: "متصل",
-      icon: CheckCircle2,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
+      label: "واجبات تسليم اليوم",
+      value: todayDueAssignmentsCount,
+      icon: Clock,
+      color: todayDueAssignmentsCount > 0 ? "text-rose-500" : "text-emerald-500",
+      bg: todayDueAssignmentsCount > 0 ? "bg-rose-500/10" : "bg-emerald-500/10",
+      href: "/courses",
     },
   ];
 
