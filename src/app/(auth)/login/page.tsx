@@ -22,6 +22,7 @@ export default function LoginPage() {
   const [selectedUniv, setSelectedUniv] = useState("aau");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [major, setMajor] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -56,6 +57,7 @@ export default function LoginPage() {
           moodleUrl,
           username: username.trim(),
           password,
+          major: major.trim(),
         }),
       });
 
@@ -72,6 +74,9 @@ export default function LoginPage() {
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
         localStorage.setItem("masar_user_name", data.student?.name || username);
+        if (major.trim()) {
+          localStorage.setItem("masar_user_major", major.trim());
+        }
       }
 
       setTimeout(() => {
@@ -163,6 +168,23 @@ export default function LoginPage() {
               placeholder="••••••••"
               className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
               dir="ltr"
+            />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-muted-foreground">
+                التخصص الجامعي
+              </label>
+              <span className="text-[10px] text-muted-foreground/80">اختياري</span>
+            </div>
+            <input
+              type="text"
+              value={major}
+              onChange={(e) => setMajor(e.target.value)}
+              disabled={loading}
+              placeholder="مثال: نظم المعلومات الإدارية، هندسة برمجيات"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
             />
           </div>
 

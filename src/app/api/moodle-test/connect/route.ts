@@ -6,7 +6,7 @@ import { syncMoodleDataForStudent } from "@/lib/moodle-sync";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { moodleUrl, username, password } = body;
+    const { moodleUrl, username, password, major } = body;
 
     // 1. التحقق من المدخلات
     if (!moodleUrl || typeof moodleUrl !== "string" || !username || typeof username !== "string" || !password || typeof password !== "string") {
@@ -149,7 +149,12 @@ export async function POST(request: Request) {
     // 8. استيراد وتحديث بيانات الطالب ومواده وواجباته الحقيقية من موودل
     let syncResult = null;
     try {
-      syncResult = await syncMoodleDataForStudent(rawToken, cleanUrl, student.id);
+      syncResult = await syncMoodleDataForStudent(
+        rawToken,
+        cleanUrl,
+        student.id,
+        typeof major === "string" ? major : undefined
+      );
     } catch (syncErr) {
       console.warn("Moodle data sync error:", syncErr);
     }

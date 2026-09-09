@@ -4,7 +4,8 @@ import { moodleDataMapper } from "@/lib/moodle-mapper";
 export async function syncMoodleDataForStudent(
   token: string,
   moodleBaseUrl: string,
-  studentId: string = "s-001"
+  studentId: string = "s-001",
+  preferredMajor?: string
 ) {
   const cleanUrl = moodleBaseUrl.trim().replace(/\/+$/, "");
 
@@ -56,6 +57,9 @@ export async function syncMoodleDataForStudent(
     completedCredits,
   });
 
+  // إذا تم تحديد تخصص من قبل الطالب، نعتمد عليه
+  const finalMajor = (preferredMajor && preferredMajor.trim()) ? preferredMajor.trim() : normalizedStudent.major;
+
   // 4. تحديث بيانات الطالب في قاعدة البيانات
   const student = await prisma.student.upsert({
     where: { id: studentId },
@@ -64,7 +68,7 @@ export async function syncMoodleDataForStudent(
       studentId: normalizedStudent.academicId,
       name: normalizedStudent.fullName,
       email: `${normalizedStudent.academicId}@ammanu.edu.jo`,
-      major: normalizedStudent.major,
+      major: finalMajor,
       year: normalizedStudent.academicYear,
       gpa: normalizedStudent.gpa,
       totalCredits: normalizedStudent.totalCreditsRequired,
@@ -81,7 +85,7 @@ export async function syncMoodleDataForStudent(
     update: {
       studentId: normalizedStudent.academicId,
       name: normalizedStudent.fullName,
-      major: normalizedStudent.major,
+      major: finalMajor,
       avatar: normalizedStudent.avatarUrl,
       completedCredits: normalizedStudent.completedCredits,
       universityId: university.id,
