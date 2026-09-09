@@ -58,11 +58,6 @@ export default async function ProfilePage() {
     );
   }
 
-  const progressPct =
-    student.totalCredits > 0
-      ? Math.round((student.completedCredits / student.totalCredits) * 100)
-      : 0;
-
   const initials = student.name
     .split(" ")
     .map((n) => n[0])
@@ -131,30 +126,21 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        {/* Academic Stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-xl border border-border bg-card p-3.5 text-center">
-            <div className="flex justify-center mb-1.5">
-              <Star className="h-4 w-4 text-amber-500" strokeWidth={1.5} />
-            </div>
-            <p className="text-xl font-semibold tabular-nums">{student.gpa.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground">المعدل التراكمي</p>
-          </div>
+        {/* Academic Stats - Real Data Only */}
+        <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl border border-border bg-card p-3.5 text-center">
             <div className="flex justify-center mb-1.5">
               <BookOpen className="h-4 w-4 text-primary" strokeWidth={1.5} />
             </div>
             <p className="text-xl font-semibold tabular-nums">{enrolledCourses.length}</p>
-            <p className="text-xs text-muted-foreground">المواد الحالية</p>
+            <p className="text-xs text-muted-foreground">المساقات المسجلة في Moodle</p>
           </div>
           <div className="rounded-xl border border-border bg-card p-3.5 text-center">
             <div className="flex justify-center mb-1.5">
-              <GraduationCap className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
             </div>
-            <p className="text-xl font-semibold tabular-nums">
-              {student.completedCredits}
-            </p>
-            <p className="text-xs text-muted-foreground">ساعة مكتملة</p>
+            <p className="text-xl font-semibold text-emerald-600 dark:text-emerald-400">متصل</p>
+            <p className="text-xs text-muted-foreground">حالة المزامنة الأكاديمية</p>
           </div>
         </div>
 
@@ -239,20 +225,6 @@ export default async function ProfilePage() {
               </Link>
             ))}
           </div>
-        </div>
-
-        {/* Degree Progress */}
-        <div className="rounded-xl border border-border bg-card p-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium">تقدّم مسار التخرج</p>
-            <span className="text-sm font-medium text-primary tabular-nums">
-              {progressPct}%
-            </span>
-          </div>
-          <Progress value={progressPct} className="h-2" />
-          <p className="text-xs text-muted-foreground mt-2">
-            تم إنجاز {student.completedCredits} من إجمالي {student.totalCredits} ساعة معتمدة.
-          </p>
         </div>
 
         {/* Account Actions */}

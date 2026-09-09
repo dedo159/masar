@@ -1,44 +1,45 @@
-import { getStudentProfile, getEnrolledCourses } from "@/lib/db-queries";
-import { GraduationCap, BookOpen, Star, Clock } from "lucide-react";
+import { getEnrolledCourses, getTodayClasses } from "@/lib/db-queries";
+import { BookOpen, Calendar, FileText, CheckCircle2 } from "lucide-react";
 
 export async function QuickStatsSection() {
-  const [student, courses] = await Promise.all([
-    getStudentProfile(),
+  const [courses, todayClasses] = await Promise.all([
     getEnrolledCourses(),
+    getTodayClasses(),
   ]);
 
-  if (!student) return null;
-
-  const enrolledCount = courses.filter((c) => c.status === "enrolled").length;
+  const totalAssignments = courses.reduce(
+    (acc, c) => acc + (c.assignments?.length || 0),
+    0
+  );
 
   const stats = [
     {
-      label: "المعدل التراكمي",
-      value: student.gpa.toFixed(2),
-      icon: Star,
-      color: "text-amber-500",
-      bg: "bg-amber-500/10",
-    },
-    {
-      label: "المواد الحالية",
-      value: enrolledCount,
+      label: "المساقات المسجلة",
+      value: courses.length,
       icon: BookOpen,
       color: "text-primary",
       bg: "bg-primary/10",
     },
     {
-      label: "الساعات المكتملة",
-      value: student.completedCredits,
-      icon: GraduationCap,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
+      label: "إجمالي التكليفات",
+      value: totalAssignments,
+      icon: FileText,
+      color: "text-amber-500",
+      bg: "bg-amber-500/10",
     },
     {
-      label: "الساعات المتبقية",
-      value: Math.max(0, student.totalCredits - student.completedCredits),
-      icon: Clock,
+      label: "محاضرات اليوم",
+      value: todayClasses.length,
+      icon: Calendar,
       color: "text-violet-500",
       bg: "bg-violet-500/10",
+    },
+    {
+      label: "بوابة Moodle",
+      value: "متصل",
+      icon: CheckCircle2,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10",
     },
   ];
 

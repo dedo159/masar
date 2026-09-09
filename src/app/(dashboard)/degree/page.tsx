@@ -95,8 +95,7 @@ export default async function DegreePage() {
           </div>
 
           <div className="flex-1">
-            <p className="text-base font-medium">هندسة الحاسوب</p>
-            <p className="text-xs text-muted-foreground mt-0.5">السنة الثالثة</p>
+            <p className="text-base font-medium">{student.major}</p>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <p className="text-lg font-medium tabular-nums">{completedCredits}</p>
