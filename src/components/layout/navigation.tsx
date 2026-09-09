@@ -10,11 +10,13 @@ import {
   Settings,
   User,
   Tag,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const desktopNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
+  { href: "/growth", icon: TrendingUp, label: "نموي الأكاديمي" },
   { href: "/courses", icon: BookOpen, label: "المواد" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
   { href: "/deals", icon: Tag, label: "العروض والخصومات" },
@@ -23,6 +25,7 @@ const desktopNavItems = [
 
 const mobileNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
+  { href: "/growth", icon: TrendingUp, label: "النمو" },
   { href: "/courses", icon: BookOpen, label: "المواد" },
   { href: "/internships", icon: Briefcase, label: "تدريب" },
   { href: "/deals", icon: Tag, label: "العروض" },

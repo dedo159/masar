@@ -40,6 +40,16 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
             لوحة التحكم
           </Link>
           <Link
+            href="/merchant/analytics"
+            className={`block px-4 py-2 rounded-md ${
+              pathname === "/merchant/analytics"
+                ? "bg-amber-50 text-amber-700 font-medium"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            التحليلات والمبيعات
+          </Link>
+          <Link
             href="/merchant/deals/new"
             className={`block px-4 py-2 rounded-md ${
               pathname === "/merchant/deals/new"
@@ -83,6 +93,14 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
             }`}
           >
             لوحة التحكم
+          </Link>
+          <Link
+            href="/merchant/analytics"
+            className={`flex-1 text-center py-3 text-sm ${
+              pathname === "/merchant/analytics" ? "text-amber-600 border-t-2 border-amber-600" : "text-gray-500"
+            }`}
+          >
+            التحليلات
           </Link>
           <Link
             href="/merchant/deals/new"

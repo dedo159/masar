@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Briefcase, LogOut } from "lucide-react";
+import { LayoutDashboard, Briefcase, BarChart3, LogOut } from "lucide-react";
 import { useState } from "react";
 
 export default function CompanyPortalLayout({
@@ -32,6 +32,11 @@ export default function CompanyPortalLayout({
       href: "/company/dashboard",
       label: "لوحة البيانات",
       icon: LayoutDashboard,
+    },
+    {
+      href: "/company/analytics",
+      label: "التحليلات ومؤشرات التوظيف",
+      icon: BarChart3,
     },
     {
       href: "/company/internships",

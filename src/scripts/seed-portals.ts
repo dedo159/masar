@@ -303,6 +303,183 @@ async function main() {
 
   console.log("✅ 6 Active Deals seeded successfully");
 
+  // ============================================
+  // 8. Analytics Enrichment (Phase 3 Seed)
+  // ============================================
+  console.log("📊 Seeding analytics & telemetry data...");
+
+  // أ. تحديث مشاهدات فرص التدريب (viewsCount)
+  await prisma.internship.updateMany({
+    data: { viewsCount: 128 },
+  });
+  if (internship) {
+    await prisma.internship.update({
+      where: { id: internship.id },
+      data: { viewsCount: 185 },
+    });
+  }
+
+  // ب. تصنيف المهارات (Skills Taxonomy)
+  const skillsData = [
+    { name: "React", category: "technical" },
+    { name: "Next.js", category: "technical" },
+    { name: "TypeScript", category: "technical" },
+    { name: "Node.js", category: "technical" },
+    { name: "Python", category: "technical" },
+    { name: "SQL", category: "technical" },
+    { name: "Tailwind CSS", category: "technical" },
+    { name: "حل المشكلات", category: "soft" },
+    { name: "التواصل الفعال", category: "soft" },
+    { name: "العمل الجماعي", category: "soft" },
+  ];
+
+  const skillRecords = [];
+  for (const s of skillsData) {
+    const rec = await prisma.skillTaxonomy.upsert({
+      where: { name: s.name },
+      update: { category: s.category },
+      create: { name: s.name, category: s.category },
+    });
+    skillRecords.push(rec);
+  }
+
+  // ج. ربط المهارات بالطالب (Student Skills)
+  if (mainStudent) {
+    for (let i = 0; i < Math.min(6, skillRecords.length); i++) {
+      await prisma.studentSkill.upsert({
+        where: {
+          studentId_skillId: {
+            studentId: mainStudent.id,
+            skillId: skillRecords[i].id,
+          },
+        },
+        update: {},
+        create: {
+          studentId: mainStudent.id,
+          skillId: skillRecords[i].id,
+          level: i % 2 === 0 ? "advanced" : "intermediate",
+        },
+      });
+    }
+  }
+
+  // د. المهارات المطلوبة لفرصة التدريب
+  if (internship) {
+    for (let i = 0; i < 4; i++) {
+      await prisma.internshipRequiredSkill.upsert({
+        where: {
+          internshipId_skillId: {
+            internshipId: internship.id,
+            skillId: skillRecords[i].id,
+          },
+        },
+        update: {},
+        create: {
+          internshipId: internship.id,
+          skillId: skillRecords[i].id,
+        },
+      });
+    }
+  }
+
+  // هـ. طلبات التقديم على التدريب (Applications Funnel)
+  if (internship && mainStudent) {
+    await prisma.internshipApplication.upsert({
+      where: {
+        studentId_internshipId: {
+          studentId: mainStudent.id,
+          internshipId: internship.id,
+        },
+      },
+      update: { status: "accepted" },
+      create: {
+        studentId: mainStudent.id,
+        internshipId: internship.id,
+        status: "accepted",
+        appliedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+        reviewedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  if (internship && atRiskStudent) {
+    await prisma.internshipApplication.upsert({
+      where: {
+        studentId_internshipId: {
+          studentId: atRiskStudent.id,
+          internshipId: internship.id,
+        },
+      },
+      update: { status: "reviewed" },
+      create: {
+        studentId: atRiskStudent.id,
+        internshipId: internship.id,
+        status: "reviewed",
+        appliedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        reviewedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  // و. مشاهدات المحتوى (Content Views)
+  const courses = await prisma.course.findMany({ take: 3 });
+  if (mainStudent && courses.length > 0) {
+    await prisma.contentView.deleteMany({ where: { studentId: mainStudent.id } });
+    for (const c of courses) {
+      for (let day = 1; day <= 5; day++) {
+        await prisma.contentView.create({
+          data: {
+            studentId: mainStudent.id,
+            courseId: c.id,
+            viewedAt: new Date(Date.now() - day * 24 * 60 * 60 * 1000),
+          },
+        });
+      }
+    }
+  }
+
+  // ز. استخدامات العروض (Deal Redemptions with Peak Hours)
+  const deals = await prisma.merchantDeal.findMany({
+    where: { merchantId: { in: [merchant1.id, merchant2.id, merchant3.id] } },
+    take: 4,
+  });
+
+  if (mainStudent && deals.length > 0) {
+    await prisma.dealRedemption.deleteMany({
+      where: { studentId: mainStudent.id },
+    });
+
+    const hours = [13, 13, 14, 14, 14, 15, 18, 19, 19, 20];
+    for (let i = 0; i < hours.length; i++) {
+      const deal = deals[i % deals.length];
+      const d = new Date(Date.now() - (i + 1) * 24 * 60 * 60 * 1000);
+      d.setHours(hours[i], 30, 0, 0);
+
+      await prisma.dealRedemption.create({
+        data: {
+          dealId: deal.id,
+          studentId: mainStudent.id,
+          redeemedAt: d,
+        },
+      });
+    }
+
+    // Add redemptions for atRiskStudent for returning customer calculation
+    if (atRiskStudent) {
+      const d1 = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+      d1.setHours(14, 0, 0, 0);
+      await prisma.dealRedemption.create({
+        data: {
+          dealId: deals[0].id,
+          studentId: atRiskStudent.id,
+          redeemedAt: d1,
+        },
+      });
+    }
+  }
+
+  console.log("✅ Analytics enrichment telemetry seeded successfully!");
+
   console.log("🎉 All portal & merchant seeds completed successfully!");
 }
 

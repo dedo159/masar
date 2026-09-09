@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, AlertTriangle, Briefcase, LogOut } from "lucide-react";
+import { LayoutDashboard, AlertTriangle, Briefcase, BarChart3, LogOut } from "lucide-react";
 import { useState } from "react";
 
 export default function UniversityPortalLayout({
@@ -32,6 +32,11 @@ export default function UniversityPortalLayout({
       href: "/university/dashboard",
       label: "لوحة البيانات",
       icon: LayoutDashboard,
+    },
+    {
+      href: "/university/analytics",
+      label: "التحليلات الشاملة",
+      icon: BarChart3,
     },
     {
       href: "/university/at-risk",

@@ -60,6 +60,8 @@ model Student {
   internshipApplications  InternshipApplication[]
   engagementSnapshots     StudentEngagementSnapshot[]
   dealRedemptions         DealRedemption[]
+  contentViews            ContentView[]
+  studentSkills           StudentSkill[]
 
   @@index([studentId])
   @@index([email])
@@ -87,6 +89,7 @@ model Course {
   assignments Assignment[]
   files       CourseFile[]
   enrollments Enrollment[]
+  contentViews ContentView[]
 
   @@index([code])
   @@map("courses")
@@ -252,6 +255,8 @@ model Internship {
 
   companyRef    Company?                @relation(fields: [companyId], references: [id], onDelete: SetNull)
   applications  InternshipApplication[]
+  requiredSkills InternshipRequiredSkill[]
+  viewsCount    Int                     @default(0)
 
   @@index([companyId])
   @@map("internships")
@@ -466,4 +471,75 @@ model DealRedemption {
   @@index([studentId])
   @@index([redeemedAt])
   @@map("deal_redemptions")
+}
+
+// --------------------------------------------
+// 21. تتبع مشاهدات المحتوى (Content Views)
+// --------------------------------------------
+model ContentView {
+  id         String   @id @default(uuid())
+  studentId  String
+  courseId    String
+  fileId     String?  // null = viewed course page itself
+  viewedAt   DateTime @default(now())
+
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([courseId])
+  @@index([viewedAt])
+  @@map("content_views")
+}
+
+// --------------------------------------------
+// 22. تصنيف المهارات الموحد (Skills Taxonomy)
+// --------------------------------------------
+model SkillTaxonomy {
+  id          String   @id @default(uuid())
+  name        String   @unique   // "Python", "React", "SQL"
+  category    String   @default("technical") // "technical" | "soft" | "language"
+  createdAt   DateTime @default(now())
+
+  studentSkills           StudentSkill[]
+  internshipRequiredSkills InternshipRequiredSkill[]
+
+  @@index([category])
+  @@map("skills_taxonomy")
+}
+
+// --------------------------------------------
+// 23. مهارات الطالب (Student Skills — M:N)
+// --------------------------------------------
+model StudentSkill {
+  id         String   @id @default(uuid())
+  studentId  String
+  skillId    String
+  level      String   @default("beginner") // "beginner" | "intermediate" | "advanced"
+  addedAt    DateTime @default(now())
+
+  student    Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  skill      SkillTaxonomy  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, skillId])
+  @@index([studentId])
+  @@index([skillId])
+  @@map("student_skills")
+}
+
+// --------------------------------------------
+// 24. المهارات المطلوبة لفرص التدريب (Internship Required Skills)
+// --------------------------------------------
+model InternshipRequiredSkill {
+  id           String   @id @default(uuid())
+  internshipId String
+  skillId      String
+
+  internship   Internship     @relation(fields: [internshipId], references: [id], onDelete: Cascade)
+  skill        SkillTaxonomy  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([internshipId, skillId])
+  @@index([internshipId])
+  @@index([skillId])
+  @@map("internship_required_skills")
 }

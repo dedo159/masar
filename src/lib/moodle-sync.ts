@@ -228,6 +228,78 @@ export async function syncMoodleDataForStudent(
     } catch (assignErr) {
       console.warn("Could not sync assignments:", assignErr);
     }
+
+    // 6. استدعاء الاختبارات (Quizzes) من Moodle وتطبيعها
+    try {
+      const quizParams = courseMoodleIds
+        .map((id, idx) => `courseids[${idx}]=${id}`)
+        .join("&");
+      const quizUrl = `${cleanUrl}/webservice/rest/server.php?wstoken=${encodeURIComponent(
+        token
+      )}&wsfunction=mod_quiz_get_quizzes_by_courses&${quizParams}&moodlewsrestformat=json`;
+
+      const quizRes = await fetch(quizUrl);
+      const quizData = await quizRes.json();
+
+      // تطبيع الاختبارات — يأتي الرد عادة بشكل { quizzes: [...] }
+      const quizzes = Array.isArray(quizData?.quizzes) ? quizData.quizzes : [];
+
+      for (const quiz of quizzes) {
+        try {
+          const quizCourseId = Number(quiz?.course ?? 0);
+          const course =
+            (await prisma.course.findFirst({
+              where: { id: `moodle-${quizCourseId}` },
+            })) ||
+            (await prisma.course.findFirst({
+              where: { code: { contains: String(quizCourseId) } },
+            }));
+
+          if (!course) continue;
+
+          const quizId = Number(quiz?.id ?? 0);
+          const quizName = String(quiz?.name ?? `اختبار (${quizId})`);
+          
+          // تاريخ الاستحقاق (timeclose) أو تاريخ الفتح (timeopen)
+          let dueDate = new Date().toISOString().split("T")[0];
+          let dueTime = "23:59";
+          
+          const closeTime = Number(quiz?.timeclose ?? 0);
+          if (closeTime > 0) {
+            const d = new Date(closeTime * 1000);
+            dueDate = d.toISOString().split("T")[0];
+            dueTime = d.toISOString().split("T")[1]?.substring(0, 5) || "23:59";
+          }
+
+          const maxGrade = Number(quiz?.grade ?? 20);
+
+          await prisma.assignment.upsert({
+            where: { id: `moodle-quiz-${quizId}` },
+            create: {
+              id: `moodle-quiz-${quizId}`,
+              courseId: course.id,
+              title: quizName,
+              description: quizName,
+              dueDate,
+              dueTime,
+              maxGrade,
+              type: "quiz",
+            },
+            update: {
+              title: quizName,
+              dueDate,
+              dueTime,
+              maxGrade,
+              type: "quiz",
+            },
+          });
+        } catch (quizErr) {
+          console.warn(`[MoodleSync] Isolated error saving quiz:`, quizErr);
+        }
+      }
+    } catch (quizErr) {
+      console.warn("Could not sync quizzes (mod_quiz may not be available):", quizErr);
+    }
   }
 
   return {
