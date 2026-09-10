@@ -77,7 +77,7 @@ export async function QuickStatsSection() {
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {stats.map(({ label, value, unit, icon: Icon, iconColor, iconBg, href, highlight }) => {
         return (
           <Link

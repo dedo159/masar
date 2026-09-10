@@ -38,7 +38,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm lg:hidden">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm md:hidden">
       <div className="flex items-center justify-around px-2 py-1.5">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -104,7 +104,7 @@ export function Sidebar() {
   const initial = studentName[0] || "ط";
 
   return (
-    <aside className="hidden lg:flex flex-col fixed right-0 top-0 h-full w-60 border-l border-border bg-card z-40">
+    <aside className="hidden md:flex flex-col fixed right-0 top-0 h-full w-60 border-l border-border bg-card z-40">
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
         <MasarLogo size="sm" priority />

@@ -8,7 +8,7 @@ export default function HomeLoading() {
 
       <div className="px-4 py-5 space-y-6 max-w-7xl mx-auto">
         {/* 1. Quick Stats Skeleton (4 cards) */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}

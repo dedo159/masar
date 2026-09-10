@@ -8,7 +8,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
-      <main className="lg:pr-60 pb-[72px] lg:pb-0 min-h-screen">
+      <main className="md:pr-60 pb-[72px] md:pb-0 min-h-screen">
         {children}
       </main>
       <BottomNav />
