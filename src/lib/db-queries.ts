@@ -437,6 +437,7 @@ export const getTodayClasses = cache(async (
         courseId: c.id,
         courseCode: c.code,
         courseNameAr: c.nameAr,
+        courseNameEn: c.nameEn,
         instructor: c.instructor,
         room: c.room,
         startTime: s.startTime,

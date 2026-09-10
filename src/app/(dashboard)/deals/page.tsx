@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tag, Building2, Calendar, Clock, AlertCircle, Loader2, X } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useLanguage } from "@/components/providers/language-provider";
 
 // Type definitions based on schema
 interface Merchant {
@@ -27,24 +28,25 @@ interface Deal {
   merchant: Merchant;
 }
 
-const CATEGORIES = [
-  { id: "الكل", label: "الكل" },
-  { id: "مطاعم", label: "🍔 مطاعم" },
-  { id: "مكتبات", label: "📚 مكتبات" },
-  { id: "مواصلات", label: "🚌 مواصلات" },
-  { id: "متاجر", label: "🛍️ متاجر" },
-  { id: "كورسات", label: "💻 كورسات" },
-  { id: "أخرى", label: "🏷️ أخرى" },
-];
-
 export default function DealsPage() {
+  const { t, language } = useLanguage();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("الكل");
+  const [activeCategory, setActiveCategory] = useState("all");
   const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
   const [redeemLoading, setRedeemLoading] = useState(false);
   const [redeemSuccess, setRedeemSuccess] = useState(false);
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
+
+  const categories = [
+    { id: "all", label: t.deals.categories.all, matchAr: "الكل" },
+    { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "مطاعم" },
+    { id: "bookstores", label: t.deals.categories.bookstores, matchAr: "مكتبات" },
+    { id: "transport", label: t.deals.categories.transport, matchAr: "مواصلات" },
+    { id: "shops", label: t.deals.categories.shops, matchAr: "متاجر" },
+    { id: "courses", label: t.deals.categories.courses, matchAr: "كورسات" },
+    { id: "other", label: t.deals.categories.other, matchAr: "أخرى" },
+  ];
 
   useEffect(() => {
     fetchDeals();
@@ -63,9 +65,13 @@ export default function DealsPage() {
     }
   };
 
-  const filteredDeals = activeCategory === "الكل" 
+  const currentCategory = categories.find((c) => c.id === activeCategory);
+  const filteredDeals = activeCategory === "all" 
     ? deals 
-    : deals.filter(deal => deal.merchant.category === activeCategory || deal.merchant.category?.includes(activeCategory));
+    : deals.filter((deal) => {
+        const cat = deal.merchant.category || "";
+        return cat === currentCategory?.matchAr || cat.includes(currentCategory?.matchAr || "");
+      });
 
   const handleRedeem = async (deal: Deal) => {
     setRedeemLoading(true);
@@ -77,13 +83,14 @@ export default function DealsPage() {
       const data = await res.json();
       if (data.success) {
         setRedeemSuccess(true);
-        setRedeemedDeals(prev => new Set(prev).add(deal.id));
+        setRedeemedDeals((prev) => new Set(prev).add(deal.id));
       } else {
-        alert(data.error || "حدث خطأ");
+        alert(data.error || (language === "en" ? "An error occurred" : "حدث خطأ"));
       }
-    } catch (error) {
-      alert("حدث خطأ في الاتصال");
+    } catch {
+      alert(language === "en" ? "Connection error" : "حدث خطأ في الاتصال");
     } finally {
+      setLoading(false);
       setRedeemLoading(false);
     }
   };
@@ -96,21 +103,21 @@ export default function DealsPage() {
   return (
     <div className="flex-1 overflow-y-auto">
       <PageHeader 
-        title="العروض والخصومات الطلابية" 
-        subtitle="خصومات وعروض حصرية لطلاب الجامعات" 
+        title={t.deals.title} 
+        subtitle={t.deals.subtitle} 
       />
       
       <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
-        <Tabs defaultValue="الكل" onValueChange={setActiveCategory} className="w-full">
+        <Tabs defaultValue="all" onValueChange={setActiveCategory} className="w-full">
           <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-4 h-auto py-2 px-1">
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <TabsTrigger key={cat.id} value={cat.id} className="text-xs sm:text-sm whitespace-nowrap px-4 py-2">
                 {cat.label}
               </TabsTrigger>
             ))}
           </TabsList>
           
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <TabsContent key={cat.id} value={cat.id} className="mt-0 outline-none">
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -157,11 +164,13 @@ export default function DealsPage() {
                       <CardContent className="pb-3">
                         <h4 className="font-medium text-sm mb-1">{deal.title}</h4>
                         <p className="text-xs text-muted-foreground line-clamp-2">
-                          {deal.description || "لا يوجد وصف إضافي."}
+                          {deal.description || (language === "en" ? "No additional description." : "لا يوجد وصف إضافي.")}
                         </p>
                         <div className="flex items-center gap-1 mt-4 text-[10px] text-muted-foreground">
                           <Calendar className="h-3 w-3" />
-                          ينتهي في: {new Date(deal.validUntil).toLocaleDateString('ar-EG')}
+                          <span>
+                            {t.deals.expiresOn} {new Date(deal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
+                          </span>
                         </div>
                       </CardContent>
                       <CardFooter>
@@ -169,7 +178,7 @@ export default function DealsPage() {
                           variant="outline" 
                           className="w-full text-xs font-medium group-hover:bg-primary/5 group-hover:text-primary transition-colors"
                         >
-                          عرض التفاصيل والاستفادة
+                          {t.deals.viewDetails}
                         </Button>
                       </CardFooter>
                     </Card>
@@ -180,9 +189,9 @@ export default function DealsPage() {
                   <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-4">
                     <Tag className="h-8 w-8 text-muted-foreground" />
                   </div>
-                  <h3 className="text-lg font-medium mb-1">لا توجد عروض متوفرة</h3>
+                  <h3 className="text-lg font-medium mb-1">{t.deals.emptyTitle}</h3>
                   <p className="text-sm text-muted-foreground max-w-sm">
-                    لا توجد عروض متوفرة حالياً في هذا القسم. يرجى التحقق لاحقاً أو استعراض أقسام أخرى.
+                    {t.deals.emptyDesc}
                   </p>
                 </div>
               )}
@@ -232,7 +241,7 @@ export default function DealsPage() {
                 <div className="bg-secondary/50 rounded-xl p-4 border border-border flex flex-col gap-2">
                   <h4 className="flex items-center gap-2 text-sm font-semibold">
                     <AlertCircle className="h-4 w-4 text-primary" />
-                    الشروط والأحكام
+                    {t.deals.terms}
                   </h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {selectedDeal.termsConditions}
@@ -243,17 +252,19 @@ export default function DealsPage() {
               <div className="flex items-center justify-between text-xs text-muted-foreground bg-background rounded-lg p-3 border border-border">
                 <div className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
-                  <span>ينتهي في: {new Date(selectedDeal.validUntil).toLocaleDateString('ar-EG')}</span>
+                  <span>
+                    {t.deals.expiresOn} {new Date(selectedDeal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4" />
-                  <span>متاح الآن</span>
+                  <span>{language === "en" ? "Available Now" : "متاح الآن"}</span>
                 </div>
               </div>
 
               {redeemSuccess && (
                 <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-3 rounded-xl text-sm font-medium text-center transition-all duration-300">
-                  تم تفعيل العرض بنجاح! أبرز هويتك الجامعية للاستفادة.
+                  {t.deals.successMsg}
                 </div>
               )}
             </div>
@@ -268,12 +279,12 @@ export default function DealsPage() {
                 {redeemLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    جاري التفعيل...
+                    <span>{language === "en" ? "Activating..." : "جاري التفعيل..."}</span>
                   </>
                 ) : redeemSuccess || redeemedDeals.has(selectedDeal.id) ? (
-                  "تم الاستخدام"
+                  t.deals.redeemed
                 ) : (
-                  "استخدام العرض الآن"
+                  t.deals.redeemNow
                 )}
               </Button>
             </div>

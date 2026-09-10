@@ -126,6 +126,7 @@ export type TodayClass = {
   courseId: string;
   courseCode: string;
   courseNameAr: string;
+  courseNameEn?: string;
   instructor: string;
   room: string;
   startTime: string;

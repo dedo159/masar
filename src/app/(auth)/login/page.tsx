@@ -3,25 +3,27 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, AlertCircle, CheckCircle2, Building2, Lock, User, Sparkles, BookOpen } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
+import { useLanguage } from "@/components/providers/language-provider";
 
 const universities = [
-  { id: "aau", name: "جامعة عمان العربية", moodleUrl: "https://vclass.ammanu.edu.jo" },
-  { id: "ju", name: "الجامعة الأردنية", moodleUrl: "https://elearning.ju.edu.jo/moodle" },
-  { id: "just", name: "جامعة العلوم والتكنولوجيا الأردنية", moodleUrl: "https://elearn.just.edu.jo" },
-  { id: "yu", name: "جامعة اليرموك", moodleUrl: "https://elearning.yu.edu.jo" },
-  { id: "gju", name: "الجامعة الألمانية الأردنية", moodleUrl: "https://lms.gju.edu.jo" },
-  { id: "bau", name: "جامعة البلقاء التطبيقية", moodleUrl: "https://elearning.bau.edu.jo" },
-  { id: "pu", name: "جامعة البترا", moodleUrl: "https://elearning.uop.edu.jo" },
-  { id: "ahu", name: "جامعة الحسين التقنية", moodleUrl: "https://lms.htu.edu.jo" },
-  { id: "mut", name: "جامعة آل البيت", moodleUrl: "https://elearning.aabu.edu.jo" },
+  { id: "aau", nameAr: "جامعة عمان العربية", nameEn: "Amman Arab University", moodleUrl: "https://vclass.ammanu.edu.jo" },
+  { id: "ju", nameAr: "الجامعة الأردنية", nameEn: "University of Jordan", moodleUrl: "https://elearning.ju.edu.jo/moodle" },
+  { id: "just", nameAr: "جامعة العلوم والتكنولوجيا الأردنية", nameEn: "JUST", moodleUrl: "https://elearn.just.edu.jo" },
+  { id: "yu", nameAr: "جامعة اليرموك", nameEn: "Yarmouk University", moodleUrl: "https://elearning.yu.edu.jo" },
+  { id: "gju", nameAr: "الجامعة الألمانية الأردنية", nameEn: "German Jordanian University", moodleUrl: "https://lms.gju.edu.jo" },
+  { id: "bau", nameAr: "جامعة البلقاء التطبيقية", nameEn: "Al-Balqa Applied University", moodleUrl: "https://elearning.bau.edu.jo" },
+  { id: "pu", nameAr: "جامعة البترا", nameEn: "University of Petra", moodleUrl: "https://elearning.uop.edu.jo" },
+  { id: "ahu", nameAr: "جامعة الحسين التقنية", nameEn: "Al Hussein Technical University", moodleUrl: "https://lms.htu.edu.jo" },
+  { id: "mut", nameAr: "جامعة آل البيت", nameEn: "Al al-Bayt University", moodleUrl: "https://elearning.aabu.edu.jo" },
 ];
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t, isRtl, language, setLanguage } = useLanguage();
   const [selectedUniv, setSelectedUniv] = useState("aau");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -34,21 +36,25 @@ export default function LoginPage() {
   const isUsernameValid = username.trim().length >= 3;
   const isPasswordValid = password.length >= 4;
 
+  const toggleLanguage = () => {
+    setLanguage(language === "ar" ? "en" : "ar");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
     if (!selectedUniv) {
-      setError("يرجى اختيار جامعتك أولاً للمتابعة.");
+      setError(t.auth.invalidUniv);
       return;
     }
     if (!isUsernameValid) {
-      setError("يرجى إدخال اسم المستخدم أو الرقم الجامعي بشكل صحيح (3 أحرف أو أرقام على الأقل).");
+      setError(t.auth.invalidUsername);
       return;
     }
     if (!isPasswordValid) {
-      setError("يرجى إدخال كلمة المرور الخاصة ببوابة Moodle.");
+      setError(t.auth.invalidPassword);
       return;
     }
 
@@ -76,12 +82,12 @@ export default function LoginPage() {
       }
 
       if (!res.ok || !data.success) {
-        setError(data.error || "فشل تسجيل الدخول. يرجى التحقق من الرقم الجامعي وكلمة المرور.");
+        setError(data.error || t.auth.loginFailed);
         setLoading(false);
         return;
       }
 
-      setSuccess("تم تسجيل الدخول والربط بنجاح! جاري تحويلك...");
+      setSuccess(t.auth.loginSuccess);
 
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
@@ -96,22 +102,35 @@ export default function LoginPage() {
         router.refresh();
       }, 1000);
     } catch {
-      setError("حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة لاحقاً.");
+      setError(t.auth.networkError);
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground" dir="rtl">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative" dir={isRtl ? "rtl" : "ltr"}>
+      {/* Language switcher button in header */}
+      <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
+        <button
+          onClick={toggleLanguage}
+          type="button"
+          aria-label={t.header.toggleLang}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card/80 text-xs font-semibold hover:bg-secondary transition-colors"
+        >
+          <Globe className="h-3.5 w-3.5" />
+          <span>{language === "ar" ? "English" : "العربية"}</span>
+        </button>
+      </div>
+
       <div className="w-full max-w-sm space-y-6">
         {/* Brand Header */}
         <div className="text-center">
           <div className="inline-flex items-center justify-center mb-3">
             <MasarLogo size="lg" priority />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">مسار</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">{t.auth.title}</h1>
           <p className="text-xs text-muted-foreground mt-1">
-            نظام التشغيل الرقمي المتكامل لحياتك الجامعية
+            {t.auth.subtitle}
           </p>
         </div>
 
@@ -137,7 +156,7 @@ export default function LoginPage() {
           {/* University selection */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
-              اختر جامعتك
+              {t.auth.selectUniversity}
             </label>
             <div className="relative">
               <select
@@ -146,10 +165,10 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
               >
-                <option value="">اختر الجامعة الأردنية التابع لها...</option>
+                <option value="">{language === "en" ? "Select your Jordanian university..." : "اختر الجامعة الأردنية التابع لها..."}</option>
                 {universities.map((u) => (
                   <option key={u.id} value={u.id}>
-                    {u.name}
+                    {language === "en" ? u.nameEn : u.nameAr}
                   </option>
                 ))}
               </select>
@@ -159,14 +178,14 @@ export default function LoginPage() {
           {/* Username / Student ID */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
-              اسم المستخدم أو الرقم الجامعي (Moodle)
+              {t.auth.studentId}
             </label>
             <Input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
-              placeholder="مثال: 2110456 أو ahmed.k"
+              placeholder={language === "en" ? "e.g. 2110456 or ahmed.k" : "مثال: 2110456 أو ahmed.k"}
               className="min-h-[44px] text-xs font-mono"
               dir="ltr"
               error={Boolean(error && !isUsernameValid)}
@@ -176,7 +195,7 @@ export default function LoginPage() {
           {/* Password */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
-              كلمة مرور Moodle
+              {t.auth.password}
             </label>
             <Input
               type="password"
@@ -194,16 +213,16 @@ export default function LoginPage() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-semibold text-foreground">
-                التخصص الجامعي
+                {t.auth.majorPlaceholder}
               </label>
-              <span className="text-[10px] text-muted-foreground">اختياري</span>
+              <span className="text-[10px] text-muted-foreground">{language === "en" ? "Optional" : "اختياري"}</span>
             </div>
             <Input
               type="text"
               value={major}
               onChange={(e) => setMajor(e.target.value)}
               disabled={loading}
-              placeholder="مثال: هندسة البرمجيات، علم الحاسوب"
+              placeholder={language === "en" ? "e.g. Software Engineering, CS" : "مثال: هندسة البرمجيات، علم الحاسوب"}
               className="min-h-[44px]"
             />
           </div>
@@ -219,10 +238,10 @@ export default function LoginPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>جاري تسجيل الدخول والمزامنة...</span>
+                <span>{t.auth.loggingIn}</span>
               </>
             ) : (
-              "تسجيل الدخول ومزامنة المقررات"
+              t.auth.loginBtn
             )}
           </Button>
 
@@ -232,16 +251,17 @@ export default function LoginPage() {
               href="/"
               className="text-xs text-muted-foreground hover:text-foreground transition-colors p-2 inline-block"
             >
-              أو الدخول كطالب تجريبي (Demo) ←
+              {language === "en" ? "Or enter as Demo Student →" : "أو الدخول كطالب تجريبي (Demo) ←"}
             </Link>
           </div>
 
           {/* Security Notice */}
           <p className="text-center text-[11px] text-muted-foreground pt-1 leading-relaxed border-t border-border">
-            تشفير كامل AES-256: كلمة مرورك لا تُخزّن نهائياً وتُستخدم لمرة واحدة فقط لتوليد جلسة Moodle الآمنة.
+            {t.auth.privacyNotice}
           </p>
         </form>
       </div>
     </div>
   );
 }
+

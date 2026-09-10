@@ -62,7 +62,7 @@ export default async function StudentGrowthPage() {
   const remainingCredits = Math.max(0, totalCredits - completedCredits);
 
   return (
-    <div className="space-y-8 px-4 py-5 max-w-6xl mx-auto" dir="rtl">
+    <div className="space-y-8 px-4 py-5 max-w-6xl mx-auto">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
