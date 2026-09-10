@@ -19,7 +19,7 @@ export default function HomePage() {
     <>
       <PageHeader
         title="مسار"
-        subtitle={today}
+        subtitle="date"
       />
 
       <div className="px-4 py-5 space-y-6 max-w-7xl mx-auto">
