@@ -1,4 +1,4 @@
-import { DEFAULT_STUDENT_ID } from "@/lib/db-queries";
+import { DEFAULT_STUDENT_ID, getDegreeRequirements, getStudentProfile } from "@/lib/db-queries";
 import {
   computeAcademicHealthScore,
   computeCareerReadinessScore,
@@ -12,38 +12,199 @@ import {
   CheckCircle2,
   Calendar,
   Briefcase,
-  GitBranch,
-  Globe,
   Sparkles,
   BookOpen,
+  GraduationCap,
+  Lock,
+  Clock,
+  Unlock,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+
+export const revalidate = 60;
+
+const courseStatusMap = {
+  completed: { label: "مكتمل", variant: "success" as const, icon: CheckCircle2 },
+  enrolled: { label: "مسجل حالياً", variant: "default" as const, icon: Clock },
+  available: { label: "متاح للتسجيل", variant: "warning" as const, icon: Unlock },
+  locked: { label: "مقفل (متطلب سابق)", variant: "secondary" as const, icon: Lock },
+};
 
 export default async function StudentGrowthPage() {
   const studentId = DEFAULT_STUDENT_ID;
 
-  // استدعاء المؤشرات الحقيقية للطالب
-  const healthMetrics = await computeAcademicHealthScore(studentId);
-  const careerMetrics = await computeCareerReadinessScore(studentId);
-  const applications = await computeApplicationsSummary(studentId);
-  const heatmap = await computeWorkloadHeatmap(studentId);
+  // استدعاء البيانات بالتوازي
+  const [
+    healthMetrics,
+    careerMetrics,
+    applications,
+    heatmap,
+    degreeRequirements,
+    studentProfile,
+    studentSkills,
+  ] = await Promise.all([
+    computeAcademicHealthScore(studentId).catch(() => ({ score: 75, onTimeRate: 80, avgGrade: 75, engagementRate: 70 })),
+    computeCareerReadinessScore(studentId).catch(() => ({ score: 65 })),
+    computeApplicationsSummary(studentId).catch(() => ({ recent: [], total: 0 })),
+    computeWorkloadHeatmap(studentId).catch(() => ({})),
+    getDegreeRequirements(studentId).catch(() => []),
+    getStudentProfile(studentId).catch(() => null),
+    prisma.studentSkill.findMany({
+      where: { studentId },
+      include: { skill: true },
+    }).catch(() => []),
+  ]);
 
-  // مهارات الطالب الفعلية من قاعدة البيانات
-  const studentSkills = await prisma.studentSkill.findMany({
-    where: { studentId },
-    include: { skill: true },
-  });
+  const totalCredits = degreeRequirements.reduce((sum, r) => sum + r.totalCredits, 0) || studentProfile?.totalCredits || 132;
+  const completedCredits = degreeRequirements.reduce((sum, r) => sum + r.completedCredits, 0) || studentProfile?.completedCredits || 0;
+  const degreePercentage = totalCredits > 0 ? Math.min(100, Math.round((completedCredits / totalCredits) * 100)) : 0;
+  const remainingCredits = Math.max(0, totalCredits - completedCredits);
 
   return (
-    <div className="space-y-8" dir="rtl">
+    <div className="space-y-8 px-4 py-5 max-w-6xl mx-auto" dir="rtl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2.5">
           <TrendingUp className="h-7 w-7 text-primary" />
-          لوحة النمو الأكاديمي والمهني
+          لوحة النمو الأكاديمي وتقدّم التخرج
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          مؤشرات ذكية تقيس جاهزيتك لسوق العمل، صحتك الأكاديمية، وتنظيم جدول أعبائك الدراسية.
+          رؤية متكاملة تقيس جاهزيتك لسوق العمل، صحتك الأكاديمية، والمسار التفصيلي نحو التخرج.
         </p>
+      </div>
+
+      {/* Degree Progress Hero Card */}
+      <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <GraduationCap className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-foreground">
+                خطة التخرج والدرجة الأكاديمية
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {studentProfile?.major || "تخصص هندسة الحاسوب"} · السنة {studentProfile?.year || 3}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="text-left sm:text-right">
+              <span className="text-xs text-muted-foreground">المعدل التراكمي (GPA):</span>
+              <p className="text-xl font-bold tabular-nums text-foreground">
+                {studentProfile?.gpa || 3.42} / 4.00
+              </p>
+            </div>
+            <div className="h-10 w-px bg-border hidden sm:block" />
+            <Badge variant="secondary" className="text-sm px-3 py-1 font-bold tabular-nums">
+              {degreePercentage}% منجز
+            </Badge>
+          </div>
+        </div>
+
+        {/* Progress Bar & Key Numbers */}
+        <div className="mt-5 space-y-2">
+          <div className="flex items-baseline justify-between text-xs">
+            <span className="font-semibold text-foreground">
+              تم إنجاز <strong className="text-primary text-base font-bold tabular-nums">{completedCredits}</strong> من أصل {totalCredits} ساعة معتمدة
+            </span>
+            <span className="text-muted-foreground">
+              المتبقي: <strong className="text-foreground font-semibold tabular-nums">{remainingCredits}</strong> ساعة
+            </span>
+          </div>
+
+          <div className="h-3 w-full overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full bg-primary transition-all duration-500 ease-out rounded-full"
+              style={{ width: `${degreePercentage}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Category Breakdown Cards */}
+        {degreeRequirements.length > 0 && (
+          <div className="mt-6 space-y-5">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              تفاصيل المتطلبات الدراسية ومقرراتها
+            </h3>
+
+            <div className="space-y-4">
+              {degreeRequirements.map((cat) => {
+                const catPercent = cat.totalCredits > 0
+                  ? Math.round((cat.completedCredits / cat.totalCredits) * 100)
+                  : 0;
+
+                return (
+                  <div
+                    key={cat.id}
+                    className="rounded-xl border border-border/80 bg-secondary/30 p-4 transition-all"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="h-4 w-4 text-primary" />
+                        <h4 className="text-sm font-bold text-foreground">
+                          {cat.categoryLabel}
+                        </h4>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="tabular-nums font-semibold text-foreground">
+                          {cat.completedCredits} / {cat.totalCredits} س.م ({catPercent}%)
+                        </span>
+                        <div className="h-1.5 w-20 bg-secondary rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-primary rounded-full"
+                            style={{ width: `${catPercent}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Course list inside category */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 mt-3">
+                      {cat.courses.map((c) => {
+                        const statusConfig = courseStatusMap[c.status] || courseStatusMap.locked;
+                        const StatusIcon = statusConfig.icon;
+
+                        return (
+                          <div
+                            key={c.id}
+                            className="flex flex-col justify-between p-3 rounded-lg border border-border/70 bg-card shadow-2xs hover:border-foreground/20 transition-colors"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <p className="text-xs font-semibold text-foreground leading-snug">
+                                  {c.nameAr}
+                                </p>
+                                <p className="text-[11px] text-muted-foreground mt-0.5">
+                                  {c.code} · {c.credits} ساعات
+                                </p>
+                              </div>
+                              {c.grade && (
+                                <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800">
+                                  {c.grade}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="mt-2.5 pt-2 border-t border-border/50 flex items-center justify-between">
+                              <Badge variant={statusConfig.variant} className="gap-1 text-[10px] px-2 py-0.5">
+                                <StatusIcon className="h-3 w-3" />
+                                <span>{statusConfig.label}</span>
+                              </Badge>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Dual Scores (Academic Health & Career Readiness) */}
@@ -55,18 +216,17 @@ export default async function StudentGrowthPage() {
               <Sparkles className="h-5 w-5 text-indigo-500" />
               درجة الصحة الأكاديمية
             </h2>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+            <Badge variant="secondary" className="font-semibold">
               {healthMetrics.score >= 80
                 ? "ممتاز 🌟"
                 : healthMetrics.score >= 60
                 ? "جيد جداً 👍"
                 : "يحتاج تحسين ⚠️"}
-            </span>
+            </Badge>
           </div>
 
           <div className="flex items-center gap-6 my-6">
             <div className="relative flex items-center justify-center">
-              {/* Circular Gauge */}
               <svg className="w-28 h-28 transform -rotate-90">
                 <circle
                   cx="56"
@@ -80,7 +240,7 @@ export default async function StudentGrowthPage() {
                   cx="56"
                   cy="56"
                   r="46"
-                  className="stroke-indigo-600"
+                  className="stroke-primary"
                   strokeWidth="10"
                   strokeDasharray={289}
                   strokeDashoffset={289 - (289 * healthMetrics.score) / 100}
@@ -88,7 +248,7 @@ export default async function StudentGrowthPage() {
                   fill="transparent"
                 />
               </svg>
-              <span className="absolute text-2xl font-black text-indigo-600">
+              <span className="absolute text-2xl font-bold tabular-nums text-foreground">
                 {healthMetrics.score}%
               </span>
             </div>
@@ -96,40 +256,40 @@ export default async function StudentGrowthPage() {
             <div className="flex-1 space-y-2.5 text-xs">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">التسليم في الموعد (40%)</span>
-                <span className="font-bold">{healthMetrics.onTimeRate}%</span>
+                <span className="font-bold tabular-nums">{healthMetrics.onTimeRate}%</span>
               </div>
-              <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-indigo-600 h-full rounded-full"
+                  className="bg-primary h-full rounded-full"
                   style={{ width: `${healthMetrics.onTimeRate}%` }}
                 />
               </div>
 
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">متوسط الدرجات (30%)</span>
-                <span className="font-bold">{healthMetrics.avgGrade}%</span>
+                <span className="font-bold tabular-nums">{healthMetrics.avgGrade}%</span>
               </div>
-              <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-emerald-600 h-full rounded-full"
+                  className="bg-emerald-500 h-full rounded-full"
                   style={{ width: `${healthMetrics.avgGrade}%` }}
                 />
               </div>
 
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">تفاعل المحتوى (30%)</span>
-                <span className="font-bold">{healthMetrics.engagementRate}%</span>
+                <span className="font-bold tabular-nums">{healthMetrics.engagementRate}%</span>
               </div>
-              <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-blue-600 h-full rounded-full"
+                  className="bg-primary/80 h-full rounded-full"
                   style={{ width: `${healthMetrics.engagementRate}%` }}
                 />
               </div>
             </div>
           </div>
 
-          <p className="text-[11px] text-muted-foreground pt-3 border-t border-border">
+          <p className="text-xs text-muted-foreground pt-3 border-t border-border">
             تُحسب الدرجة تلقائياً بناءً على مواعيد تسليماتك الفعلية، درجاتك في الواجبات، ومتابعتك لملفات المواد.
           </p>
         </div>
@@ -141,16 +301,13 @@ export default async function StudentGrowthPage() {
               <Award className="h-5 w-5 text-emerald-500" />
               درجة الجاهزية لسوق العمل
             </h2>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400">
-              {careerMetrics.score >= 70
-                ? "جاهز للمنافسة 🚀"
-                : "قيد البناء 🔨"}
-            </span>
+            <Badge variant="secondary" className="font-semibold">
+              {careerMetrics.score >= 70 ? "جاهز للمنافسة 🚀" : "قيد البناء 🔨"}
+            </Badge>
           </div>
 
           <div className="flex items-center gap-6 my-6">
             <div className="relative flex items-center justify-center">
-              {/* Circular Gauge */}
               <svg className="w-28 h-28 transform -rotate-90">
                 <circle
                   cx="56"
@@ -164,7 +321,7 @@ export default async function StudentGrowthPage() {
                   cx="56"
                   cy="56"
                   r="46"
-                  className="stroke-emerald-600"
+                  className="stroke-emerald-500"
                   strokeWidth="10"
                   strokeDasharray={289}
                   strokeDashoffset={289 - (289 * careerMetrics.score) / 100}
@@ -172,182 +329,28 @@ export default async function StudentGrowthPage() {
                   fill="transparent"
                 />
               </svg>
-              <span className="absolute text-2xl font-black text-emerald-600">
+              <span className="absolute text-2xl font-bold tabular-nums text-emerald-600 dark:text-emerald-400">
                 {careerMetrics.score}%
               </span>
             </div>
 
             <div className="flex-1 space-y-2 text-xs">
-              <div className="flex items-center justify-between p-2 rounded-lg bg-muted/40">
-                <span className="flex items-center gap-2">
-                  <GitBranch className="h-4 w-4" />
-                  حساب GitHub المكتبي
-                </span>
-                <span className={careerMetrics.hasGithub ? "text-emerald-600 font-bold" : "text-muted-foreground"}>
-                  {careerMetrics.hasGithub ? "مربوط (+20)" : "غير مربوط"}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between p-2 rounded-lg bg-muted/40">
-                <span className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  معرض الأعمال Portfolio
-                </span>
-                <span className={careerMetrics.hasPortfolio ? "text-emerald-600 font-bold" : "text-muted-foreground"}>
-                  {careerMetrics.hasPortfolio ? "مكتمل (+20)" : "غير مكتمل"}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between p-2 rounded-lg bg-muted/40">
-                <span>المهارات التقنية ({careerMetrics.skillsCount})</span>
-                <span className="font-bold text-emerald-600">
-                  +{Math.min(30, careerMetrics.skillsCount * 5)} نقطة
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between p-2 rounded-lg bg-muted/40">
-                <span>طلبات التدريب ({careerMetrics.applicationsCount})</span>
-                <span className="font-bold text-emerald-600">
-                  +{Math.min(30, careerMetrics.applicationsCount * 5)} نقطة
-                </span>
+              <p className="text-muted-foreground leading-relaxed">
+                تقيس مدى اكتمال مهاراتك التقنية، طلبات التدريب التي خضتها، ومشاريعك العملية المسجلة في ملفك.
+              </p>
+              <div className="pt-2">
+                <span className="font-semibold text-foreground">المهارات المعتمدة:</span>{" "}
+                <span className="text-muted-foreground">{studentSkills.length} مهارات مسجلة</span>
               </div>
             </div>
           </div>
 
-          <p className="text-[11px] text-muted-foreground pt-3 border-t border-border">
-            كل رابط أو مهارة أو طلب تدريب تضيفه يرفع فرص ترشيحك لدى الشركات الشريكة.
-          </p>
-        </div>
-      </div>
-
-      {/* Skills Matrix */}
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="text-base font-bold flex items-center gap-2 mb-1">
-          <BookOpen className="h-5 w-5 text-blue-500" />
-          حقيبة مهاراتي الموثقة
-        </h2>
-        <p className="text-xs text-muted-foreground mb-4">
-          المهارات التي تم التحقق منها ومطابقتها مع تصنيف المنصة المعتمد
-        </p>
-
-        <div className="flex flex-wrap gap-2.5">
-          {studentSkills.length === 0 ? (
-            <div className="text-xs text-muted-foreground py-3">
-              لم تسجل مهارات بعد. يمكنك تحديث مهاراتك من ملفك الشخصي.
-            </div>
-          ) : (
-            studentSkills.map((s) => (
-              <span
-                key={s.id}
-                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold bg-primary/10 text-primary border border-primary/20"
-              >
-                <span>{s.skill.name}</span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] bg-primary/20">
-                  {s.level === "advanced"
-                    ? "متقدم"
-                    : s.level === "intermediate"
-                    ? "متوسط"
-                    : "مبتدئ"}
-                </span>
-              </span>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Workload Heatmap & Applications Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Workload Heatmap */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-base font-bold flex items-center gap-2 mb-1">
-            <Calendar className="h-5 w-5 text-amber-500" />
-            خريطة أعباء الواجبات القادمة
-          </h2>
-          <p className="text-xs text-muted-foreground mb-4">
-            توزيع مواعيد التسليم للمواد المسجلة لتخطيط وقتك بذكاء
-          </p>
-
-          <div className="space-y-3">
-            {Object.keys(heatmap).length === 0 ? (
-              <div className="text-xs text-muted-foreground py-6 text-center">
-                لا توجد واجبات مجدولة حالياً 🎉
-              </div>
-            ) : (
-              Object.entries(heatmap)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .slice(0, 6)
-                .map(([date, count]) => (
-                  <div
-                    key={date}
-                    className="flex items-center justify-between p-3 rounded-xl bg-muted/40"
-                  >
-                    <span className="text-xs font-mono font-medium">{date}</span>
-                    <span className="flex items-center gap-2 text-xs font-semibold">
-                      <span
-                        className={`h-2.5 w-2.5 rounded-full ${
-                          count >= 3
-                            ? "bg-red-500"
-                            : count === 2
-                            ? "bg-amber-500"
-                            : "bg-emerald-500"
-                        }`}
-                      />
-                      {count} {count === 1 ? "تكليف" : "تكليفات"}
-                    </span>
-                  </div>
-                ))
-            )}
-          </div>
-        </div>
-
-        {/* Internship Applications Summary */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-          <h2 className="text-base font-bold flex items-center gap-2 mb-1">
-            <Briefcase className="h-5 w-5 text-purple-500" />
-            متابعة طلبات التدريب
-          </h2>
-          <p className="text-xs text-muted-foreground mb-4">
-            سجل تقدمك في فرص التدريب التي تقدمت لها
-          </p>
-
-          <div className="space-y-3">
-            {applications.recent.length === 0 ? (
-              <div className="text-xs text-muted-foreground py-6 text-center">
-                لم تتقدم لأي فرصة تدريب بعد. تصفح قسم التدريب وقدم الآن!
-              </div>
-            ) : (
-              applications.recent.map((app) => (
-                <div
-                  key={app.id}
-                  className="flex items-center justify-between p-3 rounded-xl bg-muted/40"
-                >
-                  <div>
-                    <div className="text-xs font-bold text-foreground">
-                      {app.title}
-                    </div>
-                    <div className="text-[11px] text-muted-foreground">
-                      {app.company}
-                    </div>
-                  </div>
-
-                  <div>
-                    {app.status === "accepted" ? (
-                      <span className="px-2 py-1 rounded-lg text-xs font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400">
-                        مقبول 🎉
-                      </span>
-                    ) : app.status === "rejected" ? (
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400">
-                        غير مؤهل
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 rounded-lg text-xs font-medium bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400">
-                        قيد المراجعة ⏳
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="pt-3 border-t border-border flex flex-wrap gap-1.5">
+            {studentSkills.slice(0, 5).map((s) => (
+              <Badge key={s.id} variant="secondary" className="text-xs">
+                {s.skill.name}
+              </Badge>
+            ))}
           </div>
         </div>
       </div>

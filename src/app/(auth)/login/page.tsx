@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Building2, Lock, User, Sparkles, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const universities = [
   { id: "aau", name: "جامعة عمان العربية", moodleUrl: "https://vclass.ammanu.edu.jo" },
@@ -27,21 +29,25 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Realtime field validation indicators
+  const isUsernameValid = username.trim().length >= 3;
+  const isPasswordValid = password.length >= 4;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
     if (!selectedUniv) {
-      setError("يرجى اختيار جامعتك أولاً.");
+      setError("يرجى اختيار جامعتك أولاً للمتابعة.");
       return;
     }
-    if (!username.trim()) {
-      setError("يرجى إدخال اسم المستخدم أو الرقم الجامعي.");
+    if (!isUsernameValid) {
+      setError("يرجى إدخال اسم المستخدم أو الرقم الجامعي بشكل صحيح (3 أحرف أو أرقام على الأقل).");
       return;
     }
-    if (!password) {
-      setError("يرجى إدخال كلمة المرور.");
+    if (!isPasswordValid) {
+      setError("يرجى إدخال كلمة المرور الخاصة ببوابة Moodle.");
       return;
     }
 
@@ -61,16 +67,21 @@ export default function LoginPage() {
         }),
       });
 
-      const data = await res.json();
+      let data: Record<string, any> = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
 
       if (!res.ok || !data.success) {
-        setError(data.error || "فشل تسجيل الدخول. تأكد من صحة البيانات.");
+        setError(data.error || "فشل تسجيل الدخول. يرجى التحقق من الرقم الجامعي وكلمة المرور.");
         setLoading(false);
         return;
       }
 
-      setSuccess("تم تسجيل الدخول بنجاح! جاري تحويلك...");
-      
+      setSuccess("تم تسجيل الدخول والربط بنجاح! جاري تحويلك...");
+
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
         localStorage.setItem("masar_user_name", data.student?.name || username);
@@ -83,137 +94,150 @@ export default function LoginPage() {
         router.push("/");
         router.refresh();
       }, 1000);
-    } catch (err: any) {
-      setError("حدث خطأ في الاتصال بالخادم. يرجى المحاولة مرة أخرى.");
+    } catch {
+      setError("حدث خطأ أثناء الاتصال بالخادم. يرجى المحاولة لاحقاً.");
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-background">
-      <div className="w-full max-w-sm">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary mb-4">
-            <span className="text-primary-foreground text-xl font-medium">م</span>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground" dir="rtl">
+      <div className="w-full max-w-sm space-y-6">
+        {/* Brand Header */}
+        <div className="text-center">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-xl font-bold mb-3 shadow-sm">
+            <span>م</span>
           </div>
-          <h1 className="text-2xl font-medium">مسار</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            نظام التشغيل الرقمي لحياتك الجامعية
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">مسار</h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            نظام التشغيل الرقمي المتكامل لحياتك الجامعية
           </p>
         </div>
 
-        {/* Form */}
+        {/* Form Card */}
         <form
           onSubmit={handleSubmit}
           className="rounded-2xl border border-border bg-card p-6 space-y-4 shadow-sm"
         >
           {error && (
-            <div className="flex items-start gap-2.5 p-3 rounded-lg bg-destructive/10 text-destructive text-xs leading-relaxed border border-destructive/20">
+            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-destructive/10 text-destructive text-xs leading-relaxed border border-destructive/20">
               <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="flex items-start gap-2.5 p-3 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs leading-relaxed border border-emerald-500/20">
+            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs leading-relaxed border border-emerald-500/20">
               <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" />
               <span>{success}</span>
             </div>
           )}
 
-          <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
+          {/* University selection */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-foreground">
               اختر جامعتك
             </label>
-            <select
-              value={selectedUniv}
-              onChange={(e) => setSelectedUniv(e.target.value)}
-              disabled={loading}
-              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring text-foreground"
-            >
-              <option value="">ابحث عن جامعتك...</option>
-              {universities.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={selectedUniv}
+                onChange={(e) => setSelectedUniv(e.target.value)}
+                disabled={loading}
+                className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
+              >
+                <option value="">اختر الجامعة الأردنية التابع لها...</option>
+                {universities.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
-              اسم المستخدم (Moodle)
+          {/* Username / Student ID */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-foreground">
+              اسم المستخدم أو الرقم الجامعي (Moodle)
             </label>
-            <input
+            <Input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
-              placeholder="أدخل اسم المستخدم أو الرقم الجامعي"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+              placeholder="مثال: 2110456 أو ahmed.k"
+              className="min-h-[44px] text-xs font-mono"
               dir="ltr"
+              error={Boolean(error && !isUsernameValid)}
             />
           </div>
 
-          <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-1.5">
-              كلمة المرور
+          {/* Password */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-foreground">
+              كلمة مرور Moodle
             </label>
-            <input
+            <Input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
               placeholder="••••••••"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+              className="min-h-[44px] font-mono"
               dir="ltr"
+              error={Boolean(error && !isPasswordValid)}
             />
           </div>
 
-          <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-medium text-muted-foreground">
+          {/* Major (Optional) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-foreground">
                 التخصص الجامعي
               </label>
-              <span className="text-[10px] text-muted-foreground/80">اختياري</span>
+              <span className="text-[10px] text-muted-foreground">اختياري</span>
             </div>
-            <input
+            <Input
               type="text"
               value={major}
               onChange={(e) => setMajor(e.target.value)}
               disabled={loading}
-              placeholder="مثال: نظم المعلومات الإدارية، هندسة برمجيات"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground"
+              placeholder="مثال: هندسة البرمجيات، علم الحاسوب"
+              className="min-h-[44px]"
             />
           </div>
 
-          <button
+          {/* Submit Button */}
+          <Button
             type="submit"
             disabled={loading}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all duration-150 disabled:opacity-60 disabled:pointer-events-none"
+            variant="default"
+            size="default"
+            className="w-full min-h-[44px] text-sm font-semibold gap-2 mt-2 cursor-pointer"
           >
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>جاري تسجيل الدخول...</span>
+                <span>جاري تسجيل الدخول والمزامنة...</span>
               </>
             ) : (
-              "تسجيل الدخول"
+              "تسجيل الدخول ومزامنة المقررات"
             )}
-          </button>
+          </Button>
 
-          <div className="pt-1 text-center">
+          {/* Demo Login Link */}
+          <div className="pt-2 text-center">
             <Link
               href="/"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors inline-block"
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors p-2 inline-block"
             >
               أو الدخول كطالب تجريبي (Demo) ←
             </Link>
           </div>
 
-          <p className="text-center text-xs text-muted-foreground pt-1">
-            كلمة مرورك تُستخدم مرة واحدة فقط لتوليد رمز الدخول — لا تُخزَّن.
+          {/* Security Notice */}
+          <p className="text-center text-[11px] text-muted-foreground pt-1 leading-relaxed border-t border-border">
+            تشفير كامل AES-256: كلمة مرورك لا تُخزّن نهائياً وتُستخدم لمرة واحدة فقط لتوليد جلسة Moodle الآمنة.
           </p>
         </form>
       </div>

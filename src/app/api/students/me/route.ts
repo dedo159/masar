@@ -25,7 +25,14 @@ export async function GET() {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { major, name } = body;
+    const { major, name, skills, github, portfolio } = body;
+
+    const dataToUpdate: Record<string, unknown> = {};
+    if (major && typeof major === "string") dataToUpdate.major = major.trim();
+    if (name && typeof name === "string") dataToUpdate.name = name.trim();
+    if (skills && Array.isArray(skills)) dataToUpdate.skills = JSON.stringify(skills);
+    if (github !== undefined && typeof github === "string") dataToUpdate.github = github.trim();
+    if (portfolio !== undefined && typeof portfolio === "string") dataToUpdate.portfolio = portfolio.trim();
 
     const updated = await prisma.student.updateMany({
       where: {
@@ -34,10 +41,7 @@ export async function PATCH(request: Request) {
           { id: "s-001" },
         ],
       },
-      data: {
-        ...(major && typeof major === "string" ? { major: major.trim() } : {}),
-        ...(name && typeof name === "string" ? { name: name.trim() } : {}),
-      },
+      data: dataToUpdate,
     });
 
     return NextResponse.json({ success: true, updated });

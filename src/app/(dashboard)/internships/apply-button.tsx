@@ -24,7 +24,7 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
         method: "POST",
       });
 
-      let data: any = {};
+      let data: Record<string, string> = {};
       try {
         data = await res.json();
       } catch {
@@ -45,34 +45,35 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
 
   if (applied) {
     return (
-      <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1.5 rounded-lg">
-        <CheckCircle2 className="h-3.5 w-3.5" />
+      <div className="flex h-11 min-h-[44px] items-center justify-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 px-4 rounded-lg">
+        <CheckCircle2 className="h-4 w-4" />
         <span>تم التقديم بنجاح</span>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="flex flex-col items-stretch sm:items-end gap-1">
       <Button
-        size="sm"
+        variant="default"
+        size="default"
         onClick={handleApply}
         disabled={loading}
-        className="text-xs gap-1.5 font-medium"
+        className="h-11 min-h-[44px] px-5 text-xs gap-2 font-semibold cursor-pointer"
       >
         {loading ? (
           <>
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            <span>جاري التقديم...</span>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>جاري إرسال الطلب...</span>
           </>
         ) : (
           <>
-            <Send className="h-3.5 w-3.5" />
+            <Send className="h-4 w-4" />
             <span>تقديم طلب الآن</span>
           </>
         )}
       </Button>
-      {error && <span className="text-[10px] text-destructive">{error}</span>}
+      {error && <span className="text-[11px] text-destructive font-medium">{error}</span>}
     </div>
   );
 }
