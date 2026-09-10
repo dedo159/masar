@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, AlertCircle, CheckCircle2, Building2, Lock, User, Sparkles, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MasarLogo } from "@/components/ui/logo";
 
 const universities = [
   { id: "aau", name: "جامعة عمان العربية", moodleUrl: "https://vclass.ammanu.edu.jo" },
@@ -105,8 +106,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm space-y-6">
         {/* Brand Header */}
         <div className="text-center">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-xl font-bold mb-3 shadow-sm">
-            <span>م</span>
+          <div className="inline-flex items-center justify-center mb-3">
+            <MasarLogo size="lg" priority />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">مسار</h1>
           <p className="text-xs text-muted-foreground mt-1">

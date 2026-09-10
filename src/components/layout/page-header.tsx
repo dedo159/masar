@@ -5,6 +5,7 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
+import { MasarLogo } from "@/components/ui/logo";
 
 interface PageHeaderProps {
   title: string;
@@ -19,11 +20,18 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center justify-between px-4 py-3">
-        <div>
-          <h1 className="text-base font-medium">{title}</h1>
-          {subtitle && (
-            <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
+        <div className="flex items-center gap-2.5">
+          {title === "مسار" && (
+            <div className="lg:hidden flex items-center">
+              <MasarLogo size="sm" priority />
+            </div>
           )}
+          <div>
+            <h1 className="text-base font-medium">{title}</h1>
+            {subtitle && (
+              <p className="text-xs text-muted-foreground mt-0.5">{subtitle}</p>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-1">
           {action}

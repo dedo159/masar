@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MasarLogo } from "@/components/ui/logo";
 
 const desktopNavItems = [
   { href: "/", icon: LayoutDashboard, label: "الرئيسية" },
@@ -105,10 +106,8 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col fixed right-0 top-0 h-full w-60 border-l border-border bg-card z-40">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 py-5 border-b border-border">
-        <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-          <span className="text-primary-foreground text-xs font-medium">م</span>
-        </div>
+      <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
+        <MasarLogo size="sm" priority />
         <span className="text-base font-medium tracking-tight">مسار</span>
       </div>
 

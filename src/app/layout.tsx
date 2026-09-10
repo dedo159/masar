@@ -13,6 +13,10 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 export const metadata: Metadata = {
   title: "مسار | نظام الطالب الرقمي",
   description: "نظام التشغيل الرقمي لحياتك الجامعية",
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/apple-touch-icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
