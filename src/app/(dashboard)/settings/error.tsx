@@ -5,6 +5,8 @@ import { AlertCircle, RefreshCw, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+import { useLanguage } from "@/components/providers/language-provider";
+
 export default function SettingsError({
   error,
   reset,
@@ -12,6 +14,9 @@ export default function SettingsError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { language } = useLanguage();
+  const isEn = language === "en";
+
   useEffect(() => {
     console.error("Settings Error Boundary caught:", error);
   }, [error]);
@@ -24,10 +29,12 @@ export default function SettingsError({
         </div>
 
         <h2 className="text-base font-semibold text-foreground">
-          تعذّر تحميل صفحة الإعدادات
+          {isEn ? "Unable to load settings page" : "تعذّر تحميل صفحة الإعدادات"}
         </h2>
         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-          حدث خطأ أثناء قراءة تفضيلات الحساب. يرجى المحاولة مرة أخرى أو تفقد اتصالك.
+          {isEn
+            ? "An error occurred while reading account preferences. Please retry or check your connection."
+            : "حدث خطأ أثناء قراءة تفضيلات الحساب. يرجى المحاولة مرة أخرى أو تفقد اتصالك."}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 mt-6">
@@ -38,7 +45,7 @@ export default function SettingsError({
             className="w-full sm:w-auto gap-2 min-h-[44px]"
           >
             <RefreshCw className="h-4 w-4" />
-            <span>إعادة المحاولة</span>
+            <span>{isEn ? "Retry" : "إعادة المحاولة"}</span>
           </Button>
 
           <Link
@@ -46,7 +53,7 @@ export default function SettingsError({
             className="inline-flex h-11 min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-border bg-secondary/40 px-4 text-sm font-medium text-foreground hover:bg-secondary active:scale-[0.98] transition-all"
           >
             <Home className="h-4 w-4" />
-            <span>الرئيسية</span>
+            <span>{isEn ? "Back to Home" : "العودة للرئيسية"}</span>
           </Link>
         </div>
       </div>

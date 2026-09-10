@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AlertCircle, RefreshCw, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export default function CourseDetailError({
   error,
@@ -12,6 +13,9 @@ export default function CourseDetailError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { language } = useLanguage();
+  const isEn = language === "en";
+
   useEffect(() => {
     console.error("CourseDetail Error Boundary caught:", error);
   }, [error]);
@@ -24,10 +28,12 @@ export default function CourseDetailError({
         </div>
 
         <h2 className="text-base font-semibold text-foreground">
-          تعذّر تحميل تفاصيل المادة الدراسية
+          {isEn ? "Unable to load course details" : "تعذّر تحميل تفاصيل المادة الدراسية"}
         </h2>
         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-          حدث خطأ أثناء جلب بيانات المساق أو واجباته وملفاته. يرجى إعادة المحاولة أو الرجوع لقائمة المواد.
+          {isEn
+            ? "An error occurred while fetching course data, assignments, or files. Please try again or return to the courses list."
+            : "حدث خطأ أثناء جلب بيانات المساق أو واجباته وملفاته. يرجى إعادة المحاولة أو الرجوع لقائمة المواد."}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 mt-6">
@@ -38,18 +44,19 @@ export default function CourseDetailError({
             className="w-full sm:w-auto gap-2 min-h-[44px]"
           >
             <RefreshCw className="h-4 w-4" />
-            <span>إعادة المحاولة</span>
+            <span>{isEn ? "Retry" : "إعادة المحاولة"}</span>
           </Button>
 
           <Link
             href="/courses"
             className="inline-flex h-11 min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-border bg-secondary/40 px-4 text-sm font-medium text-foreground hover:bg-secondary active:scale-[0.98] transition-all"
           >
-            <ArrowRight className="h-4 w-4" />
-            <span>قائمة المواد</span>
+            <ArrowRight className="h-4 w-4 rtl:rotate-180" />
+            <span>{isEn ? "Courses List" : "قائمة المواد"}</span>
           </Link>
         </div>
       </div>
     </div>
   );
 }
+

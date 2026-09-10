@@ -65,6 +65,17 @@ export default function DealsPage() {
     }
   };
 
+  const getCategoryLabel = (cat: string) => {
+    if (!cat) return "";
+    if (cat.includes("مطاعم")) return t.deals.categories.restaurants;
+    if (cat.includes("مكتبات")) return t.deals.categories.bookstores;
+    if (cat.includes("مواصلات")) return t.deals.categories.transport;
+    if (cat.includes("متاجر")) return t.deals.categories.shops;
+    if (cat.includes("كورسات")) return t.deals.categories.courses;
+    if (cat.includes("أخرى")) return t.deals.categories.other;
+    return cat;
+  };
+
   const currentCategory = categories.find((c) => c.id === activeCategory);
   const filteredDeals = activeCategory === "all" 
     ? deals 
@@ -153,7 +164,7 @@ export default function DealsPage() {
                             </CardTitle>
                             <CardDescription className="flex items-center gap-1 mt-1 text-xs">
                               <Building2 className="h-3 w-3" />
-                              {deal.merchant.category}
+                              {getCategoryLabel(deal.merchant.category)}
                             </CardDescription>
                           </div>
                           <Badge variant="warning" className="shrink-0 font-bold px-2 py-1">
@@ -212,11 +223,12 @@ export default function DealsPage() {
                 </div>
                 <div>
                   <h2 className="font-semibold text-base">{selectedDeal.merchant.businessName}</h2>
-                  <span className="text-xs text-muted-foreground">{selectedDeal.merchant.category}</span>
+                  <span className="text-xs text-muted-foreground">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
+                aria-label={language === "en" ? "Close" : "إغلاق"}
                 className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground transition-colors"
               >
                 <X className="h-5 w-5" />

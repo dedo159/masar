@@ -6,18 +6,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatTime(time: string): string {
+export function formatTime(time: string, locale: "ar" | "en" = "ar"): string {
   if (!time || time === "--:--") return "--:--";
   const [hours, minutes] = time.split(":");
   const h = parseInt(hours, 10);
   if (isNaN(h)) return time;
-  const period = h >= 12 ? "م" : "ص";
+  const isEn = locale === "en";
+  const period = h >= 12 ? (isEn ? "PM" : "م") : (isEn ? "AM" : "ص");
   const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
   return `${h12}:${minutes || "00"} ${period}`;
 }
 
-export function getDayLabel(day: string): string {
-  const days: Record<string, string> = {
+export function getDayLabel(day: string, locale: "ar" | "en" = "ar"): string {
+  const daysAr: Record<string, string> = {
     sun: "الأحد",
     mon: "الاثنين",
     tue: "الثلاثاء",
@@ -26,16 +27,26 @@ export function getDayLabel(day: string): string {
     fri: "الجمعة",
     sat: "السبت",
   };
-  return days[day] || day;
+  const daysEn: Record<string, string> = {
+    sun: "Sunday",
+    mon: "Monday",
+    tue: "Tuesday",
+    wed: "Wednesday",
+    thu: "Thursday",
+    fri: "Friday",
+    sat: "Saturday",
+  };
+  return (locale === "en" ? daysEn[day] : daysAr[day]) || day;
 }
 
 export function getTodayDay(): string {
   return getTodayDayInAmman();
 }
 
-export function getRelativeTime(dateString: string, timeString?: string): string {
+export function getRelativeTime(dateString: string, timeString?: string, locale: "ar" | "en" = "ar"): string {
+  const isEn = locale === "en";
   if (!dateString || dateString === "بدون موعد تسليم محدد" || dateString === "غير محدد") {
-    return "بدون موعد تسليم محدد";
+    return isEn ? "No deadline set" : "بدون موعد تسليم محدد";
   }
 
   // Construct precise ISO with Jordan offset (+03:00)
@@ -48,7 +59,7 @@ export function getRelativeTime(dateString: string, timeString?: string): string
     date = new Date(dateString);
   }
   if (isNaN(date.getTime())) {
-    return "بدون موعد تسليم محدد";
+    return isEn ? "No deadline set" : "بدون موعد تسليم محدد";
   }
 
   const now = new Date();
@@ -56,12 +67,12 @@ export function getRelativeTime(dateString: string, timeString?: string): string
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffMs < 0) return "انتهى";
-  if (diffHours < 1) return "خلال أقل من ساعة";
-  if (diffHours < 24) return `خلال ${diffHours} ساعة`;
-  if (diffDays === 1) return "غداً";
-  if (diffDays < 7) return `خلال ${diffDays} أيام`;
-  return date.toLocaleDateString("ar-JO", {
+  if (diffMs < 0) return isEn ? "Ended" : "انتهى";
+  if (diffHours < 1) return isEn ? "In < 1 hr" : "خلال أقل من ساعة";
+  if (diffHours < 24) return isEn ? `In ${diffHours} hrs` : `خلال ${diffHours} ساعة`;
+  if (diffDays === 1) return isEn ? "Tomorrow" : "غداً";
+  if (diffDays < 7) return isEn ? `In ${diffDays} days` : `خلال ${diffDays} أيام`;
+  return date.toLocaleDateString(isEn ? "en-US" : "ar-JO", {
     timeZone: JORDAN_TIMEZONE,
     month: "short",
     day: "numeric",
@@ -109,7 +120,8 @@ export function getLetterGrade(percentage: number): string {
   return "F";
 }
 
-export function getTimeAgo(dateString: string): string {
+export function getTimeAgo(dateString: string, locale: "ar" | "en" = "ar"): string {
+  const isEn = locale === "en";
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
@@ -117,13 +129,13 @@ export function getTimeAgo(dateString: string): string {
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffMins < 1) return "الآن";
-  if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
-  if (diffHours === 1) return "منذ ساعة";
-  if (diffHours < 24) return `منذ ${diffHours} ساعات`;
-  if (diffDays === 1) return "منذ يوم";
-  if (diffDays < 7) return `منذ ${diffDays} أيام`;
-  return date.toLocaleDateString("ar-JO", {
+  if (diffMins < 1) return isEn ? "Just now" : "الآن";
+  if (diffMins < 60) return isEn ? `${diffMins}m ago` : `منذ ${diffMins} دقيقة`;
+  if (diffHours === 1) return isEn ? "1h ago" : "منذ ساعة";
+  if (diffHours < 24) return isEn ? `${diffHours}h ago` : `منذ ${diffHours} ساعات`;
+  if (diffDays === 1) return isEn ? "1d ago" : "منذ يوم";
+  if (diffDays < 7) return isEn ? `${diffDays}d ago` : `منذ ${diffDays} أيام`;
+  return date.toLocaleDateString(isEn ? "en-US" : "ar-JO", {
     timeZone: JORDAN_TIMEZONE,
     month: "short",
     day: "numeric",

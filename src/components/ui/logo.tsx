@@ -34,7 +34,7 @@ export function MasarLogo({ className, size = "sm", priority = false }: MasarLog
     <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
       <Image
         src={isDark ? "/logo-white.png" : "/logo-black.png"}
-        alt="مسار"
+        alt="Masar - مسار"
         width={156}
         height={100}
         priority={priority}

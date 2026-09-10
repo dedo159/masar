@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/api-client";
 import { getTimeAgo } from "@/lib/utils";
+import { useLanguage } from "@/components/providers/language-provider";
 import type { Notification } from "@/lib/types";
 
 const typeIconMap = {
@@ -26,6 +27,7 @@ const typeIconMap = {
 };
 
 export function NotificationsDropdown() {
+  const { t, isRtl, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +103,7 @@ export function NotificationsDropdown() {
           if (!isOpen) fetchNotifications();
           setIsOpen((prev) => !prev);
         }}
-        aria-label="الإشعارات"
+        aria-label={t.header.notifications}
         aria-expanded={isOpen}
       >
         <Bell className="h-4 w-4" strokeWidth={1.5} />
@@ -116,16 +118,16 @@ export function NotificationsDropdown() {
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className="absolute left-0 mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150"
-          dir="rtl"
+          className={`absolute ${isRtl ? "left-0" : "right-0"} mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150`}
+          dir={isRtl ? "rtl" : "ltr"}
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-foreground">الإشعارات</h3>
+              <h3 className="text-sm font-medium text-foreground">{t.header.notifications}</h3>
               {unreadCount > 0 && (
                 <Badge variant="default" className="text-[10px] h-5 px-1.5">
-                  {unreadCount} غير مقروء
+                  {unreadCount} {language === "en" ? "Unread" : "غير مقروء"}
                 </Badge>
               )}
             </div>
@@ -136,7 +138,7 @@ export function NotificationsDropdown() {
                 className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 font-medium"
               >
                 <CheckCheck className="h-3.5 w-3.5" />
-                قراءة الكل
+                <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
               </button>
             )}
           </div>
@@ -160,9 +162,9 @@ export function NotificationsDropdown() {
                 <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center mb-2">
                   <Check className="h-5 w-5 text-muted-foreground" />
                 </div>
-                <p className="text-sm font-medium text-foreground">لا توجد إشعارات</p>
+                <p className="text-sm font-medium text-foreground">{language === "en" ? "No notifications" : "لا توجد إشعارات"}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  أنت مطلع على جميع التحديثات والمواعيد
+                  {language === "en" ? "You are all caught up on updates and deadlines" : "أنت مطلع على جميع التحديثات والمواعيد"}
                 </p>
               </div>
             ) : (
@@ -198,7 +200,7 @@ export function NotificationsDropdown() {
                           {item.title}
                         </p>
                         <span className="text-[10px] text-muted-foreground flex-shrink-0">
-                          {getTimeAgo(item.createdAt)}
+                          {getTimeAgo(item.createdAt, language)}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
@@ -215,7 +217,7 @@ export function NotificationsDropdown() {
                         type="button"
                         onClick={(e) => clearNotification(e, item.id)}
                         className="text-muted-foreground hover:text-foreground p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity mt-auto"
-                        title="حذف الإشعار"
+                        title={language === "en" ? "Dismiss notification" : "حذف الإشعار"}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -244,7 +246,7 @@ export function NotificationsDropdown() {
                 onClick={() => setNotifications([])}
                 className="text-xs text-muted-foreground hover:text-foreground transition-colors py-1 px-2 font-medium"
               >
-                مسح كل الإشعارات
+                {language === "en" ? "Clear all notifications" : "مسح كل الإشعارات"}
               </button>
             </div>
           )}

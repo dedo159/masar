@@ -62,7 +62,7 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
         <div className="space-y-2">
           {upcoming.map((assignment) => {
             const status = getDeadlineStatus(assignment.dueDate, assignment.dueTime);
-            const relTime = getRelativeTime(assignment.dueDate, assignment.dueTime);
+            const relTime = getRelativeTime(assignment.dueDate, assignment.dueTime, language === "en" ? "en" : "ar");
             const courseDisplayName = language === "en" && assignment.courseNameEn
               ? assignment.courseNameEn
               : assignment.courseNameAr;

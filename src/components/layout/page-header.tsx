@@ -19,14 +19,32 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   const { language, toggleLanguage, t } = useLanguage();
   const isDark = resolvedTheme === "dark";
 
-  // If title is "مسار" or "Masar", localize it dynamically
-  const displayTitle = (title === "مسار" || title === "Masar") ? t.common.appName : title;
+  // Dynamic title mapping
+  const titleMap: Record<string, string> = {
+    "مسار": t.common.appName,
+    "Masar": t.common.appName,
+    "courses": t.courses.title,
+    "المواد": t.courses.title,
+    "تفاصيل المادة": t.courseDetail.scheduleTab,
+    "internships": t.internships.title,
+    "لوحة التدريب": t.internships.title,
+    "deals": t.deals.title,
+    "العروض والخصومات": t.deals.title,
+    "growth": t.growth.title,
+    "نموي الأكاديمي": t.growth.title,
+    "profile": t.profile.title,
+    "الملف الشخصي": t.profile.title,
+    "settings": t.settings.title,
+    "الإعدادات": t.settings.title,
+  };
+
+  const displayTitle = titleMap[title] || title;
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2.5">
-          {(title === "مسار" || title === "Masar") && (
+          {(title === "مسار" || title === "Masar" || displayTitle === t.common.appName) && (
             <div className="md:hidden flex items-center">
               <MasarLogo size="sm" priority />
             </div>
@@ -43,6 +61,8 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
                       month: "long",
                       year: "numeric",
                     })
+                  : (subtitle === "loading" || subtitle === "جاري التحميل..." || subtitle === "جاري التحميل وتحديث البيانات...")
+                  ? t.common.loading
                   : subtitle}
               </p>
             )}
@@ -82,10 +102,13 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             title={t.header.userAccount}
             aria-label={t.header.userAccount}
           >
-            ض
+            {typeof window !== "undefined" && localStorage.getItem("masar_user_name")
+              ? localStorage.getItem("masar_user_name")![0]
+              : language === "ar" ? "ط" : "S"}
           </Link>
         </div>
       </div>
     </header>
   );
 }
+

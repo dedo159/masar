@@ -12,8 +12,20 @@ interface DegreeProgressSummaryClientProps {
 }
 
 export function DegreeProgressSummaryClient({ requirements }: DegreeProgressSummaryClientProps) {
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
+
+  const getCategoryShortLabel = (label: string) => {
+    if (language !== "en") return label;
+    if (label.includes("جامعة إجبارية") || label.includes("الجامعة الإجبارية")) return "Univ. Compulsory";
+    if (label.includes("جامعة اختيارية") || label.includes("الجامعة الاختيارية")) return "Univ. Elective";
+    if (label.includes("كلية إجبارية") || label.includes("الكلية الإجبارية")) return "Faculty Compulsory";
+    if (label.includes("تخصص إجبارية") || label.includes("التخصص الإجبارية")) return "Major Compulsory";
+    if (label.includes("تخصص اختيارية") || label.includes("التخصص الاختيارية")) return "Major Elective";
+    if (label.includes("حرة")) return "Free Electives";
+    if (label.includes("مشروع") || label.includes("تدريب")) return "Capstone & Training";
+    return label;
+  };
 
   const totalCompleted = requirements.reduce((acc, r) => acc + (r.completedCredits || 0), 0);
   const totalRequired = requirements.reduce((acc, r) => acc + (r.totalCredits || 0), 0);
@@ -113,7 +125,7 @@ export function DegreeProgressSummaryClient({ requirements }: DegreeProgressSumm
               >
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-xs font-medium text-foreground truncate">
-                    {req.categoryLabel}
+                    {getCategoryShortLabel(req.categoryLabel)}
                   </span>
                   {reqCompleted ? (
                     <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />

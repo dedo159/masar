@@ -14,15 +14,16 @@ import {
   Calendar,
   BookOpen,
   ChevronLeft,
+  ChevronRight,
   LogOut,
   LucideIcon,
   CheckCircle2,
   RefreshCw,
   Loader2,
-  AlertCircle,
   ShieldCheck,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 interface SettingRowProps {
   icon: LucideIcon;
@@ -31,9 +32,10 @@ interface SettingRowProps {
   control?: React.ReactNode;
   onClick?: () => void;
   destructive?: boolean;
+  chevron?: LucideIcon;
 }
 
-function SettingRow({ icon: Icon, label, description, control, onClick, destructive }: SettingRowProps) {
+function SettingRow({ icon: Icon, label, description, control, onClick, destructive, chevron: Chevron = ChevronLeft }: SettingRowProps) {
   const content = (
     <>
       <div
@@ -56,7 +58,7 @@ function SettingRow({ icon: Icon, label, description, control, onClick, destruct
           {control}
         </div>
       ) : onClick ? (
-        <ChevronLeft className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        <Chevron className="h-4 w-4 text-muted-foreground flex-shrink-0" />
       ) : null}
     </>
   );
@@ -92,20 +94,31 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
+  const { t, isRtl } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   // States
   const [notifications, setNotifications] = useState(true);
   const [deadlineAlerts, setDeadlineAlerts] = useState(true);
   const [gradeAlerts, setGradeAlerts] = useState(true);
-  const [moodleConnected, setMoodleConnected] = useState(true);
   const [googleCalendarConnected, setGoogleCalendarConnected] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
+  const [studentName, setStudentName] = useState<string>(t.settings.defaultStudentName);
+  const [studentMeta, setStudentMeta] = useState<string>(t.settings.defaultStudentMeta);
+
   useEffect(() => {
     setMounted(true);
-  }, []);
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("masar_user_name");
+      const storedMajor = localStorage.getItem("masar_user_major");
+      if (storedName) setStudentName(storedName);
+      if (storedMajor) setStudentMeta(storedMajor);
+    }
+  }, [t]);
+
+  const Chevron = isRtl ? ChevronLeft : ChevronRight;
 
   const handleSyncMoodle = async () => {
     setIsSyncing(true);
@@ -113,12 +126,12 @@ export default function SettingsPage() {
     try {
       const res = await fetch("/api/moodle-test/courses");
       if (res.ok) {
-        setSyncMessage("تمت المزامنة بنجاح وحفظ أحدث المقررات");
+        setSyncMessage(t.settings.syncSuccess);
       } else {
-        setSyncMessage("اكتمل فحص المزامنة مع الخادم");
+        setSyncMessage(t.settings.syncCompleted);
       }
     } catch {
-      setSyncMessage("تم تحديث البيانات المخزنة محلياً");
+      setSyncMessage(t.settings.syncFallback);
     } finally {
       setIsSyncing(false);
       setTimeout(() => setSyncMessage(null), 4000);
@@ -128,13 +141,13 @@ export default function SettingsPage() {
   return (
     <>
       <PageHeader
-        title="الإعدادات"
-        subtitle="تفضيلات الحساب، المظهر الأكاديمي، والمزامنة"
+        title={t.settings.title}
+        subtitle={t.settings.subtitle}
       />
 
       <div className="max-w-3xl mx-auto px-4 py-4 space-y-2">
         {/* Account & Profile Summary */}
-        <SectionLabel>الحساب والملف الشخصي</SectionLabel>
+        <SectionLabel>{t.settings.accountSection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
           <Link
             href="/profile"
@@ -142,22 +155,22 @@ export default function SettingsPage() {
           >
             <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
-                أ
+                {studentName[0] || (isRtl ? "أ" : "S")}
               </div>
               <div className="text-start">
-                <p className="text-sm font-semibold text-foreground">أحمد الخالدي</p>
-                <p className="text-xs text-muted-foreground">الجامعة الأردنية · 2110456</p>
+                <p className="text-sm font-semibold text-foreground">{studentName}</p>
+                <p className="text-xs text-muted-foreground">{studentMeta}</p>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-primary font-medium">
-              <span>تعديل الملف</span>
-              <ChevronLeft className="h-4 w-4" />
+              <span>{t.settings.editProfile}</span>
+              <Chevron className="h-4 w-4" />
             </div>
           </Link>
         </div>
 
         {/* Moodle Sync Integration */}
-        <SectionLabel>ربط ومزامنة Moodle</SectionLabel>
+        <SectionLabel>{t.settings.moodleSection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-xs">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
@@ -167,15 +180,15 @@ export default function SettingsPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-semibold text-foreground">
-                    نظام Moodle الإلكتروني
+                    {t.settings.moodleTitle}
                   </h3>
                   <Badge variant="success" className="text-[11px] gap-1">
                     <CheckCircle2 className="h-3 w-3" />
-                    متصل
+                    {t.settings.moodleBadge}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  خادم الجامعة: moodle.ju.edu.jo · تحديث دوري للمواد والتسليمات
+                  {t.settings.moodleMeta}
                 </p>
               </div>
             </div>
@@ -190,12 +203,12 @@ export default function SettingsPage() {
               {isSyncing ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>جاري المزامنة...</span>
+                  <span>{t.settings.syncing}</span>
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4" />
-                  <span>مزامنة الآن</span>
+                  <span>{t.settings.syncNow}</span>
                 </>
               )}
             </Button>
@@ -210,13 +223,13 @@ export default function SettingsPage() {
         </div>
 
         {/* Appearance & Theme (3 options) */}
-        <SectionLabel>المظهر ونمط الألوان</SectionLabel>
+        <SectionLabel>{t.settings.appearanceSection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-foreground">سمة الواجهة (OKLCH)</p>
+              <p className="text-sm font-semibold text-foreground">{t.settings.appearanceTitle}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                اختر النمط الفاتح النقي، أو الداكن المريح للعينين، أو التلقائي
+                {t.settings.appearanceDesc}
               </p>
             </div>
           </div>
@@ -232,7 +245,7 @@ export default function SettingsPage() {
               }`}
             >
               <Sun className="h-4 w-4" />
-              <span className="text-xs">فاتح (Light)</span>
+              <span className="text-xs">{t.settings.lightTheme}</span>
             </button>
 
             <button
@@ -245,7 +258,7 @@ export default function SettingsPage() {
               }`}
             >
               <Moon className="h-4 w-4" />
-              <span className="text-xs">داكن (Dark)</span>
+              <span className="text-xs">{t.settings.darkTheme}</span>
             </button>
 
             <button
@@ -258,24 +271,25 @@ export default function SettingsPage() {
               }`}
             >
               <Laptop className="h-4 w-4" />
-              <span className="text-xs">النظام (System)</span>
+              <span className="text-xs">{t.settings.systemTheme}</span>
             </button>
           </div>
         </div>
 
         {/* Calendar Integrations */}
-        <SectionLabel>مزامنة التقاويم الخارجية</SectionLabel>
+        <SectionLabel>{t.settings.calendarSection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
           <SettingRow
             icon={Calendar}
-            label="تقويم Google (Google Calendar)"
-            description={googleCalendarConnected ? "مزامنة جدول المحاضرات ومواعيد التسليم آلياً" : "غير مرتبط"}
+            label={t.settings.googleCalendar}
+            description={googleCalendarConnected ? t.settings.googleCalendarActive : t.settings.googleCalendarInactive}
+            chevron={Chevron}
             control={
               googleCalendarConnected ? (
                 <div className="flex items-center gap-2">
                   <Badge variant="success" className="gap-1 font-semibold text-xs">
                     <CheckCircle2 className="h-3 w-3" />
-                    مفعل
+                    {t.settings.activeBadge}
                   </Badge>
                   <Button
                     variant="outline"
@@ -283,7 +297,7 @@ export default function SettingsPage() {
                     className="min-h-[36px] text-xs px-3"
                     onClick={() => setGoogleCalendarConnected(false)}
                   >
-                    إلغاء المزامنة
+                    {t.settings.unlinkBtn}
                   </Button>
                 </div>
               ) : (
@@ -293,7 +307,7 @@ export default function SettingsPage() {
                   className="min-h-[36px] text-xs px-4"
                   onClick={() => setGoogleCalendarConnected(true)}
                 >
-                  تفعيل الربط
+                  {t.settings.linkBtn}
                 </Button>
               )
             }
@@ -301,55 +315,59 @@ export default function SettingsPage() {
         </div>
 
         {/* Notifications */}
-        <SectionLabel>التنبيهات والإشعارات الأكاديمية</SectionLabel>
+        <SectionLabel>{t.settings.notificationsSection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
           <SettingRow
             icon={Bell}
-            label="الإشعارات العامة للخدمة"
-            description="السماح للتطبيق بإرسال التنبيهات وإشعارات البوش"
+            label={t.settings.generalNotifications}
+            description={t.settings.generalNotificationsDesc}
+            chevron={Chevron}
             control={
               <Switch
                 checked={notifications}
                 onCheckedChange={setNotifications}
-                aria-label="تفعيل الإشعارات العامة"
+                aria-label={t.settings.generalNotifications}
               />
             }
           />
           <SettingRow
             icon={Bell}
-            label="تنبيهات المواعيد والتسليمات"
-            description="إرسال تنبيه قبل 24 ساعة من انتهاء موعد الواجب أو الامتحان"
+            label={t.settings.deadlineAlerts}
+            description={t.settings.deadlineAlertsDesc}
+            chevron={Chevron}
             control={
               <Switch
                 checked={deadlineAlerts}
                 onCheckedChange={setDeadlineAlerts}
                 disabled={!notifications}
-                aria-label="تنبيهات المواعيد"
+                aria-label={t.settings.deadlineAlerts}
               />
             }
           />
           <SettingRow
             icon={Bell}
-            label="إشعارات الدرجات الجديدة"
-            description="تنبيه فوري لحظة رصد علامة جديدة في أي مساق"
+            label={t.settings.gradeAlerts}
+            description={t.settings.gradeAlertsDesc}
+            chevron={Chevron}
             control={
               <Switch
                 checked={gradeAlerts}
                 onCheckedChange={setGradeAlerts}
                 disabled={!notifications}
-                aria-label="إشعارات الدرجات"
+                aria-label={t.settings.gradeAlerts}
               />
             }
           />
         </div>
 
         {/* Danger Zone */}
-        <SectionLabel>الجلسة والأمان</SectionLabel>
+        <SectionLabel>{t.settings.securitySection}</SectionLabel>
         <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6 shadow-xs">
           <SettingRow
             icon={LogOut}
-            label="تسجيل الخروج من الحساب"
-            description="إنهاء الجلسة والعودة لشاشة الدخول"
+            label={t.settings.logoutTitle}
+            description={t.settings.logoutDesc}
+            chevron={Chevron}
             destructive
             onClick={() => {
               window.location.href = "/login";
@@ -360,3 +378,4 @@ export default function SettingsPage() {
     </>
   );
 }
+

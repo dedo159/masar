@@ -98,7 +98,7 @@ export function Sidebar() {
 
   const studentName = student?.name || t.common.studentNameFallback;
   const studentMajor = student?.major || t.common.studentMajorFallback;
-  const initial = studentName[0] || "ط";
+  const initial = studentName[0] || (isRtl ? "ط" : "S");
 
   return (
     <aside className={cn(

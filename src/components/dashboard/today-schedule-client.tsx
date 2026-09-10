@@ -95,10 +95,10 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                     <div className={cn("flex-shrink-0", isRtl ? "text-left" : "text-right")}>
                       <p className="text-xs font-semibold tabular-nums text-foreground flex items-center gap-1 justify-end">
                         <Clock className="h-3 w-3 text-muted-foreground" />
-                        {formatTime(cls.startTime)}
+                        {formatTime(cls.startTime, language === "en" ? "en" : "ar")}
                       </p>
                       <p className="text-[11px] text-muted-foreground tabular-nums">
-                        {t.dashboard.until} {formatTime(cls.endTime)}
+                        {t.dashboard.until} {formatTime(cls.endTime, language === "en" ? "en" : "ar")}
                       </p>
                     </div>
                   </div>

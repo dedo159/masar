@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Plus, X, Check, Globe, GitBranch, Save, Sparkles } from "lucide-react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 interface ProfileEditorProps {
   initialSkills: string[];
@@ -17,6 +17,7 @@ export function ProfileEditor({
   initialGithub = "",
   initialPortfolio = "",
 }: ProfileEditorProps) {
+  const { t } = useLanguage();
   const [skills, setSkills] = useState<string[]>(initialSkills);
   const [newSkill, setNewSkill] = useState("");
   const [github, setGithub] = useState(initialGithub || "");
@@ -61,13 +62,13 @@ export function ProfileEditor({
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
           <h3 className="text-sm font-bold text-foreground">
-            المهارات التقنية والروابط المهنية
+            {t.profile.editorTitle}
           </h3>
         </div>
         {savedSuccess && (
           <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-200 dark:border-emerald-800">
             <Check className="h-3.5 w-3.5" />
-            تم الحفظ بنجاح
+            {t.profile.savedSuccess}
           </span>
         )}
       </div>
@@ -75,13 +76,13 @@ export function ProfileEditor({
       {/* Skills Section */}
       <div className="space-y-3">
         <label className="text-xs font-semibold text-foreground">
-          المهارات والاهتمامات التقنية
+          {t.profile.skillsLabel}
         </label>
 
         {/* Existing skills chips */}
         <div className="flex flex-wrap gap-2 min-h-[36px] p-2 rounded-lg bg-secondary/30 border border-border">
           {skills.length === 0 ? (
-            <p className="text-xs text-muted-foreground p-1">لا توجد مهارات مضافة بعد. أضف مهاراتك أدناه.</p>
+            <p className="text-xs text-muted-foreground p-1">{t.profile.noSkills}</p>
           ) : (
             skills.map((skill) => (
               <span
@@ -93,7 +94,7 @@ export function ProfileEditor({
                   type="button"
                   onClick={() => handleRemoveSkill(skill)}
                   className="text-muted-foreground hover:text-destructive cursor-pointer p-0.5 rounded-full transition-colors"
-                  aria-label={`حذف مهارة ${skill}`}
+                  aria-label={`${t.profile.removeSkill} ${skill}`}
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -113,7 +114,7 @@ export function ProfileEditor({
                 handleAddSkill();
               }
             }}
-            placeholder="أدخل مهارة جديدة (مثلاً: Next.js, Python)..."
+            placeholder={t.profile.skillPlaceholder}
             className="flex-1 min-h-[44px]"
           />
           <Button
@@ -123,7 +124,7 @@ export function ProfileEditor({
             className="gap-1 min-h-[44px] px-4"
           >
             <Plus className="h-4 w-4" />
-            <span>إضافة</span>
+            <span>{t.profile.addSkill}</span>
           </Button>
         </div>
       </div>
@@ -131,14 +132,14 @@ export function ProfileEditor({
       {/* Social / External Links Section */}
       <div className="space-y-3 pt-3 border-t border-border">
         <label className="text-xs font-semibold text-foreground">
-          الروابط المهنية وحسابات المشاريع
+          {t.profile.linksLabel}
         </label>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
             <span className="text-[11px] text-muted-foreground flex items-center gap-1">
               <GitBranch className="h-3.5 w-3.5" />
-              حساب GitHub
+              {t.profile.githubLabel}
             </span>
             <Input
               value={github}
@@ -152,7 +153,7 @@ export function ProfileEditor({
           <div className="space-y-1.5">
             <span className="text-[11px] text-muted-foreground flex items-center gap-1">
               <Globe className="h-3.5 w-3.5" />
-              موقع المعرض (Portfolio)
+              {t.profile.portfolioLabel}
             </span>
             <Input
               value={portfolio}
@@ -174,9 +175,10 @@ export function ProfileEditor({
           className="w-full sm:w-auto gap-2 min-h-[44px] px-6 font-semibold"
         >
           <Save className="h-4 w-4" />
-          <span>{isSaving ? "جاري الحفظ..." : "حفظ بيانات الملف الشخصي"}</span>
+          <span>{isSaving ? t.profile.saving : t.profile.saveButton}</span>
         </Button>
       </div>
     </div>
   );
 }
+

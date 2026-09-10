@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { AlertCircle, RefreshCw, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export default function DashboardError({
   error,
@@ -12,6 +13,9 @@ export default function DashboardError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { language } = useLanguage();
+  const isEn = language === "en";
+
   useEffect(() => {
     console.error("Dashboard Error Boundary caught:", error);
   }, [error]);
@@ -24,10 +28,12 @@ export default function DashboardError({
         </div>
 
         <h2 className="text-base font-semibold text-foreground">
-          تعذّر تحميل الصفحة الرئيسية
+          {isEn ? "Unable to load Dashboard" : "تعذّر تحميل الصفحة الرئيسية"}
         </h2>
         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-          نعتذر، واجه النظام خطأً غير متوقع أثناء استرجاع بياناتك الأكاديمية. يرجى المحاولة مرة أخرى أو العودة لاحقاً.
+          {isEn
+            ? "An unexpected error occurred while retrieving your academic data. Please try again."
+            : "نعتذر، واجه النظام خطأً غير متوقع أثناء استرجاع بياناتك الأكاديمية. يرجى المحاولة مرة أخرى أو العودة لاحقاً."}
         </p>
 
         {process.env.NODE_ENV === "development" && error.message && (
@@ -44,7 +50,7 @@ export default function DashboardError({
             className="w-full sm:w-auto gap-2 min-h-[44px]"
           >
             <RefreshCw className="h-4 w-4" />
-            <span>إعادة المحاولة</span>
+            <span>{isEn ? "Retry" : "إعادة المحاولة"}</span>
           </Button>
 
           <Link
@@ -52,10 +58,11 @@ export default function DashboardError({
             className="inline-flex h-11 min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-border bg-secondary/40 px-4 text-sm font-medium text-foreground hover:bg-secondary active:scale-[0.98] transition-all"
           >
             <Home className="h-4 w-4" />
-            <span>الانتقال للمساقات</span>
+            <span>{isEn ? "Go to Courses" : "الانتقال للمساقات"}</span>
           </Link>
         </div>
       </div>
     </div>
   );
 }
+
