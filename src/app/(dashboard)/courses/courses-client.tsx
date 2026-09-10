@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { ChevronLeft, ChevronRight, BookOpen, Clock, FileText, User, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateCourseName, translateInstructor, translateSemester } from "@/lib/translations/academic";
 import type { Course } from "@/lib/types";
 
 interface CoursesClientProps {
@@ -51,7 +52,9 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
               const pendingAssignments = course.assignments?.filter(
                 (a) => a.status === "pending"
               ).length || 0;
-              const courseDisplayName = language === "en" && course.nameEn ? course.nameEn : course.nameAr;
+              const courseDisplayName = translateCourseName(course.code, course.nameAr, course.nameEn, language);
+              const instructorName = translateInstructor(course.instructor, language);
+              const semesterName = translateSemester(course.semester, language);
 
               return (
                 <Link
@@ -95,7 +98,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <User className="h-3 w-3" />
-                        <span className="truncate max-w-[140px]">{course.instructor}</span>
+                        <span className="truncate max-w-[140px]">{instructorName}</span>
                       </span>
                       {course.room && (
                         <span className="flex items-center gap-1">
@@ -108,7 +111,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
 
                   {/* Bottom: Quick badges */}
                   <div className="flex items-center justify-between pt-3 mt-3 border-t border-border text-xs">
-                    <span className="text-muted-foreground">{course.semester}</span>
+                    <span className="text-muted-foreground">{semesterName}</span>
                     <div className="flex items-center gap-2">
                       {pendingAssignments > 0 ? (
                         <Badge variant="warning" className="gap-1">

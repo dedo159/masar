@@ -13,6 +13,7 @@ import type {
 } from "@/lib/types";
 import { getTodayDay } from "@/lib/utils";
 import { getCurrentTimeInAmman } from "@/lib/timezone";
+import { translateCourseName } from "@/lib/translations/academic";
 
 // Mock authenticated student ID (// TODO: replace with real auth session later)
 export const DEFAULT_STUDENT_ID = "s-001";
@@ -145,7 +146,7 @@ export const getEnrolledCourses = cache(async (
       id: e.course.id,
       code: e.course.code,
       nameAr: e.course.nameAr,
-      nameEn: e.course.nameEn,
+      nameEn: e.course.nameEn || translateCourseName(e.course.code, e.course.nameAr, null, "en"),
       credits: e.course.credits,
       instructor: e.course.instructor,
       room: e.course.room,
@@ -294,7 +295,7 @@ export const getCourseById = cache(async (
     id: enrollment.course.id,
     code: enrollment.course.code,
     nameAr: enrollment.course.nameAr,
-    nameEn: enrollment.course.nameEn,
+    nameEn: enrollment.course.nameEn || translateCourseName(enrollment.course.code, enrollment.course.nameAr, null, "en"),
     credits: enrollment.course.credits,
     instructor: enrollment.course.instructor,
     room: enrollment.course.room,
@@ -335,6 +336,7 @@ export const getDegreeRequirements = cache(async (
         id: c.id,
         code: c.code,
         nameAr: c.nameAr,
+        nameEn: translateCourseName(c.code, c.nameAr, null, "en"),
         credits: c.credits,
         status: c.status as "completed" | "enrolled" | "available" | "locked",
         grade: c.grade || undefined,
@@ -437,7 +439,7 @@ export const getTodayClasses = cache(async (
         courseId: c.id,
         courseCode: c.code,
         courseNameAr: c.nameAr,
-        courseNameEn: c.nameEn,
+        courseNameEn: translateCourseName(c.code, c.nameAr, c.nameEn, "en"),
         instructor: c.instructor,
         room: c.room,
         startTime: s.startTime,

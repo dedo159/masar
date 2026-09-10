@@ -5,6 +5,7 @@ import { getDeadlineStatus, getRelativeTime, cn } from "@/lib/utils";
 import { AlertTriangle, Clock, ArrowLeft, ArrowRight, CheckCircle2, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateCourseName, translateAssignmentTitle } from "@/lib/translations/academic";
 import type { Assignment } from "@/lib/types";
 
 export interface DeadlineItem extends Assignment {
@@ -63,9 +64,8 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
           {upcoming.map((assignment) => {
             const status = getDeadlineStatus(assignment.dueDate, assignment.dueTime);
             const relTime = getRelativeTime(assignment.dueDate, assignment.dueTime, language === "en" ? "en" : "ar");
-            const courseDisplayName = language === "en" && assignment.courseNameEn
-              ? assignment.courseNameEn
-              : assignment.courseNameAr;
+            const courseDisplayName = translateCourseName(undefined, assignment.courseNameAr, assignment.courseNameEn, language);
+            const assignmentTitle = translateAssignmentTitle(assignment.title, language);
             const assignmentTypeLabel = t.dashboard.assignmentTypes[assignment.type] || assignment.type;
 
             return (
@@ -88,7 +88,7 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                      {assignment.title}
+                      {assignmentTitle}
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 truncate">

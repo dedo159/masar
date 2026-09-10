@@ -5,6 +5,7 @@ import { formatTime, cn } from "@/lib/utils";
 import { MapPin, FlaskConical, BookOpen, Users, Clock, CalendarDays, ArrowLeft, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateCourseName, translateInstructor } from "@/lib/translations/academic";
 import type { TodayClass } from "@/lib/types";
 
 const iconMap: Record<TodayClass["type"], typeof BookOpen> = {
@@ -61,7 +62,8 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
             const TypeIcon = iconMap[cls.type] || BookOpen;
             const typeLabel = t.dashboard.classTypes[cls.type] || t.dashboard.classTypes.lecture;
             const isOngoing = cls.status === "ongoing";
-            const displayName = language === "en" && cls.courseNameEn ? cls.courseNameEn : cls.courseNameAr;
+            const displayName = translateCourseName(cls.courseCode, cls.courseNameAr, cls.courseNameEn, language);
+            const instructorName = translateInstructor(cls.instructor, language);
 
             return (
               <Link
@@ -88,7 +90,7 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                         {displayName}
                       </p>
                       <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                        {cls.courseCode} · {cls.instructor}
+                        {cls.courseCode} · {instructorName}
                       </p>
                     </div>
 

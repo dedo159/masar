@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateCourseName, translateCategory } from "@/lib/translations/academic";
 
 interface CourseItem {
   id: string;
@@ -77,18 +78,6 @@ export function GrowthClient({
     enrolled: { label: t.growth.courseStatus.enrolled, variant: "default" as const, icon: Clock },
     available: { label: t.growth.courseStatus.available, variant: "warning" as const, icon: Unlock },
     locked: { label: t.growth.courseStatus.locked, variant: "secondary" as const, icon: Lock },
-  };
-
-  const getCategoryLabel = (label: string) => {
-    if (isAr) return label;
-    if (label.includes("الجامعة الإجبارية") || label.includes("جامعة إجبارية")) return "Compulsory University Requirements";
-    if (label.includes("الجامعة الاختيارية") || label.includes("جامعة اختيارية")) return "Elective University Requirements";
-    if (label.includes("الكلية الإجبارية") || label.includes("كلية إجبارية")) return "Compulsory Faculty Requirements";
-    if (label.includes("التخصص الإجبارية") || label.includes("تخصص إجبارية")) return "Compulsory Major Requirements";
-    if (label.includes("التخصص الاختيارية") || label.includes("تخصص اختيارية")) return "Elective Major Requirements";
-    if (label.includes("حرة")) return "Free Electives";
-    if (label.includes("مشروع") || label.includes("تدريب")) return "Graduation Project & Internship";
-    return label;
   };
 
   return (
@@ -176,7 +165,7 @@ export function GrowthClient({
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-primary" />
                         <h4 className="text-sm font-bold text-foreground">
-                          {getCategoryLabel(cat.categoryLabel)}
+                          {translateCategory(cat.categoryLabel, language)}
                         </h4>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -197,7 +186,7 @@ export function GrowthClient({
                       {cat.courses.map((c) => {
                         const statusConfig = courseStatusMap[c.status] || courseStatusMap.locked;
                         const StatusIcon = statusConfig.icon;
-                        const cName = isAr ? c.nameAr : (c.nameEn || c.nameAr);
+                        const cName = translateCourseName(c.code, c.nameAr, (c as any).nameEn, language);
 
                         return (
                           <div

@@ -22,6 +22,7 @@ import {
   User,
   FlaskConical,
 } from "lucide-react";
+import { translateCourseName, translateInstructor, translateSemester, translateAssignmentTitle } from "@/lib/translations/academic";
 import type { Course, Assignment, CourseFile, CourseGrade } from "@/lib/types";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -65,8 +66,12 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
   const { t, language } = useLanguage();
   const isAr = language === "ar";
 
-  const displayName = isAr ? course.nameAr : (course.nameEn || course.nameAr);
-  const subName = isAr ? course.nameEn : course.nameAr;
+  const displayName = translateCourseName(course.code, course.nameAr, course.nameEn, language);
+  const subName = isAr
+    ? translateCourseName(course.code, course.nameAr, course.nameEn, "en")
+    : translateCourseName(course.code, course.nameAr, course.nameEn, "ar");
+  const instructorName = translateInstructor(course.instructor, language);
+  const semesterName = translateSemester(course.semester, language);
 
   const dayNames: Record<string, string> = {
     sun: t.courseDetail.dayNames.sun,
@@ -107,7 +112,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
     <>
       <PageHeader
         title={displayName}
-        subtitle={`${course.code} · ${course.instructor}`}
+        subtitle={`${course.code} · ${instructorName}`}
       />
 
       <div className="px-4 py-5 max-w-5xl mx-auto space-y-5">
@@ -146,7 +151,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <User className="h-3.5 w-3.5" />
-                  <span>{t.courseDetail.instructor}: {course.instructor}</span>
+                  <span>{t.courseDetail.instructor}: {instructorName}</span>
                 </span>
                 {course.room && (
                   <span className="flex items-center gap-1">
@@ -155,7 +160,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                   </span>
                 )}
                 <span>{course.credits || 3} {t.courseDetail.creditHours}</span>
-                <span>{course.semester}</span>
+                <span>{semesterName}</span>
               </div>
             </div>
           </div>
@@ -259,7 +264,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-2">
-                          <p className="text-sm font-semibold text-foreground">{assignment.title}</p>
+                          <p className="text-sm font-semibold text-foreground">{translateAssignmentTitle(assignment.title, language)}</p>
                           <Badge variant={st.variant}>{st.label}</Badge>
                         </div>
 

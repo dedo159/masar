@@ -94,6 +94,7 @@ export type DegreeRequirementCourse = {
   id: string;
   code: string;
   nameAr: string;
+  nameEn?: string;
   credits: number;
   status: "completed" | "enrolled" | "available" | "locked";
   grade?: string;
