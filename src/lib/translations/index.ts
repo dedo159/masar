@@ -212,6 +212,8 @@ export const translations = {
       close: "إغلاق",
       showIdNotice: "أبرز هويتك الجامعية للاستفادة",
       successMsg: "تم تفعيل العرض بنجاح! أبرز هويتك الجامعية للاستفادة.",
+      availableNow: "متاح الآن",
+      activating: "جاري التفعيل...",
     },
     growth: {
       title: "لوحة النمو الأكاديمي وتقدّم التخرج",
@@ -562,6 +564,8 @@ export const translations = {
       close: "Close",
       showIdNotice: "Show your student ID to the cashier",
       successMsg: "Deal activated successfully! Show your student ID to redeem.",
+      availableNow: "Available Now",
+      activating: "Activating...",
     },
     growth: {
       title: "Academic Growth & Pathway",

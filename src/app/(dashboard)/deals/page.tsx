@@ -9,6 +9,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tag, Building2, Calendar, Clock, AlertCircle, Loader2, X } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLanguage } from "@/components/providers/language-provider";
+import {
+  translateMerchantName,
+  translateDiscountLabel,
+  translateDealTitle,
+  translateDealDescription,
+  translateDealTerms,
+} from "@/lib/translations/deals";
 
 // Type definitions based on schema
 interface Merchant {
@@ -39,13 +46,13 @@ export default function DealsPage() {
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
 
   const categories = [
-    { id: "all", label: t.deals.categories.all, matchAr: "الكل" },
-    { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "مطاعم" },
-    { id: "bookstores", label: t.deals.categories.bookstores, matchAr: "مكتبات" },
-    { id: "transport", label: t.deals.categories.transport, matchAr: "مواصلات" },
-    { id: "shops", label: t.deals.categories.shops, matchAr: "متاجر" },
-    { id: "courses", label: t.deals.categories.courses, matchAr: "كورسات" },
-    { id: "other", label: t.deals.categories.other, matchAr: "أخرى" },
+    { id: "all", label: t.deals.categories.all, matchAr: "الكل", matchEn: "all" },
+    { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "مطاعم", matchEn: "restaurant" },
+    { id: "bookstores", label: t.deals.categories.bookstores, matchAr: "مكتبات", matchEn: "bookstore" },
+    { id: "transport", label: t.deals.categories.transport, matchAr: "مواصلات", matchEn: "transport" },
+    { id: "shops", label: t.deals.categories.shops, matchAr: "متاجر", matchEn: "shop" },
+    { id: "courses", label: t.deals.categories.courses, matchAr: "كورسات", matchEn: "course" },
+    { id: "other", label: t.deals.categories.other, matchAr: "أخرى", matchEn: "other" },
   ];
 
   useEffect(() => {
@@ -67,21 +74,26 @@ export default function DealsPage() {
 
   const getCategoryLabel = (cat: string) => {
     if (!cat) return "";
-    if (cat.includes("مطاعم")) return t.deals.categories.restaurants;
-    if (cat.includes("مكتبات")) return t.deals.categories.bookstores;
-    if (cat.includes("مواصلات")) return t.deals.categories.transport;
-    if (cat.includes("متاجر")) return t.deals.categories.shops;
-    if (cat.includes("كورسات")) return t.deals.categories.courses;
-    if (cat.includes("أخرى")) return t.deals.categories.other;
-    return cat;
+    const lower = cat.toLowerCase();
+    if (cat.includes("مطاعم") || lower.includes("restaurant") || lower.includes("food") || lower.includes("dining")) return t.deals.categories.restaurants;
+    if (cat.includes("مكتبات") || lower.includes("bookstore") || lower.includes("library") || lower.includes("print")) return t.deals.categories.bookstores;
+    if (cat.includes("مواصلات") || lower.includes("transport") || lower.includes("transit") || lower.includes("bus")) return t.deals.categories.transport;
+    if (cat.includes("متاجر") || lower.includes("shop") || lower.includes("store")) return t.deals.categories.shops;
+    if (cat.includes("كورسات") || lower.includes("course") || lower.includes("training")) return t.deals.categories.courses;
+    if (cat.includes("أخرى") || lower.includes("other")) return t.deals.categories.other;
+    return language === "en" ? t.deals.categories.other : cat;
   };
 
   const currentCategory = categories.find((c) => c.id === activeCategory);
   const filteredDeals = activeCategory === "all" 
     ? deals 
     : deals.filter((deal) => {
-        const cat = deal.merchant.category || "";
-        return cat === currentCategory?.matchAr || cat.includes(currentCategory?.matchAr || "");
+        const cat = (deal.merchant.category || "").toLowerCase();
+        return (
+          (currentCategory?.matchAr && cat.includes(currentCategory.matchAr)) ||
+          (currentCategory?.matchEn && cat.includes(currentCategory.matchEn)) ||
+          cat === currentCategory?.id
+        );
       });
 
   const handleRedeem = async (deal: Deal) => {
@@ -160,7 +172,7 @@ export default function DealsPage() {
                         <div className="flex justify-between items-start gap-2">
                           <div>
                             <CardTitle className="text-base font-semibold line-clamp-1">
-                              {deal.merchant.businessName}
+                              {translateMerchantName(deal.merchant.businessName, language)}
                             </CardTitle>
                             <CardDescription className="flex items-center gap-1 mt-1 text-xs">
                               <Building2 className="h-3 w-3" />
@@ -168,14 +180,14 @@ export default function DealsPage() {
                             </CardDescription>
                           </div>
                           <Badge variant="warning" className="shrink-0 font-bold px-2 py-1">
-                            {deal.discountLabel}
+                            {translateDiscountLabel(deal.discountLabel, language)}
                           </Badge>
                         </div>
                       </CardHeader>
                       <CardContent className="pb-3">
-                        <h4 className="font-medium text-sm mb-1">{deal.title}</h4>
+                        <h4 className="font-medium text-sm mb-1">{translateDealTitle(deal.title, language)}</h4>
                         <p className="text-xs text-muted-foreground line-clamp-2">
-                          {deal.description || (language === "en" ? "No additional description." : "لا يوجد وصف إضافي.")}
+                          {translateDealDescription(deal.description, language)}
                         </p>
                         <div className="flex items-center gap-1 mt-4 text-[10px] text-muted-foreground">
                           <Calendar className="h-3 w-3" />
@@ -222,13 +234,13 @@ export default function DealsPage() {
                   <Tag className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-base">{selectedDeal.merchant.businessName}</h2>
+                  <h2 className="font-semibold text-base">{translateMerchantName(selectedDeal.merchant.businessName, language)}</h2>
                   <span className="text-xs text-muted-foreground">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
-                aria-label={language === "en" ? "Close" : "إغلاق"}
+                aria-label={t.deals.close}
                 className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground transition-colors"
               >
                 <X className="h-5 w-5" />
@@ -239,12 +251,12 @@ export default function DealsPage() {
             <div className="p-5 overflow-y-auto flex-1 space-y-5">
               <div>
                 <Badge variant="warning" className="mb-3 text-sm px-3 py-1 font-bold">
-                  {selectedDeal.discountLabel}
+                  {translateDiscountLabel(selectedDeal.discountLabel, language)}
                 </Badge>
-                <h3 className="text-xl font-bold leading-tight mb-2">{selectedDeal.title}</h3>
+                <h3 className="text-xl font-bold leading-tight mb-2">{translateDealTitle(selectedDeal.title, language)}</h3>
                 {selectedDeal.description && (
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {selectedDeal.description}
+                    {translateDealDescription(selectedDeal.description, language)}
                   </p>
                 )}
               </div>
@@ -256,7 +268,7 @@ export default function DealsPage() {
                     {t.deals.terms}
                   </h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    {selectedDeal.termsConditions}
+                    {translateDealTerms(selectedDeal.termsConditions, language)}
                   </p>
                 </div>
               )}
@@ -270,7 +282,7 @@ export default function DealsPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4" />
-                  <span>{language === "en" ? "Available Now" : "متاح الآن"}</span>
+                  <span>{t.deals.availableNow}</span>
                 </div>
               </div>
 
@@ -291,7 +303,7 @@ export default function DealsPage() {
                 {redeemLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    <span>{language === "en" ? "Activating..." : "جاري التفعيل..."}</span>
+                    <span>{t.deals.activating}</span>
                   </>
                 ) : redeemSuccess || redeemedDeals.has(selectedDeal.id) ? (
                   t.deals.redeemed
