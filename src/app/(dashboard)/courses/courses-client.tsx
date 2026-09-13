@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { ChevronLeft, ChevronRight, BookOpen, Clock, FileText, User, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
-import { translateCourseName, translateInstructor, translateSemester } from "@/lib/translations/academic";
+import { translateCourseName, translateInstructor, translateSemester, translateRoom } from "@/lib/translations/academic";
 import type { Course } from "@/lib/types";
 
 interface CoursesClientProps {
@@ -103,7 +103,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                       {course.room && (
                         <span className="flex items-center gap-1">
                           <MapPin className="h-3 w-3" />
-                          <span>{course.room}</span>
+                          <span>{translateRoom(course.room, language)}</span>
                         </span>
                       )}
                     </div>

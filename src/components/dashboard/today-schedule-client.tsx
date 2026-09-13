@@ -5,7 +5,7 @@ import { formatTime, cn } from "@/lib/utils";
 import { MapPin, FlaskConical, BookOpen, Users, Clock, CalendarDays, ArrowLeft, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
-import { translateCourseName, translateInstructor } from "@/lib/translations/academic";
+import { translateCourseName, translateInstructor, translateRoom } from "@/lib/translations/academic";
 import type { TodayClass } from "@/lib/types";
 
 const iconMap: Record<TodayClass["type"], typeof BookOpen> = {
@@ -108,7 +108,7 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                   <div className="flex items-center gap-3 mt-2 flex-wrap">
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <MapPin className="h-3 w-3" />
-                      <span>{cls.room}</span>
+                      <span>{translateRoom(cls.room, language)}</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <TypeIcon className="h-3 w-3" />

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateStudentName, translateMajor, getStudentInitials } from "@/lib/translations/content";
 
 interface SettingRowProps {
   icon: LucideIcon;
@@ -94,7 +95,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   // States
@@ -117,6 +118,10 @@ export default function SettingsPage() {
       if (storedMajor) setStudentMeta(storedMajor);
     }
   }, [t]);
+
+  const displayName = translateStudentName(studentName, language);
+  const displayMeta = translateMajor(studentMeta, language);
+  const displayInitial = getStudentInitials(studentName, language);
 
   const Chevron = isRtl ? ChevronLeft : ChevronRight;
 
@@ -155,11 +160,11 @@ export default function SettingsPage() {
           >
             <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
-                {studentName[0] || (isRtl ? "أ" : "S")}
+                {displayInitial}
               </div>
               <div className="text-start">
-                <p className="text-sm font-semibold text-foreground">{studentName}</p>
-                <p className="text-xs text-muted-foreground">{studentMeta}</p>
+                <p className="text-sm font-semibold text-foreground">{displayName}</p>
+                <p className="text-xs text-muted-foreground">{displayMeta}</p>
               </div>
             </div>
             <div className="flex items-center gap-1 text-xs text-primary font-medium">

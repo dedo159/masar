@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, ExternalLink, Sparkles, Briefcase, Calendar, Building2 } from "lucide-react";
 import { ApplyButton } from "./apply-button";
 import { useLanguage } from "@/components/providers/language-provider";
+import {
+  translateInternshipTitle,
+  translateInternshipCompany,
+  translateInternshipLocation,
+  translateInternshipDuration,
+} from "@/lib/translations/content";
 import type { Internship } from "@/lib/types";
 
 const typeVariant: Record<string, "default" | "success" | "secondary" | "warning"> = {
@@ -71,7 +77,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-medium text-muted-foreground truncate">
-                              {internship.company}
+                              {translateInternshipCompany(internship.company, language)}
                             </span>
                             {internship.isNew && (
                               <Badge variant="default" className="text-[10px] px-1.5 py-0 gap-0.5 font-bold">
@@ -81,7 +87,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                             )}
                           </div>
                           <h3 className="text-sm font-bold text-foreground mt-0.5 truncate">
-                            {internship.title}
+                            {translateInternshipTitle(internship.title, language)}
                           </h3>
                         </div>
                       </div>
@@ -95,11 +101,11 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5" />
-                        <span>{internship.location}</span>
+                        <span>{translateInternshipLocation(internship.location, language)}</span>
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock className="h-3.5 w-3.5" />
-                        <span>{internship.duration}</span>
+                        <span>{translateInternshipDuration(internship.duration, language)}</span>
                       </span>
                       {internship.deadline && (
                         <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-medium">

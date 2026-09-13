@@ -73,15 +73,33 @@ export const AR_COURSE_NAME_TO_EN: Record<string, string> = {
   "تفاضل وتكامل 1": "Calculus I",
   "تفاضل وتكامل 2": "Calculus II",
   "الفيزياء العامة": "General Physics",
+  "إعلام وعلاقات عامة": "Media & Public Relations",
+  "الاعلام والعلاقات العامة": "Media & Public Relations",
+  "المهارات الحياتية": "Life Skills",
+  "ثقافة قانونية وحقوق إنسان": "Legal Culture & Human Rights",
+  "ثقافة قانونية وحقوق الإنسان": "Legal Culture & Human Rights",
+  "مهارات الاتصال باللغة العربية": "Arabic Communication Skills",
+  "مهارات الاتصال باللغة الانجليزية": "English Communication Skills",
+  "ريادة الأعمال والابتكار": "Entrepreneurship & Innovation",
+  "المسؤولية المجتمعية": "Social Responsibility",
+  "التربية الوطنية": "National Education",
+  "الأخلاق والقيم الإنسانية": "Ethics & Human Values",
 };
 
 export const INSTRUCTOR_TRANSLATIONS: Record<string, string> = {
+  "أستاذ المادة": "Course Instructor",
+  "مدرس المساق": "Course Instructor",
+  "د. سامي الحموري": "Dr. Sami Al-Hammouri",
+  "أ.د. سوسن بدرخان": "Prof. Sawsan Badrakhan",
   "د. محمد الشريف": "Dr. Mohammad Al-Sharif",
   "د. سلمى النابلسي": "Dr. Salma Al-Nabulsi",
   "أ.د. خالد الرواشدة": "Prof. Khaled Al-Rawashdeh",
   "د. رنا عبيدات": "Dr. Rana Obeidat",
   "د. عمر حسين": "Dr. Omar Hussein",
   "م. ليلى مرعي": "Eng. Layla Marie",
+  "د. أحمد خليل": "Dr. Ahmad Khalil",
+  "د. محمود حسان": "Dr. Mahmoud Hassan",
+  "أ. ريم العلي": "Ms. Reem Al-Ali",
 };
 
 export const ASSIGNMENT_TITLE_TRANSLATIONS: Record<string, string> = {
@@ -90,6 +108,23 @@ export const ASSIGNMENT_TITLE_TRANSLATIONS: Record<string, string> = {
   "تصميم قاعدة بيانات للمستشفى": "Hospital Database Schema Design",
   "تقرير بروتوكول TCP/IP": "TCP/IP Protocol Research Report",
   "مخطط UML للمشروع": "Project UML Architecture Diagram",
+  "الواجب الاول الفصل الصيفي26/25": "Assignment 1 — Summer Semester 2025/2026",
+  "الواجب الثاني الفصل الصيقي2025/2026": "Assignment 2 — Summer Semester 2025/2026",
+  "تسليم البحث المطلوب من 26-7-2026 الى 20-8-2026": "Term Research Paper Submission (26/7 - 20/8/2026)",
+  "الامتحان النهائي يوم الأربعاء 2-9-2026  شعبة (3)  من س 11:15- 12:00": "Final Exam — Wednesday 2/9/2026 (Sec 3, 11:15 - 12:00)",
+  "الامتحان النهائي لمادة مهارات الاتصال باللغة العربية فصل صيفي 2026 جلسة رابعة شعبة 2": "Final Exam — Arabic Communication Skills (Sec 2, Session 4)",
+  "امتحان المنتصف تكميلي لمادة مهارات الاتصال باللغة العربية الفصل الصيفي 23-8-2026": "Make-up Midterm Exam — Arabic Communication Skills (23/8/2026)",
+  "امتحان المنتصف لمادة مهارات الاتصال باللغة العربية - شعبة (2) - الفصل الصيفي 15/8/2026": "Midterm Exam — Arabic Communication Skills (Sec 2, 15/8/2026)",
+  "الاختبار القصير الثاني قصيدة المتنبي": "Quiz 2 — Al-Mutanabbi Poem",
+  "(نسخة) الاختبار القصير الثاني قصيدة المتنبي": "Quiz 2 — Al-Mutanabbi Poem (Copy)",
+  "الامتحان النهائي لمادة الاعلام والعلاقات العامة 5/9/2026": "Final Exam — Media & Public Relations (5/9/2026)",
+  "الامتحان النصفي( تكميلي) لمادة الاعلام والعلاقات العامة 23/8/2026": "Make-up Midterm Exam — Media & Public Relations (23/8/2026)",
+  "الاختبار القصير الثالث  قصيدة أبد الصّبار لمحمود درويش": "Quiz 3 — Mahmoud Darwish Poem",
+  "الاختبار القصير الأول ( آيات من سورة القصص)": "Quiz 1 — Verses from Surat Al-Qasas",
+  "(نسخة) الاختبار القصير الأول ( آيات من سورة القصص)": "Quiz 1 — Verses from Surat Al-Qasas (Copy)",
+  "(نسخة) (نسخة) الاختبار القصير الأول ( آيات من سورة القصص)": "Quiz 1 — Verses from Surat Al-Qasas (Copy 2)",
+  "الإعلام والعلاقات العامة (اختبار قصير)": "Quiz — Media & Public Relations",
+  "البحث المطلوب لمادة الإعلام والعلاقات العامة": "Required Research Paper — Media & Public Relations",
 };
 
 /**
@@ -110,16 +145,21 @@ export function translateCourseName(
   }
 
   // English requested
-  if (nameEn && nameEn.trim().length > 0 && !nameEn.match(/[\u0600-\u06FF]/)) {
-    return nameEn;
+  // Check known Arabic mappings first
+  if (nameAr && AR_COURSE_NAME_TO_EN[nameAr.trim()]) {
+    return AR_COURSE_NAME_TO_EN[nameAr.trim()];
   }
 
   if (code && COURSE_TRANSLATIONS[code.toUpperCase()]) {
     return COURSE_TRANSLATIONS[code.toUpperCase()].en;
   }
 
-  if (nameAr && AR_COURSE_NAME_TO_EN[nameAr]) {
-    return AR_COURSE_NAME_TO_EN[nameAr];
+  // Check if nameEn is valid English text (and not just a code like A0110166-253-1)
+  if (nameEn && nameEn.trim().length > 0 && !nameEn.match(/[\u0600-\u06FF]/)) {
+    const isCode = /^[A-Z0-9_-]+$/i.test(nameEn.trim());
+    if (!isCode) {
+      return nameEn;
+    }
   }
 
   // Check if nameAr has a lab indicator
@@ -199,9 +239,40 @@ export function translateSemester(semester: string, lang: "ar" | "en" = "ar"): s
   if (lang === "ar") return semester;
 
   return semester
+    .replace("الفصل الدراسي الحالي", "Current Academic Semester")
+    .replace("الفصل الصيفي26/25", "Summer Semester 2025/2026")
+    .replace("الفصل الصيقي2025/2026", "Summer Semester 2025/2026")
+    .replace("الفصل الصيفي 2025/2026", "Summer Semester 2025/2026")
+    .replace("فصل صيفي 2026", "Summer Semester 2026")
+    .replace("فصل صيفي", "Summer Semester")
+    .replace("الفصل الصيفي", "Summer Semester")
     .replace("الفصل الأول", "First Semester")
-    .replace("الفصل الثاني", "Second Semester")
-    .replace("الفصل الصيفي", "Summer Semester");
+    .replace("الفصل الاول", "First Semester")
+    .replace("الفصل الثاني", "Second Semester");
+}
+
+/**
+ * Translates room and hall locations
+ */
+export function translateRoom(room?: string | null, lang: "ar" | "en" = "ar"): string {
+  if (!room) return "";
+  if (lang === "ar") return room;
+
+  const trimmed = room.trim();
+  if (trimmed.includes("قاعة افتراضية") || trimmed.includes("قاعة إلكترونية")) {
+    const numMatch = trimmed.match(/\d+/);
+    if (numMatch) {
+      return `Virtual Classroom ${numMatch[0]} (V-Class)`;
+    }
+    return "Virtual Classroom (V-Class)";
+  }
+
+  return trimmed
+    .replace("مختبر الحاسوب", "Computer Lab")
+    .replace("مختبر", "Lab")
+    .replace("قاعة", "Hall")
+    .replace("مدرج", "Auditorium")
+    .replace("مبنى", "Building");
 }
 
 /**
@@ -235,5 +306,66 @@ export function translateAssignmentTitle(title: string, lang: "ar" | "en" = "ar"
   if (!title) return "";
   if (lang === "ar") return title;
 
-  return ASSIGNMENT_TITLE_TRANSLATIONS[title] || title;
+  const trimmed = title.trim();
+  if (ASSIGNMENT_TITLE_TRANSLATIONS[trimmed]) {
+    return ASSIGNMENT_TITLE_TRANSLATIONS[trimmed];
+  }
+
+  let translated = trimmed;
+  // Common prefixes & patterns
+  translated = translated
+    .replace("الامتحان النهائي", "Final Exam")
+    .replace("امتحان المنتصف", "Midterm Exam")
+    .replace("الامتحان النصفي", "Midterm Exam")
+    .replace("الاختبار القصير الأول", "Quiz 1")
+    .replace("الاختبار القصير الثاني", "Quiz 2")
+    .replace("الاختبار القصير الثالث", "Quiz 3")
+    .replace("اختبار قصير", "Quiz")
+    .replace("الواجب الاول", "Assignment 1")
+    .replace("الواجب الثاني", "Assignment 2")
+    .replace("الواجب الثالث", "Assignment 3")
+    .replace("تكميلي", "Make-up")
+    .replace("تسليم البحث المطلوب", "Term Paper Submission")
+    .replace("البحث المطلوب", "Required Research Paper")
+    .replace("(نسخة)", "(Copy)")
+    .replace("شعبة", "Section")
+    .replace("جلسة", "Session")
+    .replace("الفصل الصيفي", "Summer Semester")
+    .replace("فصل صيفي", "Summer Semester");
+
+  return translated;
+}
+
+/**
+ * Translates assignment descriptions
+ */
+export function translateAssignmentDescription(desc?: string | null, lang: "ar" | "en" = "ar"): string {
+  if (!desc) return "";
+  if (lang === "ar") return desc;
+
+  const trimmed = desc.trim();
+
+  // If description matches an assignment title
+  if (ASSIGNMENT_TITLE_TRANSLATIONS[trimmed]) {
+    return ASSIGNMENT_TITLE_TRANSLATIONS[trimmed];
+  }
+
+  if (trimmed.includes("الفرق بين القانون") && trimmed.includes("الدستور")) {
+    return "Each student is required to submit a 1-2 page worksheet explaining the difference between Law and the Constitution.";
+  }
+
+  if (trimmed.includes("خصائص حقوق الانسان") || trimmed.includes("خصائص حقوق الإنسان")) {
+    return "List the key characteristics and principles of Human Rights.";
+  }
+
+  if (trimmed.includes("المهارات الحياتية") && trimmed.includes("اعداد بحث")) {
+    return "Important announcement for Life Skills students (Summer Semester 2025/2026):\nPlease prepare a research paper on one of the course topics (minimum 10 pages). Submission deadline is between 26/7/2026 and 20/8/2026 via V-Class. Please ensure student name, ID, section, and instructor name appear on the cover page.\nProf. Sawsan Badrakhan";
+  }
+
+  if (trimmed.includes("الإعلام والعلاقات العامة") && trimmed.includes("إعداد بحث")) {
+    return "Dear students, please prepare a term paper covering one of the fields of Media & Public Relations according to the guidelines:\n- Address modern technology and social media impacts.\n- Discuss the role of AI in advancing effective media and PR workflows.\n- 10 to 15 pages in length using credible academic references.\n- Format properly: Title, Introduction, Content, Conclusion, References.\nSubmit electronically via V-Class by 30/8/2026.\nBest wishes.";
+  }
+
+  // If it is just a copy of the title pattern
+  return translateAssignmentTitle(trimmed, "en");
 }

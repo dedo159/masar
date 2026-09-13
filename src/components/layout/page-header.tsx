@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
+import { getStudentInitials } from "@/lib/translations/content";
 
 interface PageHeaderProps {
   title: string;
@@ -103,8 +104,8 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             aria-label={t.header.userAccount}
           >
             {typeof window !== "undefined" && localStorage.getItem("masar_user_name")
-              ? localStorage.getItem("masar_user_name")![0]
-              : language === "ar" ? "ط" : "S"}
+              ? getStudentInitials(localStorage.getItem("masar_user_name"), language)
+              : getStudentInitials(null, language)}
           </Link>
         </div>
       </div>

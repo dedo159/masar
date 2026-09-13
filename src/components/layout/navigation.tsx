@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
+import { translateStudentName, translateMajor, getStudentInitials } from "@/lib/translations/content";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -58,7 +59,7 @@ export function BottomNav() {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
   const [student, setStudent] = useState<{ name: string; major: string } | null>(null);
 
   const desktopNavItems = [
@@ -96,9 +97,11 @@ export function Sidebar() {
       .catch(() => {});
   }, [t]);
 
-  const studentName = student?.name || t.common.studentNameFallback;
-  const studentMajor = student?.major || t.common.studentMajorFallback;
-  const initial = studentName[0] || (isRtl ? "ط" : "S");
+  const rawName = student?.name || t.common.studentNameFallback;
+  const rawMajor = student?.major || t.common.studentMajorFallback;
+  const studentName = translateStudentName(rawName, language);
+  const studentMajor = translateMajor(rawMajor, language);
+  const initial = getStudentInitials(rawName, language);
 
   return (
     <aside className={cn(

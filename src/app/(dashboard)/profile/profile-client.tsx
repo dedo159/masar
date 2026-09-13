@@ -20,6 +20,12 @@ import {
 import Link from "next/link";
 import { ProfileEditor } from "@/components/profile/profile-editor";
 import { useLanguage } from "@/components/providers/language-provider";
+import {
+  translateStudentName,
+  translateMajor,
+  translateUniversityName,
+  getStudentInitials,
+} from "@/lib/translations/content";
 
 interface ProfileClientProps {
   student: {
@@ -34,7 +40,7 @@ interface ProfileClientProps {
     completedCredits?: number | null;
     github?: string | null;
     portfolio?: string | null;
-    university?: { name: string } | null;
+    university?: { name: string; nameEn?: string | null } | null;
     moodleConnection?: { moodleBaseUrl: string } | null;
     enrollments: Array<{ course: any }>;
   };
@@ -43,9 +49,14 @@ interface ProfileClientProps {
 }
 
 export function ProfileClient({ student, skillsList, initials }: ProfileClientProps) {
-  const { t, isRtl } = useLanguage();
+  const { t, isRtl, language } = useLanguage();
   const enrolledCourses = student.enrollments.map((e) => e.course);
   const Chevron = isRtl ? ChevronLeft : ChevronRight;
+
+  const displayName = translateStudentName(student.name, language);
+  const displayMajor = translateMajor(student.major, language);
+  const displayUniversity = translateUniversityName(student.university, language) || t.profile.defaultUniversity;
+  const displayInitials = getStudentInitials(student.name, language) || initials;
 
   return (
     <>
@@ -67,14 +78,14 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
                 />
               )}
               <AvatarFallback className="rounded-2xl text-xl font-bold bg-primary/10 text-primary">
-                {initials}
+                {displayInitials}
               </AvatarFallback>
             </Avatar>
 
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2.5">
                 <h2 className="text-xl font-bold text-foreground truncate">
-                  {student.name}
+                  {displayName}
                 </h2>
                 <Badge variant="success" className="gap-1 text-xs">
                   <CheckCircle2 className="h-3 w-3" />
@@ -83,13 +94,13 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
               </div>
 
               <p className="text-sm font-medium text-foreground/80 mt-1">
-                {student.major} · {t.profile.academicYear} {student.year || 3}
+                {displayMajor} · {t.profile.academicYear} {student.year || 3}
               </p>
 
               <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <Building2 className="h-3.5 w-3.5 text-primary" />
-                  <span>{student.university?.name || t.profile.defaultUniversity}</span>
+                  <span>{displayUniversity}</span>
                 </div>
                 <div className="flex items-center gap-1.5" dir="ltr">
                   <Fingerprint className="h-3.5 w-3.5 text-primary" />

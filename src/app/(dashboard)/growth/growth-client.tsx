@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
 import { translateCourseName, translateCategory } from "@/lib/translations/academic";
+import { translateMajor } from "@/lib/translations/content";
 
 interface CourseItem {
   id: string;
@@ -105,7 +106,7 @@ export function GrowthClient({
                 {t.growth.planTitle}
               </h2>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {studentProfile?.major || t.growth.defaultMajor} · {t.growth.year} {studentProfile?.year || 3}
+                {translateMajor(studentProfile?.major, language) || t.growth.defaultMajor} · {t.growth.year} {studentProfile?.year || 3}
               </p>
             </div>
           </div>

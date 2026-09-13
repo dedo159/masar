@@ -22,7 +22,14 @@ import {
   User,
   FlaskConical,
 } from "lucide-react";
-import { translateCourseName, translateInstructor, translateSemester, translateAssignmentTitle } from "@/lib/translations/academic";
+import {
+  translateCourseName,
+  translateInstructor,
+  translateSemester,
+  translateAssignmentTitle,
+  translateRoom,
+  translateAssignmentDescription,
+} from "@/lib/translations/academic";
 import type { Course, Assignment, CourseFile, CourseGrade } from "@/lib/types";
 import { useLanguage } from "@/components/providers/language-provider";
 
@@ -156,7 +163,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 {course.room && (
                   <span className="flex items-center gap-1">
                     <MapPin className="h-3.5 w-3.5" />
-                    <span>{t.courseDetail.room}: {course.room}</span>
+                    <span>{t.courseDetail.room}: {translateRoom(course.room, language)}</span>
                   </span>
                 )}
                 <span>{course.credits || 3} {t.courseDetail.creditHours}</span>
@@ -224,7 +231,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                         </p>
                         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                           <MapPin className="h-3 w-3" />
-                          <span>{course.room || t.courseDetail.defaultRoom}</span>
+                          <span>{translateRoom(course.room, language) || t.courseDetail.defaultRoom}</span>
                         </p>
                       </div>
                     </div>
@@ -305,7 +312,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                           assignment.description.trim() !== "" &&
                           assignment.description !== assignment.title && (
                             <div className="mt-2.5 p-3 rounded-lg bg-secondary/40 border border-border/60 text-xs text-foreground/85 leading-relaxed whitespace-pre-line">
-                              {assignment.description}
+                              {translateAssignmentDescription(assignment.description, language)}
                             </div>
                           )}
                       </div>
