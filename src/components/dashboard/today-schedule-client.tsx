@@ -15,13 +15,6 @@ const iconMap: Record<TodayClass["type"], typeof BookOpen> = {
   tutorial: Users,
 };
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 interface TodayScheduleClientProps {
   todayClasses: TodayClass[];
   studentId?: string;
@@ -31,6 +24,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
   const { t, isRtl, language } = useLanguage();
   const [webcalUrl, setWebcalUrl] = useState<string>("");
   const [googleCalUrl, setGoogleCalUrl] = useState<string>("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (studentId) {
@@ -56,34 +50,53 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         
         <div className="flex items-center gap-2">
           {studentId && webcalUrl && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
-                  title="ربط ومزامنة الجدول"
-                >
-                  <CalendarDays className="h-3.5 w-3.5" />
-                  <span>مزامنة التقويم</span>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align={isRtl ? "start" : "end"} className="w-56">
-                <DropdownMenuItem asChild>
-                  <a href={googleCalUrl} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
-                    Google Calendar (مزامنة حية)
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href={webcalUrl} className="cursor-pointer">
-                    Apple Calendar / iOS
-                  </a>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href={`/api/calendar/${studentId}`} className="cursor-pointer">
-                    Samsung Calendar (تنزيل وفتح مباشر)
-                  </a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="relative">
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
+                title="ربط ومزامنة الجدول"
+              >
+                <CalendarDays className="h-3.5 w-3.5" />
+                <span>مزامنة التقويم</span>
+              </button>
+              
+              {isDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setIsDropdownOpen(false)}
+                  />
+                  <div className={cn(
+                    "absolute top-full mt-1.5 z-50 w-56 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md",
+                    isRtl ? "right-0" : "left-0"
+                  )}>
+                    <a 
+                      href={googleCalUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Google Calendar (مزامنة حية)
+                    </a>
+                    <a 
+                      href={webcalUrl} 
+                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Apple Calendar / iOS
+                    </a>
+                    <a 
+                      href={`/api/calendar/${studentId}`} 
+                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Samsung Calendar (تنزيل وفتح مباشر)
+                    </a>
+                  </div>
+                </>
+              )}
+            </div>
           )}
           <span className="text-xs text-muted-foreground font-medium">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}

@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Arabic } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { LanguageProvider } from "@/components/providers/language-provider";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic", "latin"],
@@ -40,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
       <body className={`${ibmPlexSansArabic.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
