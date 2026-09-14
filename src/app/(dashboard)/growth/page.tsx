@@ -1,4 +1,4 @@
-import { DEFAULT_STUDENT_ID, getDegreeRequirements, getStudentProfile } from "@/lib/db-queries";
+import { DEFAULT_STUDENT_ID, getDegreeRequirements, getStudentProfile, resolveCurrentStudentId } from "@/lib/db-queries";
 import {
   computeAcademicHealthScore,
   computeCareerReadinessScore,
@@ -9,7 +9,7 @@ import { GrowthClient } from "./growth-client";
 export const revalidate = 60;
 
 export default async function StudentGrowthPage() {
-  const studentId = DEFAULT_STUDENT_ID;
+  const studentId = await resolveCurrentStudentId();
 
   // Fetch data in parallel
   const [

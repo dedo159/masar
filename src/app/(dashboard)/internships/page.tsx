@@ -1,4 +1,4 @@
-import { getInternships, DEFAULT_STUDENT_ID } from "@/lib/db-queries";
+import { getInternships, resolveCurrentStudentId } from "@/lib/db-queries";
 import { prisma } from "@/lib/prisma";
 import { InternshipsClient } from "./internships-client";
 
@@ -9,10 +9,11 @@ export default async function InternshipsPage() {
   let appliedInternshipIds: string[] = [];
 
   try {
+    const studentId = await resolveCurrentStudentId();
     const [fetchedInternships, applications] = await Promise.all([
       getInternships(),
       prisma.internshipApplication.findMany({
-        where: { studentId: DEFAULT_STUDENT_ID },
+        where: { studentId },
         select: { internshipId: true },
       }),
     ]);

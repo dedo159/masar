@@ -141,6 +141,34 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // ================================================
+  // 8. حماية لوحة تحكم الطالب (Student Dashboard)
+  // ================================================
+  const studentProtectedPaths = [
+    "/profile",
+    "/settings",
+    "/growth",
+    "/courses",
+    "/deals",
+    "/internships",
+  ];
+
+  const isStudentProtected = studentProtectedPaths.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`)
+  );
+
+  if (isStudentProtected) {
+    const token = request.cookies.get("masar_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    const session = await verifyToken(token);
+    if (!session || session.userType !== "student") {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
   return NextResponse.next();
 }
 
@@ -155,5 +183,17 @@ export const config = {
     "/api/company/:path*",
     "/merchant/:path*",
     "/api/merchant/:path*",
+    "/profile",
+    "/profile/:path*",
+    "/settings",
+    "/settings/:path*",
+    "/growth",
+    "/growth/:path*",
+    "/courses",
+    "/courses/:path*",
+    "/deals",
+    "/deals/:path*",
+    "/internships",
+    "/internships/:path*",
   ],
 };

@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-// Use DEFAULT_STUDENT_ID as requested
-const DEFAULT_STUDENT_ID = "s-001";
+import { getSession } from "@/lib/auth";
+import { DEFAULT_STUDENT_ID } from "@/lib/db-queries";
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getSession();
+    const studentId = session?.userType === "student" && session.userId ? session.userId : DEFAULT_STUDENT_ID;
+
     const resolvedParams = await params;
     const dealId = resolvedParams.id;
 
@@ -36,7 +38,7 @@ export async function POST(
       prisma.dealRedemption.create({
         data: {
           dealId: dealId,
-          studentId: DEFAULT_STUDENT_ID,
+          studentId,
         },
       }),
       prisma.merchantDeal.update({

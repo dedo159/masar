@@ -14,19 +14,38 @@ import type {
 import { getTodayDay } from "@/lib/utils";
 import { getCurrentTimeInAmman } from "@/lib/timezone";
 import { translateCourseName } from "@/lib/translations/academic";
+import { getSession } from "@/lib/auth";
 
-// Mock authenticated student ID (// TODO: replace with real auth session later)
+// Default fallback student ID (for demo or unauthenticated SSR fallback)
 export const DEFAULT_STUDENT_ID = "s-001";
+
+/**
+ * Resolves current student ID from active JWT session if available,
+ * otherwise falls back to provided studentId parameter or DEFAULT_STUDENT_ID.
+ */
+export async function resolveCurrentStudentId(explicitId?: string): Promise<string> {
+  if (explicitId && explicitId !== DEFAULT_STUDENT_ID) return explicitId;
+  try {
+    const session = await getSession();
+    if (session && session.userType === "student" && session.userId) {
+      return session.userId;
+    }
+  } catch {
+    // getSession might fail if called outside request scope
+  }
+  return explicitId || DEFAULT_STUDENT_ID;
+}
 
 // ----------------------------------------------------
 // 1. بيانات الطالب (Student Profile)
 // ----------------------------------------------------
 export const getStudentProfile = cache(async (
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<Student | null> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
   try {
     const student = await prisma.student.findFirst({
-      where: { id: studentId },
+      where: { id: resolvedId },
       include: { university: true },
     });
 
@@ -57,7 +76,7 @@ export const getStudentProfile = cache(async (
     };
   } catch {
     return {
-      id: studentId,
+      id: resolvedId,
       name: "طالب مسار",
       studentId: "202510377",
       email: "student@masar.edu.jo",
@@ -76,18 +95,19 @@ export const getStudentProfile = cache(async (
 // 2. المواد المسجلة (Courses)
 // ----------------------------------------------------
 export const getEnrolledCourses = cache(async (
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<Course[]> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
   try {
     const enrollments = await prisma.enrollment.findMany({
-    where: { studentId },
+    where: { studentId: resolvedId },
     include: {
       course: {
         include: {
           assignments: {
             include: {
               submissions: {
-                where: { studentId },
+                where: { studentId: resolvedId },
               },
             },
           },
@@ -169,12 +189,13 @@ export const getEnrolledCourses = cache(async (
 // ----------------------------------------------------
 export const getCourseById = cache(async (
   courseId: string,
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<Course | null> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
   const enrollment = await prisma.enrollment.findFirst({
     where: {
       courseId,
-      studentId,
+      studentId: resolvedId,
     },
     include: {
       course: {
@@ -182,7 +203,7 @@ export const getCourseById = cache(async (
           assignments: {
             include: {
               submissions: {
-                where: { studentId },
+                where: { studentId: resolvedId },
               },
             },
           },
@@ -313,11 +334,12 @@ export const getCourseById = cache(async (
 // 4. متطلبات التخرج (Degree Requirements)
 // ----------------------------------------------------
 export const getDegreeRequirements = cache(async (
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<DegreeRequirement[]> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
   try {
     const reqs = await prisma.degreeRequirement.findMany({
-      where: { studentId },
+      where: { studentId: resolvedId },
       orderBy: { order: "asc" },
       include: {
         courses: {
@@ -387,11 +409,12 @@ export const getInternships = cache(async (): Promise<Internship[]> => {
 // 6. الإشعارات (Notifications)
 // ----------------------------------------------------
 export const getNotifications = cache(async (
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<Notification[]> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
   const notifications = await prisma.notification.findMany({
     where: {
-      OR: [{ studentId }, { studentId: null }],
+      OR: [{ studentId: resolvedId }, { studentId: null }],
     },
     orderBy: { createdAt: "desc" },
   });
@@ -411,9 +434,10 @@ export const getNotifications = cache(async (
 // 7. محاضرات اليوم (Today Schedule)
 // ----------------------------------------------------
 export const getTodayClasses = cache(async (
-  studentId = DEFAULT_STUDENT_ID
+  studentId?: string
 ): Promise<TodayClass[]> => {
-  const courses = await getEnrolledCourses(studentId);
+  const resolvedId = await resolveCurrentStudentId(studentId);
+  const courses = await getEnrolledCourses(resolvedId);
   const today = getTodayDay(); // e.g. "sun", "mon", etc.
 
   const classes: TodayClass[] = [];

@@ -374,7 +374,15 @@ export default function SettingsPage() {
             description={t.settings.logoutDesc}
             chevron={Chevron}
             destructive
-            onClick={() => {
+            onClick={async () => {
+              try {
+                await fetch("/api/student/auth/logout", { method: "POST" });
+              } catch {}
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("masar_logged_in");
+                localStorage.removeItem("masar_user_name");
+                localStorage.removeItem("masar_user_major");
+              }
               window.location.href = "/login";
             }}
           />

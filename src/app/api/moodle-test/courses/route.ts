@@ -1,13 +1,33 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { decryptToken } from "@/lib/crypto";
+import { getSession } from "@/lib/auth";
 
 export async function GET() {
   try {
-    // 1. جلب بيانات الاتصال المحفوظة للطالب
-    const student = await prisma.student.findFirst({
-      select: { id: true },
-    });
+    // 1. جلب بيانات الاتصال المحفوظة للطالب الحالي
+    const session = await getSession();
+    let student = null;
+
+    if (session && session.userType === "student" && session.userId) {
+      student = await prisma.student.findUnique({
+        where: { id: session.userId },
+        select: { id: true },
+      });
+    }
+
+    if (!student) {
+      student = await prisma.student.findFirst({
+        where: { id: "s-001" },
+        select: { id: true },
+      });
+    }
+
+    if (!student) {
+      student = await prisma.student.findFirst({
+        select: { id: true },
+      });
+    }
 
     if (!student) {
       return NextResponse.json(

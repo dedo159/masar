@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encryptToken } from "@/lib/crypto";
 import { syncMoodleDataForStudent } from "@/lib/moodle-sync";
+import { getSession } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -114,16 +115,28 @@ export async function POST(request: Request) {
       console.warn("Could not fetch site_info during connect (optional step):", e);
     }
 
-    // 7. حفظ / تحديث بيانات الاتصال في قاعدة البيانات للطالب الحالي (s-001)
-    let student = await prisma.student.findFirst({
-      where: {
-        OR: [
-          { id: "s-001" },
-          { studentId: username.trim() },
-        ],
-      },
-      select: { id: true },
-    });
+    // 7. حفظ / تحديث بيانات الاتصال في قاعدة البيانات للطالب الحالي
+    const session = await getSession();
+    let student = null;
+
+    if (session && session.userType === "student" && session.userId) {
+      student = await prisma.student.findUnique({
+        where: { id: session.userId },
+        select: { id: true },
+      });
+    }
+
+    if (!student) {
+      student = await prisma.student.findFirst({
+        where: {
+          OR: [
+            { studentId: username.trim() },
+            { id: "s-001" },
+          ],
+        },
+        select: { id: true },
+      });
+    }
 
     if (!student) {
       student = await prisma.student.findFirst({
@@ -140,13 +153,8 @@ export async function POST(request: Request) {
 
     // حفظ التخصص فوراً في قاعدة البيانات إذا تم إدخاله
     if (major && typeof major === "string" && major.trim()) {
-      await prisma.student.updateMany({
-        where: {
-          OR: [
-            { id: student.id },
-            { id: "s-001" },
-          ],
-        },
+      await prisma.student.update({
+        where: { id: student.id },
         data: {
           major: major.trim(),
         },
