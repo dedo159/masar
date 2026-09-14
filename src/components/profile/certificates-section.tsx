@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Upload, Trash2, Award, Calendar, FileText } from "lucide-react";
+import { Plus, Upload, Trash2, Award, Calendar, FileText, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -185,7 +185,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
               <div className="flex items-start opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button 
                   variant="ghost" 
-                  size="icon-xs" 
+                  size="icon-sm" 
                   className="text-destructive hover:bg-destructive/10 h-7 w-7"
                   onClick={() => handleDelete(cert.id)}
                   disabled={deletingId === cert.id}
@@ -195,7 +195,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
                 {cert.fileData && (
                   <Button 
                     variant="ghost" 
-                    size="icon-xs" 
+                    size="icon-sm" 
                     className="text-primary hover:bg-primary/10 h-7 w-7 ms-1"
                     onClick={() => {
                       const w = window.open();
