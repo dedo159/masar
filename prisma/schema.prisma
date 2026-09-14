@@ -25,6 +25,7 @@ model University {
 
   students  Student[]
   staff     UniversityStaff[]
+  announcements Announcement[]
 
   @@map("universities")
 }
@@ -69,6 +70,8 @@ model Student {
   @@index([studentId])
   @@index([email])
   @@index([universityId])
+  announcementLikes AnnouncementLike[]
+
   @@map("students")
 }
 
@@ -558,4 +561,37 @@ model StudentCertificate {
 
   @@index([studentId])
   @@map("student_certificates")
+}
+
+// --------------------------------------------
+// Announcements
+// --------------------------------------------
+model Announcement {
+  id           String     @id @default(uuid())
+  universityId String
+  title        String
+  body         String
+  category     String
+  isPinned     Boolean    @default(false)
+  publishedAt  DateTime   @default(now())
+  expiresAt    DateTime?
+  createdAt    DateTime   @default(now())
+
+  university   University @relation(fields: [universityId], references: [id])
+  likes        AnnouncementLike[]
+
+  @@map("announcements")
+}
+
+model AnnouncementLike {
+  id             String       @id @default(uuid())
+  studentId      String
+  announcementId String
+  createdAt      DateTime     @default(now())
+
+  student        Student      @relation(fields: [studentId], references: [id])
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, announcementId])
+  @@map("announcement_likes")
 }

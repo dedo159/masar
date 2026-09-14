@@ -11,6 +11,7 @@ import {
   User,
   Tag,
   TrendingUp,
+  Megaphone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
@@ -25,6 +26,7 @@ export function BottomNav() {
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
 
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
+    { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/deals", icon: Tag, label: t.nav.dealsShort },
     { href: "/profile", icon: User, label: t.nav.profile },
@@ -66,6 +68,7 @@ export function Sidebar() {
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
 
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
+    { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/settings", icon: Settings, label: t.nav.settings },

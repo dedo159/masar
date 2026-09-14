@@ -1,7 +1,7 @@
 "use client";
 
 import { useChat } from 'ai/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useResumeStore } from '@/lib/resume/store';
 import { Button } from '@/components/ui/button';
 import { Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
@@ -9,16 +9,35 @@ import { cn } from '@/lib/utils';
 
 export function ResumeChat() {
   const store = useResumeStore();
-  const { messages, input, handleInputChange, handleSubmit, addToolResult, isLoading, error } = useChat({
+
+  const { messages, setMessages, input, handleInputChange, handleSubmit, addToolResult, isLoading, error } = useChat({
     api: '/api/resume-ai',
     initialMessages: [
       {
-        id: 'initial',
+        id: 'welcome',
         role: 'assistant',
-        content: "Hello! I'm your AI Career Coach. Let's craft an outstanding ATS-friendly resume. I can update your summary, refine your project bullets using the X-Y-Z formula, or organize your skills. What would you like to improve first?"
+        content: "مرحباً بك! أنا مساعدك الشخصي وخبير التوظيف التقني. جاهز لمساعدتك في كتابة أو تصميم سيرتك الذاتية؟ (مثلاً اطلب مني تغيير لون السيرة، أو إضافة خبرة جديدة)."
       }
     ]
   });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('resume-chat');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.length > 0) {
+          setMessages(parsed);
+        }
+      } catch (e) {}
+    }
+  }, [setMessages]);
+
+  useEffect(() => {
+    if (messages.length > 1) {
+      localStorage.setItem('resume-chat', JSON.stringify(messages));
+    }
+  }, [messages]);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +80,9 @@ export function ResumeChat() {
                 break;
               case 'update_certifications':
                 store.updateCertifications(args.certifications);
+                break;
+              case 'update_design':
+                store.updateDesign(args);
                 break;
             }
             // Respond to AI that the tool succeeded
@@ -124,7 +146,7 @@ export function ResumeChat() {
         {error && (
           <div className="flex justify-center my-4">
             <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-xl text-center max-w-[80%] border border-destructive/20">
-              حدث خطأ أثناء الاتصال. يرجى التأكد من إضافة مفتاح الذكاء الاصطناعي <code>GOOGLE_GENERATIVE_AI_API_KEY</code> في ملف <code>.env</code> الخاص بك.
+              حدث خطأ أثناء الاتصال: {error.message || 'يرجى التأكد من مفتاح الذكاء الاصطناعي'}
             </div>
           </div>
         )}

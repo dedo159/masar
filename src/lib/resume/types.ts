@@ -44,7 +44,13 @@ export interface ResumeCertification {
   link: string;
 }
 
+export interface ResumeDesign {
+  themeColor: string; // e.g., "blue", "green", "slate", "neutral"
+  fontFamily: string; // e.g., "sans", "serif", "mono"
+}
+
 export interface ResumeStateData {
+  design: ResumeDesign;
   basics: ResumeBasics;
   summary: string;
   skills: ResumeSkillCategory[];
@@ -54,6 +60,7 @@ export interface ResumeStateData {
 }
 
 export const initialResumeState: ResumeStateData = {
+  design: { themeColor: 'blue', fontFamily: 'sans' },
   basics: {
     fullName: "Student Name",
     targetJobTitle: "Software Engineer",
@@ -159,3 +166,5 @@ export const updateCertificationsSchema = z.object({
     link: z.string()
   }))
 });
+
+export const updateDesignSchema = z.object({ themeColor: z.enum(['blue', 'green', 'slate', 'red', 'black']).describe('Primary accent color'), fontFamily: z.enum(['sans', 'serif', 'mono']).describe('Typography style') });

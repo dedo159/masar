@@ -8,24 +8,26 @@ import {
   deleteProjectSchema, 
   updateBulletPointSchema,
   updateEducationSchema,
-  updateCertificationsSchema
+  updateCertificationsSchema,
+  updateDesignSchema
 } from '@/lib/resume/types';
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
-const systemPrompt = `You are a Senior Technical Recruiter & Elite Career Coach specializing in IT and Software Engineering.
-Your goal is to help the user build an ATS-friendly, highly impactful resume.
-You interact conversationally, but you ALSO proactively call tools to modify the user's resume JSON state.
+const systemPrompt = `أنت خبير توظيف تقني ومدرب مهني (Senior Technical Recruiter & Elite Career Coach).
+هدفك هو مساعدة الطالب على بناء سيرة ذاتية احترافية، متوافقة مع أنظمة التوظيف (ATS) وقوية جداً.
+**يجب أن تتحدث مع المستخدم باللغة العربية دائماً وبأسلوب مشجع واحترافي.**
+لديك القدرة على تحديث بيانات السيرة الذاتية لحظياً بالإضافة إلى القدرة على تغيير تصميم السيرة الذاتية (اللون والخط).
 
-### strict Rules:
-1. Use Google's X-Y-Z formula for bullet points: "Accomplished [X] as measured by [Y], by doing [Z]".
-2. NO FLUFF. Remove weak words like "passionate", "team player", "hard worker".
-3. NO PROGRESS BARS for skills. Just list technical skills by category (Languages, Frameworks, Databases, Tools).
-4. Proactively ask for and invent (if user agrees) technical metrics (e.g., "improved query speed by 40%", "reduced latency by 200ms", "scaled to 10k users").
-5. When the user asks to update something, ALWAYS call the appropriate tool to update the JSON state immediately, then reply confirming the change.
-6. Keep your conversational responses concise, encouraging, and focused on actionable improvements.
+### قواعد صارمة:
+1. التحدث باللغة العربية فقط في ردودك، ولكن يمكنك كتابة المصطلحات التقنية بالإنجليزية.
+2. استخدم صيغة Google (X-Y-Z) لكتابة الإنجازات: "أنجزت [X] كما يقاس بـ [Y] من خلال فعل [Z]".
+3. لا تستخدم الكلمات الإنشائية الضعيفة، وركز على الأرقام والنتائج.
+4. اطلب من المستخدم أرقاماً (مثال: تقليل وقت التحميل 20٪).
+5. عندما يطلب المستخدم تعديلاً (حتى لو كان تغيير لون أو خط السيرة)، قم **دائماً** باستدعاء الأداة (Tool) المناسبة لتنفيذ التعديل على الفور.
+6. اجعل ردودك قصيرة، مركزة، ومحفزة.
 
 You have access to the user's current resume state (passed in context or implicitly through tools). When modifying, use the tools provided.`;
 
@@ -43,7 +45,7 @@ export async function POST(req: Request) {
 
   const result = await streamText({
     // @ts-expect-error - Interface mismatch between older ai package and new @ai-sdk/google
-    model: google('gemini-1.5-pro-latest'), // Using Gemini 1.5 Pro
+    model: google('gemini-2.5-flash'), // Using Gemini 2.5 Flash
     system: systemPrompt,
     messages,
     tools: {
@@ -78,6 +80,10 @@ export async function POST(req: Request) {
       update_certifications: tool({
         description: "Update the certifications.",
         parameters: updateCertificationsSchema,
+      }),
+      update_design: tool({
+        description: "Update the resume visual design (color and font).",
+        parameters: updateDesignSchema,
       }),
     },
   });

@@ -2,6 +2,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { QuickStatsSection } from "@/components/dashboard/quick-stats";
 import { TodayScheduleSection } from "@/components/dashboard/today-schedule";
 import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines";
+import { LatestAnnouncementWidget } from "@/components/dashboard/latest-announcement";
 
 export const revalidate = 60;
 
@@ -17,11 +18,13 @@ export default function HomePage() {
   return (
     <>
       <PageHeader
-        title="مسار"
-        subtitle="date"
+        title="مرحباً"
+        subtitle={today}
       />
 
       <div className="px-4 py-5 space-y-6 max-w-7xl mx-auto">
+        <LatestAnnouncementWidget />
+
         {/* 1. Quick Stats (KPIs) */}
         <QuickStatsSection />
 
