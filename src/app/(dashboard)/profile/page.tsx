@@ -14,27 +14,9 @@ export default async function ProfilePage() {
     include: {
       university: true,
       moodleConnection: true,
-      enrollments: {
-        include: {
-          course: true,
-        },
+      certificates: {
+        orderBy: { issueDate: "desc" },
       },
-    },
-  })) || (await prisma.student.findFirst({
-    where: { id: "s-001" },
-    include: {
-      university: true,
-      moodleConnection: true,
-      enrollments: {
-        include: {
-          course: true,
-        },
-      },
-    },
-  })) || (await prisma.student.findFirst({
-    include: {
-      university: true,
-      moodleConnection: true,
       enrollments: {
         include: {
           course: true,

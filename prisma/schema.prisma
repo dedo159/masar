@@ -64,6 +64,7 @@ model Student {
   studentSkills           StudentSkill[]
   passkeys                Passkey[]
   pushSubscriptions       PushSubscription[]
+  certificates            StudentCertificate[]
 
   @@index([studentId])
   @@index([email])
@@ -538,4 +539,23 @@ model InternshipRequiredSkill {
   @@index([internshipId])
   @@index([skillId])
   @@map("internship_required_skills")
+}
+
+// --------------------------------------------
+// 25. الشهادات (Student Certificates)
+// --------------------------------------------
+model StudentCertificate {
+  id           String   @id @default(uuid())
+  studentId    String
+  name         String   // e.g. "Google Data Analytics", "AWS Certified Cloud Practitioner"
+  issuer       String   // e.g. "Coursera", "AWS"
+  issueDate    DateTime
+  fileData     String?  @db.Text // Base64 encoded file data
+  fileType     String?  // e.g. "application/pdf"
+  createdAt    DateTime @default(now())
+
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@map("student_certificates")
 }

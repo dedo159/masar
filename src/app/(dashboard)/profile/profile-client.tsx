@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { ProfileEditor } from "@/components/profile/profile-editor";
+import { CertificatesSection } from "@/components/profile/certificates-section";
 import { useLanguage } from "@/components/providers/language-provider";
 import {
   translateStudentName,
@@ -43,6 +44,7 @@ interface ProfileClientProps {
     university?: { name: string; nameEn?: string | null } | null;
     moodleConnection?: { moodleBaseUrl: string } | null;
     enrollments: Array<{ course: any }>;
+    certificates?: Array<any>;
   };
   skillsList: string[];
   initials: string;
@@ -163,8 +165,11 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
           </div>
         </div>
 
+        {/* Certificates Section */}
+        <CertificatesSection certificates={student.certificates || []} />
+
         {/* Account Quick Links */}
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden mt-6">
           <Link
             href="/settings"
             className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary/50 transition-colors"
