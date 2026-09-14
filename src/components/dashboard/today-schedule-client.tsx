@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import { formatTime, cn } from "@/lib/utils";
@@ -21,6 +22,14 @@ interface TodayScheduleClientProps {
 
 export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleClientProps) {
   const { t, isRtl, language } = useLanguage();
+  const [webcalUrl, setWebcalUrl] = useState<string>("");
+
+  useEffect(() => {
+    if (studentId) {
+      setWebcalUrl(`webcal://${window.location.host}/api/calendar/${studentId}`);
+    }
+  }, [studentId]);
+
   const hasClasses = todayClasses.length > 0;
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
 
@@ -36,18 +45,15 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         </div>
         
         <div className="flex items-center gap-2">
-          {studentId && (
-            <button
-              onClick={() => {
-                const url = `webcal://${window.location.host}/api/calendar/${studentId}`;
-                window.location.href = url;
-              }}
+          {studentId && webcalUrl && (
+            <a
+              href={webcalUrl}
               className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
               title="ربط ومزامنة الجدول مع تقويم الهاتف (Google Calendar / Apple Calendar)"
             >
               <CalendarDays className="h-3.5 w-3.5" />
               <span>مزامنة التقويم</span>
-            </button>
+            </a>
           )}
           <span className="text-xs text-muted-foreground font-medium">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
