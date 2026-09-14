@@ -226,12 +226,7 @@ export default function LoginPage() {
           }
         }
 
-        // Check if biometric is available and offer setup
-        if (biometricAvailable) {
-          setLoading(false);
-          setShowBiometricSetup(true);
-          return;
-        }
+
 
         setTimeout(() => {
           router.push("/");
@@ -275,12 +270,7 @@ export default function LoginPage() {
         }
       }
 
-      // Check if biometric is available and offer setup
-      if (biometricAvailable) {
-        setLoading(false);
-        setShowBiometricSetup(true);
-        return;
-      }
+
 
       setTimeout(() => {
         router.push("/");
