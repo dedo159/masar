@@ -124,7 +124,7 @@ export function ResumeChat() {
         {error && (
           <div className="flex justify-center my-4">
             <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-xl text-center max-w-[80%] border border-destructive/20">
-              حدث خطأ أثناء الاتصال. يرجى التأكد من إضافة مفتاح الذكاء الاصطناعي <code>OPENAI_API_KEY</code> في ملف <code>.env</code> الخاص بك.
+              حدث خطأ أثناء الاتصال. يرجى التأكد من إضافة مفتاح الذكاء الاصطناعي <code>GOOGLE_GENERATIVE_AI_API_KEY</code> في ملف <code>.env</code> الخاص بك.
             </div>
           </div>
         )}

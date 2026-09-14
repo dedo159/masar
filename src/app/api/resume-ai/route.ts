@@ -1,5 +1,5 @@
 import { streamText, tool } from 'ai';
-import { createOpenAI } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { 
   updateBasicsSchema, 
   updateSummarySchema, 
@@ -11,10 +11,8 @@ import {
   updateCertificationsSchema
 } from '@/lib/resume/types';
 
-// Depending on the key, we can use openai or gemini. Using openai format since we installed @ai-sdk/openai.
-// In reality, this requires OPENAI_API_KEY. We'll use a placeholder or assume it's in the environment.
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'dummy_key',
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
 const systemPrompt = `You are a Senior Technical Recruiter & Elite Career Coach specializing in IT and Software Engineering.
@@ -34,17 +32,17 @@ You have access to the user's current resume state (passed in context or implici
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   
-  if (!apiKey || apiKey === 'dummy_key') {
+  if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: 'Missing OPENAI_API_KEY in .env file' }), 
+      JSON.stringify({ error: 'Missing GOOGLE_GENERATIVE_AI_API_KEY in .env file' }), 
       { status: 401, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   const result = await streamText({
-    model: openai('gpt-4o'), // Or any capable model
+    model: google('gemini-1.5-pro-latest'), // Using Gemini 1.5 Pro
     system: systemPrompt,
     messages,
     tools: {
