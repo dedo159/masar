@@ -42,6 +42,7 @@ export async function POST(req: Request) {
   }
 
   const result = await streamText({
+    // @ts-expect-error - Interface mismatch between older ai package and new @ai-sdk/google
     model: google('gemini-1.5-pro-latest'), // Using Gemini 1.5 Pro
     system: systemPrompt,
     messages,
