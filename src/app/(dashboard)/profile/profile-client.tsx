@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { ProfileEditor } from "@/components/profile/profile-editor";
@@ -170,6 +171,24 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
 
         {/* Account Quick Links */}
         <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden mt-6">
+          <Link
+            href="/resume-builder"
+            className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary/50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <Sparkles className="h-4 w-4" strokeWidth={1.5} />
+              </div>
+              <div className="text-start">
+                <p className="text-sm font-medium text-foreground">{isRtl ? "مُنشئ السيرة الذاتية (الذكاء الاصطناعي)" : "AI Resume Builder"}</p>
+                <p className="text-xs text-muted-foreground">
+                  {isRtl ? "أنشئ سيرتك الذاتية المتوافقة مع ATS بمساعدة الذكاء الاصطناعي" : "Build an ATS-friendly resume with AI assistance"}
+                </p>
+              </div>
+            </div>
+            <Chevron className="h-4 w-4 text-muted-foreground" />
+          </Link>
+
           <Link
             href="/settings"
             className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary/50 transition-colors"
