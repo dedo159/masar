@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const res = NextResponse.json({ success: true, options });
     res.cookies.set('webauthn_challenge', options.challenge, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production' && process.env.VERCEL === '1',
       sameSite: 'strict',
       path: '/',
       maxAge: 300, // 5 minutes
