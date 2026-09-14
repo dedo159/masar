@@ -49,13 +49,30 @@ export function NotificationsDropdown() {
     setPermission(result);
   };
 
-  const showSystemNotification = (title: string, body: string) => {
-    if ("Notification" in window && Notification.permission === "granted") {
-      new window.Notification(title, {
-        body,
-        icon: "/favicon.ico",
-        dir: isRtl ? "rtl" : "ltr"
-      });
+  const showSystemNotification = async (title: string, body: string) => {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+    const options = {
+      body,
+      icon: "/favicon.ico",
+      dir: isRtl ? "rtl" : ("ltr" as "rtl" | "ltr" | "auto"),
+    };
+
+    try {
+      if ("serviceWorker" in navigator) {
+        const registration = await navigator.serviceWorker.ready;
+        if (registration && registration.showNotification) {
+          await registration.showNotification(title, options);
+          return;
+        }
+      }
+      // Fallback
+      new window.Notification(title, options);
+    } catch (e) {
+      console.error("Failed to show notification:", e);
+      try {
+        new window.Notification(title, options);
+      } catch (e2) {}
     }
   };
 
