@@ -115,28 +115,6 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
           </div>
         </div>
 
-        {/* Academic Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <div className="flex justify-center mb-1.5">
-              <BookOpen className="h-4 w-4 text-primary" strokeWidth={1.5} />
-            </div>
-            <p className="text-2xl font-bold tabular-nums text-foreground">
-              {enrolledCourses.length}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">{t.profile.enrolledCourses}</p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <div className="flex justify-center mb-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
-            </div>
-            <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
-              {t.profile.moodleStatus}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">{t.profile.moodlePortal}</p>
-          </div>
-        </div>
 
         {/* Interactive Skills and Social Links Editor */}
         <ProfileEditor
