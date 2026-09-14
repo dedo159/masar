@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import { formatTime, cn } from "@/lib/utils";
@@ -21,6 +22,25 @@ interface TodayScheduleClientProps {
 
 export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleClientProps) {
   const { t, isRtl, language } = useLanguage();
+  const [calendarHref, setCalendarHref] = useState<string>("");
+
+  useEffect(() => {
+    if (studentId) {
+      const absoluteUrl = `https://${window.location.host}/api/calendar/${studentId}`;
+      const ua = navigator.userAgent.toLowerCase();
+      
+      if (ua.includes("android")) {
+        // Android: Force open Google Calendar app, fallback to Play Store
+        setCalendarHref(`intent://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}#Intent;scheme=https;package=com.google.android.calendar;end`);
+      } else if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("ipod")) {
+        // iOS: webcal automatically opens Apple Calendar
+        setCalendarHref(`webcal://${window.location.host}/api/calendar/${studentId}`);
+      } else {
+        // Desktop: Open Google Calendar web
+        setCalendarHref(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
+      }
+    }
+  }, [studentId]);
 
   const hasClasses = todayClasses.length > 0;
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
@@ -37,9 +57,11 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         </div>
         
         <div className="flex items-center gap-2">
-          {studentId && (
+          {studentId && calendarHref && (
             <a
-              href={`/api/calendar/${studentId}`}
+              href={calendarHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
               title="ربط ومزامنة الجدول مع تقويم الهاتف"
             >
