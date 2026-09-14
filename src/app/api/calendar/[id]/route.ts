@@ -30,8 +30,7 @@ export async function GET(
 ) {
   const { id } = await params;
 
-  // UUID should be 36 characters long, this prevents people trying simple integers
-  if (!id || id.length < 30) {
+  if (!id) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
