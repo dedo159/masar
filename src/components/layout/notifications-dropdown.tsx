@@ -58,7 +58,11 @@ export function NotificationsDropdown() {
   const subscribeToPush = async () => {
     if (!("serviceWorker" in navigator)) return;
     try {
-      const registration = await navigator.serviceWorker.ready;
+      // Fix for mobile browsers where .ready hangs
+      await navigator.serviceWorker.register("/sw.js");
+      const registration = await navigator.serviceWorker.getRegistration();
+      if (!registration || !registration.pushManager) return;
+
       // Hardcoded for demo to ensure it works on Vercel without env setup
       const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
       
@@ -67,12 +71,19 @@ export function NotificationsDropdown() {
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
       });
 
-      await fetch("/api/notifications/push/subscribe", {
+      const response = await fetch("/api/notifications/push/subscribe", {
         method: "POST",
         body: JSON.stringify(subscription),
         headers: { "Content-Type": "application/json" },
       });
-    } catch (e) {
+      
+      if (response.ok) {
+        alert("تم الاشتراك بإشعارات الهاتف بنجاح! 🚀");
+      } else {
+        alert("فشل حفظ الاشتراك في السيرفر.");
+      }
+    } catch (e: any) {
+      alert("خطأ أثناء تفعيل الإشعارات: " + e.message);
       console.error("Push subscription failed", e);
     }
   };
@@ -248,7 +259,11 @@ export function NotificationsDropdown() {
                   onClick={async () => {
                     // Try subscribing again just in case it failed previously
                     await subscribeToPush();
-                    fetch("/api/notifications/push/test", { method: "POST" });
+                    const res = await fetch("/api/notifications/push/test", { method: "POST" });
+                    if (!res.ok) {
+                      const data = await res.json();
+                      alert("فشل إرسال الإشعار: " + (data.error || ""));
+                    }
                   }}
                   className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
                 >
