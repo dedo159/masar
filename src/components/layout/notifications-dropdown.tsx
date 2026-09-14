@@ -44,10 +44,46 @@ export function NotificationsDropdown() {
     }
   }, []);
 
+  function urlBase64ToUint8Array(base64String: string) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+
+  const subscribeToPush = async () => {
+    if (!("serviceWorker" in navigator)) return;
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      if (!vapidPublicKey) return;
+
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+      });
+
+      await fetch("/api/notifications/push/subscribe", {
+        method: "POST",
+        body: JSON.stringify(subscription),
+        headers: { "Content-Type": "application/json" },
+      });
+    } catch (e) {
+      console.error("Push subscription failed", e);
+    }
+  };
+
   const requestPermission = async () => {
     if (!("Notification" in window)) return;
     const result = await Notification.requestPermission();
     setPermission(result);
+    if (result === "granted") {
+      await subscribeToPush();
+    }
   };
 
   const showSystemNotification = async (title: string, body: string) => {
@@ -209,7 +245,11 @@ export function NotificationsDropdown() {
               {permission === "granted" && (
                 <button
                   type="button"
-                  onClick={() => showSystemNotification("تجربة", "هذا إشعار خارجي لتجربة النظام")}
+                  onClick={async () => {
+                    // Try subscribing again just in case it failed previously
+                    await subscribeToPush();
+                    fetch("/api/notifications/push/test", { method: "POST" });
+                  }}
                   className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
                 >
                   {language === "en" ? "Test Alert" : "تجربة التنبيه"}

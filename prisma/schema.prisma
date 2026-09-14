@@ -63,6 +63,7 @@ model Student {
   contentViews            ContentView[]
   studentSkills           StudentSkill[]
   passkeys                Passkey[]
+  pushSubscriptions       PushSubscription[]
 
   @@index([studentId])
   @@index([email])
@@ -87,6 +88,22 @@ model Passkey {
 
   @@index([studentId])
   @@map("passkeys")
+}
+
+// --------------------------------------------
+// 2c. اشتراكات الإشعارات (Web Push Subscriptions)
+// --------------------------------------------
+model PushSubscription {
+  id        String   @id @default(uuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([studentId])
+  @@map("push_subscriptions")
 }
 
 // --------------------------------------------
