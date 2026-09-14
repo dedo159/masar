@@ -36,6 +36,7 @@ export function NotificationsDropdown() {
   
   // Track previous unread count to detect new notifications
   const prevUnreadCountRef = useRef<number>(0);
+  const isFirstFetchRef = useRef<boolean>(true);
 
   useEffect(() => {
     if ("Notification" in window) {
@@ -89,12 +90,15 @@ export function NotificationsDropdown() {
       setNotifications(data);
       
       const unreadCount = data.filter((n) => !n.read).length;
-      // If we have more unread notifications than before, trigger system notification
-      if (unreadCount > prevUnreadCountRef.current && prevUnreadCountRef.current > 0) {
+      
+      // If we have more unread notifications than before, and it's not the first fetch
+      if (!isFirstFetchRef.current && unreadCount > prevUnreadCountRef.current) {
         const newest = data.find((n) => !n.read);
         if (newest) showSystemNotification(newest.title, newest.body);
       }
+      
       prevUnreadCountRef.current = unreadCount;
+      isFirstFetchRef.current = false;
     } catch (e) {
       console.error("Failed to fetch notifications from API:", e);
     } finally {
