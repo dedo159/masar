@@ -31,12 +31,46 @@ export function NotificationsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [permission, setPermission] = useState<NotificationPermission>("default");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Track previous unread count to detect new notifications
+  const prevUnreadCountRef = useRef<number>(0);
+
+  useEffect(() => {
+    if ("Notification" in window) {
+      setPermission(Notification.permission);
+    }
+  }, []);
+
+  const requestPermission = async () => {
+    if (!("Notification" in window)) return;
+    const result = await Notification.requestPermission();
+    setPermission(result);
+  };
+
+  const showSystemNotification = (title: string, body: string) => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      new window.Notification(title, {
+        body,
+        icon: "/favicon.ico",
+        dir: isRtl ? "rtl" : "ltr"
+      });
+    }
+  };
 
   const fetchNotifications = async () => {
     try {
       const data = await api.getNotifications();
       setNotifications(data);
+      
+      const unreadCount = data.filter((n) => !n.read).length;
+      // If we have more unread notifications than before, trigger system notification
+      if (unreadCount > prevUnreadCountRef.current && prevUnreadCountRef.current > 0) {
+        const newest = data.find((n) => !n.read);
+        if (newest) showSystemNotification(newest.title, newest.body);
+      }
+      prevUnreadCountRef.current = unreadCount;
     } catch (e) {
       console.error("Failed to fetch notifications from API:", e);
     } finally {
@@ -44,8 +78,11 @@ export function NotificationsDropdown() {
     }
   };
 
+  // Poll for new notifications every 15 seconds to test external notifications
   useEffect(() => {
     fetchNotifications();
+    const interval = setInterval(fetchNotifications, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -131,16 +168,36 @@ export function NotificationsDropdown() {
                 </Badge>
               )}
             </div>
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                onClick={markAllAsRead}
-                className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 font-medium"
-              >
-                <CheckCheck className="h-3.5 w-3.5" />
-                <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {permission === "default" && (
+                <button
+                  type="button"
+                  onClick={requestPermission}
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
+                >
+                  {language === "en" ? "Enable Alerts" : "تفعيل التنبيهات"}
+                </button>
+              )}
+              {permission === "granted" && (
+                <button
+                  type="button"
+                  onClick={() => showSystemNotification("تجربة", "هذا إشعار خارجي لتجربة النظام")}
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
+                >
+                  {language === "en" ? "Test Alert" : "تجربة التنبيه"}
+                </button>
+              )}
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={markAllAsRead}
+                  className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 font-medium"
+                >
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* List */}
