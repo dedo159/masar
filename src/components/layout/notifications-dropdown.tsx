@@ -60,7 +60,14 @@ export function NotificationsDropdown() {
 
     try {
       if ("serviceWorker" in navigator) {
-        const registration = await navigator.serviceWorker.ready;
+        // First try to register it if it doesn't exist
+        try {
+          await navigator.serviceWorker.register("/sw.js");
+        } catch (e) {
+          console.error("SW reg failed", e);
+        }
+        
+        const registration = await navigator.serviceWorker.getRegistration();
         if (registration && registration.showNotification) {
           await registration.showNotification(title, options);
           return;
