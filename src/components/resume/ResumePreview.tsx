@@ -64,14 +64,14 @@ export const ResumePreview = forwardRef<HTMLDivElement, {}>((_, ref) => {
           {data.basics.location && (
             <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-[var(--theme-color)]" /> {data.basics.location}</span>
           )}
-          {data.basics.Briefcase && (
-            <a href={`https://${data.basics.Briefcase}`} className="flex items-center gap-1.5 hover:text-[var(--theme-color)] transition-colors">
-              <Briefcase className="w-4 h-4 text-[var(--theme-color)]" /> {data.basics.Briefcase}
+          {data.basics.linkedin && (
+            <a href={`https://${data.basics.linkedin}`} className="flex items-center gap-1.5 hover:text-[var(--theme-color)] transition-colors">
+              <Briefcase className="w-4 h-4 text-[var(--theme-color)]" /> {data.basics.linkedin}
             </a>
           )}
-          {data.basics.Code && (
-            <a href={`https://${data.basics.Code}`} className="flex items-center gap-1.5 hover:text-[var(--theme-color)] transition-colors">
-              <Code className="w-4 h-4 text-[var(--theme-color)]" /> {data.basics.Code}
+          {data.basics.github && (
+            <a href={`https://${data.basics.github}`} className="flex items-center gap-1.5 hover:text-[var(--theme-color)] transition-colors">
+              <Code className="w-4 h-4 text-[var(--theme-color)]" /> {data.basics.github}
             </a>
           )}
           {data.basics.portfolio && (
