@@ -3,9 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { requireAuth } from '@/lib/auth';
 import webpush from 'web-push';
 
-const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '';
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || '';
-const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@example.com';
+const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
+const vapidPrivateKey = "aHOrks_1saMyiqgMPAC_yu1uUplmpVZ5NOFbxsI0TtE";
+const vapidSubject = 'mailto:admin@example.com';
 
 if (vapidPublicKey && vapidPrivateKey) {
   webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
