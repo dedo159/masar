@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, AlertCircle, CheckCircle2, Globe, Sparkles } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Globe, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
+import { startRegistration, startAuthentication } from "@simplewebauthn/browser";
 
 const universities = [
   { id: "aau", nameAr: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University", moodleUrl: "https://vclass.ammanu.edu.jo" },
@@ -20,16 +21,158 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [major, setMajor] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [biometricLoading, setBiometricLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [showBiometricSetup, setShowBiometricSetup] = useState(false);
 
   // Realtime field validation indicators
   const isUsernameValid = username.trim().length >= 3;
   const isPasswordValid = password.length >= 4;
 
+  // Check if WebAuthn is available on this device
+  useEffect(() => {
+    async function checkBiometric() {
+      if (
+        typeof window !== "undefined" &&
+        window.PublicKeyCredential &&
+        typeof window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === "function"
+      ) {
+        try {
+          const available = await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+          setBiometricAvailable(available);
+        } catch {
+          setBiometricAvailable(false);
+        }
+      }
+    }
+    checkBiometric();
+  }, []);
+
   const toggleLanguage = () => {
     setLanguage(language === "ar" ? "en" : "ar");
+  };
+
+  // --- Biometric Login ---
+  const handleBiometricLogin = useCallback(async () => {
+    setError(null);
+    setSuccess(null);
+    setBiometricLoading(true);
+
+    try {
+      // 1. Get authentication options from server
+      const optionsRes = await fetch("/api/student/auth/passkey/login-options", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      });
+
+      if (!optionsRes.ok) {
+        const data = await optionsRes.json().catch(() => ({}));
+        setError(data.error || t.auth.biometricLoginFailed);
+        setBiometricLoading(false);
+        return;
+      }
+
+      const { options } = await optionsRes.json();
+
+      // 2. Start browser biometric prompt
+      const authResponse = await startAuthentication({ optionsJSON: options });
+
+      // 3. Verify with server
+      const verifyRes = await fetch("/api/student/auth/passkey/login-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(authResponse),
+      });
+
+      const verifyData = await verifyRes.json().catch(() => ({}));
+
+      if (!verifyRes.ok || !verifyData.success) {
+        setError(verifyData.error || t.auth.biometricLoginFailed);
+        setBiometricLoading(false);
+        return;
+      }
+
+      setSuccess(t.auth.loginSuccess);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("masar_logged_in", "true");
+        localStorage.setItem("masar_user_name", verifyData.student?.name || "");
+        if (verifyData.student?.major) {
+          localStorage.setItem("masar_user_major", verifyData.student.major);
+        }
+      }
+
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1000);
+    } catch (err: unknown) {
+      // User cancelled the biometric prompt
+      if (err instanceof Error && err.name === "NotAllowedError") {
+        setBiometricLoading(false);
+        return;
+      }
+      setError(t.auth.biometricLoginFailed);
+      setBiometricLoading(false);
+    }
+  }, [router, t]);
+
+  // --- Biometric Registration (after successful login) ---
+  const handleBiometricSetup = async () => {
+    setError(null);
+    setBiometricLoading(true);
+
+    try {
+      // 1. Get registration options
+      const optionsRes = await fetch("/api/student/auth/passkey/register-options", {
+        method: "POST",
+      });
+
+      if (!optionsRes.ok) {
+        setError(t.auth.biometricSetupFailed);
+        setBiometricLoading(false);
+        return;
+      }
+
+      const { options } = await optionsRes.json();
+
+      // 2. Start browser biometric registration
+      const regResponse = await startRegistration({ optionsJSON: options });
+
+      // 3. Verify with server
+      const verifyRes = await fetch("/api/student/auth/passkey/register-verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(regResponse),
+      });
+
+      const verifyData = await verifyRes.json().catch(() => ({}));
+
+      if (!verifyRes.ok || !verifyData.success) {
+        setError(verifyData.error || t.auth.biometricSetupFailed);
+        setBiometricLoading(false);
+        return;
+      }
+
+      setSuccess(t.auth.biometricSetupSuccess);
+      setShowBiometricSetup(false);
+
+      setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1500);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === "NotAllowedError") {
+        setBiometricLoading(false);
+        return;
+      }
+      setError(t.auth.biometricSetupFailed);
+      setBiometricLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,6 +205,7 @@ export default function LoginPage() {
         body: JSON.stringify({
           identifier: username.trim(),
           password,
+          rememberMe,
         }),
       });
 
@@ -81,6 +225,14 @@ export default function LoginPage() {
             localStorage.setItem("masar_user_major", authData.student.major);
           }
         }
+
+        // Check if biometric is available and offer setup
+        if (biometricAvailable) {
+          setLoading(false);
+          setShowBiometricSetup(true);
+          return;
+        }
+
         setTimeout(() => {
           router.push("/");
           router.refresh();
@@ -123,6 +275,13 @@ export default function LoginPage() {
         }
       }
 
+      // Check if biometric is available and offer setup
+      if (biometricAvailable) {
+        setLoading(false);
+        setShowBiometricSetup(true);
+        return;
+      }
+
       setTimeout(() => {
         router.push("/");
         router.refresh();
@@ -132,6 +291,75 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  // --- Biometric Setup Modal ---
+  if (showBiometricSetup) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground" dir={isRtl ? "rtl" : "ltr"}>
+        <div className="w-full max-w-sm space-y-6">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center mb-3">
+              <MasarLogo size="lg" priority />
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-5 shadow-sm text-center">
+            {error && (
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-destructive/10 text-destructive text-xs leading-relaxed border border-destructive/20">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            {success && (
+              <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs leading-relaxed border border-emerald-500/20">
+                <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span>{success}</span>
+              </div>
+            )}
+
+            <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+              <Fingerprint className="h-8 w-8 text-primary" />
+            </div>
+
+            <div>
+              <h2 className="text-lg font-bold text-foreground">{t.auth.biometricSetup}</h2>
+              <p className="text-xs text-muted-foreground mt-1">{t.auth.biometricSetupDesc}</p>
+            </div>
+
+            <Button
+              onClick={handleBiometricSetup}
+              disabled={biometricLoading}
+              className="w-full min-h-[44px] text-sm font-semibold gap-2 cursor-pointer"
+            >
+              {biometricLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>{t.auth.loggingIn}</span>
+                </>
+              ) : (
+                <>
+                  <Fingerprint className="h-4 w-4" />
+                  <span>{t.auth.biometricSetup}</span>
+                </>
+              )}
+            </Button>
+
+            <button
+              onClick={() => {
+                setShowBiometricSetup(false);
+                router.push("/");
+                router.refresh();
+              }}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            >
+              {t.auth.biometricSkip}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative" dir={isRtl ? "rtl" : "ltr"}>
@@ -177,6 +405,38 @@ export default function LoginPage() {
               <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" />
               <span>{success}</span>
             </div>
+          )}
+
+          {/* Biometric Login Button */}
+          {biometricAvailable && (
+            <>
+              <Button
+                type="button"
+                onClick={handleBiometricLogin}
+                disabled={biometricLoading || loading}
+                variant="outline"
+                className="w-full min-h-[48px] text-sm font-semibold gap-2.5 cursor-pointer border-primary/30 hover:bg-primary/5 hover:border-primary/50 transition-all"
+              >
+                {biometricLoading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>{t.auth.loggingIn}</span>
+                  </>
+                ) : (
+                  <>
+                    <Fingerprint className="h-5 w-5 text-primary" />
+                    <span>{t.auth.biometricLogin}</span>
+                  </>
+                )}
+              </Button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-[11px] text-muted-foreground font-medium">{t.auth.biometricOr}</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+            </>
           )}
 
           {/* University selection */}
@@ -253,6 +513,21 @@ export default function LoginPage() {
             />
           </div>
 
+          {/* Remember Me Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              disabled={loading}
+              className="h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer accent-primary"
+            />
+            <label htmlFor="rememberMe" className="text-xs text-foreground cursor-pointer select-none">
+              {t.auth.rememberMe}
+            </label>
+          </div>
+
           {/* Submit Button */}
           <Button
             type="submit"
@@ -296,4 +571,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

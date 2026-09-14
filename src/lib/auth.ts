@@ -29,11 +29,14 @@ function getJwtSecret(): Uint8Array {
 }
 
 // ---- Create Session ----
-export async function createSession(payload: SessionPayload): Promise<string> {
+export async function createSession(payload: SessionPayload, rememberMe: boolean = false): Promise<string> {
+  const expiry = rememberMe ? "30d" : JWT_EXPIRY;
+  const maxAge = rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7;
+
   const token = await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime(JWT_EXPIRY)
+    .setExpirationTime(expiry)
     .sign(getJwtSecret());
 
   const cookieStore = await cookies();
@@ -42,7 +45,7 @@ export async function createSession(payload: SessionPayload): Promise<string> {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge,
   });
 
   return token;

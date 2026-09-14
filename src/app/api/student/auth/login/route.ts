@@ -5,7 +5,7 @@ import { createSession } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
-    const { identifier, username, email, password } = await request.json();
+    const { identifier, username, email, password, rememberMe } = await request.json();
     const loginId = (identifier || username || email || '').trim();
     
     if (!loginId || !password) {
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       universityId: student.universityId,
       name: student.name,
       email: student.email,
-    });
+    }, !!rememberMe);
 
     return NextResponse.json({
       success: true,

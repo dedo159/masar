@@ -63,11 +63,31 @@ model Student {
   dealRedemptions         DealRedemption[]
   contentViews            ContentView[]
   studentSkills           StudentSkill[]
+  passkeys                Passkey[]
 
   @@index([studentId])
   @@index([email])
   @@index([universityId])
   @@map("students")
+}
+
+// --------------------------------------------
+// 2b. مفاتيح البصمة (Passkeys / WebAuthn)
+// --------------------------------------------
+model Passkey {
+  id           String   @id @default(uuid())
+  credentialId String   @unique       // WebAuthn credential ID (base64url)
+  publicKey    Bytes                  // COSE public key
+  counter      BigInt   @default(0)   // Signature counter
+  deviceType   String   @default("singleDevice") // "singleDevice" | "multiDevice"
+  backedUp     Boolean  @default(false)
+  transports   String?               // JSON array: ["internal","hybrid"]
+  studentId    String
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@index([studentId])
+  @@map("passkeys")
 }
 
 // --------------------------------------------
