@@ -39,9 +39,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, issuer, issueDate, fileData, fileType } = body;
+    const { name, issuer, fileData, fileType } = body;
 
-    if (!name || !issuer || !issueDate) {
+    if (!name || !issuer) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -50,7 +50,6 @@ export async function POST(request: Request) {
         studentId: session.userId,
         name,
         issuer,
-        issueDate: new Date(issueDate),
         fileData,
         fileType,
       },

@@ -50,7 +50,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.issuer || !formData.issueDate) return;
+    if (!formData.name || !formData.issuer) return;
 
     setIsUploading(true);
     try {
@@ -130,15 +130,6 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "تاريخ الإصدار" : "Issue Date"}</label>
-              <Input 
-                required 
-                type="date"
-                value={formData.issueDate} 
-                onChange={(e) => setFormData({...formData, issueDate: e.target.value})}
-              />
-            </div>
-            <div>
               <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ملف الشهادة (صورة أو PDF)" : "Certificate File"}</label>
               <Input 
                 type="file" 
@@ -176,10 +167,6 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
                 <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
                   <Building2 className="h-3 w-3" />
                   <span className="truncate">{cert.issuer}</span>
-                </p>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                  <Calendar className="h-3 w-3" />
-                  <span>{new Date(cert.issueDate).toLocaleDateString(isRtl ? 'ar-EG' : 'en-US', { year: 'numeric', month: 'short' })}</span>
                 </p>
               </div>
               <div className="flex items-start opacity-0 group-hover:opacity-100 transition-opacity">
