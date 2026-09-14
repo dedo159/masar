@@ -129,7 +129,7 @@ export async function GET(
   return new NextResponse(value, {
     headers: {
       'Content-Type': 'text/calendar; charset=utf-8',
-      'Content-Disposition': `attachment; filename="masar_schedule_${student.studentId}.ics"`,
+      'Content-Disposition': `inline; filename="masar_schedule_${student.studentId}.ics"`,
     },
   });
 }

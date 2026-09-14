@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import { formatTime, cn } from "@/lib/utils";
@@ -22,17 +21,6 @@ interface TodayScheduleClientProps {
 
 export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleClientProps) {
   const { t, isRtl, language } = useLanguage();
-  const [webcalUrl, setWebcalUrl] = useState<string>("");
-  const [googleCalUrl, setGoogleCalUrl] = useState<string>("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    if (studentId) {
-      const absoluteUrl = `https://${window.location.host}/api/calendar/${studentId}`;
-      setWebcalUrl(`webcal://${window.location.host}/api/calendar/${studentId}`);
-      setGoogleCalUrl(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
-    }
-  }, [studentId]);
 
   const hasClasses = todayClasses.length > 0;
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
@@ -49,54 +37,15 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         </div>
         
         <div className="flex items-center gap-2">
-          {studentId && webcalUrl && (
-            <div className="relative">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
-                title="ربط ومزامنة الجدول"
-              >
-                <CalendarDays className="h-3.5 w-3.5" />
-                <span>مزامنة التقويم</span>
-              </button>
-              
-              {isDropdownOpen && (
-                <>
-                  <div 
-                    className="fixed inset-0 z-40" 
-                    onClick={() => setIsDropdownOpen(false)}
-                  />
-                  <div className={cn(
-                    "absolute top-full mt-1.5 z-50 w-56 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md",
-                    isRtl ? "right-0" : "left-0"
-                  )}>
-                    <a 
-                      href={googleCalUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Google Calendar (مزامنة حية)
-                    </a>
-                    <a 
-                      href={webcalUrl} 
-                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Apple Calendar / iOS
-                    </a>
-                    <a 
-                      href={`/api/calendar/${studentId}`} 
-                      className="relative flex w-full cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => setIsDropdownOpen(false)}
-                    >
-                      Samsung Calendar (تنزيل وفتح مباشر)
-                    </a>
-                  </div>
-                </>
-              )}
-            </div>
+          {studentId && (
+            <a
+              href={`/api/calendar/${studentId}`}
+              className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
+              title="ربط ومزامنة الجدول مع تقويم الهاتف"
+            >
+              <CalendarDays className="h-3.5 w-3.5" />
+              <span>مزامنة التقويم</span>
+            </a>
           )}
           <span className="text-xs text-muted-foreground font-medium">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
