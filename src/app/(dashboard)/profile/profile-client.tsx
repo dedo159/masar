@@ -116,17 +116,7 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
         </div>
 
         {/* Academic Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <div className="flex justify-center mb-1.5">
-              <GraduationCap className="h-4 w-4 text-primary" strokeWidth={1.5} />
-            </div>
-            <p className="text-2xl font-bold tabular-nums text-foreground">
-              {student.gpa || 3.42}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">{t.profile.gpaLabel}</p>
-          </div>
-
+        <div className="grid grid-cols-2 gap-3">
           <div className="rounded-xl border border-border bg-card p-4 text-center">
             <div className="flex justify-center mb-1.5">
               <BookOpen className="h-4 w-4 text-primary" strokeWidth={1.5} />
@@ -135,16 +125,6 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
               {enrolledCourses.length}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">{t.profile.enrolledCourses}</p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4 text-center">
-            <div className="flex justify-center mb-1.5">
-              <Award className="h-4 w-4 text-emerald-500" strokeWidth={1.5} />
-            </div>
-            <p className="text-2xl font-bold tabular-nums text-foreground">
-              {student.completedCredits || 79}
-            </p>
-            <p className="text-xs text-muted-foreground mt-0.5">{t.profile.completedCredits}</p>
           </div>
 
           <div className="rounded-xl border border-border bg-card p-4 text-center">
