@@ -407,37 +407,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Biometric Login Button */}
-          {biometricAvailable && (
-            <>
-              <Button
-                type="button"
-                onClick={handleBiometricLogin}
-                disabled={biometricLoading || loading}
-                variant="outline"
-                className="w-full min-h-[48px] text-sm font-semibold gap-2.5 cursor-pointer border-primary/30 hover:bg-primary/5 hover:border-primary/50 transition-all"
-              >
-                {biometricLoading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{t.auth.loggingIn}</span>
-                  </>
-                ) : (
-                  <>
-                    <Fingerprint className="h-5 w-5 text-primary" />
-                    <span>{t.auth.biometricLogin}</span>
-                  </>
-                )}
-              </Button>
 
-              {/* Divider */}
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-[11px] text-muted-foreground font-medium">{t.auth.biometricOr}</span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-            </>
-          )}
 
           {/* University selection */}
           <div className="space-y-1.5">
@@ -513,28 +483,13 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Remember Me Checkbox */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              disabled={loading}
-              className="h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer accent-primary"
-            />
-            <label htmlFor="rememberMe" className="text-xs text-foreground cursor-pointer select-none">
-              {t.auth.rememberMe}
-            </label>
-          </div>
-
           {/* Submit Button */}
           <Button
             type="submit"
             disabled={loading}
             variant="default"
             size="default"
-            className="w-full min-h-[44px] text-sm font-semibold gap-2 mt-2 cursor-pointer"
+            className="w-full min-h-[44px] text-sm font-semibold gap-2 mt-4 cursor-pointer"
           >
             {loading ? (
               <>
@@ -545,22 +500,6 @@ export default function LoginPage() {
               t.auth.loginBtn
             )}
           </Button>
-
-          {/* Demo Login Link & Register link */}
-          <div className="pt-2 text-center space-y-1">
-            <Link
-              href="/register"
-              className="text-xs text-primary hover:underline font-medium p-1 block"
-            >
-              {language === "en" ? "Don't have an account? Register here →" : "ليس لديك حساب؟ سجّل كطالب جديد ←"}
-            </Link>
-            <Link
-              href="/"
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors p-1 block"
-            >
-              {language === "en" ? "Or enter as Demo Student →" : "أو الدخول كطالب تجريبي (Demo) ←"}
-            </Link>
-          </div>
 
           {/* Security Notice */}
           <p className="text-center text-[11px] text-muted-foreground pt-1 leading-relaxed border-t border-border">
