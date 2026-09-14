@@ -15,6 +15,13 @@ const iconMap: Record<TodayClass["type"], typeof BookOpen> = {
   tutorial: Users,
 };
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 interface TodayScheduleClientProps {
   todayClasses: TodayClass[];
   studentId?: string;
@@ -23,12 +30,13 @@ interface TodayScheduleClientProps {
 export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleClientProps) {
   const { t, isRtl, language } = useLanguage();
   const [webcalUrl, setWebcalUrl] = useState<string>("");
+  const [googleCalUrl, setGoogleCalUrl] = useState<string>("");
 
   useEffect(() => {
     if (studentId) {
-      // Use Google Calendar's subscription endpoint which works universally on Android/Web
       const absoluteUrl = `https://${window.location.host}/api/calendar/${studentId}`;
-      setWebcalUrl(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
+      setWebcalUrl(`webcal://${window.location.host}/api/calendar/${studentId}`);
+      setGoogleCalUrl(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
     }
   }, [studentId]);
 
@@ -48,16 +56,34 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         
         <div className="flex items-center gap-2">
           {studentId && webcalUrl && (
-            <a
-              href={webcalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
-              title="ربط ومزامنة الجدول مع تقويم الهاتف (Google Calendar / Apple Calendar)"
-            >
-              <CalendarDays className="h-3.5 w-3.5" />
-              <span>مزامنة التقويم</span>
-            </a>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
+                  title="ربط ومزامنة الجدول"
+                >
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  <span>مزامنة التقويم</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align={isRtl ? "start" : "end"} className="w-56">
+                <DropdownMenuItem asChild>
+                  <a href={googleCalUrl} target="_blank" rel="noopener noreferrer" className="cursor-pointer">
+                    Google Calendar (مزامنة حية)
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href={webcalUrl} className="cursor-pointer">
+                    Apple Calendar / iOS
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a href={`/api/calendar/${studentId}`} className="cursor-pointer">
+                    Samsung Calendar (تنزيل وفتح مباشر)
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           <span className="text-xs text-muted-foreground font-medium">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
