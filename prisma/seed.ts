@@ -3,7 +3,6 @@ import {
   universities,
   mockStudent,
   mockCourses,
-  mockDegreeRequirements,
   mockInternships,
   mockNotifications,
 } from "../src/lib/mock-data";
@@ -20,8 +19,6 @@ async function main() {
   await prisma.courseFile.deleteMany();
   await prisma.enrollment.deleteMany();
   await prisma.course.deleteMany();
-  await prisma.degreeRequirementCourse.deleteMany();
-  await prisma.degreeRequirement.deleteMany();
   await prisma.student.deleteMany();
   await prisma.university.deleteMany();
   await prisma.internship.deleteMany();
@@ -138,38 +135,7 @@ async function main() {
     }
   }
 
-  // 5. متطلبات التخرج (Degree Requirements)
-  console.log("-> إضافة متطلبات التخرج...");
-  let reqOrder = 0;
-  for (const dr of mockDegreeRequirements) {
-    const requirement = await prisma.degreeRequirement.create({
-      data: {
-        id: dr.id,
-        studentId: student.id,
-        category: dr.category,
-        categoryLabel: dr.categoryLabel,
-        totalCredits: dr.totalCredits,
-        completedCredits: dr.completedCredits,
-        order: reqOrder++,
-      },
-    });
 
-    let courseOrder = 0;
-    for (const drc of dr.courses) {
-      await prisma.degreeRequirementCourse.create({
-        data: {
-          id: drc.id,
-          requirementId: requirement.id,
-          code: drc.code,
-          nameAr: drc.nameAr,
-          credits: drc.credits,
-          status: drc.status,
-          grade: drc.grade ?? null,
-          order: courseOrder++,
-        },
-      });
-    }
-  }
 
   // 6. فرص التدريب (Internships)
   console.log("-> إضافة فرص التدريب...");

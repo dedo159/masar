@@ -6,7 +6,6 @@ import type {
   Student,
   University,
   Course,
-  DegreeRequirement,
   Internship,
   Notification,
   TodayClass,
@@ -241,69 +240,6 @@ export const mockTodayClasses: TodayClass[] = [
   },
 ];
 
-export const mockDegreeRequirements: DegreeRequirement[] = [
-  {
-    id: "dr-001",
-    category: "mandatory",
-    categoryLabel: "متطلبات الكلية الإجبارية",
-    totalCredits: 30,
-    completedCredits: 21,
-    courses: [
-      { id: "dc-001", code: "CS101", nameAr: "مقدمة في علم الحاسوب", credits: 3, status: "completed", grade: "A" },
-      { id: "dc-002", code: "CS102", nameAr: "البرمجة الهيكلية", credits: 3, status: "completed", grade: "B+" },
-      { id: "dc-003", code: "CS201", nameAr: "البرمجة كائنية التوجه", credits: 3, status: "completed", grade: "A-" },
-      { id: "dc-004", code: "CS210", nameAr: "المنطق الرياضي", credits: 3, status: "completed", grade: "B" },
-      { id: "dc-005", code: "CS220", nameAr: "تصميم الدوائر الرقمية", credits: 3, status: "completed", grade: "B+" },
-      { id: "dc-006", code: "CS230", nameAr: "نظرية الحساب", credits: 3, status: "completed", grade: "A" },
-      { id: "dc-007", code: "CS240", nameAr: "نظم التشغيل", credits: 3, status: "completed", grade: "B" },
-      { id: "dc-008", code: "CS301", nameAr: "هياكل البيانات", credits: 3, status: "enrolled" },
-      { id: "dc-009", code: "CS315", nameAr: "قواعد البيانات 2", credits: 3, status: "enrolled" },
-      { id: "dc-010", code: "CS410", nameAr: "الذكاء الاصطناعي", credits: 3, status: "available" },
-    ],
-  },
-  {
-    id: "dr-002",
-    category: "major",
-    categoryLabel: "متطلبات التخصص",
-    totalCredits: 45,
-    completedCredits: 24,
-    courses: [
-      { id: "dc-011", code: "CS320", nameAr: "شبكات الحاسوب", credits: 3, status: "enrolled" },
-      { id: "dc-012", code: "CS330", nameAr: "هندسة البرمجيات", credits: 3, status: "enrolled" },
-      { id: "dc-013", code: "CS350", nameAr: "الأمن المعلوماتي", credits: 3, status: "available" },
-      { id: "dc-014", code: "CS360", nameAr: "الحوسبة السحابية", credits: 3, status: "locked" },
-      { id: "dc-015", code: "CS490", nameAr: "مشروع التخرج", credits: 6, status: "locked" },
-    ],
-  },
-  {
-    id: "dr-003",
-    category: "university",
-    categoryLabel: "متطلبات الجامعة",
-    totalCredits: 18,
-    completedCredits: 15,
-    courses: [
-      { id: "dc-016", code: "AR101", nameAr: "اللغة العربية", credits: 3, status: "completed", grade: "A-" },
-      { id: "dc-017", code: "EN101", nameAr: "اللغة الإنجليزية 1", credits: 3, status: "completed", grade: "B+" },
-      { id: "dc-018", code: "EN102", nameAr: "اللغة الإنجليزية 2", credits: 3, status: "completed", grade: "B" },
-      { id: "dc-019", code: "IS101", nameAr: "الثقافة الإسلامية", credits: 3, status: "completed", grade: "A" },
-      { id: "dc-020", code: "MIL101", nameAr: "التربية العسكرية", credits: 3, status: "completed", grade: "A+" },
-      { id: "dc-021", code: "MATH310", nameAr: "الاحتمالات والإحصاء", credits: 3, status: "enrolled" },
-    ],
-  },
-  {
-    id: "dr-004",
-    category: "elective",
-    categoryLabel: "مواد اختيارية",
-    totalCredits: 12,
-    completedCredits: 6,
-    courses: [
-      { id: "dc-022", code: "CS305", nameAr: "تطوير تطبيقات الويب", credits: 3, status: "completed", grade: "A" },
-      { id: "dc-023", code: "CS306", nameAr: "تعلم الآلة", credits: 3, status: "completed", grade: "A-" },
-      { id: "dc-024", code: "CS307", nameAr: "معالجة الصور", credits: 3, status: "available" },
-      { id: "dc-025", code: "CS308", nameAr: "تطوير تطبيقات الجوال", credits: 3, status: "available" },
-    ],
-  },
-];
 
 export const mockInternships: Internship[] = [
   {

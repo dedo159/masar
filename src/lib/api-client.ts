@@ -1,7 +1,6 @@
 import type {
   Student,
   Course,
-  DegreeRequirement,
   Internship,
   Notification,
   TodayClass,
@@ -29,7 +28,6 @@ export const api = {
   getStudent: () => fetchApi<Student>("/api/students/me"),
   getCourses: () => fetchApi<Course[]>("/api/courses"),
   getCourse: (id: string) => fetchApi<Course>(`/api/courses/${id}`),
-  getDegreeProgress: () => fetchApi<DegreeRequirement[]>("/api/degree-progress"),
   getInternships: () => fetchApi<Internship[]>("/api/internships"),
   getNotifications: () => fetchApi<Notification[]>("/api/notifications"),
   getTodaySchedule: () => fetchApi<TodayClass[]>("/api/today-schedule"),

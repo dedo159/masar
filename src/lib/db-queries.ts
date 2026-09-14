@@ -6,7 +6,6 @@ import type {
   Assignment,
   CourseFile,
   CourseGrade,
-  DegreeRequirement,
   Internship,
   Notification,
   TodayClass,
@@ -328,50 +327,6 @@ export const getCourseById = cache(async (
     assignments,
     files,
   };
-});
-
-// ----------------------------------------------------
-// 4. متطلبات التخرج (Degree Requirements)
-// ----------------------------------------------------
-export const getDegreeRequirements = cache(async (
-  studentId?: string
-): Promise<DegreeRequirement[]> => {
-  const resolvedId = await resolveCurrentStudentId(studentId);
-  try {
-    const reqs = await prisma.degreeRequirement.findMany({
-      where: { studentId: resolvedId },
-      orderBy: { order: "asc" },
-      include: {
-        courses: {
-          orderBy: { order: "asc" },
-        },
-      },
-    });
-
-    return reqs.map((r) => ({
-      id: r.id,
-      category: r.category as DegreeRequirement["category"],
-      categoryLabel: r.categoryLabel,
-      totalCredits: r.totalCredits,
-      completedCredits: r.completedCredits,
-      courses: r.courses.map((c) => ({
-        id: c.id,
-        code: c.code,
-        nameAr: c.nameAr,
-        nameEn: translateCourseName(c.code, c.nameAr, null, "en"),
-        credits: c.credits,
-        status: c.status as "completed" | "enrolled" | "available" | "locked",
-        grade: c.grade || undefined,
-      })),
-    }));
-  } catch {
-    return [
-      { id: "req-1", category: "university", categoryLabel: "متطلبات جامعة", totalCredits: 24, completedCredits: 18, courses: [] },
-      { id: "req-2", category: "major", categoryLabel: "متطلبات كلية وتخصص", totalCredits: 66, completedCredits: 42, courses: [] },
-      { id: "req-3", category: "mandatory", categoryLabel: "مواد إجبارية", totalCredits: 30, completedCredits: 24, courses: [] },
-      { id: "req-4", category: "elective", categoryLabel: "مواد اختيارية", totalCredits: 12, completedCredits: 6, courses: [] },
-    ];
-  }
 });
 
 // ----------------------------------------------------

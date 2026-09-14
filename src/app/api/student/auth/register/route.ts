@@ -80,19 +80,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Automatically create degree requirements template for new student
-    try {
-      await prisma.degreeRequirement.createMany({
-        data: [
-          { studentId: newStudent.id, category: 'university', categoryLabel: 'متطلبات جامعة', totalCredits: 24, completedCredits: 0, order: 1 },
-          { studentId: newStudent.id, category: 'major', categoryLabel: 'متطلبات كلية وتخصص', totalCredits: 66, completedCredits: 0, order: 2 },
-          { studentId: newStudent.id, category: 'mandatory', categoryLabel: 'مواد إجبارية', totalCredits: 30, completedCredits: 0, order: 3 },
-          { studentId: newStudent.id, category: 'elective', categoryLabel: 'مواد اختيارية', totalCredits: 12, completedCredits: 0, order: 4 },
-        ],
-      });
-    } catch (e) {
-      console.warn('Degree requirements template error (non-fatal):', e);
-    }
+
 
     // Issue session
     await createSession({

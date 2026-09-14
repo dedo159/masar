@@ -81,24 +81,7 @@ export type CourseFile = {
   week?: number;
 };
 
-export type DegreeRequirement = {
-  id: string;
-  category: "mandatory" | "university" | "elective" | "major";
-  categoryLabel: string;
-  totalCredits: number;
-  completedCredits: number;
-  courses: DegreeRequirementCourse[];
-};
 
-export type DegreeRequirementCourse = {
-  id: string;
-  code: string;
-  nameAr: string;
-  nameEn?: string;
-  credits: number;
-  status: "completed" | "enrolled" | "available" | "locked";
-  grade?: string;
-};
 
 export type Internship = {
   id: string;

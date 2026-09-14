@@ -56,7 +56,6 @@ model Student {
   enrollments             Enrollment[]
   submissions             Submission[]
   notifications           Notification[]
-  degreeRequirements      DegreeRequirement[]
   moodleConnection        MoodleConnection?
   internshipApplications  InternshipApplication[]
   engagementSnapshots     StudentEngagementSnapshot[]
@@ -213,48 +212,7 @@ model CourseFile {
   @@map("course_files")
 }
 
-// --------------------------------------------
-// 8. فئات متطلبات التخرج (Degree Requirements)
-// --------------------------------------------
-model DegreeRequirement {
-  id               String                   @id @default(uuid())
-  studentId        String
-  category         String                   // "mandatory" | "university" | "elective" | "major"
-  categoryLabel    String                   // "متطلبات الكلية الإجبارية"
-  totalCredits     Int                      // 30
-  completedCredits Int                      @default(0) // 21
-  order            Int                      @default(0)
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime                 @updatedAt
 
-  student          Student                  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  courses          DegreeRequirementCourse[]
-
-  @@index([studentId])
-  @@map("degree_requirements")
-}
-
-// --------------------------------------------
-// 9. مواد متطلبات التخرج (Degree Requirement Courses)
-// --------------------------------------------
-model DegreeRequirementCourse {
-  id            String            @id @default(uuid())
-  requirementId String
-  code          String            // "CS101"
-  nameAr        String            // "مقدمة في علم الحاسوب"
-  credits       Int               @default(3)
-  status        String            @default("available") // "completed" | "enrolled" | "available" | "locked"
-  grade         String?           // "A", "B+", etc.
-  order         Int               @default(0)
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-
-  requirement   DegreeRequirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
-
-  @@index([requirementId])
-  @@index([code])
-  @@map("degree_requirement_courses")
-}
 
 // --------------------------------------------
 // 10. فرص التدريب (Internships)

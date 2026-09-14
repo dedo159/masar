@@ -33,8 +33,8 @@ export default function GrowthError({
         </h2>
         <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
           {isEn
-            ? "We encountered an issue calculating readiness scores and graduation requirements. Please retry or return home."
-            : "نعتذر، واجه الخادم مشكلة أثناء احتساب درجات الجاهزية ومتطلبات التخرج. يمكنك المحاولة مجدداً أو العودة للرئيسية."}
+            ? "Sorry, the server encountered an issue calculating your readiness scores. You can try again or return home."
+            : "نعتذر، واجه الخادم مشكلة أثناء احتساب درجات الجاهزية. يمكنك المحاولة مجدداً أو العودة للرئيسية."}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 mt-6">

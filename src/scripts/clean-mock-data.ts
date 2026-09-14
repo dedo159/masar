@@ -87,59 +87,7 @@ async function main() {
   }
   console.log(`- تم ضبط مواعيد المحاضرات الأسبوعية لـ ${courses.length} مواد مستوردة.`);
 
-  // 5. ربط المواد المستوردة بمتطلبات التخرج وتحديثها
-  const degreeReqs = await prisma.degreeRequirement.findMany({
-    include: { courses: true },
-  });
 
-  for (const dr of degreeReqs) {
-    // إزالة المقررات الوهمية من المتطلبات
-    await prisma.degreeRequirementCourse.deleteMany({
-      where: { requirementId: dr.id },
-    });
-  }
-
-  // إعادة بناء متطلبات الخطة بناءً على مسار الطالب والمواد المستوردة
-  if (degreeReqs.length > 0) {
-    const uniReq = degreeReqs[0];
-    await prisma.degreeRequirementCourse.createMany({
-      data: [
-        {
-          requirementId: uniReq.id,
-          code: "A0110154",
-          nameAr: "المهارات الحياتية",
-          credits: 3,
-          status: "enrolled",
-          grade: "مسجل حالياً",
-        },
-        {
-          requirementId: uniReq.id,
-          code: "A0411601",
-          nameAr: "ثقافة قانونية وحقوق إنسان",
-          credits: 3,
-          status: "enrolled",
-          grade: "مسجل حالياً",
-        },
-        {
-          requirementId: uniReq.id,
-          code: "A0110144",
-          nameAr: "مهارات الاتصال باللغة العربية",
-          credits: 3,
-          status: "enrolled",
-          grade: "مسجل حالياً",
-        },
-        {
-          requirementId: uniReq.id,
-          code: "A0110166",
-          nameAr: "إعلام وعلاقات عامة",
-          credits: 3,
-          status: "enrolled",
-          grade: "مسجل حالياً",
-        },
-      ],
-    });
-    console.log("- تم تحديث متطلبات الخطة الدراسية بالمواد المستوردة.");
-  }
 
   console.log("✅ اكتمل التنظيف! لا توجد أي بيانات وهمية الآن، فقط بيانات الطالب الحقيقية من Moodle.");
 

@@ -1,4 +1,4 @@
-import { DEFAULT_STUDENT_ID, getDegreeRequirements, getStudentProfile, resolveCurrentStudentId } from "@/lib/db-queries";
+import { DEFAULT_STUDENT_ID, getStudentProfile, resolveCurrentStudentId } from "@/lib/db-queries";
 import {
   computeAcademicHealthScore,
   computeCareerReadinessScore,
@@ -15,13 +15,11 @@ export default async function StudentGrowthPage() {
   const [
     healthMetrics,
     careerMetrics,
-    degreeRequirements,
     studentProfile,
     studentSkills,
   ] = await Promise.all([
     computeAcademicHealthScore(studentId).catch(() => ({ score: 75, onTimeRate: 80, avgGrade: 75, engagementRate: 70 })),
     computeCareerReadinessScore(studentId).catch(() => ({ score: 65 })),
-    getDegreeRequirements(studentId).catch(() => []),
     getStudentProfile(studentId).catch(() => null),
     prisma.studentSkill.findMany({
       where: { studentId },
@@ -29,22 +27,12 @@ export default async function StudentGrowthPage() {
     }).catch(() => []),
   ]);
 
-  const totalCredits = degreeRequirements.reduce((sum, r) => sum + r.totalCredits, 0) || studentProfile?.totalCredits || 132;
-  const completedCredits = degreeRequirements.reduce((sum, r) => sum + r.completedCredits, 0) || studentProfile?.completedCredits || 0;
-  const degreePercentage = totalCredits > 0 ? Math.min(100, Math.round((completedCredits / totalCredits) * 100)) : 0;
-  const remainingCredits = Math.max(0, totalCredits - completedCredits);
-
   return (
     <GrowthClient
       healthMetrics={healthMetrics}
       careerMetrics={careerMetrics}
-      degreeRequirements={degreeRequirements as any}
       studentProfile={studentProfile}
       studentSkills={studentSkills}
-      totalCredits={totalCredits}
-      completedCredits={completedCredits}
-      degreePercentage={degreePercentage}
-      remainingCredits={remainingCredits}
     />
   );
 }
