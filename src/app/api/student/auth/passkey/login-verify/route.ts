@@ -25,11 +25,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'البصمة غير مسجلة. يرجى تسجيل الدخول بكلمة المرور.' }, { status: 401 });
     }
 
+    const host = request.headers.get('host') || 'localhost';
+    const rpId = host.split(':')[0];
+    const origin = request.headers.get('origin') || `https://${host}`;
+
     const verification = await verifyPasskeyLogin(
       body,
       expectedChallenge,
       new Uint8Array(passkey.publicKey),
-      passkey.counter
+      passkey.counter,
+      rpId,
+      origin
     );
 
     if (!verification.verified) {

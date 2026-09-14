@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { generatePasskeyRegistrationOptions } from '@/lib/webauthn';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const session = await getSession();
     if (!session || session.userType !== 'student') {
@@ -21,9 +21,14 @@ export async function POST() {
 
     const existingIds = student.passkeys.map((p) => p.credentialId);
 
+    // Dynamic RP ID mapping
+    const host = request.headers.get('host') || 'localhost';
+    const rpId = host.split(':')[0]; // Remove port if present
+
     const options = await generatePasskeyRegistrationOptions(
       student.studentId,
       student.name,
+      rpId,
       existingIds
     );
 

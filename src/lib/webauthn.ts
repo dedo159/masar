@@ -10,38 +10,16 @@ import type {
   AuthenticatorTransport,
 } from "@simplewebauthn/server";
 
-// RP (Relying Party) configuration
-const RP_NAME = "مسار — Masar";
-
-function getRpId(): string {
-  if (process.env.WEBAUTHN_RP_ID) return process.env.WEBAUTHN_RP_ID;
-  if (process.env.VERCEL_URL) {
-    const url = process.env.VERCEL_URL;
-    return url.replace(/^https?:\/\//, "").split(":")[0];
-  }
-  return "localhost";
-}
-
-function getOrigin(): string {
-  if (process.env.WEBAUTHN_ORIGIN) return process.env.WEBAUTHN_ORIGIN;
-  if (process.env.VERCEL_URL) {
-    const url = process.env.VERCEL_URL;
-    return url.startsWith("http") ? url : `https://${url}`;
-  }
-  return "http://localhost:3000";
-}
-
 // ---- Registration (مرحلة تسجيل البصمة) ----
 
 export async function generatePasskeyRegistrationOptions(
   studentId: string,
   studentName: string,
+  rpId: string,
   existingCredentialIds: string[] = []
 ) {
-  const rpId = getRpId();
-
   const options = await generateRegistrationOptions({
-    rpName: RP_NAME,
+    rpName: "مسار — Masar",
     rpID: rpId,
     userName: studentId,
     userDisplayName: studentName,
@@ -62,11 +40,10 @@ export async function generatePasskeyRegistrationOptions(
 
 export async function verifyPasskeyRegistration(
   response: RegistrationResponseJSON,
-  expectedChallenge: string
+  expectedChallenge: string,
+  rpId: string,
+  origin: string
 ) {
-  const rpId = getRpId();
-  const origin = getOrigin();
-
   const verification = await verifyRegistrationResponse({
     response,
     expectedChallenge,
@@ -80,11 +57,10 @@ export async function verifyPasskeyRegistration(
 // ---- Authentication (مرحلة تسجيل الدخول بالبصمة) ----
 
 export async function generatePasskeyLoginOptions(
+  rpId: string,
   allowCredentialIds?: string[],
   transportsMap?: Record<string, string | null>
 ) {
-  const rpId = getRpId();
-
   const allowCredentials = allowCredentialIds?.map((id) => {
     const rawTransports = transportsMap?.[id];
     let transports: AuthenticatorTransport[] = ["internal", "hybrid"];
@@ -111,11 +87,10 @@ export async function verifyPasskeyLogin(
   response: AuthenticationResponseJSON,
   expectedChallenge: string,
   credentialPublicKey: Uint8Array | Buffer,
-  credentialCounter: bigint
+  credentialCounter: bigint,
+  rpId: string,
+  origin: string
 ) {
-  const rpId = getRpId();
-  const origin = getOrigin();
-  
   const publicKey = credentialPublicKey instanceof Buffer 
     ? new Uint8Array(credentialPublicKey) 
     : credentialPublicKey;

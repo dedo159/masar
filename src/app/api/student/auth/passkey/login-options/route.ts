@@ -39,7 +39,10 @@ export async function POST(request: Request) {
       }
     }
 
-    const options = await generatePasskeyLoginOptions(allowCredentialIds, transportsMap);
+    const host = request.headers.get('host') || 'localhost';
+    const rpId = host.split(':')[0];
+
+    const options = await generatePasskeyLoginOptions(rpId, allowCredentialIds, transportsMap);
 
     const res = NextResponse.json({ success: true, options });
     res.cookies.set('webauthn_login_challenge', options.challenge, {

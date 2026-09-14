@@ -20,7 +20,11 @@ export async function POST(request: Request) {
 
     const body: RegistrationResponseJSON = await request.json();
 
-    const verification = await verifyPasskeyRegistration(body, expectedChallenge);
+    const host = request.headers.get('host') || 'localhost';
+    const rpId = host.split(':')[0];
+    const origin = request.headers.get('origin') || `https://${host}`;
+
+    const verification = await verifyPasskeyRegistration(body, expectedChallenge, rpId, origin);
 
     if (!verification.verified || !verification.registrationInfo) {
       return NextResponse.json({ error: 'فشل التحقق من البصمة' }, { status: 400 });
