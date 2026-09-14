@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { encryptToken } from "@/lib/crypto";
 import { syncMoodleDataForStudent } from "@/lib/moodle-sync";
-import { getSession } from "@/lib/auth";
+import { getSession, createSession } from "@/lib/auth";
 
 export async function POST(request: Request) {
   try {
@@ -191,6 +191,23 @@ export async function POST(request: Request) {
       );
     } catch (syncErr) {
       console.warn("Moodle data sync error:", syncErr);
+    }
+
+    // 9. إنشاء جلسة (Session) للطالب إذا لم يكن لديه واحدة بالفعل (لأنه سجل دخول للتو من موودل)
+    if (!session) {
+      const fullStudent = await prisma.student.findUnique({
+        where: { id: student.id },
+      });
+      if (fullStudent) {
+        // Create a persistent session (e.g. 30 days) by passing rememberMe=true
+        await createSession({
+          userId: fullStudent.id,
+          userType: "student",
+          universityId: fullStudent.universityId,
+          name: fullStudent.name,
+          email: fullStudent.email,
+        }, true);
+      }
     }
 
     return NextResponse.json({
