@@ -10,21 +10,13 @@ import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
 
 const universities = [
-  { id: "aau", nameAr: "جامعة عمان العربية", nameEn: "Amman Arab University", moodleUrl: "https://vclass.ammanu.edu.jo" },
-  { id: "ju", nameAr: "الجامعة الأردنية", nameEn: "University of Jordan", moodleUrl: "https://elearning.ju.edu.jo/moodle" },
-  { id: "just", nameAr: "جامعة العلوم والتكنولوجيا الأردنية", nameEn: "JUST", moodleUrl: "https://elearn.just.edu.jo" },
-  { id: "yu", nameAr: "جامعة اليرموك", nameEn: "Yarmouk University", moodleUrl: "https://elearning.yu.edu.jo" },
-  { id: "gju", nameAr: "الجامعة الألمانية الأردنية", nameEn: "German Jordanian University", moodleUrl: "https://lms.gju.edu.jo" },
-  { id: "bau", nameAr: "جامعة البلقاء التطبيقية", nameEn: "Al-Balqa Applied University", moodleUrl: "https://elearning.bau.edu.jo" },
-  { id: "pu", nameAr: "جامعة البترا", nameEn: "University of Petra", moodleUrl: "https://elearning.uop.edu.jo" },
-  { id: "ahu", nameAr: "جامعة الحسين التقنية", nameEn: "Al Hussein Technical University", moodleUrl: "https://lms.htu.edu.jo" },
-  { id: "mut", nameAr: "جامعة آل البيت", nameEn: "Al al-Bayt University", moodleUrl: "https://elearning.aabu.edu.jo" },
+  { id: "aau", nameAr: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University", moodleUrl: "https://vclass.ammanu.edu.jo" },
 ];
 
 export default function RegisterPage() {
   const router = useRouter();
   const { t, isRtl, language, setLanguage } = useLanguage();
-  const [selectedUniv, setSelectedUniv] = useState("ju");
+  const [selectedUniv, setSelectedUniv] = useState("aau");
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
   const [email, setEmail] = useState("");
