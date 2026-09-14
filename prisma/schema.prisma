@@ -548,7 +548,7 @@ model StudentCertificate {
   id           String   @id @default(uuid())
   studentId    String
   name         String   // e.g. "Google Data Analytics", "AWS Certified Cloud Practitioner"
-  issuer       String   // e.g. "Coursera", "AWS"
+  issuer       String?  // e.g. "Coursera", "AWS"
   issueDate    DateTime?
   fileData     String?  @db.Text // Base64 encoded file data
   fileType     String?  // e.g. "application/pdf"

@@ -50,7 +50,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.issuer) return;
+    if (!formData.name) return;
 
     setIsUploading(true);
     try {
@@ -121,9 +121,10 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "الجهة المانحة" : "Issuer"}</label>
+              <label className="text-sm font-medium mb-1.5 block">
+                {isRtl ? "الجهة المانحة" : "Issuer"} <span className="text-muted-foreground text-xs font-normal">({isRtl ? "اختياري" : "Optional"})</span>
+              </label>
               <Input 
-                required 
                 value={formData.issuer} 
                 onChange={(e) => setFormData({...formData, issuer: e.target.value})}
                 placeholder={isRtl ? "مثال: Coursera" : "e.g. Coursera"}
@@ -164,10 +165,12 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-sm text-foreground truncate" title={cert.name}>{cert.name}</h4>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                  <Building2 className="h-3 w-3" />
-                  <span className="truncate">{cert.issuer}</span>
-                </p>
+                {cert.issuer && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                    <Building2 className="h-3 w-3" />
+                    <span className="truncate">{cert.issuer}</span>
+                  </p>
+                )}
               </div>
               <div className="flex items-start opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button 

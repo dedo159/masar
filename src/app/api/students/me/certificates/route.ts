@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, issuer, fileData, fileType } = body;
 
-    if (!name || !issuer) {
+    if (!name) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
