@@ -26,7 +26,9 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
 
   useEffect(() => {
     if (studentId) {
-      setWebcalUrl(`webcal://${window.location.host}/api/calendar/${studentId}`);
+      // Use Google Calendar's subscription endpoint which works universally on Android/Web
+      const absoluteUrl = `https://${window.location.host}/api/calendar/${studentId}`;
+      setWebcalUrl(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
     }
   }, [studentId]);
 
@@ -48,6 +50,8 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
           {studentId && webcalUrl && (
             <a
               href={webcalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
               title="ربط ومزامنة الجدول مع تقويم الهاتف (Google Calendar / Apple Calendar)"
             >
