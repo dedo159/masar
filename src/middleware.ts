@@ -147,7 +147,7 @@ export async function middleware(request: NextRequest) {
   const studentProtectedPaths = [
     "/profile",
     "/settings",
-    "/growth",
+
     "/courses",
     "/deals",
     "/internships",
@@ -187,8 +187,7 @@ export const config = {
     "/profile/:path*",
     "/settings",
     "/settings/:path*",
-    "/growth",
-    "/growth/:path*",
+
     "/courses",
     "/courses/:path*",
     "/deals",

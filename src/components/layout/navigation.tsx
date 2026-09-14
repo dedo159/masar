@@ -23,7 +23,7 @@ export function BottomNav() {
 
   const mobileNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
-    { href: "/growth", icon: TrendingUp, label: t.nav.growthShort },
+
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/deals", icon: Tag, label: t.nav.dealsShort },
@@ -64,7 +64,7 @@ export function Sidebar() {
 
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
-    { href: "/growth", icon: TrendingUp, label: t.nav.growth },
+
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/deals", icon: Tag, label: t.nav.deals },

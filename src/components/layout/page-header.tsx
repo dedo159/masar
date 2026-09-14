@@ -31,8 +31,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
     "لوحة التدريب": t.internships.title,
     "deals": t.deals.title,
     "العروض والخصومات": t.deals.title,
-    "growth": t.growth.title,
-    "نموي الأكاديمي": t.growth.title,
+
     "profile": t.profile.title,
     "الملف الشخصي": t.profile.title,
     "settings": t.settings.title,
