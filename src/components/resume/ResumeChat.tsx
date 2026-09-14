@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 export function ResumeChat() {
   const store = useResumeStore();
-  const { messages, input, handleInputChange, handleSubmit, addToolResult, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, addToolResult, isLoading, error } = useChat({
     api: '/api/resume-ai',
     initialMessages: [
       {
@@ -113,14 +113,18 @@ export function ResumeChat() {
             </div>
           </div>
         ))}
-        {isLoading && messages[messages.length - 1]?.role === 'user' && (
-          <div className="flex gap-3">
-            <div className="h-8 w-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center shrink-0 mt-1">
-              <Bot className="h-4 w-4" />
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-muted text-foreground px-4 py-3 rounded-2xl rounded-tl-sm flex items-center gap-2">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="text-sm">يعالج...</span>
             </div>
-            <div className="bg-secondary/50 border rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Thinking...</span>
+          </div>
+        )}
+        {error && (
+          <div className="flex justify-center my-4">
+            <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-xl text-center max-w-[80%] border border-destructive/20">
+              حدث خطأ أثناء الاتصال. يرجى التأكد من إضافة مفتاح الذكاء الاصطناعي <code>OPENAI_API_KEY</code> في ملف <code>.env</code> الخاص بك.
             </div>
           </div>
         )}

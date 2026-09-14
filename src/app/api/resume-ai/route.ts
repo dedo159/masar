@@ -34,6 +34,15 @@ You have access to the user's current resume state (passed in context or implici
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
+  const apiKey = process.env.OPENAI_API_KEY;
+  
+  if (!apiKey || apiKey === 'dummy_key') {
+    return new Response(
+      JSON.stringify({ error: 'Missing OPENAI_API_KEY in .env file' }), 
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
   const result = await streamText({
     model: openai('gpt-4o'), // Or any capable model
     system: systemPrompt,
