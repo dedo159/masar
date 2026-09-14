@@ -58,5 +58,15 @@ export async function POST(request: Request) {
     },
   });
 
+  // Background task to send notifications
+  import('@/lib/notifications/push').then(({ sendNotificationToAllStudents }) => {
+    sendNotificationToAllStudents(
+      'فرصة تدريب جديدة! 🏢',
+      `فرصة تدريب جديدة بمسمى "${internship.title}" لدى "${internship.company}". سارع بالتقديم!`,
+      '/internships',
+      'internship'
+    );
+  }).catch(console.error);
+
   return NextResponse.json(internship, { status: 201 });
 }

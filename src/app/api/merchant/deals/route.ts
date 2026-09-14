@@ -53,6 +53,16 @@ export async function POST(request: Request) {
       },
     });
 
+    // Background task to send notifications
+    import('@/lib/notifications/push').then(({ sendNotificationToAllStudents }) => {
+      sendNotificationToAllStudents(
+        'عرض حصري جديد! 🎁',
+        `استفد من العرض الجديد: "${deal.title}" بخصم ${deal.discountLabel}. لا تفوت الفرصة!`,
+        '/deals',
+        'offer'
+      );
+    }).catch(console.error);
+
     return NextResponse.json({ success: true, deal }, { status: 201 });
   } catch (error) {
     console.error("Create deal error:", error);

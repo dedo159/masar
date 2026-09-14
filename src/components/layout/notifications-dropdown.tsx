@@ -59,11 +59,21 @@ export function NotificationsDropdown() {
   }
 
   const subscribeToPush = async () => {
-    if (!("serviceWorker" in navigator)) return;
+    if (!("serviceWorker" in navigator)) {
+      alert("متصفحك لا يدعم Service Worker");
+      return;
+    }
     try {
-      // We fixed the SW install failure (missing /degree route), so .ready will work now!
-      const registration = await navigator.serviceWorker.ready;
-      if (!registration || !registration.pushManager) return;
+      // Fix for mobile browsers where .ready hangs
+      const registration = await navigator.serviceWorker.register("/sw.js");
+      if (!registration) {
+        alert("فشل تسجيل Service Worker (النتيجة فارغة)");
+        return;
+      }
+      if (!registration.pushManager) {
+        alert("متصفحك لا يدعم خدمة الإشعارات الخلفية (PushManager غير متوفر). جرب متصفح كروم الأساسي.");
+        return;
+      }
 
       // Hardcoded for demo to ensure it works on Vercel without env setup
       const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
@@ -82,7 +92,8 @@ export function NotificationsDropdown() {
       if (response.ok) {
         alert("تم الاشتراك بإشعارات الهاتف بنجاح! 🚀");
       } else {
-        alert("فشل حفظ الاشتراك في السيرفر.");
+        const errorText = await response.text();
+        alert("فشل حفظ الاشتراك في السيرفر: " + errorText);
       }
     } catch (e: any) {
       alert("خطأ أثناء تفعيل الإشعارات: " + e.message);
