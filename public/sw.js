@@ -1,5 +1,5 @@
-const CACHE_NAME = "masar-v1";
-const STATIC_ASSETS = ["/", "/courses", "/degree", "/internships", "/profile", "/settings"];
+const CACHE_NAME = "masar-v2";
+const STATIC_ASSETS = ["/", "/courses", "/internships", "/profile", "/settings"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

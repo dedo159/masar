@@ -42,6 +42,9 @@ export function NotificationsDropdown() {
     if ("Notification" in window) {
       setPermission(Notification.permission);
     }
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").then(reg => reg.update());
+    }
   }, []);
 
   function urlBase64ToUint8Array(base64String: string) {
@@ -58,9 +61,8 @@ export function NotificationsDropdown() {
   const subscribeToPush = async () => {
     if (!("serviceWorker" in navigator)) return;
     try {
-      // Fix for mobile browsers where .ready hangs
-      await navigator.serviceWorker.register("/sw.js");
-      const registration = await navigator.serviceWorker.getRegistration();
+      // We fixed the SW install failure (missing /degree route), so .ready will work now!
+      const registration = await navigator.serviceWorker.ready;
       if (!registration || !registration.pushManager) return;
 
       // Hardcoded for demo to ensure it works on Vercel without env setup
@@ -108,14 +110,7 @@ export function NotificationsDropdown() {
 
     try {
       if ("serviceWorker" in navigator) {
-        // First try to register it if it doesn't exist
-        try {
-          await navigator.serviceWorker.register("/sw.js");
-        } catch (e) {
-          console.error("SW reg failed", e);
-        }
-        
-        const registration = await navigator.serviceWorker.getRegistration();
+        const registration = await navigator.serviceWorker.ready;
         if (registration && registration.showNotification) {
           await registration.showNotification(title, options);
           return;
