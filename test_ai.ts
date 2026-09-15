@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
-import { generateObject, generateText } from "ai";
+import { generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env" });
 
 const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
@@ -39,63 +41,36 @@ const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم 
   }
 }`;
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const { 
-      target_role, 
-      completed_courses_list, 
-      gpa, 
-      completed_credit_hours, 
-      total_credit_hours, 
-      github_languages, 
-      github_repos_count, 
-      top_projects_descriptions, 
-      self_declared_skills 
-    } = body;
-
-    const userPrompt = `المسمى الوظيفي المستهدف: ${target_role}
+const userPrompt = `المسمى الوظيفي المستهدف: Junior Frontend Developer
 
 السجل الأكاديمي:
-- المساقات المنجزة: ${completed_courses_list}
-- المعدل التراكمي: ${gpa} من 4.00
-- الساعات المعتمدة المنجزة: ${completed_credit_hours} من أصل ${total_credit_hours}
+- المساقات المنجزة: Math, OOP
+- المعدل التراكمي: 3.5 من 4.00
+- الساعات المعتمدة المنجزة: 90 من أصل 130
 
 بيانات GitHub والمشاريع:
-- اللغات والتقنيات المستخدمة: ${github_languages}
-- عدد المستودعات العامة: ${github_repos_count}
-- ملخص أبرز المشاريع: ${top_projects_descriptions}
-- المهارات التقنية المدخلة: ${self_declared_skills}
+- اللغات والتقنيات المستخدمة: JS, React
+- عدد المستودعات العامة: 5
+- ملخص أبرز المشاريع: A simple app
+- المهارات التقنية المدخلة: React
 
 قم بالتدقيق الفوري وأرجع مصفوفة الـ JSON مباشرة.`;
 
-    // Using generateText because the prompt strictly tells the model to output JSON without formatting tags
-    // We will parse it on our end
+async function test() {
+  try {
     const { text } = await generateText({
-      // @ts-expect-error
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       prompt: userPrompt,
-      temperature: 0.1, // Low temperature for consistent JSON
+      temperature: 0.1,
     });
-
-    let jsonResult;
-    try {
-      let cleanText = text.trim();
-      const firstBrace = cleanText.indexOf('{');
-      const lastBrace = cleanText.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1) {
-          cleanText = cleanText.substring(firstBrace, lastBrace + 1);
-      }
-      jsonResult = JSON.parse(cleanText);
-    } catch (e) {
-      console.error("Failed to parse JSON from AI response", text);
-      return NextResponse.json({ error: "Invalid JSON format from AI: " + e.message }, { status: 500 });
-    }
-
-    return NextResponse.json(jsonResult);
-  } catch (error) {
-    console.error("Readiness AI Error:", error.message || error);
-    return NextResponse.json({ error: `Internal Server Error: ${error.message || error}` }, { status: 500 });
+    console.log("Raw Response:");
+    console.log(text);
+    const cleanText = text.replace(/^\s*```json\s*/i, '').replace(/\s*```\s*$/, '').trim();
+    JSON.parse(cleanText);
+    console.log("\nJSON parsed successfully!");
+  } catch(e) {
+    console.error("Failed:", e);
   }
 }
+test();

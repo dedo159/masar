@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+const fs = require('fs');
+const content = `import { NextResponse } from "next/server";
 import { generateObject, generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
@@ -6,7 +7,7 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
 });
 
-const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم (Technical Career Auditor) متخصص في تقييم طلاب وخريجي كليات تقنية المعلومات لفرص التدريب (Internships) ووظائف المطورين المبتدئين (Junior Roles).
+const systemPrompt = \`أنت مدقق مهني وتقني واقعي وصارم (Technical Career Auditor) متخصص في تقييم طلاب وخريجي كليات تقنية المعلومات لفرص التدريب (Internships) ووظائف المطورين المبتدئين (Junior Roles).
 
 مهمتك: تحليل السجل الأكاديمي للطالب، ومستودعات مشاريع GitHub الخاصة به، ومساره المهني المستهدف، ثم حساب "مؤشر الجاهزية لسوق العمل" بدقة وبدون أي مجاملة أو تضخيم.
 
@@ -37,7 +38,7 @@ const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم 
     "recommended_project": "<فكرة مشروع تطبيقي محدد وعملي لسد الفجوة المهارية الأهم>",
     "project_impact": "<الزيادة التقديرية في نسبة الجاهزية، مثل: +15%>"
   }
-}`;
+}\`;
 
 export async function POST(req: Request) {
   try {
@@ -54,25 +55,24 @@ export async function POST(req: Request) {
       self_declared_skills 
     } = body;
 
-    const userPrompt = `المسمى الوظيفي المستهدف: ${target_role}
+    const userPrompt = \`المسمى الوظيفي المستهدف: \${target_role}
 
 السجل الأكاديمي:
-- المساقات المنجزة: ${completed_courses_list}
-- المعدل التراكمي: ${gpa} من 4.00
-- الساعات المعتمدة المنجزة: ${completed_credit_hours} من أصل ${total_credit_hours}
+- المساقات المنجزة: \${completed_courses_list}
+- المعدل التراكمي: \${gpa} من 4.00
+- الساعات المعتمدة المنجزة: \${completed_credit_hours} من أصل \${total_credit_hours}
 
 بيانات GitHub والمشاريع:
-- اللغات والتقنيات المستخدمة: ${github_languages}
-- عدد المستودعات العامة: ${github_repos_count}
-- ملخص أبرز المشاريع: ${top_projects_descriptions}
-- المهارات التقنية المدخلة: ${self_declared_skills}
+- اللغات والتقنيات المستخدمة: \${github_languages}
+- عدد المستودعات العامة: \${github_repos_count}
+- ملخص أبرز المشاريع: \${top_projects_descriptions}
+- المهارات التقنية المدخلة: \${self_declared_skills}
 
-قم بالتدقيق الفوري وأرجع مصفوفة الـ JSON مباشرة.`;
+قم بالتدقيق الفوري وأرجع مصفوفة الـ JSON مباشرة.\`;
 
     // Using generateText because the prompt strictly tells the model to output JSON without formatting tags
     // We will parse it on our end
     const { text } = await generateText({
-      // @ts-expect-error
       model: google('gemini-2.5-flash'),
       system: systemPrompt,
       prompt: userPrompt,
@@ -81,21 +81,20 @@ export async function POST(req: Request) {
 
     let jsonResult;
     try {
-      let cleanText = text.trim();
-      const firstBrace = cleanText.indexOf('{');
-      const lastBrace = cleanText.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1) {
-          cleanText = cleanText.substring(firstBrace, lastBrace + 1);
-      }
+      // In case the model accidentally outputs markdown tags despite instructions
+      const cleanText = text.replace(/^\\s*\`\`\`json\\s*/i, '').replace(/\\s*\`\`\`\\s*$/, '').trim();
       jsonResult = JSON.parse(cleanText);
     } catch (e) {
       console.error("Failed to parse JSON from AI response", text);
-      return NextResponse.json({ error: "Invalid JSON format from AI: " + e.message }, { status: 500 });
+      return NextResponse.json({ error: "Invalid JSON format from AI" }, { status: 500 });
     }
 
     return NextResponse.json(jsonResult);
   } catch (error) {
-    console.error("Readiness AI Error:", error.message || error);
-    return NextResponse.json({ error: `Internal Server Error: ${error.message || error}` }, { status: 500 });
+    console.error("Readiness AI Error:", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+`;
+fs.writeFileSync('src/app/api/student/readiness/route.ts', content, 'utf8');
+console.log('Created route.ts');

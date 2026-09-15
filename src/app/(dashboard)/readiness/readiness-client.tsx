@@ -58,12 +58,12 @@ export function ReadinessClient() {
         body: JSON.stringify(payload)
       });
       
-      if (!res.ok) throw new Error("فشل في جلب التقييم");
+      if (!res.ok) { const errorData = await res.json().catch(() => ({})); throw new Error(errorData.error || `فشل في جلب التقييم: HTTP ${res.status}`); }
       const data = await res.json();
       setResult(data);
     } catch (error) {
       console.error(error);
-      alert("حدث خطأ أثناء الاتصال بالمدقق الآلي.");
+      alert(`حدث خطأ أثناء الاتصال بالمدقق الآلي: ${error.message}`);
     } finally {
       setLoading(false);
     }

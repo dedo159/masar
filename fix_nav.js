@@ -1,7 +1,18 @@
 const fs = require('fs');
-let c = fs.readFileSync('src/components/layout/navigation.tsx', 'utf8');
+let content = fs.readFileSync('src/components/layout/navigation.tsx', 'utf8');
 
-// Replace all garbled labels that might exist in navigation.tsx
-c = c.replace(/label: "[?]+"|label: "\?\?\?\?\?\?\?\?\?"/g, 'label: "\u0625\u0639\u0644\u0627\u0646\u0627\u062A"');
+content = content.replace(
+  "{ href: \"/readiness\", icon: TrendingUp, label: \"التدقيق المهني\" },\n    { href: \"/readiness\", icon: TrendingUp, label: \"التدقيق المهني\" },",
+  "{ href: \"/readiness\", icon: TrendingUp, label: \"التدقيق المهني\" },"
+);
 
-fs.writeFileSync('src/components/layout/navigation.tsx', c);
+const targetDesktop = "{ href: \"/internships\", icon: Briefcase, label: t.nav.internships },";
+if(content.lastIndexOf(targetDesktop) !== content.indexOf(targetDesktop)) {
+    // There are multiple, let's replace the last one (desktop)
+    const lastIndex = content.lastIndexOf(targetDesktop);
+    const before = content.substring(0, lastIndex);
+    const after = content.substring(lastIndex + targetDesktop.length);
+    content = before + targetDesktop + "\n    { href: \"/readiness\", icon: TrendingUp, label: \"التدقيق المهني\" }," + after;
+}
+
+fs.writeFileSync('src/components/layout/navigation.tsx', content, 'utf8');
