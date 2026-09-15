@@ -2,6 +2,96 @@ export type Language = "ar" | "en";
 
 export const translations = {
   ar: {
+    srcappdashboardpagetsx: {
+      "text_c5ze": "مرحباً"
+},
+    srccomponentsresumeresumechattsx: {
+      "text_5dsn": "مرحباً بك! أنا مساعدك الشخصي وخبير التوظيف التقني. جاهز لمساعدتك في كتابة أو تصميم سيرتك الذاتية؟ (مثلاً اطلب مني تغيير لون السيرة، أو إضافة خبرة جديدة).",
+      "text_wy9q": "يعالج...",
+      "text_97sr": "حدث خطأ أثناء الاتصال:",
+      "text_heky": "يرجى التأكد من مفتاح الذكاء الاصطناعي"
+},
+    appdashboardprofileprofileclienttsx: {
+      "text_04bl": "مُنشئ السيرة الذاتية (الذكاء الاصطناعي)",
+      "text_y7o3": "أنشئ سيرتك الذاتية المتوافقة مع ATS بمساعدة الذكاء الاصطناعي"
+},
+    companyportaldashboardpagetsx: {
+      "text_8sxs": "لوحة البيانات",
+      "text_nhry": "نظرة عامة على فرص التدريب والمتقدمين",
+      "text_ol3e": "نشر فرصة تدريب جديدة",
+      "text_unk2": "فرص التدريب المنشورة",
+      "text_ma4a": "إجمالي المتقدمين",
+      "text_p5u1": "طلبات قيد المراجعة"
+},
+    companyportalinternshipspagetsx: {
+      "text_xyr3": "هل أنت متأكد من حذف هذه الفرصة؟",
+      "text_5zyo": "فرص التدريب",
+      "text_oxwt": "إدارة فرص التدريب المنشورة من قبل شركتك",
+      "text_v066": "نشر فرصة جديدة",
+      "text_ebo6": "جاري التحميل...",
+      "text_43wb": "لا توجد فرص تدريب",
+      "text_lsu1": "قم بنشر أول فرصة تدريب لشركتك",
+      "text_0bzt": "عن بعد",
+      "text_85wz": "مدمج",
+      "text_1f64": "حضوري",
+      "text_kn29": "متقدم",
+      "text_7omr": "عرض المتقدمين",
+      "text_fbls": "حذف",
+      "text_oss9": "نشر فرصة تدريب جديدة",
+      "text_ok2m": "المسمى الوظيفي *",
+      "text_ornd": "الموقع *",
+      "text_7abo": "نوع التدريب",
+      "text_e06a": "حضوري",
+      "text_p58p": "عن بعد",
+      "text_m6si": "مدمج",
+      "text_8tld": "المدة *",
+      "text_og45": "مثال: 3 أشهر",
+      "text_tm0k": "آخر موعد للتقديم",
+      "text_owu7": "الكلمات المفتاحية (مفصولة بفاصلة)",
+      "text_t5to": "مثال: React, Node.js, برمجة",
+      "text_n9j4": "رابط التقديم الخارجي (اختياري)",
+      "text_3oye": "الوصف *",
+      "text_jfpm": "جاري الحفظ...",
+      "text_rd9u": "نشر الفرصة",
+      "text_jpzg": "إلغاء"
+},
+    merchantportaldashboardpagetsx: {
+      "text_8bsp": "هل أنت متأكد من حذف هذا العرض؟",
+      "text_qxqf": "جاري التحميل...",
+      "text_t4d6": "نظرة عامة",
+      "text_o4e9": "إضافة عرض جديد",
+      "text_kbg4": "العروض النشطة",
+      "text_ln6d": "إجمالي الاستخدامات",
+      "text_6tfp": "عروض منتهية أو متوقفة",
+      "text_bai2": "عروضي",
+      "text_diel": "لا توجد عروض مضافة بعد.",
+      "text_qonw": "العرض",
+      "text_k4qa": "الحالة",
+      "text_yftc": "تاريخ الانتهاء",
+      "text_modk": "الاستخدامات",
+      "text_v1jx": "إجراءات",
+      "text_2ms3": "نشط",
+      "text_3nmk": "متوقف",
+      "text_vltw": "تعديل",
+      "text_wwfl": "حذف"
+},
+    universityportalatriskpagetsx: {
+      "text_abyp": "الطلاب المعرضون للخطر",
+      "text_tjhp": "لا يوجد طلاب معرضون للخطر حالياً",
+      "text_jbh9": "اسم الطالب",
+      "text_d3r8": "الرقم الجامعي",
+      "text_d4bi": "آخر دخول",
+      "text_egiz": "الواجبات المتأخرة",
+      "text_jo2g": "سبب الخطر",
+      "text_78rq": "غير متوفر",
+      "text_ets3": "مستوى تفاعل منخفض"
+},
+    universityportaldashboardpagetsx: {
+      "text_r1ns": "لوحة البيانات",
+      "text_g2hr": "عدد الطلاب النشطين",
+      "text_1ufv": "طلاب معرضون للخطر",
+      "text_kf3n": "معدل اعتماد Moodle"
+},
     readinessclient: {
       "key_s1yrnd": "منصة تجارة إلكترونية متكاملة، وتطبيق لإدارة المهام باستخدام Next.js",
       "key_kgt7q3": "مقدمة في البرمجة، هياكل البيانات، هندسة البرمجيات، قواعد البيانات",
@@ -402,6 +492,96 @@ export const translations = {
     },
   },
   en: {
+    srcappdashboardpagetsx: {
+      "text_c5ze": "مرحباً"
+},
+    srccomponentsresumeresumechattsx: {
+      "text_5dsn": "مرحباً بك! أنا مساعدك الشخصي وخبير التوظيف التقني. جاهز لمساعدتك في كتابة أو تصميم سيرتك الذاتية؟ (مثلاً اطلب مني تغيير لون السيرة، أو إضافة خبرة جديدة).",
+      "text_wy9q": "يعالج...",
+      "text_97sr": "حدث خطأ أثناء الاتصال:",
+      "text_heky": "يرجى التأكد من مفتاح الذكاء الاصطناعي"
+},
+    appdashboardprofileprofileclienttsx: {
+      "text_04bl": "مُنشئ السيرة الذاتية (الذكاء الاصطناعي)",
+      "text_y7o3": "أنشئ سيرتك الذاتية المتوافقة مع ATS بمساعدة الذكاء الاصطناعي"
+},
+    companyportaldashboardpagetsx: {
+      "text_8sxs": "لوحة البيانات",
+      "text_nhry": "نظرة عامة على فرص التدريب والمتقدمين",
+      "text_ol3e": "نشر فرصة تدريب جديدة",
+      "text_unk2": "فرص التدريب المنشورة",
+      "text_ma4a": "إجمالي المتقدمين",
+      "text_p5u1": "طلبات قيد المراجعة"
+},
+    companyportalinternshipspagetsx: {
+      "text_xyr3": "هل أنت متأكد من حذف هذه الفرصة؟",
+      "text_5zyo": "فرص التدريب",
+      "text_oxwt": "إدارة فرص التدريب المنشورة من قبل شركتك",
+      "text_v066": "نشر فرصة جديدة",
+      "text_ebo6": "جاري التحميل...",
+      "text_43wb": "لا توجد فرص تدريب",
+      "text_lsu1": "قم بنشر أول فرصة تدريب لشركتك",
+      "text_0bzt": "عن بعد",
+      "text_85wz": "مدمج",
+      "text_1f64": "حضوري",
+      "text_kn29": "متقدم",
+      "text_7omr": "عرض المتقدمين",
+      "text_fbls": "حذف",
+      "text_oss9": "نشر فرصة تدريب جديدة",
+      "text_ok2m": "المسمى الوظيفي *",
+      "text_ornd": "الموقع *",
+      "text_7abo": "نوع التدريب",
+      "text_e06a": "حضوري",
+      "text_p58p": "عن بعد",
+      "text_m6si": "مدمج",
+      "text_8tld": "المدة *",
+      "text_og45": "مثال: 3 أشهر",
+      "text_tm0k": "آخر موعد للتقديم",
+      "text_owu7": "الكلمات المفتاحية (مفصولة بفاصلة)",
+      "text_t5to": "مثال: React, Node.js, برمجة",
+      "text_n9j4": "رابط التقديم الخارجي (اختياري)",
+      "text_3oye": "الوصف *",
+      "text_jfpm": "جاري الحفظ...",
+      "text_rd9u": "نشر الفرصة",
+      "text_jpzg": "إلغاء"
+},
+    merchantportaldashboardpagetsx: {
+      "text_8bsp": "هل أنت متأكد من حذف هذا العرض؟",
+      "text_qxqf": "جاري التحميل...",
+      "text_t4d6": "نظرة عامة",
+      "text_o4e9": "إضافة عرض جديد",
+      "text_kbg4": "العروض النشطة",
+      "text_ln6d": "إجمالي الاستخدامات",
+      "text_6tfp": "عروض منتهية أو متوقفة",
+      "text_bai2": "عروضي",
+      "text_diel": "لا توجد عروض مضافة بعد.",
+      "text_qonw": "العرض",
+      "text_k4qa": "الحالة",
+      "text_yftc": "تاريخ الانتهاء",
+      "text_modk": "الاستخدامات",
+      "text_v1jx": "إجراءات",
+      "text_2ms3": "نشط",
+      "text_3nmk": "متوقف",
+      "text_vltw": "تعديل",
+      "text_wwfl": "حذف"
+},
+    universityportalatriskpagetsx: {
+      "text_abyp": "الطلاب المعرضون للخطر",
+      "text_tjhp": "لا يوجد طلاب معرضون للخطر حالياً",
+      "text_jbh9": "اسم الطالب",
+      "text_d3r8": "الرقم الجامعي",
+      "text_d4bi": "آخر دخول",
+      "text_egiz": "الواجبات المتأخرة",
+      "text_jo2g": "سبب الخطر",
+      "text_78rq": "غير متوفر",
+      "text_ets3": "مستوى تفاعل منخفض"
+},
+    universityportaldashboardpagetsx: {
+      "text_r1ns": "لوحة البيانات",
+      "text_g2hr": "عدد الطلاب النشطين",
+      "text_1ufv": "طلاب معرضون للخطر",
+      "text_kf3n": "معدل اعتماد Moodle"
+},
     readinessclient: {
       "key_s1yrnd": "منصة تجارة إلكترونية متكاملة، وتطبيق لإدارة المهام باستخدام Next.js",
       "key_kgt7q3": "مقدمة في البرمجة، هياكل البيانات، هندسة البرمجيات، قواعد البيانات",

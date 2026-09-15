@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export default function InternshipsPage() {
+    const { t } = useLanguage();
   const router = useRouter();
   const [internships, setInternships] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +76,7 @@ export default function InternshipsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("هل أنت متأكد من حذف هذه الفرصة؟")) return;
+    if (!confirm(t.companyportalinternshipspagetsx.text_xyr3)) return;
     try {
       const res = await fetch(`/api/company/internships/${id}`, { method: "DELETE" });
       if (res.ok) {
@@ -89,25 +91,24 @@ export default function InternshipsPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">فرص التدريب</h2>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">إدارة فرص التدريب المنشورة من قبل شركتك</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_5zyo}</h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{t.companyportalinternshipspagetsx.text_oxwt}</p>
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
         >
           <span>➕</span>
-          نشر فرصة جديدة
-        </button>
+          {t.companyportalinternshipspagetsx.text_v066}</button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-500">جاري التحميل...</div>
+        <div className="text-center py-12 text-gray-500">{t.companyportalinternshipspagetsx.text_ebo6}</div>
       ) : internships.length === 0 ? (
         <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
           <span className="text-4xl mb-3 inline-block">💼</span>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">لا توجد فرص تدريب</h3>
-          <p className="text-gray-500 mt-1">قم بنشر أول فرصة تدريب لشركتك</p>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_43wb}</h3>
+          <p className="text-gray-500 mt-1">{t.companyportalinternshipspagetsx.text_lsu1}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -116,7 +117,7 @@ export default function InternshipsPage() {
               <div className="flex justify-between items-start mb-4">
                 <h3 className="font-bold text-lg text-gray-900 dark:text-foreground line-clamp-2">{internship.title}</h3>
                 <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
-                  {internship.type === 'remote' ? 'عن بعد' : internship.type === 'hybrid' ? 'مدمج' : 'حضوري'}
+                  {internship.type === 'remote' ? t.companyportalinternshipspagetsx.text_0bzt : internship.type === 'hybrid' ? t.companyportalinternshipspagetsx.text_85wz : t.companyportalinternshipspagetsx.text_1f64}
                 </span>
               </div>
               
@@ -128,8 +129,7 @@ export default function InternshipsPage() {
                   <span>⏱️</span> {internship.duration}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span>👥</span> {internship._count?.applications || 0} متقدم
-                </div>
+                  <span>👥</span> {internship._count?.applications || 0} {t.companyportalinternshipspagetsx.text_kn29}</div>
               </div>
 
               <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
@@ -137,12 +137,11 @@ export default function InternshipsPage() {
                   href={`/company/internships/${internship.id}/applicants`}
                   className="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 dark:text-emerald-400 py-2 rounded-lg text-center text-sm font-medium transition-colors"
                 >
-                  عرض المتقدمين
-                </Link>
+                  {t.companyportalinternshipspagetsx.text_7omr}</Link>
                 <button
                   onClick={() => handleDelete(internship.id)}
                   className="px-3 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 rounded-lg text-sm transition-colors"
-                  title="حذف"
+                  title={t.companyportalinternshipspagetsx.text_fbls}
                 >
                   🗑️
                 </button>
@@ -157,63 +156,62 @@ export default function InternshipsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" dir="rtl">
           <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-800 shadow-2xl">
             <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-10">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-foreground">نشر فرصة تدريب جديدة</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_oss9}</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700 text-xl">✕</button>
             </div>
             
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">المسمى الوظيفي *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_ok2m}</label>
                   <input required name="title" value={formData.title} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الموقع *</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_ornd}</label>
                   <input required name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع التدريب</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_7abo}</label>
                   <select name="type" value={formData.type} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground">
-                    <option value="onsite">حضوري</option>
-                    <option value="remote">عن بعد</option>
-                    <option value="hybrid">مدمج</option>
+                    <option value="onsite">{t.companyportalinternshipspagetsx.text_e06a}</option>
+                    <option value="remote">{t.companyportalinternshipspagetsx.text_p58p}</option>
+                    <option value="hybrid">{t.companyportalinternshipspagetsx.text_m6si}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">المدة *</label>
-                  <input required name="duration" value={formData.duration} onChange={handleChange} placeholder="مثال: 3 أشهر" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_8tld}</label>
+                  <input required name="duration" value={formData.duration} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_og45} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">آخر موعد للتقديم</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_tm0k}</label>
                   <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الكلمات المفتاحية (مفصولة بفاصلة)</label>
-                <input name="tags" value={formData.tags} onChange={handleChange} placeholder="مثال: React, Node.js, برمجة" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_owu7}</label>
+                <input name="tags" value={formData.tags} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_t5to} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">رابط التقديم الخارجي (اختياري)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_n9j4}</label>
                 <input type="url" name="applyUrl" value={formData.applyUrl} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الوصف *</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_3oye}</label>
                 <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground resize-none"></textarea>
               </div>
 
               <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <button type="submit" disabled={submitting} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-foreground py-2.5 rounded-lg font-medium transition-colors disabled:opacity-70">
-                  {submitting ? "جاري الحفظ..." : "نشر الفرصة"}
+                  {submitting ? t.companyportalinternshipspagetsx.text_jfpm : t.companyportalinternshipspagetsx.text_rd9u}
                 </button>
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
-                  إلغاء
-                </button>
+                  {t.companyportalinternshipspagetsx.text_jpzg}</button>
               </div>
             </form>
           </div>

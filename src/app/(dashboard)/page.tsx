@@ -3,10 +3,12 @@ import { QuickStatsSection } from "@/components/dashboard/quick-stats";
 import { TodayScheduleSection } from "@/components/dashboard/today-schedule";
 import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines";
 import { LatestAnnouncementWidget } from "@/components/dashboard/latest-announcement";
+import { getServerTranslations } from "@/lib/translations/server";
 
 export const revalidate = 60;
 
-export default function HomePage() {
+export default async function HomePage() {
+    const t = await getServerTranslations();
   const today = new Date().toLocaleDateString("ar-JO", {
     timeZone: "Asia/Amman",
     weekday: "long",
@@ -18,7 +20,7 @@ export default function HomePage() {
   return (
     <>
       <PageHeader
-        title="مرحباً"
+        title={t.srcappdashboardpagetsx.text_c5ze}
         subtitle={today}
       />
 

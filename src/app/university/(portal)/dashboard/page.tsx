@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
+import { getServerTranslations } from "@/lib/translations/server";
 
 export default async function DashboardPage() {
+    const t = await getServerTranslations();
   // Fetch data
   const activeStudents = await prisma.student.count();
   const moodleConnected = await prisma.moodleConnection.count();
@@ -11,7 +13,7 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">لوحة البيانات</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">{t.universityportaldashboardpagetsx.text_r1ns}</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -21,7 +23,7 @@ export default async function DashboardPage() {
             📊
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">عدد الطلاب النشطين</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_g2hr}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{activeStudents}</p>
           </div>
         </div>
@@ -32,7 +34,7 @@ export default async function DashboardPage() {
             ⚠️
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">طلاب معرضون للخطر</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_1ufv}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{atRiskStudents}</p>
           </div>
         </div>
@@ -43,7 +45,7 @@ export default async function DashboardPage() {
             🔗
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">معدل اعتماد Moodle</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_kf3n}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{moodlePercentage}%</p>
           </div>
         </div>

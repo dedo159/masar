@@ -52,7 +52,7 @@ interface ProfileClientProps {
 }
 
 export function ProfileClient({ student, skillsList, initials }: ProfileClientProps) {
-  const { t, isRtl, language } = useLanguage();
+const { t, isRtl, language } = useLanguage();
   const enrolledCourses = student.enrollments.map((e) => e.course);
   const Chevron = isRtl ? ChevronLeft : ChevronRight;
 
@@ -180,9 +180,9 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
                 <Sparkles className="h-4 w-4" strokeWidth={1.5} />
               </div>
               <div className="text-start">
-                <p className="text-sm font-medium text-foreground">{isRtl ? "مُنشئ السيرة الذاتية (الذكاء الاصطناعي)" : "AI Resume Builder"}</p>
+                <p className="text-sm font-medium text-foreground">{isRtl ? t.appdashboardprofileprofileclienttsx.text_04bl : "AI Resume Builder"}</p>
                 <p className="text-xs text-muted-foreground">
-                  {isRtl ? "أنشئ سيرتك الذاتية المتوافقة مع ATS بمساعدة الذكاء الاصطناعي" : "Build an ATS-friendly resume with AI assistance"}
+                  {isRtl ? t.appdashboardprofileprofileclienttsx.text_y7o3 : "Build an ATS-friendly resume with AI assistance"}
                 </p>
               </div>
             </div>

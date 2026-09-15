@@ -6,8 +6,10 @@ import { useResumeStore } from '@/lib/resume/store';
 import { Button } from '@/components/ui/button';
 import { Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from "@/components/providers/language-provider";
 
 export function ResumeChat() {
+    const { t } = useLanguage();
   const store = useResumeStore();
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, addToolResult, isLoading, error } = useChat({
@@ -19,7 +21,7 @@ export function ResumeChat() {
       {
         id: 'welcome',
         role: 'assistant',
-        content: "مرحباً بك! أنا مساعدك الشخصي وخبير التوظيف التقني. جاهز لمساعدتك في كتابة أو تصميم سيرتك الذاتية؟ (مثلاً اطلب مني تغيير لون السيرة، أو إضافة خبرة جديدة)."
+        content: t.srccomponentsresumeresumechattsx.text_5dsn
       }
     ]
   });
@@ -184,14 +186,14 @@ export function ResumeChat() {
           <div className="flex justify-start">
             <div className="bg-muted text-foreground px-4 py-3 rounded-lg rounded-tl-sm flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span className="text-sm">يعالج...</span>
+              <span className="text-sm">{t.srccomponentsresumeresumechattsx.text_wy9q}</span>
             </div>
           </div>
         )}
         {error && (
           <div className="flex justify-center my-4">
             <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-lg text-center max-w-[80%] border border-destructive/20">
-              حدث خطأ أثناء الاتصال: {error.message || 'يرجى التأكد من مفتاح الذكاء الاصطناعي'}
+              {t.srccomponentsresumeresumechattsx.text_97sr}{error.message || t.srccomponentsresumeresumechattsx.text_heky}
             </div>
           </div>
         )}
