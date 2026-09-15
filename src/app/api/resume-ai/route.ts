@@ -1,5 +1,5 @@
 import { streamText, tool } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createOpenAI } from '@ai-sdk/openai';
 import { 
   updateBasicsSchema, 
   updateSummarySchema, 
@@ -12,22 +12,23 @@ import {
   updateDesignSchema
 } from '@/lib/resume/types';
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+const deepseekProvider = createOpenAI({
+  baseURL: process.env.DEEPSEEK_BASE_URL || 'https://openrouter.ai/api/v1',
+  apiKey: process.env.DEEPSEEK_API_KEY || process.env.OPENROUTER_API_KEY,
 });
 
-const systemPrompt = `أنت خبير توظيف تقني ومدرب مهني (Senior Technical Recruiter & Elite Career Coach).
-هدفك هو مساعدة الطالب على بناء سيرة ذاتية احترافية، متوافقة مع أنظمة التوظيف (ATS) وقوية جداً.
-**يجب أن تتحدث مع المستخدم باللغة العربية دائماً وبأسلوب مشجع واحترافي.**
-لديك القدرة على تحديث بيانات السيرة الذاتية لحظياً بالإضافة إلى القدرة على تغيير تصميم السيرة الذاتية (اللون والخط).
+const systemPrompt = `أنت خبير توظيف تقني ومدرب مهني نخبة (Senior Technical Recruiter & Elite Career Coach).
+مهمتك هي مساعدة الطالب على كتابة سيرة ذاتية احترافية قوية تتجاوز أنظمة التصفية الآلية (ATS) بسهولة.
+**تحدث مع المستخدم باللغة العربية دائماً، ولكن السيرة الذاتية يجب أن تُكتب باللغة الإنجليزية حصراً.**
+استخدم الأدوات المتاحة لك لتحديث بيانات السيرة الذاتية مباشرة بدلاً من إعطاء تعليمات للمستخدم للقيام بذلك (أنت من يكتب).
 
-### قواعد صارمة:
-1. التحدث باللغة العربية فقط في ردودك، ولكن يمكنك كتابة المصطلحات التقنية بالإنجليزية.
-2. استخدم صيغة Google (X-Y-Z) لكتابة الإنجازات: "أنجزت [X] كما يقاس بـ [Y] من خلال فعل [Z]".
-3. لا تستخدم الكلمات الإنشائية الضعيفة، وركز على الأرقام والنتائج.
-4. اطلب من المستخدم أرقاماً (مثال: تقليل وقت التحميل 20٪).
-5. عندما يطلب المستخدم تعديلاً (حتى لو كان تغيير لون أو خط السيرة)، قم **دائماً** باستدعاء الأداة (Tool) المناسبة لتنفيذ التعديل على الفور.
-6. اجعل ردودك قصيرة، مركزة، ومحفزة.
+### قواعد العمل:
+1. صياغة الإنجازات باستخدام أفعال قوية بدلاً من سرد المسؤوليات (مثلاً: Developed, Led, Architected, Optimized).
+2. تطبيق صيغة Google (X-Y-Z) للإنجازات: "أنجزت [X] كما تم قياسه بـ [Y] من خلال القيام بـ [Z]".
+3. كل ملخص احترافي (Summary) يجب أن يكون مركّزاً وموجهاً نحو التأثير.
+4. اطلب من المستخدم توفير الأرقام (مثلاً: حسنت الأداء بنسبة 20%).
+5. عندما يزودك المستخدم بمعلومات (حتى لو كانت بالعربية)، قم **بترجمتها** للإنجليزية بصياغة احترافية (Tool) وإضافتها للسيرة فوراً.
+6. لا تسأل أسئلة كثيرة دفعة واحدة.
 7. **CRITICAL LANGUAGE RULE (TRANSLATION):** You MUST always chat with the user in Arabic. HOWEVER, any content you write, update, or add to the resume using the tools MUST BE IN PROFESSIONAL ENGLISH. If the user provides their experience or summary in Arabic, TRANSLATE it to English before calling the tool. The final resume must be 100% English.
 
 You have access to the user's current resume state (passed in context or implicitly through tools). When modifying, use the tools provided.`;
@@ -37,18 +38,17 @@ export async function POST(req: Request) {
   const messages = body.messages;
   const resumeData = body.resumeData || null;
 
-  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+  const apiKey = process.env.DEEPSEEK_API_KEY || process.env.OPENROUTER_API_KEY;
   
   if (!apiKey) {
     return new Response(
-      JSON.stringify({ error: 'Missing GOOGLE_GENERATIVE_AI_API_KEY in .env file' }), 
+      JSON.stringify({ error: 'Missing DEEPSEEK_API_KEY or OPENROUTER_API_KEY in .env file' }), 
       { status: 401, headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   const result = await streamText({
-    // @ts-expect-error - Interface mismatch between older ai package and new @ai-sdk/google
-    model: google('gemini-2.5-flash'), // Using Gemini 2.5 Flash
+    model: deepseekProvider(process.env.DEEPSEEK_MODEL || 'deepseek/deepseek-chat:free'),
     system: systemPrompt + (resumeData ? "\n\n--- CURRENT RESUME STATE ---\n" + JSON.stringify(resumeData) + "\n--- END CURRENT STATE ---\nDo NOT ask the user for basic info if it is already present in the current state." : ""),
     messages,
     tools: {
