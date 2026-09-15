@@ -3,7 +3,7 @@
 import { PageHeader } from "@/components/layout/page-header";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { getDeadlineStatus, getRelativeTime, formatTime } from "@/lib/utils";
+import { getDeadlineStatus, getRelativeTime, formatTime, cn } from "@/lib/utils";
 import {
   Clock,
   BookOpen,
@@ -59,18 +59,18 @@ function EmptyStateCard({
   description: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
-      <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground">
-        <Icon className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
+    <div className="flex flex-col items-center justify-center py-12 px-4 rounded-[20px] border border-dashed border-white/10 bg-card text-center transition-colors">
+      <div className="h-14 w-14 rounded-2xl fintech-gradient-blue flex items-center justify-center mb-4 shadow-lg text-white">
+        <Icon className="h-6 w-6 fill-white/20" strokeWidth={2} />
       </div>
-      <p className="text-base font-semibold text-foreground">{title}</p>
-      <p className="text-xs text-muted-foreground mt-1 max-w-sm leading-relaxed">{description}</p>
+      <p className="text-base font-bold text-white">{title}</p>
+      <p className="text-xs text-white/50 mt-1 max-w-sm leading-relaxed font-medium">{description}</p>
     </div>
   );
 }
 
 export function CourseDetailClient({ course }: CourseDetailClientProps) {
-  const { t, language } = useLanguage();
+  const { t, language, isRtl } = useLanguage();
   const isAr = language === "ar";
 
   const displayName = translateCourseName(course.code, course.nameAr, course.nameEn, language);
@@ -99,12 +99,12 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
 
   const statusConfig: Record<
     Assignment["status"],
-    { label: string; variant: "default" | "success" | "warning" | "secondary" | "destructive" | "neutral" }
+    { label: string; bg: string; text: string }
   > = {
-    pending: { label: t.courseDetail.assignmentStatus.pending, variant: "warning" },
-    submitted: { label: t.courseDetail.assignmentStatus.submitted, variant: "success" },
-    graded: { label: t.courseDetail.assignmentStatus.graded, variant: "default" },
-    late: { label: t.courseDetail.assignmentStatus.late, variant: "destructive" },
+    pending: { label: t.courseDetail.assignmentStatus.pending, bg: "bg-[#F97316]/10 border-[#F97316]/20", text: "text-[#F97316]" },
+    submitted: { label: t.courseDetail.assignmentStatus.submitted, bg: "bg-[#059669]/10 border-[#059669]/20", text: "text-[#059669]" },
+    graded: { label: t.courseDetail.assignmentStatus.graded, bg: "bg-[#3B82F6]/10 border-[#3B82F6]/20", text: "text-[#3B82F6]" },
+    late: { label: t.courseDetail.assignmentStatus.late, bg: "bg-[#EF4444]/10 border-[#EF4444]/20", text: "text-[#EF4444]" },
   };
 
   const hasGrades =
@@ -119,49 +119,51 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
     <>
       <PageHeader
         title={displayName}
-        subtitle={`${course.code} · ${instructorName}`}
+        subtitle={`${course.code} آ· ${instructorName}`}
       />
 
       <div className="px-4 py-5 max-w-5xl mx-auto space-y-5">
         {/* Course Header Hero Card */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
-          <div className="flex items-start gap-4">
+        <div className="rounded-[20px] border border-white/5 bg-card p-5 shadow-sm relative overflow-hidden">
+          {/* Subtle Glow */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-[#3B82F6]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+          <div className="flex items-start gap-4 relative z-10">
             <div
-              className="h-12 w-12 rounded-xl flex-shrink-0 flex items-center justify-center"
+              className="h-14 w-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-white shadow-lg"
               style={{
-                backgroundColor: `${course.color || "currentColor"}18`,
-                color: course.color || "currentColor",
+                background: `linear-gradient(135deg, ${course.color || "#3B82F6"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
               }}
             >
-              <BookOpen className="h-6 w-6" />
+              <BookOpen className="h-6 w-6 fill-white/20" strokeWidth={2} />
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
-                  <h2 className="text-lg font-semibold text-foreground truncate">
+                  <h2 className="text-lg font-bold text-white truncate">
                     {displayName}
                   </h2>
-                  {subName && <p className="text-xs text-muted-foreground mt-0.5">{subName}</p>}
+                  {subName && <p className="text-xs text-white/50 mt-1 font-medium">{subName}</p>}
                 </div>
 
                 {course.grade?.total !== undefined && (
-                  <div className="inline-flex items-center gap-2 self-start sm:self-auto bg-secondary px-3 py-1.5 rounded-lg border border-border">
-                    <span className="text-xs text-muted-foreground">{t.courseDetail.totalGrade}:</span>
-                    <span className="text-base font-bold tabular-nums text-foreground">
-                      {course.grade.total} / 100
+                  <div className="inline-flex items-center gap-2 self-start sm:self-auto bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
+                    <span className="text-xs text-white/50 font-semibold">{t.courseDetail.totalGrade}:</span>
+                    <span className="text-base font-extrabold tabular-nums text-white">
+                      {course.grade.total} <span className="text-[10px] text-white/40">/ 100</span>
                     </span>
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 pt-4 border-t border-white/5 text-[11px] text-white/60 font-semibold">
+                <span className="flex items-center gap-1.5">
                   <User className="h-3.5 w-3.5" />
                   <span>{t.courseDetail.instructor}: {instructorName}</span>
                 </span>
                 {course.room && (
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5" />
                     <span>{t.courseDetail.room}: {translateRoom(course.room, language)}</span>
                   </span>
@@ -175,17 +177,17 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
 
         {/* 4 Clean Tabs */}
         <Tabs defaultValue="schedule" className="space-y-4">
-          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto p-1 gap-1">
-            <TabsTrigger value="schedule" className="min-h-[40px] text-xs">
+          <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto p-1.5 gap-1.5 bg-black/20 border border-white/5 rounded-[16px]">
+            <TabsTrigger value="schedule" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-white/10 data-[state=active]:text-white">
               {t.courseDetail.scheduleTab}
             </TabsTrigger>
-            <TabsTrigger value="assignments" className="min-h-[40px] text-xs">
+            <TabsTrigger value="assignments" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-white/10 data-[state=active]:text-white">
               {t.courseDetail.assignmentsTab} ({course.assignments.length})
             </TabsTrigger>
-            <TabsTrigger value="files" className="min-h-[40px] text-xs">
+            <TabsTrigger value="files" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-white/10 data-[state=active]:text-white">
               {t.courseDetail.filesTab} ({course.files.length})
             </TabsTrigger>
-            <TabsTrigger value="grades" className="min-h-[40px] text-xs">
+            <TabsTrigger value="grades" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-white/10 data-[state=active]:text-white">
               {t.courseDetail.gradesTab}
             </TabsTrigger>
           </TabsList>
@@ -207,29 +209,29 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                   return (
                     <div
                       key={index}
-                      className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 transition-all hover:border-foreground/20"
+                      className="flex items-start gap-4 rounded-[20px] border border-white/5 bg-card p-4 transition-all hover:border-white/20 hover:bg-white/[0.02]"
                     >
-                      <div className="h-9 w-9 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
+                      <div className="h-10 w-10 rounded-2xl fintech-gradient-blue flex items-center justify-center flex-shrink-0 shadow-md">
                         {isLab ? (
-                          <FlaskConical className="h-4 w-4 text-primary" />
+                          <FlaskConical className="h-4 w-4 text-white fill-white/20" strokeWidth={2} />
                         ) : (
-                          <BookOpen className="h-4 w-4 text-primary" />
+                          <BookOpen className="h-4 w-4 text-white fill-white/20" strokeWidth={2} />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <p className="text-sm font-semibold text-foreground">{dayName}</p>
-                          <Badge variant={isLab ? "warning" : "secondary"}>
+                          <p className="text-sm font-bold text-white">{dayName}</p>
+                          <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md border", isLab ? "bg-[#F97316]/10 text-[#F97316] border-[#F97316]/20" : "bg-white/5 text-white/70 border-transparent")}>
                             {isLab ? t.courseDetail.classTypes.lab : t.courseDetail.classTypes.lecture}
-                          </Badge>
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1 tabular-nums flex items-center gap-1">
+                        <p className="text-xs text-white/50 mt-1.5 tabular-nums flex items-center gap-1.5 font-semibold">
                           <Clock className="h-3 w-3" />
                           <span>
                             {formatTime(slot.startTime, language)} - {formatTime(slot.endTime, language)}
                           </span>
                         </p>
-                        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                        <p className="text-xs text-white/50 mt-1 flex items-center gap-1.5 font-semibold">
                           <MapPin className="h-3 w-3" />
                           <span>{translateRoom(course.room, language) || t.courseDetail.defaultRoom}</span>
                         </p>
@@ -242,7 +244,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
           </TabsContent>
 
           {/* 2. Assignments Tab */}
-          <TabsContent value="assignments" className="space-y-2">
+          <TabsContent value="assignments" className="space-y-3">
             {course.assignments.length === 0 ? (
               <EmptyStateCard
                 icon={ClipboardList}
@@ -250,71 +252,72 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 description={t.courseDetail.emptyAssignmentsDesc}
               />
             ) : (
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {course.assignments.map((assignment) => {
-                  const urgency = getDeadlineStatus(assignment.dueDate, assignment.dueTime);
-                  const st = statusConfig[assignment.status] || { label: assignment.status, variant: "secondary" };
-                  const isDone = assignment.status === "submitted" || assignment.status === "graded";
+                  const statusInfo = statusConfig[assignment.status];
+                  const dStatus = getDeadlineStatus(assignment.dueDate, assignment.dueTime);
+                  const isUrgent = dStatus === "urgent" && assignment.status === "pending";
+                  const relTime = getRelativeTime(assignment.dueDate, assignment.dueTime, language === "en" ? "en" : "ar");
+                  const title = translateAssignmentTitle(assignment.title, language);
+                  const desc = translateAssignmentDescription(assignment.description, language);
 
                   return (
                     <div
                       key={assignment.id}
-                      className="flex items-start gap-3.5 rounded-xl border border-border bg-card p-4 transition-all duration-150 hover:border-foreground/20"
+                      className={cn(
+                        "flex flex-col sm:flex-row sm:items-start gap-4 rounded-[20px] border bg-card p-4 transition-all relative overflow-hidden",
+                        isUrgent ? "border-[#EF4444]/40 hover:border-[#EF4444]/80 shadow-[0_0_15px_rgba(239,68,68,0.1)]" : "border-white/5 hover:border-white/20 hover:bg-white/[0.02]"
+                      )}
                     >
-                      <div className="mt-1">
-                        {isDone ? (
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        ) : (
-                          <Circle className="h-4 w-4 text-muted-foreground" />
-                        )}
-                      </div>
+                      {isUrgent && (
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-[#EF4444]/15 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                      )}
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="text-sm font-semibold text-foreground">{translateAssignmentTitle(assignment.title, language)}</p>
-                          <Badge variant={st.variant}>{st.label}</Badge>
+                      <div className="flex-1 min-w-0 z-10">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="text-sm font-bold text-white truncate">
+                            {title}
+                          </h4>
+                          <span className="text-[10px] font-bold text-white/50 bg-white/5 px-2 py-0.5 rounded-md">
+                            {typeLabel[assignment.type] || assignment.type}
+                          </span>
                         </div>
-
-                        <div className="flex flex-wrap items-center gap-3 mt-2 text-xs">
-                          <span className="text-muted-foreground font-medium">
-                            {typeLabel[assignment.type] || t.courseDetail.assignmentTypes.assignment}
+                        {desc && (
+                          <p className="text-xs text-white/60 line-clamp-2 mt-1 leading-relaxed font-medium">
+                            {desc}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-4 mt-3 text-xs text-white/40 font-semibold tabular-nums">
+                          <span className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5" />
+                            {assignment.dueDate}
                           </span>
-
-                          <span
-                            className={`flex items-center gap-1 font-medium ${
-                              urgency === "urgent"
-                                ? "text-destructive"
-                                : urgency === "soon"
-                                ? "text-amber-500"
-                                : "text-muted-foreground"
-                            }`}
-                          >
-                            {urgency === "urgent" && <AlertTriangle className="h-3 w-3" />}
-                            <Clock className="h-3 w-3" />
-                            <span>{getRelativeTime(assignment.dueDate, assignment.dueTime, language)}</span>
-                            {assignment.dueTime && assignment.dueTime !== "--:--" && (
-                              <span className="tabular-nums">({assignment.dueTime} {t.courseDetail.jordanTime})</span>
-                            )}
-                          </span>
-
-                          {assignment.grade !== undefined ? (
-                            <Badge variant="success">
-                              {t.courseDetail.grade}: {assignment.grade} / {assignment.maxGrade}
-                            </Badge>
-                          ) : (
-                            <span className="text-muted-foreground">
-                              {assignment.maxGrade} {t.courseDetail.gradePoints}
+                          {assignment.dueTime && (
+                            <span className="flex items-center gap-1.5">
+                              <Clock className="h-3.5 w-3.5" />
+                              {assignment.dueTime}
                             </span>
                           )}
                         </div>
+                      </div>
 
-                        {assignment.description &&
-                          assignment.description.trim() !== "" &&
-                          assignment.description !== assignment.title && (
-                            <div className="mt-2.5 p-3 rounded-lg bg-secondary/40 border border-border/60 text-xs text-foreground/85 leading-relaxed whitespace-pre-line">
-                              {translateAssignmentDescription(assignment.description, language)}
-                            </div>
-                          )}
+                      <div className={cn("flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 flex-shrink-0 z-10 mt-3 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-0 border-white/5", isRtl ? "sm:text-left" : "sm:text-right")}>
+                        <div className={cn("px-2.5 py-1 rounded-md text-[10px] font-bold border flex items-center gap-1.5", statusInfo.bg, statusInfo.text)}>
+                          {assignment.status === "pending" ? <Clock className="h-3 w-3" /> : <CheckCircle2 className="h-3 w-3" />}
+                          {statusInfo.label}
+                        </div>
+                        
+                        {assignment.status === "pending" && (
+                          <div className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md", isUrgent ? "text-[#EF4444] bg-[#EF4444]/10" : "text-[#F97316] bg-[#F97316]/10")}>
+                            {isUrgent ? t.dashboard.urgentBadge : t.dashboard.soonBadge}: {relTime}
+                          </div>
+                        )}
+
+                        {assignment.grade && (
+                          <div className="text-sm font-extrabold text-white bg-white/5 px-3 py-1 rounded-lg border border-white/5">
+                            {assignment.grade} <span className="text-[10px] text-white/40">/ {assignment.maxGrade || 100}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
@@ -324,7 +327,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
           </TabsContent>
 
           {/* 3. Files Tab */}
-          <TabsContent value="files" className="space-y-2">
+          <TabsContent value="files" className="space-y-3">
             {course.files.length === 0 ? (
               <EmptyStateCard
                 icon={FolderOpen}
@@ -332,28 +335,31 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 description={t.courseDetail.emptyFilesDesc}
               />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {course.files.map((file) => {
-                  const Icon = fileIconMap[file.type] || FileText;
+                  const FileIconCmp = fileIconMap[file.type] || FileText;
+                  const isLink = file.type === "link";
+                  
                   return (
                     <a
                       key={file.id}
                       href={file.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3.5 rounded-xl border border-border bg-card p-3.5 min-h-[56px] hover:bg-secondary/40 hover:border-primary/20 hover:shadow-sm active:scale-[0.98] transition-all duration-200 group"
+                      className="group flex items-start gap-4 rounded-[20px] border border-white/5 bg-card p-4 transition-all hover:border-white/20 hover:bg-white/[0.02]"
                     >
-                      <div className="h-9 w-9 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0 text-foreground">
-                        <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      <div className="h-10 w-10 rounded-2xl fintech-gradient-blue flex items-center justify-center flex-shrink-0 shadow-md">
+                        <FileIconCmp className="h-4 w-4 text-white fill-white/20" strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate group-hover:text-primary transition-colors">
-                          {file.name}
+                        <p className="text-sm font-bold text-white truncate transition-colors group-hover:text-[#3B82F6]">
+                          {translateAssignmentTitle(file.name, language)}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {file.type.toUpperCase()}
-                          {file.week && ` · ${t.courseDetail.weekPrefix} ${file.week}`}
-                        </p>
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] font-semibold text-white/50">
+                          <span className="uppercase tracking-wider">{file.type}</span>
+                          
+                          
+                        </div>
                       </div>
                     </a>
                   );
@@ -363,7 +369,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
           </TabsContent>
 
           {/* 4. Grades Tab */}
-          <TabsContent value="grades">
+          <TabsContent value="grades" className="space-y-4">
             {!hasGrades ? (
               <EmptyStateCard
                 icon={GraduationCap}
@@ -371,79 +377,70 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 description={t.courseDetail.emptyGradesDesc}
               />
             ) : (
-              <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
-                <div className="flex items-center justify-between pb-3 border-b border-border">
-                  <h3 className="text-sm font-semibold text-foreground">
-                    {t.courseDetail.gradesBreakdown}
-                  </h3>
-                  {course.grade?.letter && (
-                    <Badge variant="default" className="text-sm px-2.5 py-0.5 font-bold">
-                      {t.courseDetail.gradeLetter}: {course.grade.letter}
-                    </Badge>
-                  )}
-                </div>
-
-                <div className="space-y-3 divide-y divide-border">
-                  {course.grade?.midterm !== undefined && (
-                    <div className="flex items-center justify-between pt-3 hover:bg-secondary/20 p-2 -mx-2 rounded-lg transition-colors">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">{t.courseDetail.midtermExam}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.midtermDesc}</p>
-                      </div>
-                      <span className="text-sm font-bold tabular-nums text-foreground bg-secondary px-2.5 py-1 rounded-md">
-                        {course.grade.midterm} / 30
-                      </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {course.grade?.total !== undefined && (
+                  <div className="sm:col-span-2 rounded-[20px] border border-[#3B82F6]/20 bg-[#3B82F6]/5 p-6 flex items-center justify-between shadow-[0_0_30px_rgba(59,130,246,0.1)] relative overflow-hidden">
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#3B82F6]/20 rounded-full blur-3xl pointer-events-none" />
+                    <div className="relative z-10">
+                      <p className="text-sm font-bold text-[#3B82F6] mb-1">{t.courseDetail.totalGrade}</p>
+                      
                     </div>
-                  )}
-
-                  {course.grade?.assignments !== undefined && (
-                    <div className="flex items-center justify-between pt-3">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">{t.courseDetail.coursework}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.courseworkDesc}</p>
+                    <div className="text-right relative z-10">
+                      <div className="text-4xl font-extrabold text-white tabular-nums tracking-tighter">
+                        {course.grade.total}
+                        <span className="text-lg text-white/40 ml-1">/100</span>
                       </div>
-                      <span className="text-sm font-bold tabular-nums text-foreground bg-secondary px-2.5 py-1 rounded-md">
-                        {course.grade.assignments} / 20
-                      </span>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {course.grade?.participation !== undefined && (
-                    <div className="flex items-center justify-between pt-3">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">{t.courseDetail.participation}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.participationDesc}</p>
-                      </div>
-                      <span className="text-sm font-bold tabular-nums text-foreground bg-secondary px-2.5 py-1 rounded-md">
-                        {course.grade.participation} / 10
-                      </span>
+                {course.grade?.midterm !== undefined && (
+                  <div className="rounded-[20px] border border-white/5 bg-card p-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+                    <div>
+                      <p className="text-sm font-bold text-white">{t.courseDetail.midtermExam}</p>
                     </div>
-                  )}
+                    <div className="text-xl font-extrabold text-white tabular-nums">
+                      {course.grade.midterm}
+                      <span className="text-xs text-white/40 ml-1">/ 30</span>
+                    </div>
+                  </div>
+                )}
 
-                  {course.grade?.final !== undefined && (
-                    <div className="flex items-center justify-between pt-3">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">{t.courseDetail.finalExam}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.finalExamDesc}</p>
-                      </div>
-                      <span className="text-sm font-bold tabular-nums text-foreground bg-secondary px-2.5 py-1 rounded-md">
-                        {course.grade.final} / 40
-                      </span>
+                {course.grade?.participation !== undefined && (
+                  <div className="rounded-[20px] border border-white/5 bg-card p-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+                    <div>
+                      <p className="text-sm font-bold text-white">{t.courseDetail.participation}</p>
                     </div>
-                  )}
+                    <div className="text-xl font-extrabold text-white tabular-nums">
+                      {course.grade.participation}
+                      <span className="text-xs text-white/40 ml-1">/ 10</span>
+                    </div>
+                  </div>
+                )}
+                
+                {course.grade?.assignments !== undefined && (
+                  <div className="rounded-[20px] border border-white/5 bg-card p-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+                    <div>
+                      <p className="text-sm font-bold text-white">{t.courseDetail.assignmentsTab}</p>
+                    </div>
+                    <div className="text-xl font-extrabold text-white tabular-nums">
+                      {course.grade.assignments}
+                      <span className="text-xs text-white/40 ml-1">/ 20</span>
+                    </div>
+                  </div>
+                )}
 
-                  {course.grade?.total !== undefined && (
-                    <div className="flex items-center justify-between pt-3 bg-secondary/30 p-3 rounded-lg border border-border">
-                      <div>
-                        <span className="text-sm font-bold text-foreground">{t.courseDetail.cumulativeTotal}</span>
-                        <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.cumulativeTotalDesc}</p>
-                      </div>
-                      <span className="text-base font-extrabold tabular-nums text-foreground">
-                        {course.grade.total} / 100
-                      </span>
+                {course.grade?.final !== undefined && (
+                  <div className="rounded-[20px] border border-white/5 bg-card p-5 flex items-center justify-between hover:bg-white/[0.02] transition-colors">
+                    <div>
+                      <p className="text-sm font-bold text-white">{t.courseDetail.finalExam}</p>
                     </div>
-                  )}
-                </div>
+                    <div className="text-xl font-extrabold text-white tabular-nums">
+                      {course.grade.final}
+                      <span className="text-xs text-white/40 ml-1">/ 40</span>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </TabsContent>

@@ -30,17 +30,17 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
 
       <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
         {enrolledCourses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-xl border border-dashed border-border bg-card/60 text-center">
-            <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center mb-3 text-foreground">
-              <BookOpen className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
+          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-[20px] border border-dashed border-white/10 bg-card/60 text-center">
+            <div className="h-14 w-14 rounded-2xl fintech-gradient-blue flex items-center justify-center mb-3 text-white shadow-lg">
+              <BookOpen className="h-6 w-6 fill-white/20" strokeWidth={2} />
             </div>
-            <h3 className="text-base font-semibold text-foreground">{t.courses.emptyTitle}</h3>
-            <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+            <h3 className="text-base font-bold text-white">{t.courses.emptyTitle}</h3>
+            <p className="text-xs text-white/50 mt-1 max-w-sm">
               {t.courses.emptyDesc}
             </p>
             <Link
               href="/"
-              className="mt-4 inline-flex h-11 min-h-[44px] items-center justify-center px-5 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-all duration-150"
+              className="mt-4 inline-flex h-11 min-h-[44px] items-center justify-center px-6 rounded-xl fintech-gradient-blue text-white text-xs font-bold hover:fintech-glow-blue transition-all duration-300"
             >
               {t.courses.backHome}
             </Link>
@@ -60,49 +60,51 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                 <Link
                   key={course.id}
                   href={`/courses/${course.id}`}
-                  className="group relative flex flex-col justify-between rounded-xl border border-border bg-card p-4 min-h-[120px] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/25"
+                  className="group relative flex flex-col justify-between rounded-[20px] border border-white/5 bg-card p-4 min-h-[120px] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.03]"
                 >
                   {/* Top: Header & Code */}
                   <div>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
                         <div
-                          className="h-9 w-9 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-bold"
+                          className="h-11 w-11 rounded-2xl flex-shrink-0 flex items-center justify-center text-xs font-bold shadow-md text-white"
                           style={{
-                            backgroundColor: `${course.color || "currentColor"}18`,
-                            color: course.color || "currentColor",
+                            background: `linear-gradient(135deg, ${course.color || "#3B82F6"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
                           }}
                         >
-                          <BookOpen className="h-4 w-4" />
+                          <BookOpen className="h-5 w-5 fill-white/20" strokeWidth={1.75} />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-sm font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                          <h3 className="text-sm font-bold text-white truncate transition-colors">
                             {courseDisplayName}
                           </h3>
-                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                          <p className="text-xs text-white/50 mt-1 truncate font-medium">
                             {course.code} · {course.credits || 3} {t.courses.credits}
                           </p>
                         </div>
                       </div>
 
                       {gradePercent !== undefined ? (
-                        <span className="text-xs font-semibold tabular-nums text-foreground bg-secondary px-2.5 py-1 rounded-md border border-border flex-shrink-0">
-                          {gradePercent} / 100
+                        <span className="text-sm font-extrabold tabular-nums text-white bg-white/10 px-2.5 py-1 rounded-lg border border-white/5 flex-shrink-0">
+                          {gradePercent}
+                          <span className="text-[10px] text-white/50 ml-0.5">/ 100</span>
                         </span>
                       ) : (
-                        <ChevronIcon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
+                        <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                          <ChevronIcon className="h-4 w-4 text-white/50 group-hover:text-white" />
+                        </div>
                       )}
                     </div>
 
                     {/* Middle info */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-4 text-[11px] text-white/60 font-medium">
+                      <span className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-md">
+                        <User className="h-3.5 w-3.5" />
                         <span className="truncate max-w-[140px]">{instructorName}</span>
                       </span>
                       {course.room && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3 w-3" />
+                        <span className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded-md">
+                          <MapPin className="h-3.5 w-3.5" />
                           <span>{translateRoom(course.room, language)}</span>
                         </span>
                       )}
@@ -110,19 +112,19 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                   </div>
 
                   {/* Bottom: Quick badges */}
-                  <div className="flex items-center justify-between pt-3 mt-3 border-t border-border text-xs">
-                    <span className="text-muted-foreground">{semesterName}</span>
+                  <div className="flex items-center justify-between pt-4 mt-4 border-t border-white/5 text-[11px] font-medium">
+                    <span className="text-white/40">{semesterName}</span>
                     <div className="flex items-center gap-2">
                       {pendingAssignments > 0 ? (
-                        <Badge variant="warning" className="gap-1">
+                        <div className="flex items-center gap-1.5 text-white bg-[#EF4444] px-2.5 py-1 rounded-full shadow-md font-bold">
                           <Clock className="h-3 w-3" />
                           <span>{pendingAssignments} {t.courses.pendingTasks}</span>
-                        </Badge>
+                        </div>
                       ) : (
-                        <Badge variant="secondary" className="gap-1">
+                        <div className="flex items-center gap-1.5 text-white/60 bg-white/5 border border-white/5 px-2.5 py-1 rounded-full">
                           <FileText className="h-3 w-3" />
                           <span>{course.assignments?.length || 0} {t.dashboard.assignmentTypes.assignment}</span>
-                        </Badge>
+                        </div>
                       )}
                     </div>
                   </div>
