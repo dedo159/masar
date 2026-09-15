@@ -70,7 +70,7 @@ export function ResumeChat() {
                 store.updateEducation([{
                    id: "edu-1",
                    institution: data.universityId === "ju" ? "University of Jordan" : data.universityId || "University",
-                   degree: "Bachelor of " + (data.major || "Computer Science") + (data.gpa ? ` (GPA: ${data.gpa}/4.00)` : ""),
+                   degree: "Bachelor of " + (data.major || "Computer Science"),
                    graduationYear: "Present",
                    relevantCoursework: []
                 }]);
