@@ -102,7 +102,8 @@ export function ReadinessClient() {
                   onChange={(e) => setTargetRole(e.target.value)}
                   className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-[#fafafa] px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
-                  <option value="Frontend Developer">مطور واجهات أمامية (Frontend Developer)</option>
+                  <option value="Software Engineer">مهندس برمجيات (Software Engineer)</option>
+                    <option value="Frontend Developer">مطور واجهات أمامية (Frontend Developer)</option>
                   <option value="Backend Developer">مطور أنظمة خلفية (Backend Developer)</option>
                   <option value="Full Stack Developer">مطور ويب شامل (Full Stack Developer)</option>
                   <option value="Mobile App Developer">مطور تطبيقات هواتف (Mobile App Developer)</option>
