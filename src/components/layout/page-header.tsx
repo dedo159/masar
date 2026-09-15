@@ -52,7 +52,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           <div>
             <h1 className="text-base font-medium">{displayTitle}</h1>
             {subtitle && (
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5" suppressHydrationWarning>
                 {subtitle === "date" 
                   ? new Date().toLocaleDateString(language === "ar" ? "ar-JO" : "en-US", {
                       timeZone: "Asia/Amman",
@@ -61,7 +61,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
                       month: "long",
                       year: "numeric",
                     })
-                  : (subtitle === "loading" || subtitle === "جاري التحميل..." || subtitle === "جاري التحميل وتحديث البيانات...")
+                  : (subtitle === "loading" || subtitle === "جاري التحميل..." || subtitle === "جاري تحميل البيانات...")
                   ? t.common.loading
                   : subtitle}
               </p>
@@ -101,6 +101,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             className="flex items-center justify-center h-10 w-10 md:h-9 md:w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-medium border border-border mx-1"
             title={t.header.userAccount}
             aria-label={t.header.userAccount}
+            suppressHydrationWarning
           >
             {typeof window !== "undefined" && localStorage.getItem("masar_user_name")
               ? getStudentInitials(localStorage.getItem("masar_user_name"), language)
