@@ -75,7 +75,7 @@ function SettingRow({ icon: Icon, label, description, control, onClick, destruct
   return (
     <button
       type="button"
-      className={`flex w-full items-center gap-3 px-4 py-3.5 min-h-[56px] hover:bg-secondary/50 transition-colors text-start ${
+      className={`flex w-full items-center gap-3 px-4 py-3.5 min-h-[56px] hover:bg-secondary/50 active:bg-secondary/80 transition-all duration-200 text-start ${
         onClick ? "cursor-pointer" : "cursor-default"
       }`}
       onClick={onClick}
@@ -153,10 +153,10 @@ export default function SettingsPage() {
       <div className="max-w-3xl mx-auto px-4 py-4 space-y-2">
         {/* Account & Profile Summary */}
         <SectionLabel>{t.settings.accountSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <Link
             href="/profile"
-            className="flex items-center justify-between p-4 min-h-[64px] hover:bg-secondary/40 transition-colors"
+            className="flex items-center justify-between p-4 min-h-[64px] hover:bg-secondary/40 active:bg-secondary/80 transition-all duration-200"
           >
             <div className="flex items-center gap-3">
               <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
@@ -176,7 +176,7 @@ export default function SettingsPage() {
 
         {/* Moodle Sync Integration */}
         <SectionLabel>{t.settings.moodleSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
               <div className="h-10 w-10 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0">
@@ -203,7 +203,7 @@ export default function SettingsPage() {
               size="default"
               onClick={handleSyncMoodle}
               disabled={isSyncing}
-              className="min-h-[44px] px-4 gap-2 text-xs font-semibold cursor-pointer"
+              className="min-h-[44px] px-4 gap-2 text-xs font-semibold cursor-pointer active:scale-95 transition-transform"
             >
               {isSyncing ? (
                 <>
@@ -229,7 +229,7 @@ export default function SettingsPage() {
 
         {/* Appearance & Theme (3 options) */}
         <SectionLabel>{t.settings.appearanceSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">{t.settings.appearanceTitle}</p>
@@ -283,7 +283,7 @@ export default function SettingsPage() {
 
         {/* Calendar Integrations */}
         <SectionLabel>{t.settings.calendarSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <SettingRow
             icon={Calendar}
             label={t.settings.googleCalendar}
@@ -299,7 +299,7 @@ export default function SettingsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="min-h-[36px] text-xs px-3"
+                    className="min-h-[44px] text-xs px-3 active:scale-95 transition-transform"
                     onClick={() => setGoogleCalendarConnected(false)}
                   >
                     {t.settings.unlinkBtn}
@@ -309,7 +309,7 @@ export default function SettingsPage() {
                 <Button
                   variant="default"
                   size="sm"
-                  className="min-h-[36px] text-xs px-4"
+                  className="min-h-[44px] text-xs px-4 active:scale-95 transition-transform"
                   onClick={() => setGoogleCalendarConnected(true)}
                 >
                   {t.settings.linkBtn}
@@ -321,7 +321,7 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <SectionLabel>{t.settings.notificationsSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <SettingRow
             icon={Bell}
             label={t.settings.generalNotifications}
@@ -367,7 +367,7 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <SectionLabel>{t.settings.securitySection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6 shadow-xs">
+        <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6 shadow-sm transition-all">
           <SettingRow
             icon={LogOut}
             label={t.settings.logoutTitle}

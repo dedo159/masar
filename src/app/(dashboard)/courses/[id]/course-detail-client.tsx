@@ -59,11 +59,11 @@ function EmptyStateCard({
   description: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 px-4 rounded-xl border border-dashed border-border bg-card/50 text-center">
-      <div className="h-12 w-12 rounded-xl bg-secondary/80 flex items-center justify-center mb-3">
+    <div className="flex flex-col items-center justify-center py-12 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+      <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground">
         <Icon className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
       </div>
-      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-base font-semibold text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground mt-1 max-w-sm leading-relaxed">{description}</p>
     </div>
   );
@@ -341,7 +341,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                       href={file.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3.5 rounded-xl border border-border bg-card p-3.5 min-h-[56px] hover:bg-secondary/40 hover:border-foreground/20 transition-all duration-150 group"
+                      className="flex items-center gap-3.5 rounded-xl border border-border bg-card p-3.5 min-h-[56px] hover:bg-secondary/40 hover:border-primary/20 hover:shadow-sm active:scale-[0.98] transition-all duration-200 group"
                     >
                       <div className="h-9 w-9 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0 text-foreground">
                         <Icon className="h-4 w-4" strokeWidth={1.75} />
@@ -371,7 +371,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 description={t.courseDetail.emptyGradesDesc}
               />
             ) : (
-              <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs">
+              <div className="rounded-xl border border-border bg-card p-5 space-y-4 shadow-sm">
                 <div className="flex items-center justify-between pb-3 border-b border-border">
                   <h3 className="text-sm font-semibold text-foreground">
                     {t.courseDetail.gradesBreakdown}
@@ -385,7 +385,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
 
                 <div className="space-y-3 divide-y divide-border">
                   {course.grade?.midterm !== undefined && (
-                    <div className="flex items-center justify-between pt-3">
+                    <div className="flex items-center justify-between pt-3 hover:bg-secondary/20 p-2 -mx-2 rounded-lg transition-colors">
                       <div>
                         <span className="text-sm font-medium text-foreground">{t.courseDetail.midtermExam}</span>
                         <p className="text-xs text-muted-foreground mt-0.5">{t.courseDetail.midtermDesc}</p>

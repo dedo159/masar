@@ -41,7 +41,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   const displayTitle = titleMap[title] || title;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md transition-colors duration-300">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2.5">
           {(title === "مسار" || title === "Masar" || displayTitle === t.common.appName) && (
@@ -76,7 +76,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            className="h-8 px-2.5 text-xs font-medium gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary"
+            className="h-11 md:h-9 px-3 text-xs font-medium gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all active:scale-95"
             aria-label={t.header.toggleLang}
             title={t.header.toggleLang}
           >
@@ -98,7 +98,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           <NotificationsDropdown />
           <Link
             href="/profile"
-            className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-all text-xs font-medium border border-border mr-1 ml-1"
+            className="flex items-center justify-center h-10 w-10 md:h-9 md:w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-medium border border-border mx-1"
             title={t.header.userAccount}
             aria-label={t.header.userAccount}
           >

@@ -61,7 +61,7 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
         size="default"
         onClick={handleApply}
         disabled={loading}
-        className="h-11 min-h-[44px] px-5 text-xs gap-2 font-semibold cursor-pointer"
+        className="h-11 min-h-[44px] px-5 text-xs gap-2 font-semibold cursor-pointer transition-all active:scale-95"
       >
         {loading ? (
           <>

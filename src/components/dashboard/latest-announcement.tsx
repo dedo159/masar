@@ -34,7 +34,7 @@ export function LatestAnnouncementWidget() {
 
   return (
     <Link href="/announcements" className="block mb-6">
-      <div className="bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl p-3 px-4 flex items-center justify-between transition-colors">
+      <div className="bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-center justify-between transition-all duration-200 hover:shadow-sm active:scale-[0.98] min-h-[44px]">
         <div className="flex items-center gap-3">
           <div className="bg-primary/10 text-primary p-2 rounded-full">
             <Megaphone className="w-4 h-4" />

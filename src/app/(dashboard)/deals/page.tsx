@@ -144,28 +144,37 @@ export default function DealsPage() {
             <TabsContent key={cat.id} value={cat.id} className="mt-0 outline-none">
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Card key={i} className="overflow-hidden">
-                      <CardHeader className="pb-2">
-                        <Skeleton className="h-5 w-32 mb-2" />
-                        <Skeleton className="h-4 w-24" />
-                      </CardHeader>
-                      <CardContent>
-                        <Skeleton className="h-4 w-full mb-2" />
-                        <Skeleton className="h-4 w-2/3" />
-                      </CardContent>
-                      <CardFooter>
-                        <Skeleton className="h-9 w-full" />
-                      </CardFooter>
-                    </Card>
-                  ))}
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
+                      <Card key={i} className="border-border shadow-sm">
+                        <CardHeader className="pb-3">
+                          <div className="flex justify-between items-start gap-2">
+                            <div className="space-y-2 w-full">
+                              <Skeleton className="h-5 w-3/4 max-w-[200px]" />
+                              <Skeleton className="h-3 w-24" />
+                            </div>
+                            <Skeleton className="h-6 w-16 rounded-md shrink-0" />
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pb-3 space-y-2.5">
+                          <Skeleton className="h-4 w-full" />
+                          <div className="space-y-1.5 pt-1">
+                            <Skeleton className="h-3 w-full" />
+                            <Skeleton className="h-3 w-4/5" />
+                          </div>
+                          <Skeleton className="h-3 w-32 mt-4" />
+                        </CardContent>
+                        <CardFooter>
+                          <Skeleton className="h-10 min-h-[44px] w-full rounded-md" />
+                        </CardFooter>
+                      </Card>
+                    ))}
                 </div>
               ) : filteredDeals.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredDeals.map((deal) => (
                     <Card 
                       key={deal.id} 
-                      className="group cursor-pointer hover:border-primary/50 transition-colors duration-200"
+                      className="group cursor-pointer border-border shadow-sm hover:-translate-y-1 hover:shadow-md hover:border-primary/20 active:scale-[0.98] transition-all duration-200"
                       onClick={() => setSelectedDeal(deal)}
                     >
                       <CardHeader className="pb-3">
@@ -199,7 +208,7 @@ export default function DealsPage() {
                       <CardFooter>
                         <Button 
                           variant="outline" 
-                          className="w-full text-xs font-medium group-hover:bg-primary/5 group-hover:text-primary transition-colors"
+                          className="w-full h-10 min-h-[44px] text-xs font-medium group-hover:bg-primary/5 group-hover:text-primary transition-colors active:scale-95"
                         >
                           {t.deals.viewDetails}
                         </Button>
@@ -208,8 +217,8 @@ export default function DealsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-20 text-center px-4">
-                  <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center mb-4">
+                <div className="flex flex-col items-center justify-center py-20 text-center px-4 rounded-xl border border-dashed border-border bg-muted/30 transition-colors">
+                  <div className="h-16 w-16 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground">
                     <Tag className="h-8 w-8 text-muted-foreground" />
                   </div>
                   <h3 className="text-lg font-medium mb-1">{t.deals.emptyTitle}</h3>
@@ -241,7 +250,7 @@ export default function DealsPage() {
               <button 
                 onClick={closeDialog}
                 aria-label={t.deals.close}
-                className="h-8 w-8 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground transition-colors"
+                className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground transition-colors active:scale-95"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -296,7 +305,7 @@ export default function DealsPage() {
             {/* Footer */}
             <div className="p-4 border-t border-border bg-muted/30">
               <Button 
-                className="w-full font-bold h-11 text-sm" 
+                className="w-full font-bold h-11 min-h-[44px] text-sm active:scale-95 transition-transform" 
                 onClick={() => handleRedeem(selectedDeal)}
                 disabled={redeemLoading || redeemSuccess || redeemedDeals.has(selectedDeal.id)}
               >

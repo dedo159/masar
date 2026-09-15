@@ -50,11 +50,11 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
 
       {/* Empty State vs List */}
       {upcoming.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed border-border bg-card/60 text-center">
-          <div className="h-10 w-10 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2">
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+          <div className="h-12 w-12 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 shadow-sm">
             <CheckCircle2 className="h-5 w-5" />
           </div>
-          <p className="text-sm font-medium text-foreground">{t.dashboard.noDeadlines}</p>
+          <p className="text-base font-medium text-foreground">{t.dashboard.noDeadlines}</p>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm">
             {t.dashboard.allCaughtUp}
           </p>
@@ -74,7 +74,7 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
                 href={`/courses/${assignment.courseId}`}
                 className={cn(
                   "flex items-center gap-3.5 rounded-xl border border-border bg-card p-3.5 min-h-[52px]",
-                  "hover:border-foreground/20 hover:bg-secondary/40 hover:-translate-y-0.5 shadow-xs",
+                  "hover:border-primary/20 hover:bg-secondary/40 hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98] shadow-xs",
                   "transition-all duration-150 ease-out group"
                 )}
               >

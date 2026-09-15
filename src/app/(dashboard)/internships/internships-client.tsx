@@ -42,8 +42,8 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
 
       <div className="px-4 py-5 space-y-5 max-w-5xl mx-auto">
         {internships.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-xl border border-dashed border-border bg-card/60 text-center">
-            <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center mb-3 text-foreground">
+          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+            <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground">
               <Briefcase className="h-6 w-6 text-muted-foreground" strokeWidth={1.5} />
             </div>
             <h3 className="text-base font-semibold text-foreground">{t.internships.emptyTitle}</h3>
@@ -64,13 +64,13 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
               return (
                 <div
                   key={internship.id}
-                  className="rounded-2xl border border-border bg-card p-5 flex flex-col justify-between gap-4 shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/20"
+                  className="rounded-2xl border border-border bg-card p-5 flex flex-col justify-between gap-4 shadow-sm transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-md hover:border-primary/20"
                 >
                   {/* Top info */}
                   <div>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center text-primary flex-shrink-0 font-bold text-sm">
+                        <div className="h-12 w-12 rounded-xl bg-primary/5 border border-primary/10 flex items-center justify-center text-primary flex-shrink-0 font-bold text-sm shadow-sm">
                           <Building2 className="h-5 w-5" />
                         </div>
 

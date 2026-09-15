@@ -77,11 +77,11 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
 
       {/* Empty State with Actionable Link */}
       {!hasClasses ? (
-        <div className="flex flex-col items-center justify-center py-8 px-4 rounded-xl border border-dashed border-border bg-card/60 text-center">
-          <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center mb-2 text-foreground">
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+          <div className="h-12 w-12 rounded-full bg-secondary/80 flex items-center justify-center mb-3 text-muted-foreground shadow-sm">
             <CalendarDays className="h-5 w-5" />
           </div>
-          <p className="text-sm font-medium text-foreground">{t.dashboard.noClassesToday}</p>
+          <p className="text-base font-medium text-foreground">{t.dashboard.noClassesToday}</p>
           <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-4">
             {t.dashboard.noClassesDesc}
           </p>
@@ -110,7 +110,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
                   "flex items-start gap-3 rounded-xl border bg-card p-3.5 min-h-[56px] transition-all duration-150 ease-out group",
                   isOngoing
                     ? "border-emerald-500/50 dark:border-emerald-500/40 bg-emerald-500/[0.04] shadow-sm hover:border-emerald-500"
-                    : "border-border hover:border-foreground/20 hover:bg-secondary/40",
+                    : "border-border hover:border-primary/20 hover:bg-secondary/40 active:scale-[0.98] hover:shadow-sm",
                   cls.status === "done" && "opacity-60 bg-muted/20"
                 )}
               >

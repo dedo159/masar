@@ -152,14 +152,14 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
       )}
 
       {certificates.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground bg-secondary/10 rounded-lg border border-dashed">
-          <Award className="h-10 w-10 mx-auto mb-3 opacity-20" />
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+          <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground"><Award className="h-6 w-6" strokeWidth={1.5} /></div>
           <p>{isRtl ? "لا توجد شهادات مضافة حتى الآن." : "No certificates added yet."}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {certificates.map((cert) => (
-            <div key={cert.id} className="flex p-3 rounded-lg border border-border bg-background hover:border-primary/30 transition-colors group">
+            <div key={cert.id} className="flex p-3 rounded-xl border border-border bg-background hover:border-primary/20 hover:shadow-sm active:scale-[0.98] transition-all duration-200 group min-h-[56px]">
               <div className="h-10 w-10 rounded-md bg-primary/10 text-primary flex items-center justify-center me-3 shrink-0">
                 <FileText className="h-5 w-5" />
               </div>

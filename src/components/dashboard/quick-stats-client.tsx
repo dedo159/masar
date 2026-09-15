@@ -71,8 +71,8 @@ export function QuickStatsClient({
           href={href}
           className={cn(
             "group relative flex flex-col justify-between rounded-xl border bg-card p-4 min-h-[96px]",
-            "transition-all duration-200 ease-out shadow-xs",
-            "hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/25",
+            "transition-all duration-200 ease-out shadow-sm", // Enhanced baseline shadow
+            "hover:-translate-y-1 hover:shadow-md hover:border-primary/20 active:scale-[0.98]",
             highlight ? "border-destructive/40 bg-destructive/[0.02]" : "border-border"
           )}
         >
@@ -91,7 +91,7 @@ export function QuickStatsClient({
                 {unit}
               </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-1 truncate">
+            <p className="text-sm font-medium text-muted-foreground mt-1.5 truncate">
               {label}
             </p>
           </div>
