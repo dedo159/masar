@@ -52,7 +52,7 @@ export function ResumeChat() {
         .then(res => res.json())
         .then(data => {
           if (data && !data.error) {
-             store.updateBasics({
+             useResumeStore.getState().updateBasics({
                 fullName: data.name || "",
                 email: data.email || "",
                 github: data.github || "",
@@ -68,11 +68,11 @@ export function ResumeChat() {
              }
              
              if (skillsList.length > 0) {
-                store.updateSkills([{ category: "Technical Skills", items: skillsList }]);
+                useResumeStore.getState().updateSkills([{ category: "Technical Skills", items: skillsList }]);
              }
              
              if (data.universityId || data.major) {
-                store.updateEducation([{
+                useResumeStore.getState().updateEducation([{
                    id: "edu-1",
                    institution: data.universityId === "ju" ? "University of Jordan" : data.universityId || "University",
                    degree: "Bachelor of " + (data.major || "Computer Science"),
@@ -105,31 +105,31 @@ export function ResumeChat() {
           try {
             switch (invocation.toolName) {
               case 'update_basics':
-                store.updateBasics(args);
+                useResumeStore.getState().updateBasics(args);
                 break;
               case 'update_summary':
-                store.updateSummary(args.summary);
+                useResumeStore.getState().updateSummary(args.summary);
                 break;
               case 'update_skills':
-                store.updateSkills(args.skills);
+                useResumeStore.getState().updateSkills(args.skills);
                 break;
               case 'add_or_update_project':
-                store.addOrUpdateProject(args);
+                useResumeStore.getState().addOrUpdateProject(args);
                 break;
               case 'delete_project':
-                store.deleteProject(args.id);
+                useResumeStore.getState().deleteProject(args.id);
                 break;
               case 'update_bullet_point':
-                store.updateBulletPoint(args.projectId, args.bulletIndex, args.newText);
+                useResumeStore.getState().updateBulletPoint(args.projectId, args.bulletIndex, args.newText);
                 break;
               case 'update_education':
-                store.updateEducation(args.education);
+                useResumeStore.getState().updateEducation(args.education);
                 break;
               case 'update_certifications':
-                store.updateCertifications(args.certifications);
+                useResumeStore.getState().updateCertifications(args.certifications);
                 break;
               case 'update_design':
-                store.updateDesign(args);
+                useResumeStore.getState().updateDesign(args);
                 break;
             }
             // Respond to AI that the tool succeeded
@@ -140,7 +140,7 @@ export function ResumeChat() {
         }
       });
     }
-  }, [messages, store, addToolResult]);
+  }, [messages, addToolResult]);
 
   return (
     <div className="flex flex-col h-full bg-card rounded-lg border shadow-sm overflow-hidden">
