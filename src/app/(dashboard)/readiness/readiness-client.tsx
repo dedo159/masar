@@ -80,7 +80,7 @@ export function ReadinessClient() {
   return (
     <div className="space-y-6">
       <PageHeader title={t.readinessclient.key_toyy3w} />
-      <p className="text-[#666666] text-sm mt-2">{t.readinessclient.key_mjhxrk}</p>
+      <p className="text-muted-foreground text-sm mt-2">{t.readinessclient.key_mjhxrk}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
@@ -96,11 +96,11 @@ export function ReadinessClient() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_ywqfcx}</label>
+                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_ywqfcx}</label>
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-[#fafafa] px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-background px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <option value="Software Engineer">{t.readinessclient.key_oc39qi}</option>
                     <option value="Frontend Developer">{t.readinessclient.key_dxblft}</option>
@@ -119,31 +119,31 @@ export function ReadinessClient() {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_3ux84x}</label>
+                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_3ux84x}</label>
                 <Input 
                   value={githubLanguages} 
                   onChange={(e) => setGithubLanguages(e.target.value)} 
                   placeholder={t.readinessclient.key_4srqlt}
-                  className="bg-[#fafafa]"
+                  className="bg-background"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_kqgzve}</label>
+                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_kqgzve}</label>
                 <Input 
                   type="number"
                   value={githubReposCount} 
                   onChange={(e) => setGithubReposCount(e.target.value)} 
-                  className="bg-[#fafafa]"
+                  className="bg-background"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_mlp3m9}</label>
+                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_mlp3m9}</label>
                 <textarea 
                   value={topProjects} 
                   onChange={(e) => setTopProjects(e.target.value)} 
-                  className="w-full rounded-md border border-input bg-[#fafafa] px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[100px]"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[100px]"
                   placeholder={t.readinessclient.key_733los}
                 />
               </div>
@@ -171,22 +171,22 @@ export function ReadinessClient() {
         {/* Results Column */}
         <div className="md:col-span-7">
           {!result && !loading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-[#fafafa]/50 border-border">
-              <ShieldCheck className="w-16 h-16 text-[#666666]/30 mb-4" />
-              <h3 className="text-lg font-medium text-[#171717]">{t.readinessclient.key_uietee}</h3>
-              <p className="text-sm text-[#666666] max-w-sm mt-2">
+            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-muted/20 border-border">
+              <ShieldCheck className="w-16 h-16 text-muted-foreground/30 mb-4" />
+              <h3 className="text-lg font-medium text-foreground">{t.readinessclient.key_uietee}</h3>
+              <p className="text-sm text-muted-foreground max-w-sm mt-2">
                 {t.readinessclient.key_nb66j7}</p>
             </div>
           )}
 
           {loading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-[#fafafa]/50 border-border">
+            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-muted/20 border-border">
               <div className="relative">
                 <div className="absolute -inset-4 bg-[#0070f3]/20 rounded-full blur-xl animate-pulse" />
                 <Loader2 className="w-12 h-12 text-[#0070f3] animate-spin relative z-10" />
               </div>
-              <h3 className="text-lg font-medium text-[#171717] mt-6">{t.readinessclient.key_rsmy05}</h3>
-              <p className="text-sm text-[#666666] mt-2">
+              <h3 className="text-lg font-medium text-foreground mt-6">{t.readinessclient.key_rsmy05}</h3>
+              <p className="text-sm text-muted-foreground mt-2">
                 {t.readinessclient.key_hbomh7}</p>
             </div>
           )}
@@ -199,18 +199,18 @@ export function ReadinessClient() {
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
-                      <p className="text-sm font-medium text-[#666666] mb-1">{t.readinessclient.key_52yk5p}</p>
-                      <h2 className="text-3xl font-bold text-[#171717] flex items-center gap-3">
+                      <p className="text-sm font-medium text-muted-foreground mb-1">{t.readinessclient.key_52yk5p}</p>
+                      <h2 className="text-3xl font-bold text-foreground flex items-center gap-3">
                         <span className={getScoreColor(result.readiness_score)}>
                           {result.readiness_score}%
                         </span>
-                        <Badge variant="outline" className="bg-[#fafafa] text-[#171717] font-normal text-sm">
+                        <Badge variant="outline" className="bg-background text-foreground font-normal text-sm">
                           {result.readiness_status}
                         </Badge>
                       </h2>
                     </div>
                     <div className="text-right w-full md:w-1/2">
-                      <p className="text-sm text-[#666666] leading-relaxed">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         {result.strengths_summary}
                       </p>
                     </div>
@@ -228,7 +228,7 @@ export function ReadinessClient() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {result.verified_skills.map((skill: string, i: number) => (
-                      <Badge key={i} variant="secondary" className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-medium">
+                      <Badge key={i} variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400  border border-emerald-500/20 hover:bg-emerald-500/20 font-medium">
                         {skill}
                       </Badge>
                     ))}
@@ -245,13 +245,13 @@ export function ReadinessClient() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {result.critical_gaps.map((gap: any, i: number) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-lg bg-[#fafafa] border border-border">
+                    <div key={i} className="flex gap-4 p-4 rounded-lg bg-background border border-border">
                       <div className="mt-1">
                         <div className={`w-2 h-2 rounded-full ${gap.priority === 'High' ? 'bg-[#ff5b4f] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-500' : 'bg-blue-400'}`} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-[#171717]">{gap.skill}</h4>
-                        <p className="text-sm text-[#666666] mt-1 leading-relaxed">
+                        <h4 className="font-semibold text-foreground">{gap.skill}</h4>
+                        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                           {gap.reason}
                         </p>
                       </div>
@@ -261,18 +261,18 @@ export function ReadinessClient() {
               </Card>
 
               {/* Actionable Next Step */}
-              <Card className="vercel-card border-border/50 bg-blue-50/50">
+              <Card className="vercel-card border-border/50 bg-blue-500/100/5">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <ArrowUpRight className="w-4 h-4 text-[#0070f3]" />
                     {t.readinessclient.key_n3bmys}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="p-4 rounded-lg bg-white border border-blue-100 shadow-sm">
-                    <p className="text-[#171717] font-medium leading-relaxed">
+                  <div className="p-4 rounded-lg bg-card border border-blue-500/20 shadow-sm">
+                    <p className="text-foreground font-medium leading-relaxed">
                       {result.actionable_next_step.recommended_project}
                     </p>
-                    <div className="mt-4 flex items-center gap-2 text-sm text-[#0070f3] font-semibold bg-blue-50 w-fit px-3 py-1 rounded-full">
+                    <div className="mt-4 flex items-center gap-2 text-sm text-[#0070f3] font-semibold bg-blue-500/10 w-fit px-3 py-1 rounded-full">
                       <TrendingUp className="w-4 h-4" />
                       {t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}
                     </div>
