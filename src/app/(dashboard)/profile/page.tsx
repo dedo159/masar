@@ -34,7 +34,7 @@ export default async function ProfilePage() {
     .map((n) => n[0])
     .filter(Boolean)
     .join("")
-    .slice(0, 2) || "ط";
+    .slice(0, 2) || "ط·";
 
   let skillsList: string[] = [];
   try {
@@ -46,8 +46,8 @@ export default async function ProfilePage() {
   return (
     <ProfileClient
       student={student as any}
-      skillsList={skillsList}
-      initials={initials}
+      
+      
     />
   );
 }

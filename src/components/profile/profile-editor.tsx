@@ -119,9 +119,7 @@ export function ProfileEditor({
           />
           <Button
             type="button"
-            variant="outline" className="gap-1 min-h-[44px] px-4 bg-white/5 border-white/5 text-white hover:bg-white/10 hover:text-white"
-            onClick={handleAddSkill}
-            className="gap-1 min-h-[44px] px-4"
+            variant="outline" className="gap-1 min-h-[44px] px-4 bg-white/5 border-white/5 text-white hover:bg-white/10 hover:text-white" onClick={handleAddSkill}
           >
             <Plus className="h-4 w-4" />
             <span>{t.profile.addSkill}</span>

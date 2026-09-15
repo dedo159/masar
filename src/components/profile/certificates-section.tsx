@@ -75,7 +75,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(isRtl ? "ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط­ط°ظپ ظ‡ط°ظ‡ ط§ظ„ط´ظ‡ط§ط¯ط©طں" : "Are you sure you want to delete this certificate?")) return;
+    if (!confirm(isRtl ? "ط¸â€،ط¸â€‍ ط·آ£ط¸â€ ط·ع¾ ط¸â€¦ط·ع¾ط·آ£ط¸ئ’ط·آ¯ ط¸â€¦ط¸â€  ط·آ­ط·آ°ط¸ظ¾ ط¸â€،ط·آ°ط¸â€، ط·آ§ط¸â€‍ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ©ط·ع؛" : "Are you sure you want to delete this certificate?")) return;
     
     setDeletingId(id);
     try {
@@ -98,12 +98,12 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center gap-2">
           <Award className="h-5 w-5 text-[#7C3AED]" />
-          {isRtl ? "ط§ظ„ط´ظ‡ط§ط¯ط§طھ ظˆط§ظ„ط¯ظˆط±ط§طھ" : "Certificates"}
+          {isRtl ? "ط·آ§ط¸â€‍ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ§ط·ع¾ ط¸ث†ط·آ§ط¸â€‍ط·آ¯ط¸ث†ط·آ±ط·آ§ط·ع¾" : "Certificates"}
         </h3>
         {!showUploadForm && (
           <Button variant="outline" size="sm" onClick={() => setShowUploadForm(true)} className="gap-2">
             <Plus className="h-4 w-4" />
-            {isRtl ? "ط¥ط¶ط§ظپط© ط´ظ‡ط§ط¯ط©" : "Add Certificate"}
+            {isRtl ? "ط·آ¥ط·آ¶ط·آ§ط¸ظ¾ط·آ© ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ©" : "Add Certificate"}
           </Button>
         )}
       </div>
@@ -112,40 +112,36 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
         <form onSubmit={handleUpload} className="bg-white/5/30 p-4 rounded-lg mb-6 border border-white/5/50">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ط§ط³ظ… ط§ظ„ط´ظ‡ط§ط¯ط©/ط§ظ„ط¯ظˆط±ط©" : "Certificate Name"}</label>
+              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ط·آ§ط·آ³ط¸â€¦ ط·آ§ط¸â€‍ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ©/ط·آ§ط¸â€‍ط·آ¯ط¸ث†ط·آ±ط·آ©" : "Certificate Name"}</label>
               <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
                 required 
                 value={formData.name} 
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                placeholder={isRtl ? "ظ…ط«ط§ظ„: Google Data Analytics" : "e.g. Google Data Analytics"}
+                placeholder={isRtl ? "ط¸â€¦ط·آ«ط·آ§ط¸â€‍: Google Data Analytics" : "e.g. Google Data Analytics"}
               />
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">
-                {isRtl ? "ط§ظ„ط¬ظ‡ط© ط§ظ„ظ…ط§ظ†ط­ط©" : "Issuer"} <span className="text-white/50 text-xs font-normal">({isRtl ? "ط§ط®طھظٹط§ط±ظٹ" : "Optional"})</span>
+                {isRtl ? "ط·آ§ط¸â€‍ط·آ¬ط¸â€،ط·آ© ط·آ§ط¸â€‍ط¸â€¦ط·آ§ط¸â€ ط·آ­ط·آ©" : "Issuer"} <span className="text-white/50 text-xs font-normal">({isRtl ? "ط·آ§ط·آ®ط·ع¾ط¸ظ¹ط·آ§ط·آ±ط¸ظ¹" : "Optional"})</span>
               </label>
               <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
                 value={formData.issuer} 
                 onChange={(e) => setFormData({...formData, issuer: e.target.value})}
-                placeholder={isRtl ? "ظ…ط«ط§ظ„: Coursera" : "e.g. Coursera"}
+                placeholder={isRtl ? "ط¸â€¦ط·آ«ط·آ§ط¸â€‍: Coursera" : "e.g. Coursera"}
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ظ…ظ„ظپ ط§ظ„ط´ظ‡ط§ط¯ط© (طµظˆط±ط© ط£ظˆ PDF)" : "Certificate File"}</label>
-              <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
-                type="file" 
-                accept="image/*,application/pdf"
-                onChange={handleFileChange}
-                className="file:me-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-primary file:text-[#7C3AED]-foreground hover:file:bg-primary/90 cursor-pointer"
+              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ط¸â€¦ط¸â€‍ط¸ظ¾ ط·آ§ط¸â€‍ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ© (ط·آµط¸ث†ط·آ±ط·آ© ط·آ£ط¸ث† PDF)" : "Certificate File"}</label>
+              <Input type="file" className="bg-white/5 border-white/5 text-white placeholder:text-white/30 file:me-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-primary file:text-[#7C3AED]-foreground hover:file:bg-primary/90 cursor-pointer"
               />
             </div>
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => setShowUploadForm(false)}>
-              {isRtl ? "ط¥ظ„ط؛ط§ط،" : "Cancel"}
+              {isRtl ? "ط·آ¥ط¸â€‍ط·ط›ط·آ§ط·طŒ" : "Cancel"}
             </Button>
             <Button type="submit" disabled={isUploading}>
-              {isUploading ? (isRtl ? "ط¬ط§ط±ظٹ ط§ظ„ط±ظپط¹..." : "Uploading...") : (isRtl ? "ط­ظپط¸ ط§ظ„ط´ظ‡ط§ط¯ط©" : "Save Certificate")}
+              {isUploading ? (isRtl ? "ط·آ¬ط·آ§ط·آ±ط¸ظ¹ ط·آ§ط¸â€‍ط·آ±ط¸ظ¾ط·آ¹..." : "Uploading...") : (isRtl ? "ط·آ­ط¸ظ¾ط·آ¸ ط·آ§ط¸â€‍ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ©" : "Save Certificate")}
             </Button>
           </div>
         </form>
@@ -154,7 +150,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
       {certificates.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-white/5 bg-white/5 text-center transition-colors">
           <div className="h-14 w-14 rounded-full bg-white/5/80 flex items-center justify-center mb-4 shadow-sm text-white/50"><Award className="h-6 w-6" strokeWidth={1.5} /></div>
-          <p>{isRtl ? "ظ„ط§ طھظˆط¬ط¯ ط´ظ‡ط§ط¯ط§طھ ظ…ط¶ط§ظپط© ط­طھظ‰ ط§ظ„ط¢ظ†." : "No certificates added yet."}</p>
+          <p>{isRtl ? "ط¸â€‍ط·آ§ ط·ع¾ط¸ث†ط·آ¬ط·آ¯ ط·آ´ط¸â€،ط·آ§ط·آ¯ط·آ§ط·ع¾ ط¸â€¦ط·آ¶ط·آ§ط¸ظ¾ط·آ© ط·آ­ط·ع¾ط¸â€° ط·آ§ط¸â€‍ط·آ¢ط¸â€ ." : "No certificates added yet."}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
