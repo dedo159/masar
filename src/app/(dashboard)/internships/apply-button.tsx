@@ -36,10 +36,10 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
       if (res.ok || res.status === 409) {
         setApplied(true);
       } else {
-        setError(data.error || (language === "en" ? "Application failed" : "ظپط´ظ„ ط§ظ„طھظ‚ط¯ظٹظ…"));
+        setError(data.error || (language === "en" ? "Application failed" : "فشل التقديم"));
       }
     } catch {
-      setError(language === "en" ? "Connection error" : "ط­ط¯ط« ط®ط·ط£ ظپظٹ ط§ظ„ط§طھطµط§ظ„");
+      setError(language === "en" ? "Connection error" : "حدث خطأ في الاتصال");
     } finally {
       setLoading(false);
     }
@@ -47,9 +47,9 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
 
   if (applied) {
     return (
-      <div className="flex h-11 min-h-[44px] items-center justify-center gap-1.5 text-xs font-bold text-[#059669] bg-[#059669]/10 border border-[#059669]/20 px-4 rounded-[12px]">
+      <div className="flex h-10 min-h-[40px] items-center justify-center gap-1.5 text-xs font-medium text-[#0070f3] bg-[#0070f3]/10 border border-[#0070f3]/20 px-4 rounded-md">
         <CheckCircle2 className="h-4 w-4" />
-        <span>{language === "en" ? "Applied Successfully" : "طھظ… ط§ظ„طھظ‚ط¯ظٹظ… ط¨ظ†ط¬ط§ط­"}</span>
+        <span>{language === "en" ? "Applied Successfully" : "تم التقديم بنجاح"}</span>
       </div>
     );
   }
@@ -61,17 +61,17 @@ export function ApplyButton({ internshipId, initialApplied = false }: ApplyButto
         size="default"
         onClick={handleApply}
         disabled={loading}
-        className="h-11 min-h-[44px] px-5 text-xs gap-2 font-bold cursor-pointer transition-all active:scale-95 fintech-gradient-teal text-white hover:fintech-glow-teal border-0 rounded-[12px]"
+        className="h-10 min-h-[40px] px-5 text-sm gap-2 font-medium cursor-pointer transition-all active:scale-95 vercel-button-primary"
       >
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span>{language === "en" ? "Submitting Application..." : "ط¬ط§ط±ظٹ ط¥ط±ط³ط§ظ„ ط§ظ„ط·ظ„ط¨..."}</span>
+            <span>{language === "en" ? "Submitting Application..." : "جاري إرسال الطلب..."}</span>
           </>
         ) : (
           <>
             <Send className="h-4 w-4" />
-            <span>{language === "en" ? "Apply Now" : "طھظ‚ط¯ظٹظ… ط·ظ„ط¨ ط§ظ„ط¢ظ†"}</span>
+            <span>{language === "en" ? "Apply Now" : "تقديم طلب الآن"}</span>
           </>
         )}
       </Button>

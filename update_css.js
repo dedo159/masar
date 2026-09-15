@@ -1,4 +1,9 @@
+const fs = require('fs');
+
+const cssContent = 
 @import "tailwindcss";
+
+@plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -41,26 +46,30 @@
   --popover: #ffffff;
   --popover-foreground: #171717;
   
+  /* Primary Action - Vercel Black */
   --primary: #171717;
   --primary-foreground: #ffffff;
   
+  /* Secondary / Muted - Grays */
   --secondary: #fafafa;
   --secondary-foreground: #171717;
   
   --muted: #fafafa;
-  --muted-foreground: #666666;
+  --muted-foreground: #666666; /* Gray 500 */
   
   --accent: #fafafa;
   --accent-foreground: #171717;
   
+  /* Destructive - Ship Red */
   --destructive: #ff5b4f;
   --destructive-foreground: #ffffff;
   
+  /* Borders and Inputs */
   --border: #eaeaea;
   --input: #eaeaea;
-  --ring: #0070f3;
+  --ring: #0070f3; /* Console Blue for focus rings */
   
-  --radius: 6px;
+  --radius: 6px; /* Vercel uses relatively small, sharp border radii */
 }
 
 .dark {
@@ -100,35 +109,25 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Geist is Vercel's default, we can just use default sans */
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
   }
 }
 
+/* Vercel Specific Utility Classes */
 @layer utilities {
   .vercel-card {
-    @apply bg-card border border-border rounded-lg shadow-[0_2px_4px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.02)] transition-all duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.05)];
+    @apply bg-card border border-border rounded-md shadow-sm transition-shadow duration-200 hover:shadow-md;
   }
   
-  .vercel-button-primary {
-    @apply bg-[#171717] dark:bg-white text-white dark:text-black font-medium border border-transparent rounded-md transition-colors hover:bg-[#383838] dark:hover:bg-[#e0e0e0];
-  }
-
-  .vercel-button-secondary {
-    @apply bg-white dark:bg-black text-[#666666] dark:text-[#888888] font-medium border border-[#eaeaea] dark:border-[#333333] rounded-md transition-colors hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white;
+  .vercel-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#0070f3] to-[#ff5b4f];
   }
   
-  .vercel-button-develop {
-    @apply bg-[#0a72ef] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#0070f3];
-  }
-  
-  .vercel-button-ship {
-    @apply bg-[#ff5b4f] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#e04337];
-  }
-
-  .vercel-button-preview {
-    @apply bg-[#de1d8d] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#c21477];
-  }
-
   .vercel-link {
     @apply text-[#0072f5] hover:underline decoration-1 underline-offset-4;
   }
 }
+\;
+
+fs.writeFileSync('src/app/globals.css', cssContent, 'utf8');

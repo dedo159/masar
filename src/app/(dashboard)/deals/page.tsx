@@ -46,13 +46,13 @@ export default function DealsPage() {
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
 
   const categories = [
-    { id: "all", label: t.deals.categories.all, matchAr: "ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ¸ط¦â€™ط·آ¸أ¢â‚¬â€چ", matchEn: "all" },
-    { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ·ط·آ·ط¢آ§ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬آ¦", matchEn: "restaurant" },
-    { id: "bookstores", label: t.deals.categories.bookstores, matchAr: "ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ·ط¹آ¾ط·آ·ط¢آ¨ط·آ·ط¢آ§ط·آ·ط¹آ¾", matchEn: "bookstore" },
-    { id: "transport", label: t.deals.categories.transport, matchAr: "ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آµط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ·ط¹آ¾", matchEn: "transport" },
-    { id: "shops", label: t.deals.categories.shops, matchAr: "ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ¬ط·آ·ط¢آ±", matchEn: "shop" },
-    { id: "courses", label: t.deals.categories.courses, matchAr: "ط·آ¸ط¦â€™ط·آ¸ط«â€ ط·آ·ط¢آ±ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¹آ¾", matchEn: "course" },
-    { id: "other", label: t.deals.categories.other, matchAr: "ط·آ·ط¢آ£ط·آ·ط¢آ®ط·آ·ط¢آ±ط·آ¸أ¢â‚¬آ°", matchEn: "other" },
+    { id: "all", label: t.deals.categories.all, matchAr: "الكل", matchEn: "all" },
+    { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "مطاعم", matchEn: "restaurant" },
+    { id: "bookstores", label: t.deals.categories.bookstores, matchAr: "مكتبات", matchEn: "bookstore" },
+    { id: "transport", label: t.deals.categories.transport, matchAr: "مواصلات", matchEn: "transport" },
+    { id: "shops", label: t.deals.categories.shops, matchAr: "متاجر", matchEn: "shop" },
+    { id: "courses", label: t.deals.categories.courses, matchAr: "كورسات", matchEn: "course" },
+    { id: "other", label: t.deals.categories.other, matchAr: "أخرى", matchEn: "other" },
   ];
 
   useEffect(() => {
@@ -75,12 +75,12 @@ export default function DealsPage() {
   const getCategoryLabel = (cat: string) => {
     if (!cat) return "";
     const lower = cat.toLowerCase();
-    if (cat.includes("ط·آ¸أ¢â‚¬آ¦ط·آ·ط¢آ·ط·آ·ط¢آ§ط·آ·ط¢آ¹ط·آ¸أ¢â‚¬آ¦") || lower.includes("restaurant") || lower.includes("food") || lower.includes("dining")) return t.deals.categories.restaurants;
-    if (cat.includes("ط·آ¸أ¢â‚¬آ¦ط·آ¸ط¦â€™ط·آ·ط¹آ¾ط·آ·ط¢آ¨ط·آ·ط¢آ§ط·آ·ط¹آ¾") || lower.includes("bookstore") || lower.includes("library") || lower.includes("print")) return t.deals.categories.bookstores;
-    if (cat.includes("ط·آ¸أ¢â‚¬آ¦ط·آ¸ط«â€ ط·آ·ط¢آ§ط·آ·ط¢آµط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ·ط¹آ¾") || lower.includes("transport") || lower.includes("transit") || lower.includes("bus")) return t.deals.categories.transport;
-    if (cat.includes("ط·آ¸أ¢â‚¬آ¦ط·آ·ط¹آ¾ط·آ·ط¢آ§ط·آ·ط¢آ¬ط·آ·ط¢آ±") || lower.includes("shop") || lower.includes("store")) return t.deals.categories.shops;
-    if (cat.includes("ط·آ¸ط¦â€™ط·آ¸ط«â€ ط·آ·ط¢آ±ط·آ·ط¢آ³ط·آ·ط¢آ§ط·آ·ط¹آ¾") || lower.includes("course") || lower.includes("training")) return t.deals.categories.courses;
-    if (cat.includes("ط·آ·ط¢آ£ط·آ·ط¢آ®ط·آ·ط¢آ±ط·آ¸أ¢â‚¬آ°") || lower.includes("other")) return t.deals.categories.other;
+    if (cat.includes("مطاعم") || lower.includes("restaurant") || lower.includes("food") || lower.includes("dining")) return t.deals.categories.restaurants;
+    if (cat.includes("مكتبات") || lower.includes("bookstore") || lower.includes("library") || lower.includes("print")) return t.deals.categories.bookstores;
+    if (cat.includes("مواصلات") || lower.includes("transport") || lower.includes("transit") || lower.includes("bus")) return t.deals.categories.transport;
+    if (cat.includes("متاجر") || lower.includes("shop") || lower.includes("store")) return t.deals.categories.shops;
+    if (cat.includes("كورسات") || lower.includes("course") || lower.includes("training")) return t.deals.categories.courses;
+    if (cat.includes("أخرى") || lower.includes("other")) return t.deals.categories.other;
     return language === "en" ? t.deals.categories.other : cat;
   };
 
@@ -108,10 +108,10 @@ export default function DealsPage() {
         setRedeemSuccess(true);
         setRedeemedDeals((prev) => new Set(prev).add(deal.id));
       } else {
-        alert(data.error || (language === "en" ? "An error occurred" : "ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ« ط·آ·ط¢آ®ط·آ·ط¢آ·ط·آ·ط¢آ£"));
+        alert(data.error || (language === "en" ? "An error occurred" : "حدث خطأ"));
       }
     } catch {
-      alert(language === "en" ? "Connection error" : "ط·آ·ط¢آ­ط·آ·ط¢آ¯ط·آ·ط¢آ« ط·آ·ط¢آ®ط·آ·ط¢آ·ط·آ·ط¢آ£ ط·آ¸ط¸آ¾ط·آ¸ط¸آ¹ ط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چط·آ·ط¢آ§ط·آ·ط¹آ¾ط·آ·ط¢آµط·آ·ط¢آ§ط·آ¸أ¢â‚¬â€چ");
+      alert(language === "en" ? "Connection error" : "حدث خطأ في الاتصال");
     } finally {
       setLoading(false);
       setRedeemLoading(false);
@@ -132,9 +132,9 @@ export default function DealsPage() {
       
       <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
         <Tabs defaultValue="all" onValueChange={setActiveCategory} className="w-full">
-          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-4 h-auto py-2 px-1 bg-black/20 border border-white/5 rounded-[16px]">
+          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-4 h-auto py-2 px-1 bg-secondary/50 border border-border rounded-lg">
             {categories.map((cat) => (
-              <TabsTrigger key={cat.id} value={cat.id} className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-xl data-[state=active]:bg-white/10 data-[state=active]:text-white font-bold">
+              <TabsTrigger key={cat.id} value={cat.id} className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground font-medium text-muted-foreground">
                 {cat.label}
               </TabsTrigger>
             ))}
@@ -145,7 +145,7 @@ export default function DealsPage() {
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <Card key={i} className="rounded-[20px] border border-white/5 bg-card shadow-sm">
+                      <Card key={i} className="vercel-card">
                         <CardHeader className="pb-3">
                           <div className="flex justify-between items-start gap-2">
                             <div className="space-y-2 w-full">
@@ -174,31 +174,31 @@ export default function DealsPage() {
                   {filteredDeals.map((deal) => (
                     <Card 
                       key={deal.id} 
-                      className="group cursor-pointer rounded-[20px] border border-white/5 bg-card hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(249,115,22,0.15)] hover:border-white/20 active:scale-[0.98] transition-all duration-300 relative overflow-hidden"
+                      className="group cursor-pointer vercel-card relative overflow-hidden active:scale-[0.99] transition-transform"
                       onClick={() => setSelectedDeal(deal)}
                     >
                       <CardHeader className="pb-3">
                         <div className="flex justify-between items-start gap-2">
                           <div>
-                            <CardTitle className="text-base font-bold text-white line-clamp-1">
+                            <CardTitle className="text-base font-medium text-foreground line-clamp-1">
                               {translateMerchantName(deal.merchant.businessName, language)}
                             </CardTitle>
-                            <CardDescription className="flex items-center gap-1 mt-1 text-xs text-white/50 font-medium">
+                            <CardDescription className="flex items-center gap-1 mt-1 text-xs text-muted-foreground text-xs">
                               <Building2 className="h-3 w-3" />
                               {getCategoryLabel(deal.merchant.category)}
                             </CardDescription>
                           </div>
-                          <span className="shrink-0 font-bold px-2 py-1 rounded-md bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 text-[10px]">
+                          <span className="shrink-0 font-medium px-2 py-0.5 rounded bg-[#ff5b4f]/10 text-[#ff5b4f] border border-[#ff5b4f]/20 text-[10px]">
                             {translateDiscountLabel(deal.discountLabel, language)}
                           </span>
                         </div>
                       </CardHeader>
                       <CardContent className="pb-3">
                         <h4 className="font-bold text-sm mb-1 text-white">{translateDealTitle(deal.title, language)}</h4>
-                        <p className="text-xs text-white/60 line-clamp-2 font-medium">
+                        <p className="text-xs text-muted-foreground line-clamp-2 text-sm">
                           {translateDealDescription(deal.description, language)}
                         </p>
-                        <div className="flex items-center gap-1 mt-4 text-[10px] text-white/40 font-bold">
+                        <div className="flex items-center gap-1 mt-4 text-[11px] text-muted-foreground">
                           <Calendar className="h-3 w-3" />
                           <span>
                             {t.deals.expiresOn} {new Date(deal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
@@ -207,7 +207,8 @@ export default function DealsPage() {
                       </CardContent>
                       <CardFooter>
                         <Button 
-                          variant="outline" className="w-full h-10 min-h-[44px] text-xs font-bold bg-white/5 border-white/5 text-white group-hover:bg-[#F97316]/10 group-hover:text-[#F97316] group-hover:border-[#F97316]/20 transition-colors active:scale-95 rounded-xl"
+                          variant="outline" 
+                          className="w-full h-10 min-h-[44px] text-xs font-medium group-hover:bg-primary/5 group-hover:text-primary transition-colors active:scale-95"
                         >
                           {t.deals.viewDetails}
                         </Button>
@@ -216,11 +217,11 @@ export default function DealsPage() {
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center py-20 text-center px-4 rounded-[20px] border border-dashed border-white/10 bg-card/50 transition-colors">
-                  <div className="h-16 w-16 rounded-2xl fintech-gradient-orange flex items-center justify-center mb-4 shadow-md text-white">
-                    <Tag className="h-8 w-8 fill-white/20" strokeWidth={2} />
+                <div className="flex flex-col items-center justify-center py-16 text-center px-4 rounded-lg border border-dashed border-border bg-secondary/30">
+                  <div className="h-14 w-14 rounded-full bg-[#ff5b4f]/10 flex items-center justify-center mb-4 text-[#ff5b4f]">
+                    <Tag className="h-7 w-7" strokeWidth={1.5} />
                   </div>
-                  <h3 className="text-lg font-bold text-white mb-1">{t.deals.emptyTitle}</h3>
+                  <h3 className="text-lg font-medium text-foreground mb-1">{t.deals.emptyTitle}</h3>
                   <p className="text-sm text-white/50 max-w-sm font-medium">
                     {t.deals.emptyDesc}
                   </p>
@@ -234,22 +235,22 @@ export default function DealsPage() {
       {/* Modal / Dialog Overlay */}
       {selectedDeal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#151530] w-full max-w-lg rounded-[24px] shadow-2xl border border-white/10 flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 relative">
+          <div className="bg-background w-full max-w-lg rounded-xl shadow-xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 relative">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 z-10 relative">
+            <div className="flex items-center justify-between p-4 border-b border-border z-10 relative">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-[16px] fintech-gradient-orange flex items-center justify-center text-white shrink-0 shadow-md">
-                  <Tag className="h-6 w-6 fill-white/20" strokeWidth={2} />
+                <div className="h-12 w-12 rounded-lg bg-[#ff5b4f]/10 flex items-center justify-center text-[#ff5b4f] shrink-0 border border-[#ff5b4f]/20">
+                  <Tag className="h-6 w-6" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg text-white">{translateMerchantName(selectedDeal.merchant.businessName, language)}</h2>
-                  <span className="text-xs text-white/50 font-medium">{getCategoryLabel(selectedDeal.merchant.category)}</span>
+                  <h2 className="font-bold text-lg text-foreground">{translateMerchantName(selectedDeal.merchant.businessName, language)}</h2>
+                  <span className="text-xs text-muted-foreground text-xs">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
                 aria-label={t.deals.close}
-                className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-white/10 text-white/50 hover:text-white transition-colors active:scale-95"
+                className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors active:scale-95"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -258,21 +259,21 @@ export default function DealsPage() {
             {/* Body */}
             <div className="p-6 overflow-y-auto flex-1 space-y-5 relative z-10">
               <div>
-                <span className="mb-3 text-sm px-3 py-1 font-bold rounded-md bg-[#F97316]/10 text-[#F97316] border border-[#F97316]/20 inline-block">
+                <span className="mb-3 text-xs px-2.5 py-1 font-medium rounded-full bg-[#ff5b4f]/10 text-[#ff5b4f] border border-[#ff5b4f]/20 inline-block">
                   {translateDiscountLabel(selectedDeal.discountLabel, language)}
                 </span>
-                <h3 className="text-2xl font-extrabold text-white leading-tight mb-2">{translateDealTitle(selectedDeal.title, language)}</h3>
+                <h3 className="text-2xl font-semibold text-foreground tracking-tight leading-tight mb-2">{translateDealTitle(selectedDeal.title, language)}</h3>
                 {selectedDeal.description && (
-                  <p className="text-sm text-white/70 leading-relaxed font-medium">
+                  <p className="text-sm text-muted-foreground leading-relaxed text-sm">
                     {translateDealDescription(selectedDeal.description, language)}
                   </p>
                 )}
               </div>
               
               {selectedDeal.termsConditions && (
-                <div className="bg-black/20 rounded-[16px] p-5 border border-white/5 flex flex-col gap-2">
-                  <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-                    <AlertCircle className="h-4 w-4 text-[#F97316]" />
+                <div className="bg-[#ff5b4f]/5 rounded-lg p-4 border border-[#ff5b4f]/20 flex flex-col gap-2">
+                  <h4 className="flex items-center gap-2 text-sm font-medium text-foreground">
+                    <AlertCircle className="h-4 w-4 text-[#ff5b4f]" />
                     {t.deals.terms}
                   </h4>
                   <p className="text-xs text-white/50 leading-relaxed font-medium">
@@ -281,7 +282,7 @@ export default function DealsPage() {
                 </div>
               )}
               
-              <div className="flex items-center justify-between text-xs text-white/50 font-bold bg-white/5 rounded-xl p-4 border border-white/5">
+              <div className="flex items-center justify-between text-xs text-white/50 font-bold bg-secondary rounded-lg p-3 border border-border text-foreground font-mono">
                 <div className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
                   <span>
@@ -295,16 +296,17 @@ export default function DealsPage() {
               </div>
 
               {redeemSuccess && (
-                <div className="bg-[#059669]/10 border border-[#059669]/20 text-[#059669] p-3 rounded-xl text-sm font-bold text-center transition-all duration-300">
+                <div className="bg-[#0072f5]/10 border border-[#0072f5]/20 text-[#0072f5] p-3 rounded-md text-sm font-medium text-center transition-all duration-300">
                   {t.deals.successMsg}
                 </div>
               )}
             </div>
             
             {/* Footer */}
-            <div className="p-5 border-t border-white/10 bg-black/20 relative z-10">
+            <div className="p-4 border-t border-border bg-secondary/30 relative z-10">
               <Button 
-                className="w-full font-bold h-12 min-h-[48px] text-sm active:scale-95 transition-transform fintech-gradient-orange text-white hover:fintech-glow-orange border-0 rounded-[14px]" onClick={() => handleRedeem(selectedDeal)}
+                className="w-full font-bold h-11 min-h-[44px] text-sm active:scale-95 transition-transform" 
+                onClick={() => handleRedeem(selectedDeal)}
                 disabled={redeemLoading || redeemSuccess || redeemedDeals.has(selectedDeal.id)}
               >
                 {redeemLoading ? (
