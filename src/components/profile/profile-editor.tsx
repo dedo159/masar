@@ -12,6 +12,17 @@ interface ProfileEditorProps {
   initialPortfolio?: string;
 }
 
+const AVAILABLE_SKILLS = [
+  "JavaScript", "TypeScript", "Python", "Java", "C++", "C#", "Ruby", "PHP", 
+  "Swift", "Kotlin", "Go", "Rust", "React", "Angular", "Vue.js", "Next.js", 
+  "Node.js", "Express", "Django", "Spring Boot", "ASP.NET Core", "SQL", 
+  "MySQL", "PostgreSQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", 
+  "Azure", "Google Cloud", "Git", "Linux", "CI/CD", "Agile", "Scrum", 
+  "UI/UX Design", "Figma", "Tailwind CSS", "SASS/SCSS", "GraphQL", 
+  "REST API", "Machine Learning", "Data Analysis", "Cybersecurity", 
+  "Flutter", "React Native"
+].sort();
+
 export function ProfileEditor({
   initialSkills = [],
   initialGithub = "",
