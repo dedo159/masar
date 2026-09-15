@@ -68,11 +68,11 @@ export function ResumeChat() {
              
              if (data.universityId || data.major) {
                 store.updateEducation([{
+                   id: "edu-1",
                    institution: data.universityId === "ju" ? "University of Jordan" : data.universityId || "University",
-                   degree: "Bachelor of " + (data.major || "Computer Science"),
-                   startDate: "2021",
-                   endDate: "Present",
-                   gpa: data.gpa ? data.gpa.toString() + " / 4.00" : ""
+                   degree: "Bachelor of " + (data.major || "Computer Science") + (data.gpa ? ` (GPA: ${data.gpa}/4.00)` : ""),
+                   graduationYear: "Present",
+                   relevantCoursework: []
                 }]);
              }
           }
