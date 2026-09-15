@@ -85,9 +85,13 @@ export async function syncMoodleDataForStudent(
     update: {
       studentId: normalizedStudent.academicId,
       name: normalizedStudent.fullName,
+      email: normalizedStudent.academicId + '@ammanu.edu.jo',
       major: finalMajor,
-      avatar: normalizedStudent.avatarUrl,
+      year: normalizedStudent.academicYear,
+      gpa: normalizedStudent.gpa,
+      totalCredits: normalizedStudent.totalCreditsRequired,
       completedCredits: normalizedStudent.completedCredits,
+      avatar: normalizedStudent.avatarUrl,
       universityId: university.id,
     },
   });
