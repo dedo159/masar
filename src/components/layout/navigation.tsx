@@ -28,6 +28,7 @@ export function BottomNav() {
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
+    { href: "/readiness", icon: TrendingUp, label: "التدقيق المهني" },
     { href: "/deals", icon: Tag, label: t.nav.dealsShort },
     { href: "/profile", icon: User, label: t.nav.profile },
   ];
@@ -70,6 +71,7 @@ export function Sidebar() {
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
+    { href: "/readiness", icon: TrendingUp, label: "التدقيق المهني" },
     { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/settings", icon: Settings, label: t.nav.settings },
   ];
