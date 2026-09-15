@@ -22,115 +22,48 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-destructive-foreground: var(--destructive-foreground);
   
-  /* Semantic Tints */
-  --color-academic-bg: var(--academic-bg);
-  --color-academic-fg: var(--academic-fg);
-  --color-academic-border: var(--academic-border);
-
-  --color-progress-bg: var(--progress-bg);
-  --color-progress-fg: var(--progress-fg);
-  --color-progress-border: var(--progress-border);
-
-  --color-career-bg: var(--career-bg);
-  --color-career-fg: var(--career-fg);
-  --color-career-border: var(--career-border);
-
-  --color-deals-bg: var(--deals-bg);
-  --color-deals-fg: var(--deals-fg);
-  --color-deals-border: var(--deals-border);
-
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
 }
 
-:root {
-  /* Warm Light Mode */
-  --background: oklch(0.98 0.005 75);
-  --foreground: oklch(0.20 0.01 75);
-  --card: oklch(1.00 0 0);
-  --card-foreground: oklch(0.20 0.01 75);
-  --popover: oklch(1.00 0 0);
-  --popover-foreground: oklch(0.20 0.01 75);
-  --primary: oklch(0.20 0.01 75);
-  --primary-foreground: oklch(0.98 0.005 75);
-  --secondary: oklch(0.95 0.01 75);
-  --secondary-foreground: oklch(0.25 0.01 75);
-  --muted: oklch(0.95 0.01 75);
-  --muted-foreground: oklch(0.50 0.01 75);
-  --accent: oklch(0.95 0.01 75);
-  --accent-foreground: oklch(0.20 0.01 75);
-  --destructive: oklch(0.60 0.15 25);
-  --destructive-foreground: oklch(1.00 0 0);
-  --border: oklch(0.90 0.01 75);
-  --input: oklch(0.90 0.01 75);
-  --ring: oklch(0.80 0.01 75);
+/* Force Dark Mode Fintech Identity on both root and dark */
+:root, .dark {
+  /* Deep Navy/Purple Background */
+  --background: #12122A;
+  --foreground: #FFFFFF;
   
-  --radius: 0.75rem; /* 12px for softer look */
-
-  /* Academic (Blue) */
-  --academic-bg: oklch(0.96 0.02 240);
-  --academic-fg: oklch(0.40 0.08 245);
-  --academic-border: oklch(0.90 0.03 240);
-
-  /* Progress (Purple) */
-  --progress-bg: oklch(0.96 0.02 300);
-  --progress-fg: oklch(0.40 0.08 305);
-  --progress-border: oklch(0.90 0.03 300);
-
-  /* Career (Teal/Green) */
-  --career-bg: oklch(0.96 0.02 170);
-  --career-fg: oklch(0.35 0.08 175);
-  --career-border: oklch(0.90 0.03 170);
-
-  /* Deals (Coral/Pink) */
-  --deals-bg: oklch(0.96 0.02 15);
-  --deals-fg: oklch(0.45 0.12 20);
-  --deals-border: oklch(0.90 0.03 15);
-}
-
-.dark {
-  /* Warm Dark Mode */
-  --background: oklch(0.15 0.005 75);
-  --foreground: oklch(0.95 0.005 75);
-  --card: oklch(0.18 0.005 75);
-  --card-foreground: oklch(0.95 0.005 75);
-  --popover: oklch(0.18 0.005 75);
-  --popover-foreground: oklch(0.95 0.005 75);
-  --primary: oklch(0.95 0.005 75);
-  --primary-foreground: oklch(0.15 0.005 75);
-  --secondary: oklch(0.22 0.005 75);
-  --secondary-foreground: oklch(0.90 0.005 75);
-  --muted: oklch(0.22 0.005 75);
-  --muted-foreground: oklch(0.65 0.005 75);
-  --accent: oklch(0.22 0.005 75);
-  --accent-foreground: oklch(0.95 0.005 75);
-  --destructive: oklch(0.45 0.15 25);
-  --destructive-foreground: oklch(0.95 0.005 75);
-  --border: oklch(0.25 0.005 75);
-  --input: oklch(0.25 0.005 75);
-  --ring: oklch(0.35 0.005 75);
-
-  /* Academic (Blue) - Dark */
-  --academic-bg: oklch(0.22 0.02 240);
-  --academic-fg: oklch(0.85 0.05 245);
-  --academic-border: oklch(0.28 0.03 240);
-
-  /* Progress (Purple) - Dark */
-  --progress-bg: oklch(0.22 0.02 300);
-  --progress-fg: oklch(0.85 0.05 305);
-  --progress-border: oklch(0.28 0.03 300);
-
-  /* Career (Teal/Green) - Dark */
-  --career-bg: oklch(0.22 0.02 170);
-  --career-fg: oklch(0.85 0.05 175);
-  --career-border: oklch(0.28 0.03 170);
-
-  /* Deals (Coral/Pink) - Dark */
-  --deals-bg: oklch(0.22 0.02 15);
-  --deals-fg: oklch(0.85 0.05 20);
-  --deals-border: oklch(0.28 0.03 15);
+  /* Semi-transparent dark surfaces for cards */
+  --card: rgba(255, 255, 255, 0.03);
+  --card-foreground: #FFFFFF;
+  
+  --popover: #151530;
+  --popover-foreground: #FFFFFF;
+  
+  /* Primary accents */
+  --primary: #7C3AED;
+  --primary-foreground: #FFFFFF;
+  
+  /* Secondary (muted surfaces) */
+  --secondary: rgba(255, 255, 255, 0.05);
+  --secondary-foreground: #A1A1AA; /* Zinc 400 */
+  
+  --muted: rgba(255, 255, 255, 0.05);
+  --muted-foreground: #A1A1AA;
+  
+  --accent: rgba(255, 255, 255, 0.1);
+  --accent-foreground: #FFFFFF;
+  
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.05);
+  --ring: #7C3AED;
+  
+  --radius: 1rem; /* 16px */
 }
 
 /* ========== Base ========== */
@@ -141,6 +74,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Force dark background color on html to prevent flashing */
+  background-color: #12122A; 
 }
 
 body {
@@ -160,4 +95,31 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
+}
+
+/* Fintech Utilities */
+.fintech-gradient-blue {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+}
+.fintech-gradient-purple {
+  background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+}
+.fintech-gradient-orange {
+  background: linear-gradient(135deg, #F97316 0%, #EF4444 100%);
+}
+.fintech-gradient-teal {
+  background: linear-gradient(135deg, #0D9488 0%, #059669 100%);
+}
+
+.fintech-glow-blue {
+  box-shadow: 0 8px 32px -8px rgba(59, 130, 246, 0.5);
+}
+.fintech-glow-purple {
+  box-shadow: 0 8px 32px -8px rgba(124, 58, 237, 0.5);
+}
+.fintech-glow-orange {
+  box-shadow: 0 8px 32px -8px rgba(249, 115, 22, 0.5);
+}
+.fintech-glow-teal {
+  box-shadow: 0 8px 32px -8px rgba(13, 148, 136, 0.5);
 }

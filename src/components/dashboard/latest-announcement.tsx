@@ -34,21 +34,23 @@ export function LatestAnnouncementWidget() {
 
   return (
     <Link href="/announcements" className="block mb-6">
-      <div className="bg-academic-bg/40 dark:bg-academic-bg/10 hover:bg-academic-bg/60 border border-academic-border rounded-2xl p-4 flex items-center justify-between transition-all duration-300 hover:shadow-sm active:scale-[0.98] min-h-[44px]">
+      <div className="bg-card border border-white/5 rounded-[20px] p-4 flex items-center justify-between transition-all duration-300 hover:border-white/20 hover:fintech-glow-purple active:scale-[0.98] min-h-[44px]">
         <div className="flex items-center gap-4">
-          <div className="bg-academic-bg text-academic-fg p-2.5 rounded-xl">
-            <Megaphone className="w-5 h-5" strokeWidth={1.75} />
+          <div className="fintech-gradient-purple text-white p-3 rounded-2xl shadow-lg">
+            <Megaphone className="w-5 h-5 fill-white/20" strokeWidth={2} />
           </div>
           <div>
-            <div className="text-xs font-semibold text-academic-fg/80 mb-1">
+            <div className="text-xs font-bold text-white/60 mb-1 uppercase tracking-wider">
               {announcement.isPinned ? "إعلان مثبت" : "أحدث إعلان"}
             </div>
-            <div className="text-sm font-medium text-foreground line-clamp-1">
+            <div className="text-sm font-semibold text-white line-clamp-1">
               {announcement.title}
             </div>
           </div>
         </div>
-        <ChevronLeft className="w-5 h-5 text-academic-fg/60 rtl:rotate-180" />
+        <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center">
+          <ChevronLeft className="w-4 h-4 text-white/50 rtl:rotate-180" />
+        </div>
       </div>
     </Link>
   );

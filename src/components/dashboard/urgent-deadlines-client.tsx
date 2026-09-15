@@ -28,36 +28,37 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
     <section>
       {/* Section Header */}
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2.5">
-          <div className="bg-progress-bg p-1.5 rounded-lg text-progress-fg">
-             <AlertTriangle className="h-4 w-4" />
+        <div className="flex items-center gap-3">
+          <div className="fintech-gradient-orange p-2 rounded-xl text-white shadow-md">
+             <AlertTriangle className="h-4 w-4 fill-white/20" strokeWidth={2} />
           </div>
-          <h2 className="text-sm font-semibold text-foreground">
+          <h2 className="text-sm font-bold text-white">
             {t.dashboard.urgentDeadlines}
           </h2>
           {urgentCount > 0 && (
-            <Badge variant="urgent" className="gap-1 animate-pulse">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-white bg-[#EF4444] px-2.5 py-1 rounded-full animate-pulse shadow-md">
+              <AlertTriangle className="h-3 w-3" />
               <span>{urgentCount} {t.dashboard.urgentBadge}</span>
-            </Badge>
+            </div>
           )}
         </div>
         <Link
           href="/courses"
-          className="flex items-center gap-1.5 text-xs font-semibold text-progress-fg bg-progress-bg hover:bg-progress-border px-3 py-1.5 rounded-full transition-colors"
+          className="flex items-center gap-1.5 text-xs font-bold text-white bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors border border-white/5"
         >
           <span>{t.dashboard.allCourses}</span>
-          <ArrowIcon className="h-3 w-3" />
+          <ArrowIcon className="h-3.5 w-3.5" />
         </Link>
       </div>
 
       {/* Empty State vs List */}
       {upcoming.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12 px-4 rounded-2xl border border-dashed border-progress-border bg-progress-bg/10 text-center transition-colors">
-          <div className="h-12 w-12 rounded-full bg-progress-bg text-progress-fg flex items-center justify-center mb-3 shadow-sm">
-            <CheckCircle2 className="h-5 w-5" />
+        <div className="flex flex-col items-center justify-center py-12 px-4 rounded-[20px] border border-dashed border-white/10 bg-card text-center transition-colors">
+          <div className="h-14 w-14 rounded-2xl fintech-gradient-teal flex items-center justify-center mb-4 text-white shadow-lg">
+            <CheckCircle2 className="h-6 w-6 fill-white/20" strokeWidth={2} />
           </div>
-          <p className="text-base font-medium text-foreground">{t.dashboard.noDeadlines}</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+          <p className="text-base font-bold text-white">{t.dashboard.noDeadlines}</p>
+          <p className="text-xs text-white/50 mt-1 max-w-sm font-medium">
             {t.dashboard.allCaughtUp}
           </p>
         </div>
@@ -75,50 +76,56 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
                 key={assignment.id}
                 href={"/courses/" + assignment.courseId}
                 className={cn(
-                  "flex items-center gap-4 rounded-2xl border bg-card p-4 min-h-[56px]",
-                  "transition-all duration-300 ease-out shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.1)]",
-                  "hover:border-progress-fg/30 hover:bg-progress-bg/10 hover:-translate-y-1 hover:shadow-md active:scale-[0.98] group"
+                  "flex items-center gap-4 rounded-[20px] border bg-card p-4 min-h-[56px] relative overflow-hidden group",
+                  "transition-all duration-300 ease-out",
+                  status === "urgent" ? "border-[#EF4444]/40 hover:border-[#EF4444]/80 shadow-[0_0_20px_rgba(239,68,68,0.1)]" : "border-white/5 hover:border-white/20 hover:bg-white/[0.02]",
+                  "active:scale-[0.98]"
                 )}
               >
+                {/* Visual Glow for Urgent */}
+                {status === "urgent" && (
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#EF4444]/15 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                )}
+
                 {/* Course color indicator */}
                 <div
-                  className="h-3 w-3 rounded-full flex-shrink-0 shadow-sm"
-                  style={{ backgroundColor: assignment.courseColor || "currentColor" }}
+                  className="h-10 w-1.5 rounded-full flex-shrink-0 z-10"
+                  style={{ backgroundColor: assignment.courseColor || "#7C3AED" }}
                 />
 
-                {/* Assignment Title & Course Info (Truncated safely) */}
-                <div className="flex-1 min-w-0">
+                {/* Assignment Title & Course Info */}
+                <div className="flex-1 min-w-0 z-10">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-semibold text-foreground truncate group-hover:text-progress-fg transition-colors">
+                    <p className="text-sm font-bold text-white truncate transition-colors">
                       {assignmentTitle}
                     </p>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                  <p className="text-xs text-white/50 mt-1 truncate font-medium">
                     {courseDisplayName} · {assignmentTypeLabel}
                   </p>
                 </div>
 
                 {/* Status Badge & Due Time */}
-                <div className={cn("flex-shrink-0 flex flex-col gap-1.5", isRtl ? "text-left items-end" : "text-right items-end")}>
+                <div className={cn("flex-shrink-0 flex flex-col gap-2 z-10", isRtl ? "text-left items-end" : "text-right items-end")}>
                   {status === "urgent" ? (
-                    <Badge variant="urgent" className="gap-1 font-semibold">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-white bg-[#EF4444] px-2.5 py-1 rounded-md shadow-md">
                       <Clock className="h-3 w-3" />
                       <span>{t.dashboard.urgentBadge}: {relTime}</span>
-                    </Badge>
+                    </div>
                   ) : status === "soon" ? (
-                    <Badge variant="warning" className="gap-1 font-semibold">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#F97316] bg-[#F97316]/10 px-2.5 py-1 rounded-md border border-[#F97316]/20">
                       <Clock className="h-3 w-3" />
                       <span>{t.dashboard.soonBadge}: {relTime}</span>
-                    </Badge>
+                    </div>
                   ) : (
-                    <span className="flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground bg-muted px-2 py-1 rounded-md">
-                      <Calendar className="h-3 w-3" />
+                    <span className="flex items-center gap-1.5 text-[11px] font-bold text-white/50 bg-white/5 px-2.5 py-1 rounded-md">
+                      <Calendar className="h-3.5 w-3.5" />
                       <span>{relTime}</span>
                     </span>
                   )}
 
                   {assignment.dueTime && assignment.dueTime !== "--:--" && (
-                    <span className="text-[10px] text-muted-foreground font-medium tabular-nums">
+                    <span className="text-[11px] text-white/40 font-semibold tabular-nums">
                       {t.dashboard.atHour} {assignment.dueTime}
                     </span>
                   )}

@@ -26,9 +26,8 @@ export function QuickStatsClient({
       value: coursesCount,
       unit: t.dashboard.stats.coursesUnit,
       icon: BookOpen,
-      iconColor: "text-academic-fg",
-      iconBg: "bg-academic-bg",
-      cardClass: "hover:border-academic-fg/30 hover:shadow-academic-bg/50",
+      gradient: "fintech-gradient-blue",
+      glow: "hover:fintech-glow-blue",
       href: "/courses",
     },
     {
@@ -36,9 +35,8 @@ export function QuickStatsClient({
       value: todayDueCount,
       unit: t.dashboard.stats.tasksUnit,
       icon: Clock,
-      iconColor: "text-progress-fg",
-      iconBg: "bg-progress-bg",
-      cardClass: "hover:border-progress-fg/30 hover:shadow-progress-bg/50",
+      gradient: "fintech-gradient-purple",
+      glow: "hover:fintech-glow-purple",
       href: "/courses",
     },
     {
@@ -46,9 +44,8 @@ export function QuickStatsClient({
       value: internshipsCount,
       unit: t.dashboard.stats.internshipsUnit,
       icon: Briefcase,
-      iconColor: "text-career-fg",
-      iconBg: "bg-career-bg",
-      cardClass: "hover:border-career-fg/30 hover:shadow-career-bg/50",
+      gradient: "fintech-gradient-teal",
+      glow: "hover:fintech-glow-teal",
       href: "/internships",
     },
     {
@@ -56,42 +53,43 @@ export function QuickStatsClient({
       value: dealsCount,
       unit: t.dashboard.stats.dealsUnit,
       icon: Tag,
-      iconColor: "text-deals-fg",
-      iconBg: "bg-deals-bg",
-      cardClass: "hover:border-deals-fg/30 hover:shadow-deals-bg/50",
+      gradient: "fintech-gradient-orange",
+      glow: "hover:fintech-glow-orange",
       href: "/deals",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {stats.map(({ label, value, unit, icon: Icon, iconColor, iconBg, cardClass, href }) => (
+      {stats.map(({ label, value, unit, icon: Icon, gradient, glow, href }) => (
         <Link
           key={href + label}
           href={href}
           className={cn(
-            "group relative flex flex-col justify-between rounded-2xl border border-border bg-card p-5 min-h-[110px]",
-            "transition-all duration-300 ease-out shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.1)]",
-            "hover:-translate-y-1 hover:shadow-md active:scale-[0.98]",
-            cardClass
+            "group relative flex flex-col justify-between rounded-[20px] border border-white/5 bg-card p-5 min-h-[120px]",
+            "transition-all duration-300 ease-out",
+            "hover:-translate-y-1 hover:border-white/20 active:scale-[0.98]",
+            glow
           )}
         >
           <div className="flex items-center justify-between">
-            <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105", iconBg)}>
-              <Icon className={cn("h-5 w-5", iconColor)} strokeWidth={1.5} />
+            <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg text-white", gradient)}>
+              <Icon className="h-5 w-5 fill-white/20" strokeWidth={2} />
             </div>
-            <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0 rtl:translate-x-2 rtl:group-hover:translate-x-0" />
+            <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+              <ArrowUpRight className="h-4 w-4 text-white/50 group-hover:text-white transition-colors" />
+            </div>
           </div>
           <div className="mt-4">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-bold tracking-tight text-foreground tabular-nums leading-none">
+              <span className="text-3xl font-extrabold tracking-tight text-white tabular-nums leading-none">
                 {value}
               </span>
-              <span className="text-xs font-medium text-muted-foreground">
+              <span className="text-xs font-semibold text-white/50">
                 {unit}
               </span>
             </div>
-            <p className="text-sm font-medium text-muted-foreground mt-2 truncate">
+            <p className="text-sm font-medium text-white/70 mt-2 truncate">
               {label}
             </p>
           </div>
