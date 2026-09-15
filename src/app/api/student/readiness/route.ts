@@ -88,13 +88,13 @@ export async function POST(req: Request) {
           cleanText = cleanText.substring(firstBrace, lastBrace + 1);
       }
       jsonResult = JSON.parse(cleanText);
-    } catch (e) {
+    } catch (e: any) {
       console.error("Failed to parse JSON from AI response", text);
       return NextResponse.json({ error: "Invalid JSON format from AI: " + e.message }, { status: 500 });
     }
 
     return NextResponse.json(jsonResult);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Readiness AI Error:", error.message || error);
     return NextResponse.json({ error: `Internal Server Error: ${error.message || error}` }, { status: 500 });
   }

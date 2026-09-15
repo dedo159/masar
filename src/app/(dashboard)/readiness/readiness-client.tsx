@@ -61,7 +61,7 @@ export function ReadinessClient() {
       if (!res.ok) { const errorData = await res.json().catch(() => ({})); throw new Error(errorData.error || `فشل في جلب التقييم: HTTP ${res.status}`); }
       const data = await res.json();
       setResult(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       alert(`حدث خطأ أثناء الاتصال بالمدقق الآلي: ${error.message}`);
     } finally {
