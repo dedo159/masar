@@ -35,8 +35,8 @@ export function QuickStatsClient({
       value: todayDueCount,
       unit: t.dashboard.stats.tasksUnit,
       icon: Clock,
-      gradient: "fintech-gradient-purple",
-      glow: "hover:fintech-glow-purple",
+      gradient: "bg-[#171717] dark:bg-white text-white dark:text-black",
+      glow: "hover:bg-[#383838] dark:hover:bg-[#e0e0e0]",
       href: "/courses",
     },
     {
@@ -44,8 +44,8 @@ export function QuickStatsClient({
       value: internshipsCount,
       unit: t.dashboard.stats.internshipsUnit,
       icon: Briefcase,
-      gradient: "fintech-gradient-teal",
-      glow: "hover:fintech-glow-teal",
+      gradient: "vercel-button-primary",
+      glow: "hover:bg-[#383838]",
       href: "/internships",
     },
     {
@@ -53,8 +53,8 @@ export function QuickStatsClient({
       value: dealsCount,
       unit: t.dashboard.stats.dealsUnit,
       icon: Tag,
-      gradient: "fintech-gradient-orange",
-      glow: "hover:fintech-glow-orange",
+      gradient: "bg-[#ff5b4f] text-white",
+      glow: "hover:bg-[#e04337]",
       href: "/deals",
     },
   ];
@@ -66,30 +66,30 @@ export function QuickStatsClient({
           key={href + label}
           href={href}
           className={cn(
-            "group relative flex flex-col justify-between rounded-[20px] border border-white/5 bg-card p-5 min-h-[120px]",
+            "group relative flex flex-col justify-between vercel-card p-5 min-h-[120px]",
             "transition-all duration-300 ease-out",
-            "hover:-translate-y-1 hover:border-white/20 active:scale-[0.98]",
+            "hover:-translate-y-1 hover:border-border/50 active:scale-[0.98]",
             glow
           )}
         >
           <div className="flex items-center justify-between">
-            <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg text-white", gradient)}>
+            <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg text-foreground", gradient)}>
               <Icon className="h-5 w-5 fill-white/20" strokeWidth={2} />
             </div>
-            <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-              <ArrowUpRight className="h-4 w-4 text-white/50 group-hover:text-white transition-colors" />
+            <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-muted transition-colors">
+              <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
             </div>
           </div>
           <div className="mt-4">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-extrabold tracking-tight text-white tabular-nums leading-none">
+              <span className="text-3xl font-extrabold tracking-tight text-foreground tabular-nums leading-none">
                 {value}
               </span>
-              <span className="text-xs font-semibold text-white/50">
+              <span className="text-xs font-semibold text-muted-foreground">
                 {unit}
               </span>
             </div>
-            <p className="text-sm font-medium text-white/70 mt-2 truncate">
+            <p className="text-sm font-medium text-muted-foreground/90 mt-2 truncate">
               {label}
             </p>
           </div>

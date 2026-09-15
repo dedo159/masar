@@ -55,7 +55,7 @@ export default function UniversityPortalLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="p-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800">
-          <div className="h-10 w-10 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md shadow-blue-600/20">
+          <div className="h-10 w-10 rounded-xl bg-blue-600 text-foreground flex items-center justify-center text-xl shadow-md shadow-blue-600/20">
             🏫
           </div>
           <div>
@@ -74,7 +74,7 @@ export default function UniversityPortalLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30 font-semibold"
+                    ? "bg-blue-600 text-foreground shadow-sm shadow-blue-600/30 font-semibold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >

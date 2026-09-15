@@ -50,7 +50,7 @@ export default function CompanyPortalLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-slate-900 border-l border-emerald-100 dark:border-slate-800 shadow-sm">
         <div className="p-6 flex items-center gap-3 border-b border-emerald-50 dark:border-slate-800">
-          <div className="h-10 w-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md shadow-emerald-600/20">
+          <div className="h-10 w-10 rounded-xl bg-emerald-600 text-foreground flex items-center justify-center text-xl shadow-md shadow-emerald-600/20">
             🏢
           </div>
           <div>
@@ -69,7 +69,7 @@ export default function CompanyPortalLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/30 font-semibold"
+                    ? "bg-emerald-600 text-foreground shadow-sm shadow-emerald-600/30 font-semibold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-emerald-50/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
                 }`}
               >

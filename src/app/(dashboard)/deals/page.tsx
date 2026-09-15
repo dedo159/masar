@@ -194,7 +194,7 @@ export default function DealsPage() {
                         </div>
                       </CardHeader>
                       <CardContent className="pb-3">
-                        <h4 className="font-bold text-sm mb-1 text-white">{translateDealTitle(deal.title, language)}</h4>
+                        <h4 className="font-bold text-sm mb-1 text-foreground">{translateDealTitle(deal.title, language)}</h4>
                         <p className="text-xs text-muted-foreground line-clamp-2 text-sm">
                           {translateDealDescription(deal.description, language)}
                         </p>
@@ -222,7 +222,7 @@ export default function DealsPage() {
                     <Tag className="h-7 w-7" strokeWidth={1.5} />
                   </div>
                   <h3 className="text-lg font-medium text-foreground mb-1">{t.deals.emptyTitle}</h3>
-                  <p className="text-sm text-white/50 max-w-sm font-medium">
+                  <p className="text-sm text-muted-foreground max-w-sm font-medium">
                     {t.deals.emptyDesc}
                   </p>
                 </div>
@@ -276,13 +276,13 @@ export default function DealsPage() {
                     <AlertCircle className="h-4 w-4 text-[#ff5b4f]" />
                     {t.deals.terms}
                   </h4>
-                  <p className="text-xs text-white/50 leading-relaxed font-medium">
+                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                     {translateDealTerms(selectedDeal.termsConditions, language)}
                   </p>
                 </div>
               )}
               
-              <div className="flex items-center justify-between text-xs text-white/50 font-bold bg-secondary rounded-lg p-3 border border-border text-foreground font-mono">
+              <div className="flex items-center justify-between text-xs text-muted-foreground font-bold bg-secondary rounded-lg p-3 border border-border text-foreground font-mono">
                 <div className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
                   <span>

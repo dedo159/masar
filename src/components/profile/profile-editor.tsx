@@ -57,11 +57,11 @@ export function ProfileEditor({
   };
 
   return (
-    <div className="rounded-2xl border border-white/5 bg-card p-5 space-y-5 shadow-xs">
-      <div className="flex items-center justify-between pb-3 border-b border-white/5">
+    <div className="rounded-2xl border border-border bg-card p-5 space-y-5 shadow-xs">
+      <div className="flex items-center justify-between pb-3 border-b border-border">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-[#7C3AED]" />
-          <h3 className="text-sm font-bold text-white">
+          <Sparkles className="h-5 w-5 text-foreground font-medium" />
+          <h3 className="text-sm font-bold text-foreground">
             {t.profile.editorTitle}
           </h3>
         </div>
@@ -75,25 +75,25 @@ export function ProfileEditor({
 
       {/* Skills Section */}
       <div className="space-y-3">
-        <label className="text-xs font-semibold text-white">
+        <label className="text-xs font-semibold text-foreground">
           {t.profile.skillsLabel}
         </label>
 
         {/* Existing skills chips */}
-        <div className="flex flex-wrap gap-2 min-h-[36px] p-2 rounded-lg bg-white/5/30 border border-white/5">
+        <div className="flex flex-wrap gap-2 min-h-[36px] p-2 rounded-lg bg-secondary/30 border border-border">
           {skills.length === 0 ? (
-            <p className="text-xs text-white/50 p-1">{t.profile.noSkills}</p>
+            <p className="text-xs text-muted-foreground p-1">{t.profile.noSkills}</p>
           ) : (
             skills.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-card border border-white/5 text-xs font-medium text-white shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-card border border-border text-xs font-medium text-foreground shadow-2xs"
               >
                 <span>{skill}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(skill)}
-                  className="text-white/50 hover:text-destructive cursor-pointer p-0.5 rounded-full transition-colors"
+                  className="text-muted-foreground hover:text-destructive cursor-pointer p-0.5 rounded-full transition-colors"
                   aria-label={`${t.profile.removeSkill} ${skill}`}
                 >
                   <X className="h-3 w-3" />
@@ -129,14 +129,14 @@ export function ProfileEditor({
       </div>
 
       {/* Social / External Links Section */}
-      <div className="space-y-3 pt-3 border-t border-white/5">
-        <label className="text-xs font-semibold text-white">
+      <div className="space-y-3 pt-3 border-t border-border">
+        <label className="text-xs font-semibold text-foreground">
           {t.profile.linksLabel}
         </label>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <span className="text-[11px] text-white/50 flex items-center gap-1">
+            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
               <GitBranch className="h-3.5 w-3.5" />
               {t.profile.githubLabel}
             </span>
@@ -149,7 +149,7 @@ export function ProfileEditor({
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[11px] text-white/50 flex items-center gap-1">
+            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
               <Globe className="h-3.5 w-3.5" />
               {t.profile.portfolioLabel}
             </span>

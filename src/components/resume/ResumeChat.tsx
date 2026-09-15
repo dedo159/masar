@@ -120,7 +120,7 @@ export function ResumeChat() {
             <div className={cn(
               "max-w-[80%] rounded-2xl px-4 py-3 text-sm",
               m.role === 'user' 
-                ? "bg-[#000000] dark:bg-[#ffffff] text-white dark:text-black rounded-lg shadow-sm px-4 py-2" 
+                ? "bg-[#000000] dark:bg-[#ffffff] text-foreground dark:text-black rounded-lg shadow-sm px-4 py-2" 
                 : "bg-secondary text-foreground border border-border rounded-lg shadow-sm px-4 py-2"
             )}>
               {m.content && <div className="whitespace-pre-wrap leading-relaxed">{m.content}</div>}

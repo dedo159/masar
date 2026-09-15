@@ -33,7 +33,7 @@ export default async function CompanyAnalyticsPage() {
     <div className="space-y-8" dir="rtl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground flex items-center gap-2.5">
           <TrendingUp className="h-7 w-7 text-emerald-600" />
           تحليلات استقطاب المواهب والتوظيف
         </h1>
@@ -55,7 +55,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {metrics.totalInternships}
             </span>
             <span className="text-xs text-slate-400 mr-2">فرصة منشورة</span>
@@ -73,7 +73,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {metrics.totalApplications}
             </span>
             <span className="text-xs text-slate-400 mr-2">طلب مستلم</span>
@@ -91,7 +91,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {metrics.acceptanceRate}%
             </span>
           </div>
@@ -111,7 +111,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {metrics.avgReviewDays > 0 ? `${metrics.avgReviewDays}` : "—"}
             </span>
             <span className="text-xs text-slate-400 mr-1.5">يوم عمل</span>
@@ -126,7 +126,7 @@ export default async function CompanyAnalyticsPage() {
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2">
               <Filter className="h-5 w-5 text-emerald-600" />
               قمع استقطاب وتعيين المتدربين (Recruitment Funnel)
             </h2>
@@ -199,7 +199,7 @@ export default async function CompanyAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Internships Performance Table (2 cols) */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-1">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Eye className="h-5 w-5 text-blue-600" />
             أداء فرص التدريب ومعدلات التحويل
           </h2>
@@ -227,13 +227,13 @@ export default async function CompanyAnalyticsPage() {
                 ) : (
                   metrics.perInternship.map((i) => (
                     <tr key={i.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-white">
+                      <td className="px-4 py-3 font-medium text-slate-900 dark:text-foreground">
                         {i.title}
                       </td>
                       <td className="px-4 py-3 text-slate-600 dark:text-slate-400">
                         {i.viewsCount}
                       </td>
-                      <td className="px-4 py-3 font-semibold text-slate-900 dark:text-white">
+                      <td className="px-4 py-3 font-semibold text-slate-900 dark:text-foreground">
                         {i.applicationsCount}
                       </td>
                       <td className="px-4 py-3">
@@ -251,7 +251,7 @@ export default async function CompanyAnalyticsPage() {
 
         {/* Demanded Skills (1 col) */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-1">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Award className="h-5 w-5 text-purple-600" />
             المهارات الأكثر طلباً في إعلاناتك
           </h2>

@@ -58,7 +58,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-xl bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-xl">
         <div className="text-center mb-8">
           <span className="text-4xl inline-block mb-4">🏢</span>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">تسجيل شركة جديدة — مسار</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">تسجيل شركة جديدة — مسار</h1>
           <p className="text-gray-500 mt-2">أنشئ حساباً لشركتك للبدء بنشر فرص التدريب</p>
         </div>
 
@@ -76,7 +76,7 @@ export default function RegisterPage() {
                 type="text"
                 name="companyName"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={formData.companyName}
                 onChange={handleChange}
               />
@@ -87,7 +87,7 @@ export default function RegisterPage() {
                 type="text"
                 name="recruiterName"
                 required
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={formData.recruiterName}
                 onChange={handleChange}
               />
@@ -100,7 +100,7 @@ export default function RegisterPage() {
               type="email"
               name="email"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
               value={formData.email}
               onChange={handleChange}
               placeholder="name@company.com"
@@ -113,7 +113,7 @@ export default function RegisterPage() {
               type="password"
               name="password"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
               value={formData.password}
               onChange={handleChange}
             />
@@ -125,7 +125,7 @@ export default function RegisterPage() {
               <input
                 type="url"
                 name="website"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={formData.website}
                 onChange={handleChange}
                 placeholder="https://company.com"
@@ -136,7 +136,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 name="industry"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={formData.industry}
                 onChange={handleChange}
                 placeholder="مثال: تقنية المعلومات"
@@ -147,7 +147,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+            className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-foreground rounded-xl font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-4"
           >
             {loading ? "جاري إنشاء الحساب..." : "إنشاء حساب"}
           </button>

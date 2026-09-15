@@ -16,7 +16,7 @@ export default async function InternshipsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">فرص التدريب المتاحة</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">فرص التدريب المتاحة</h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">عرض جميع فرص التدريب ونسب إقبال الطلاب عليها</p>
         </div>
       </div>
@@ -25,7 +25,7 @@ export default async function InternshipsPage() {
         {internships.map((internship) => (
           <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start gap-2 mb-2">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white line-clamp-2">{internship.title}</h3>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-foreground line-clamp-2">{internship.title}</h3>
               <span className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
                 {internship.type === 'remote' ? 'عن بُعد' : internship.type === 'hybrid' ? 'هجين' : 'حضوري'}
               </span>

@@ -122,7 +122,7 @@ export default function AnnouncementsPage() {
           <p>جاري تحميل الإعلانات...</p>
         </div>
       ) : filteredAnnouncements.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-xl bg-card/50 border-dashed">
+        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-xl bg-secondary/30 border-dashed">
           <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
             <Megaphone className="w-8 h-8 text-muted-foreground" />
           </div>

@@ -70,7 +70,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                   <div>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="h-12 w-12 rounded-[16px] fintech-gradient-teal flex items-center justify-center text-foreground flex-shrink-0 font-bold text-sm shadow-sm">
+                        <div className="h-12 w-12 rounded-lg vercel-button-primary flex items-center justify-center text-foreground flex-shrink-0 font-bold text-sm shadow-sm">
                           <Building2 className="h-5 w-5" strokeWidth={1.5} />
                         </div>
 
@@ -92,7 +92,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                         </div>
                       </div>
 
-                      <span className="flex-shrink-0 text-[10px] font-bold px-2 py-1 rounded-md bg-white/5 border border-white/5 text-foreground/70">
+                      <span className="flex-shrink-0 text-[10px] font-bold px-2 py-1 rounded-md bg-secondary border border-border text-foreground/70">
                         {typeText}
                       </span>
                     </div>
@@ -121,7 +121,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                         {internship.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/5 border border-white/5 text-foreground/70"
+                            className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-secondary border border-border text-foreground/70"
                           >
                             {tag}
                           </span>

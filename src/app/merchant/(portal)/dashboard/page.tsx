@@ -62,7 +62,7 @@ export default function MerchantDashboardPage() {
         <h2 className="text-2xl font-bold text-gray-900">نظرة عامة</h2>
         <Link
           href="/merchant/deals/new"
-          className="bg-amber-600 text-white px-4 py-2 rounded-md hover:bg-amber-700 text-sm font-medium"
+          className="bg-amber-600 text-foreground px-4 py-2 rounded-md hover:bg-amber-700 text-sm font-medium"
         >
           إضافة عرض جديد
         </Link>

@@ -65,7 +65,7 @@ export default function UniversityLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white outline-none transition-all"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-foreground outline-none transition-all"
               placeholder="name@university.edu"
               dir="ltr"
             />
@@ -77,7 +77,7 @@ export default function UniversityLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white outline-none transition-all"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-foreground outline-none transition-all"
               placeholder="••••••••"
               dir="ltr"
             />
@@ -85,7 +85,7 @@ export default function UniversityLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+            className="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-foreground rounded-lg font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-2"
           >
             {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>

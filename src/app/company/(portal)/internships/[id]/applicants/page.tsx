@@ -49,7 +49,7 @@ export default function ApplicantsPage() {
           ➡️
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">المتقدمين لفرصة التدريب</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">المتقدمين لفرصة التدريب</h2>
           {data?.internship && (
             <p className="text-gray-500 dark:text-gray-400 mt-1">{data.internship.title}</p>
           )}
@@ -61,7 +61,7 @@ export default function ApplicantsPage() {
       ) : !data || data.applications.length === 0 ? (
         <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
           <span className="text-4xl mb-3 inline-block">📭</span>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">لا يوجد متقدمين بعد</h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">لا يوجد متقدمين بعد</h3>
           <p className="text-gray-500 mt-1">لم يقم أحد بالتقديم على هذه الفرصة حتى الآن</p>
         </div>
       ) : (
@@ -81,7 +81,7 @@ export default function ApplicantsPage() {
               <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                 {data.applications.map((app) => (
                   <tr key={app.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/20 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-foreground">
                       {app.student.name}
                     </td>
                     <td className="px-6 py-4 text-gray-600 dark:text-gray-400">

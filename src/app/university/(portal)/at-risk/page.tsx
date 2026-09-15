@@ -9,7 +9,7 @@ export default async function AtRiskPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">الطلاب المعرضون للخطر</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">الطلاب المعرضون للخطر</h1>
       
       <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
         {atRiskStudents.length === 0 ? (
@@ -32,7 +32,7 @@ export default async function AtRiskPage() {
               <tbody>
                 {atRiskStudents.map((record) => (
                   <tr key={record.id} className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-foreground">
                       {record.student.name}
                     </td>
                     <td className="px-6 py-4 font-mono" dir="ltr">{record.student.studentId}</td>

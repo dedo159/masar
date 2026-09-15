@@ -34,12 +34,12 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">لوحة البيانات</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">لوحة البيانات</h2>
           <p className="text-gray-500 dark:text-gray-400 mt-1">نظرة عامة على فرص التدريب والمتقدمين</p>
         </div>
         <Link
           href="/company/internships"
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors inline-flex items-center gap-2"
+          className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-xl font-medium transition-colors inline-flex items-center gap-2"
         >
           <span>➕</span>
           نشر فرصة تدريب جديدة
@@ -60,7 +60,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">فرص التدريب المنشورة</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.totalInternships}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.totalInternships}</h3>
             </div>
           </div>
           
@@ -70,7 +70,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">إجمالي المتقدمين</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.totalApplicants}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.totalApplicants}</h3>
             </div>
           </div>
 
@@ -80,7 +80,7 @@ export default function DashboardPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500 dark:text-gray-400">طلبات قيد المراجعة</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.pendingReview}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.pendingReview}</h3>
             </div>
           </div>
         </div>

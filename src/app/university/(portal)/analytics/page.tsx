@@ -144,7 +144,7 @@ export default async function UniversityAnalyticsPage() {
     <div className="space-y-8" dir="rtl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2.5">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground flex items-center gap-2.5">
           <TrendingUp className="h-7 w-7 text-blue-600" />
           لوحة التحليلات الأكاديمية والتشغيلية
         </h1>
@@ -166,7 +166,7 @@ export default async function UniversityAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {atRiskCount}
             </span>
             <span className="text-xs text-slate-400 mr-2">من أصل {totalStudents} طالب</span>
@@ -189,7 +189,7 @@ export default async function UniversityAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {generalOnTimeRate}%
             </span>
           </div>
@@ -209,7 +209,7 @@ export default async function UniversityAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {totalContentViews}
             </span>
             <span className="text-xs text-slate-400 mr-2">مشاهدة موثقة</span>
@@ -230,7 +230,7 @@ export default async function UniversityAnalyticsPage() {
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <span className="text-3xl font-extrabold text-slate-900 dark:text-foreground">
               {internshipInterestRate}%
             </span>
           </div>
@@ -244,7 +244,7 @@ export default async function UniversityAnalyticsPage() {
       <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-amber-500" />
               المواد ذات مؤشرات التعثر (عنق الزجاجة)
             </h2>
@@ -276,7 +276,7 @@ export default async function UniversityAnalyticsPage() {
               ) : (
                 courseMetrics.map((c) => (
                   <tr key={c.courseId} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
-                    <td className="px-4 py-3.5 font-medium text-slate-900 dark:text-white">
+                    <td className="px-4 py-3.5 font-medium text-slate-900 dark:text-foreground">
                       <div>{c.nameAr}</div>
                       <div className="text-xs text-slate-400 font-mono">{c.code}</div>
                     </td>
@@ -319,7 +319,7 @@ export default async function UniversityAnalyticsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Skills Gap */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-1">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Award className="h-5 w-5 text-indigo-600" />
             تحليل فجوة المهارات وسوق العمل
           </h2>
@@ -378,7 +378,7 @@ export default async function UniversityAnalyticsPage() {
 
         {/* Employment Indicators */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-          <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-1">
+          <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <GraduationCap className="h-5 w-5 text-purple-600" />
             مؤشرات الجاهزية والتوظيف
           </h2>
@@ -393,7 +393,7 @@ export default async function UniversityAnalyticsPage() {
                   {totalApplications}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <div className="text-sm font-semibold text-slate-900 dark:text-foreground">
                     إجمالي طلبات التدريب المقدمة
                   </div>
                   <div className="text-xs text-slate-400">من طلاب الجامعة</div>
@@ -407,7 +407,7 @@ export default async function UniversityAnalyticsPage() {
                   {acceptedApplications}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <div className="text-sm font-semibold text-slate-900 dark:text-foreground">
                     طلبات التدريب المقبولة
                   </div>
                   <div className="text-xs text-slate-400">تم اعتماد قبولهم من قبل الشركات</div>
