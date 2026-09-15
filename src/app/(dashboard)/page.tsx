@@ -5,7 +5,7 @@ import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines"
 import { LatestAnnouncementWidget } from "@/components/dashboard/latest-announcement";
 import { getServerTranslations } from "@/lib/translations/server";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
     const t = await getServerTranslations();

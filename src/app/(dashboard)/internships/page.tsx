@@ -2,7 +2,7 @@ import { getInternships, resolveCurrentStudentId } from "@/lib/db-queries";
 import { prisma } from "@/lib/prisma";
 import { InternshipsClient } from "./internships-client";
 
-export const revalidate = 0;
+export const dynamic = 'force-dynamic';
 
 export default async function InternshipsPage() {
   let internships = [];

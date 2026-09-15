@@ -1,7 +1,7 @@
 import { getEnrolledCourses } from "@/lib/db-queries";
 import { CoursesClient } from "./courses-client";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function CoursesPage() {
   let enrolledCourses = [];

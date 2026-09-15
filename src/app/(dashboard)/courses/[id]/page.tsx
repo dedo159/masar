@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getCourseById } from "@/lib/db-queries";
 import { CourseDetailClient } from "./course-detail-client";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function CourseDetailPage({
   params,
