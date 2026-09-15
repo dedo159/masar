@@ -57,8 +57,8 @@ export function ProfileEditor({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 space-y-5 shadow-xs">
-      <div className="flex items-center justify-between pb-3 border-b border-border">
+    <div className="rounded-[20px] border border-white/5 bg-card p-5 space-y-5 shadow-sm relative overflow-hidden group hover:border-white/20 transition-all">
+      <div className="flex items-center justify-between pb-4 border-b border-white/5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
           <h3 className="text-sm font-bold text-foreground">
@@ -66,7 +66,7 @@ export function ProfileEditor({
           </h3>
         </div>
         {savedSuccess && (
-          <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md border border-emerald-200 dark:border-emerald-800">
+          <span className="flex items-center gap-1 text-xs font-semibold text-[#059669] bg-[#059669]/10 px-2.5 py-1 rounded-md border border-[#059669]/20">
             <Check className="h-3.5 w-3.5" />
             {t.profile.savedSuccess}
           </span>
@@ -75,25 +75,25 @@ export function ProfileEditor({
 
       {/* Skills Section */}
       <div className="space-y-3">
-        <label className="text-xs font-semibold text-foreground">
+        <label className="text-xs font-bold text-white/70">
           {t.profile.skillsLabel}
         </label>
 
         {/* Existing skills chips */}
-        <div className="flex flex-wrap gap-2 min-h-[36px] p-2 rounded-lg bg-secondary/30 border border-border">
+        <div className="flex flex-wrap gap-2 min-h-[36px] p-2 rounded-lg bg-black/20 border border-white/5">
           {skills.length === 0 ? (
-            <p className="text-xs text-muted-foreground p-1">{t.profile.noSkills}</p>
+            <p className="text-xs text-white/40 p-1 font-medium">{t.profile.noSkills}</p>
           ) : (
             skills.map((skill) => (
               <span
                 key={skill}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-card border border-border text-xs font-medium text-foreground shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/5 border border-white/5 text-[11px] font-bold text-white shadow-sm"
               >
                 <span>{skill}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(skill)}
-                  className="text-muted-foreground hover:text-destructive cursor-pointer p-0.5 rounded-full transition-colors"
+                  className="text-white/40 hover:text-[#EF4444] cursor-pointer p-0.5 rounded-full transition-colors"
                   aria-label={`${t.profile.removeSkill} ${skill}`}
                 >
                   <X className="h-3 w-3" />
@@ -115,11 +115,11 @@ export function ProfileEditor({
               }
             }}
             placeholder={t.profile.skillPlaceholder}
-            className="flex-1 min-h-[44px]"
+            className="flex-1 min-h-[44px] bg-white/5 border-white/5 text-white placeholder:text-white/30"
           />
           <Button
             type="button"
-            variant="secondary"
+            variant="outline" className="gap-1 min-h-[44px] px-4 bg-white/5 border-white/5 text-white hover:bg-white/10 hover:text-white"
             onClick={handleAddSkill}
             className="gap-1 min-h-[44px] px-4"
           >
@@ -130,14 +130,14 @@ export function ProfileEditor({
       </div>
 
       {/* Social / External Links Section */}
-      <div className="space-y-3 pt-3 border-t border-border">
-        <label className="text-xs font-semibold text-foreground">
+      <div className="space-y-3 pt-3 border-t border-white/5">
+        <label className="text-xs font-bold text-white/70">
           {t.profile.linksLabel}
         </label>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+            <span className="text-[11px] text-white/50 font-bold flex items-center gap-1">
               <GitBranch className="h-3.5 w-3.5" />
               {t.profile.githubLabel}
             </span>
@@ -145,13 +145,13 @@ export function ProfileEditor({
               value={github}
               onChange={(e) => setGithub(e.target.value)}
               placeholder="github.com/username"
-              className="min-h-[44px] font-mono text-xs"
+              className="min-h-[44px] font-mono text-xs bg-white/5 border-white/5 text-white placeholder:text-white/30"
               dir="ltr"
             />
           </div>
 
           <div className="space-y-1.5">
-            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+            <span className="text-[11px] text-white/50 font-bold flex items-center gap-1">
               <Globe className="h-3.5 w-3.5" />
               {t.profile.portfolioLabel}
             </span>
@@ -159,7 +159,7 @@ export function ProfileEditor({
               value={portfolio}
               onChange={(e) => setPortfolio(e.target.value)}
               placeholder="https://myportfolio.dev"
-              className="min-h-[44px] font-mono text-xs"
+              className="min-h-[44px] font-mono text-xs bg-white/5 border-white/5 text-white placeholder:text-white/30"
               dir="ltr"
             />
           </div>
@@ -172,7 +172,7 @@ export function ProfileEditor({
           type="button"
           onClick={handleSave}
           disabled={isSaving}
-          className="w-full sm:w-auto gap-2 min-h-[44px] px-6 font-semibold"
+          className="w-full sm:w-auto gap-2 min-h-[44px] px-6 font-bold fintech-gradient-purple text-white hover:fintech-glow-purple border-0"
         >
           <Save className="h-4 w-4" />
           <span>{isSaving ? t.profile.saving : t.profile.saveButton}</span>

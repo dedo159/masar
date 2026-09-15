@@ -75,7 +75,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm(isRtl ? "هل أنت متأكد من حذف هذه الشهادة؟" : "Are you sure you want to delete this certificate?")) return;
+    if (!confirm(isRtl ? "ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط­ط°ظپ ظ‡ط°ظ‡ ط§ظ„ط´ظ‡ط§ط¯ط©طں" : "Are you sure you want to delete this certificate?")) return;
     
     setDeletingId(id);
     try {
@@ -94,79 +94,79 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 shadow-sm mt-6">
+    <div className="bg-card border border-white/5 rounded-xl p-5 shadow-sm mt-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center gap-2">
-          <Award className="h-5 w-5 text-primary" />
-          {isRtl ? "الشهادات والدورات" : "Certificates"}
+          <Award className="h-5 w-5 text-[#7C3AED]" />
+          {isRtl ? "ط§ظ„ط´ظ‡ط§ط¯ط§طھ ظˆط§ظ„ط¯ظˆط±ط§طھ" : "Certificates"}
         </h3>
         {!showUploadForm && (
           <Button variant="outline" size="sm" onClick={() => setShowUploadForm(true)} className="gap-2">
             <Plus className="h-4 w-4" />
-            {isRtl ? "إضافة شهادة" : "Add Certificate"}
+            {isRtl ? "ط¥ط¶ط§ظپط© ط´ظ‡ط§ط¯ط©" : "Add Certificate"}
           </Button>
         )}
       </div>
 
       {showUploadForm && (
-        <form onSubmit={handleUpload} className="bg-secondary/30 p-4 rounded-lg mb-6 border border-border/50">
+        <form onSubmit={handleUpload} className="bg-white/5/30 p-4 rounded-lg mb-6 border border-white/5/50">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "اسم الشهادة/الدورة" : "Certificate Name"}</label>
-              <Input 
+              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ط§ط³ظ… ط§ظ„ط´ظ‡ط§ط¯ط©/ط§ظ„ط¯ظˆط±ط©" : "Certificate Name"}</label>
+              <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
                 required 
                 value={formData.name} 
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                placeholder={isRtl ? "مثال: Google Data Analytics" : "e.g. Google Data Analytics"}
+                placeholder={isRtl ? "ظ…ط«ط§ظ„: Google Data Analytics" : "e.g. Google Data Analytics"}
               />
             </div>
             <div>
               <label className="text-sm font-medium mb-1.5 block">
-                {isRtl ? "الجهة المانحة" : "Issuer"} <span className="text-muted-foreground text-xs font-normal">({isRtl ? "اختياري" : "Optional"})</span>
+                {isRtl ? "ط§ظ„ط¬ظ‡ط© ط§ظ„ظ…ط§ظ†ط­ط©" : "Issuer"} <span className="text-white/50 text-xs font-normal">({isRtl ? "ط§ط®طھظٹط§ط±ظٹ" : "Optional"})</span>
               </label>
-              <Input 
+              <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
                 value={formData.issuer} 
                 onChange={(e) => setFormData({...formData, issuer: e.target.value})}
-                placeholder={isRtl ? "مثال: Coursera" : "e.g. Coursera"}
+                placeholder={isRtl ? "ظ…ط«ط§ظ„: Coursera" : "e.g. Coursera"}
               />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ملف الشهادة (صورة أو PDF)" : "Certificate File"}</label>
-              <Input 
+              <label className="text-sm font-medium mb-1.5 block">{isRtl ? "ظ…ظ„ظپ ط§ظ„ط´ظ‡ط§ط¯ط© (طµظˆط±ط© ط£ظˆ PDF)" : "Certificate File"}</label>
+              <Input className="bg-white/5 border-white/5 text-white placeholder:text-white/30" 
                 type="file" 
                 accept="image/*,application/pdf"
                 onChange={handleFileChange}
-                className="file:me-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 cursor-pointer"
+                className="file:me-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:bg-primary file:text-[#7C3AED]-foreground hover:file:bg-primary/90 cursor-pointer"
               />
             </div>
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => setShowUploadForm(false)}>
-              {isRtl ? "إلغاء" : "Cancel"}
+              {isRtl ? "ط¥ظ„ط؛ط§ط،" : "Cancel"}
             </Button>
             <Button type="submit" disabled={isUploading}>
-              {isUploading ? (isRtl ? "جاري الرفع..." : "Uploading...") : (isRtl ? "حفظ الشهادة" : "Save Certificate")}
+              {isUploading ? (isRtl ? "ط¬ط§ط±ظٹ ط§ظ„ط±ظپط¹..." : "Uploading...") : (isRtl ? "ط­ظپط¸ ط§ظ„ط´ظ‡ط§ط¯ط©" : "Save Certificate")}
             </Button>
           </div>
         </form>
       )}
 
       {certificates.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
-          <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground"><Award className="h-6 w-6" strokeWidth={1.5} /></div>
-          <p>{isRtl ? "لا توجد شهادات مضافة حتى الآن." : "No certificates added yet."}</p>
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-white/5 bg-white/5 text-center transition-colors">
+          <div className="h-14 w-14 rounded-full bg-white/5/80 flex items-center justify-center mb-4 shadow-sm text-white/50"><Award className="h-6 w-6" strokeWidth={1.5} /></div>
+          <p>{isRtl ? "ظ„ط§ طھظˆط¬ط¯ ط´ظ‡ط§ط¯ط§طھ ظ…ط¶ط§ظپط© ط­طھظ‰ ط§ظ„ط¢ظ†." : "No certificates added yet."}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {certificates.map((cert) => (
-            <div key={cert.id} className="flex p-3 rounded-xl border border-border bg-background hover:border-primary/20 hover:shadow-sm active:scale-[0.98] transition-all duration-200 group min-h-[56px]">
-              <div className="h-10 w-10 rounded-md bg-primary/10 text-primary flex items-center justify-center me-3 shrink-0">
+            <div key={cert.id} className="flex p-3 rounded-xl border border-white/5 bg-background hover:border-primary/20 hover:shadow-sm active:scale-[0.98] transition-all duration-200 group min-h-[56px]">
+              <div className="h-10 w-10 rounded-md bg-[#7C3AED]/10 text-[#7C3AED] flex items-center justify-center me-3 shrink-0">
                 <FileText className="h-5 w-5" />
               </div>
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm text-foreground truncate" title={cert.name}>{cert.name}</h4>
+                <h4 className="font-medium text-sm text-white truncate" title={cert.name}>{cert.name}</h4>
                 {cert.issuer && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                  <p className="text-xs text-white/50 flex items-center gap-1.5 mt-1">
                     <Building2 className="h-3 w-3" />
                     <span className="truncate">{cert.issuer}</span>
                   </p>
@@ -186,7 +186,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
                   <Button 
                     variant="ghost" 
                     size="icon-sm" 
-                    className="text-primary hover:bg-primary/10 h-7 w-7 ms-1"
+                    className="text-[#7C3AED] hover:bg-[#7C3AED]/10 h-7 w-7 ms-1"
                     onClick={() => {
                       const w = window.open();
                       if (w) w.document.write(`<iframe src="${cert.fileData}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
