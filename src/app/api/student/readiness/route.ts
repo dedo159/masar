@@ -1,8 +1,9 @@
+export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { generateObject, generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
-const google = createGoogleGenerativeAI();
+
 
 const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم (Technical Career Auditor) متخصص في تقييم طلاب وخريجي كليات تقنية المعلومات لفرص التدريب (Internships) ووظائف المطورين المبتدئين (Junior Roles).
 
@@ -39,6 +40,11 @@ const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم 
 
 export async function POST(req: Request) {
   try {
+    const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: "Missing GOOGLE_GENERATIVE_AI_API_KEY in .env file" }, { status: 500 });
+    }
+    const google = createGoogleGenerativeAI({ apiKey });
     const body = await req.json();
     const { 
       target_role, 
