@@ -29,15 +29,15 @@ export const api = {
   getCourses: () => fetchApi<Course[]>("/api/courses"),
   getCourse: (id: string) => fetchApi<Course>(`/api/courses/${id}`),
   getInternships: () => fetchApi<Internship[]>("/api/internships"),
-  getNotifications: () => fetchApi<Notification[]>("/api/notifications"),
+  getNotifications: () => fetchApi<Notification[]>("/api/updates"),
   getTodaySchedule: () => fetchApi<TodayClass[]>("/api/today-schedule"),
   markNotificationRead: (id: string) =>
-    fetchApi<{ success: boolean }>("/api/notifications", {
+    fetchApi<{ success: boolean }>("/api/updates", {
       method: "PATCH",
       body: JSON.stringify({ id }),
     }),
   markAllNotificationsRead: () =>
-    fetchApi<{ success: boolean }>("/api/notifications", {
+    fetchApi<{ success: boolean }>("/api/updates", {
       method: "PATCH",
       body: JSON.stringify({ readAll: true }),
     }),

@@ -13,12 +13,12 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("GET /api/notifications error:", error);
+    console.error("GET /api/updates error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
 
-// Support PATCH /api/notifications to mark notification as read
+// Support PATCH /api/updates to mark notification as read
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
@@ -42,7 +42,7 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
   } catch (error) {
-    console.error("PATCH /api/notifications error:", error);
+    console.error("PATCH /api/updates error:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
