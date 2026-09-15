@@ -145,16 +145,19 @@ export async function proxy(request: NextRequest) {
   // 8. حماية لوحة تحكم الطالب (Student Dashboard)
   // ================================================
   const studentProtectedPaths = [
-    "/profile",
-    "/settings",
-
+    "/",
+    "/announcements",
     "/courses",
     "/deals",
     "/internships",
+    "/profile",
+    "/readiness",
+    "/resume-builder",
+    "/settings"
   ];
 
   const isStudentProtected = studentProtectedPaths.some(
-    (p) => pathname === p || pathname.startsWith(`${p}/`)
+    (p) => pathname === p || pathname.startsWith(p === "/" ? "/_never_match_" : `${p}/`)
   );
 
   if (isStudentProtected) {
@@ -183,16 +186,22 @@ export const config = {
     "/api/company/:path*",
     "/merchant/:path*",
     "/api/merchant/:path*",
-    "/profile",
-    "/profile/:path*",
-    "/settings",
-    "/settings/:path*",
-
+    "/",
+    "/announcements",
+    "/announcements/:path*",
     "/courses",
     "/courses/:path*",
     "/deals",
     "/deals/:path*",
     "/internships",
     "/internships/:path*",
+    "/profile",
+    "/profile/:path*",
+    "/readiness",
+    "/readiness/:path*",
+    "/resume-builder",
+    "/resume-builder/:path*",
+    "/settings",
+    "/settings/:path*"
   ],
 };

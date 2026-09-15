@@ -7,7 +7,11 @@ export const revalidate = 0;
 
 export default async function ProfilePage() {
   const session = await getSession();
-  const studentId = session?.userType === "student" && session.userId ? session.userId : "s-001";
+  
+  if (!session || session.userType !== "student" || !session.userId) {
+    throw new Error("Unauthorized");
+  }
+  const studentId = session.userId;
 
   const student = (await prisma.student.findFirst({
     where: { id: studentId },

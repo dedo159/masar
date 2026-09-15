@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
-import { DEFAULT_STUDENT_ID } from "@/lib/db-queries";
 
 export async function POST(
   request: Request,
@@ -9,7 +8,10 @@ export async function POST(
 ) {
   try {
     const session = await getSession();
-    const studentId = session?.userType === "student" && session.userId ? session.userId : DEFAULT_STUDENT_ID;
+    if (!session || session.userType !== "student" || !session.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const studentId = session.userId;
 
     const { id: internshipId } = await params;
 

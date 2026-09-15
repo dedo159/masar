@@ -1,12 +1,19 @@
 import { prisma } from '@/lib/prisma';
+import { getSession } from '@/lib/auth';
 import { getServerTranslations } from "@/lib/translations/server";
 
 export default async function DashboardPage() {
     const t = await getServerTranslations();
   // Fetch data
-  const activeStudents = await prisma.student.count();
-  const moodleConnected = await prisma.moodleConnection.count();
-  const atRiskStudents = await prisma.studentEngagementSnapshot.count({ where: { riskFlag: true } });
+  const session = await getSession();
+  if (!session || session.userType !== 'staff' || !session.universityId) {
+    throw new Error('Unauthorized');
+  }
+  const universityId = session.universityId;
+
+  const activeStudents = await prisma.student.count({ where: { universityId } });
+  const moodleConnected = await prisma.moodleConnection.count({ where: { student: { universityId } } });
+  const atRiskStudents = await prisma.studentEngagementSnapshot.count({ where: { riskFlag: true, student: { universityId } } });
   
   const moodlePercentage = activeStudents > 0 ? Math.round((moodleConnected / activeStudents) * 100) : 0;
 

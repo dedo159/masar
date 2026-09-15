@@ -16,14 +16,14 @@ import { translateCourseName } from "@/lib/translations/academic";
 import { getSession } from "@/lib/auth";
 
 // Default fallback student ID (for demo or unauthenticated SSR fallback)
-export const DEFAULT_STUDENT_ID = "s-001";
+
 
 /**
  * Resolves current student ID from active JWT session if available,
- * otherwise falls back to provided studentId parameter or DEFAULT_STUDENT_ID.
+ * throws Unauthorized error if neither is available.
  */
 export async function resolveCurrentStudentId(explicitId?: string): Promise<string> {
-  if (explicitId && explicitId !== DEFAULT_STUDENT_ID) return explicitId;
+  if (explicitId) return explicitId;
   try {
     const session = await getSession();
     if (session && session.userType === "student" && session.userId) {
@@ -32,7 +32,7 @@ export async function resolveCurrentStudentId(explicitId?: string): Promise<stri
   } catch {
     // getSession might fail if called outside request scope
   }
-  return explicitId || DEFAULT_STUDENT_ID;
+  throw new Error("Unauthorized: No active session found");
 }
 
 // ----------------------------------------------------

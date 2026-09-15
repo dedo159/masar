@@ -4,7 +4,7 @@ import { moodleDataMapper, safeDate } from "@/lib/moodle-mapper";
 export async function syncMoodleDataForStudent(
   token: string,
   moodleBaseUrl: string,
-  studentId: string = "s-001",
+  studentId: string,
   preferredMajor?: string
 ) {
   const cleanUrl = moodleBaseUrl.trim().replace(/\/+$/, "");
