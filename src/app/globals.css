@@ -32,7 +32,7 @@
 
 :root {
   /* Vercel Light Theme */
-  --background: #ffffff;
+  --background: #fafafa;
   --foreground: #171717;
   
   --card: #ffffff;
@@ -105,7 +105,7 @@
 
 @layer utilities {
   .vercel-card {
-    @apply bg-card border border-border rounded-lg shadow-[0_2px_4px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.02)] transition-all duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.05)];
+    @apply bg-card border border-border rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)];
   }
   
   .vercel-button-primary {
