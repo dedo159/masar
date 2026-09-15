@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { generateObject, generateText } from "ai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-});
+const google = createGoogleGenerativeAI();
 
 const systemPrompt = `أنت مدقق مهني وتقني واقعي وصارم (Technical Career Auditor) متخصص في تقييم طلاب وخريجي كليات تقنية المعلومات لفرص التدريب (Internships) ووظائف المطورين المبتدئين (Junior Roles).
 
