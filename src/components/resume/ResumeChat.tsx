@@ -12,6 +12,9 @@ export function ResumeChat() {
 
   const { messages, setMessages, input, handleInputChange, handleSubmit, addToolResult, isLoading, error } = useChat({
     api: '/api/resume-ai',
+    body: {
+      resumeData: store.data
+    },
     initialMessages: [
       {
         id: 'welcome',

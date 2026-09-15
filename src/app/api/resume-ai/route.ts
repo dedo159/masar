@@ -32,7 +32,9 @@ const systemPrompt = `أنت خبير توظيف تقني ومدرب مهني (S
 You have access to the user's current resume state (passed in context or implicitly through tools). When modifying, use the tools provided.`;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const body = await req.json();
+  const messages = body.messages;
+  const resumeData = body.resumeData || null;
 
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   
@@ -46,7 +48,7 @@ export async function POST(req: Request) {
   const result = await streamText({
     // @ts-expect-error - Interface mismatch between older ai package and new @ai-sdk/google
     model: google('gemini-2.5-flash'), // Using Gemini 2.5 Flash
-    system: systemPrompt,
+    system: systemPrompt + (resumeData ? "\n\n--- CURRENT RESUME STATE ---\n" + JSON.stringify(resumeData) + "\n--- END CURRENT STATE ---\nDo NOT ask the user for basic info if it is already present in the current state." : ""),
     messages,
     tools: {
       update_basics: tool({
