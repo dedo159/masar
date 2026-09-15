@@ -26,72 +26,72 @@ export function QuickStatsClient({
       value: coursesCount,
       unit: t.dashboard.stats.coursesUnit,
       icon: BookOpen,
-      iconColor: "text-foreground",
-      iconBg: "bg-secondary",
+      iconColor: "text-academic-fg",
+      iconBg: "bg-academic-bg",
+      cardClass: "hover:border-academic-fg/30 hover:shadow-academic-bg/50",
       href: "/courses",
-      highlight: false,
     },
     {
       label: t.dashboard.stats.todayDue,
       value: todayDueCount,
       unit: t.dashboard.stats.tasksUnit,
       icon: Clock,
-      iconColor: todayDueCount > 0 ? "text-destructive" : "text-emerald-600 dark:text-emerald-400",
-      iconBg: todayDueCount > 0 ? "bg-destructive/10" : "bg-emerald-500/10",
+      iconColor: "text-progress-fg",
+      iconBg: "bg-progress-bg",
+      cardClass: "hover:border-progress-fg/30 hover:shadow-progress-bg/50",
       href: "/courses",
-      highlight: todayDueCount > 0,
     },
     {
       label: t.dashboard.stats.internships,
       value: internshipsCount,
       unit: t.dashboard.stats.internshipsUnit,
       icon: Briefcase,
-      iconColor: "text-foreground",
-      iconBg: "bg-secondary",
+      iconColor: "text-career-fg",
+      iconBg: "bg-career-bg",
+      cardClass: "hover:border-career-fg/30 hover:shadow-career-bg/50",
       href: "/internships",
-      highlight: false,
     },
     {
       label: t.dashboard.stats.deals,
       value: dealsCount,
       unit: t.dashboard.stats.dealsUnit,
       icon: Tag,
-      iconColor: "text-foreground",
-      iconBg: "bg-secondary",
+      iconColor: "text-deals-fg",
+      iconBg: "bg-deals-bg",
+      cardClass: "hover:border-deals-fg/30 hover:shadow-deals-bg/50",
       href: "/deals",
-      highlight: false,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map(({ label, value, unit, icon: Icon, iconColor, iconBg, href, highlight }) => (
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      {stats.map(({ label, value, unit, icon: Icon, iconColor, iconBg, cardClass, href }) => (
         <Link
           key={href + label}
           href={href}
           className={cn(
-            "group relative flex flex-col justify-between rounded-xl border bg-card p-4 min-h-[96px]",
-            "transition-all duration-200 ease-out shadow-sm", // Enhanced baseline shadow
-            "hover:-translate-y-1 hover:shadow-md hover:border-primary/20 active:scale-[0.98]",
-            highlight ? "border-destructive/40 bg-destructive/[0.02]" : "border-border"
+            "group relative flex flex-col justify-between rounded-2xl border border-border bg-card p-5 min-h-[110px]",
+            "transition-all duration-300 ease-out shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:shadow-[0_2px_10px_rgba(0,0,0,0.1)]",
+            "hover:-translate-y-1 hover:shadow-md active:scale-[0.98]",
+            cardClass
           )}
         >
           <div className="flex items-center justify-between">
-            <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center transition-transform duration-200 group-hover:scale-105", iconBg)}>
-              <Icon className={cn("h-4 w-4", iconColor)} strokeWidth={1.75} />
+            <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105", iconBg)}>
+              <Icon className={cn("h-5 w-5", iconColor)} strokeWidth={1.5} />
             </div>
-            <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity -translate-x-1 group-hover:translate-x-0 rtl:translate-x-1 rtl:group-hover:translate-x-0" />
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0 rtl:translate-x-2 rtl:group-hover:translate-x-0" />
           </div>
-          <div className="mt-3">
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold tracking-tight text-foreground tabular-nums leading-none">
+          <div className="mt-4">
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold tracking-tight text-foreground tabular-nums leading-none">
                 {value}
               </span>
-              <span className="text-[11px] text-muted-foreground">
+              <span className="text-xs font-medium text-muted-foreground">
                 {unit}
               </span>
             </div>
-            <p className="text-sm font-medium text-muted-foreground mt-1.5 truncate">
+            <p className="text-sm font-medium text-muted-foreground mt-2 truncate">
               {label}
             </p>
           </div>

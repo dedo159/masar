@@ -26,18 +26,15 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
 
   useEffect(() => {
     if (studentId) {
-      const absoluteUrl = `https://${window.location.host}/api/calendar/${studentId}`;
+      const absoluteUrl = "https://" + window.location.host + "/api/calendar/" + studentId;
       const ua = navigator.userAgent.toLowerCase();
       
       if (ua.includes("android")) {
-        // Android: Force open Google Calendar app, fallback to Play Store
-        setCalendarHref(`intent://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}#Intent;scheme=https;package=com.google.android.calendar;end`);
+        setCalendarHref("intent://calendar.google.com/calendar/render?cid=" + encodeURIComponent(absoluteUrl) + "#Intent;scheme=https;package=com.google.android.calendar;end");
       } else if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("ipod")) {
-        // iOS: webcal automatically opens Apple Calendar
-        setCalendarHref(`webcal://${window.location.host}/api/calendar/${studentId}`);
+        setCalendarHref("webcal://" + window.location.host + "/api/calendar/" + studentId);
       } else {
-        // Desktop: Open Google Calendar web
-        setCalendarHref(`https://calendar.google.com/calendar/render?cid=${encodeURIComponent(absoluteUrl)}`);
+        setCalendarHref("https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(absoluteUrl));
       }
     }
   }, [studentId]);
@@ -48,10 +45,13 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
   return (
     <section>
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2.5">
+          <div className="bg-academic-bg p-1.5 rounded-lg text-academic-fg">
+             <CalendarDays className="h-4 w-4" />
+          </div>
           <h2 className="text-sm font-semibold text-foreground">{t.dashboard.todayClasses}</h2>
-          <span className="text-[11px] text-muted-foreground bg-secondary/80 px-2 py-0.5 rounded-full border border-border">
+          <span className="text-[11px] text-muted-foreground bg-muted px-2.5 py-0.5 rounded-full border border-border hidden sm:inline-block">
             {t.dashboard.timeZoneNotice}
           </span>
         </div>
@@ -62,39 +62,38 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
               href={calendarHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-[11px] font-medium text-primary bg-primary/10 hover:bg-primary/20 px-2.5 py-1 rounded-full transition-colors"
-              title="ربط ومزامنة الجدول مع تقويم الهاتف"
+              className="flex items-center gap-1.5 text-[11px] font-medium text-academic-fg bg-academic-bg hover:bg-academic-border px-3 py-1.5 rounded-full transition-colors"
+              title="مزامنة الجدول الدراسي مع التقويم الخاص بك"
             >
-              <CalendarDays className="h-3.5 w-3.5" />
               <span>مزامنة التقويم</span>
             </a>
           )}
-          <span className="text-xs text-muted-foreground font-medium">
+          <span className="text-xs text-academic-fg font-medium bg-academic-bg/50 px-2.5 py-1 rounded-full">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
           </span>
         </div>
       </div>
 
-      {/* Empty State with Actionable Link */}
+      {/* Empty State */}
       {!hasClasses ? (
-        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
-          <div className="h-12 w-12 rounded-full bg-secondary/80 flex items-center justify-center mb-3 text-muted-foreground shadow-sm">
+        <div className="flex flex-col items-center justify-center py-12 px-4 rounded-2xl border border-dashed border-academic-border bg-academic-bg/10 text-center transition-colors">
+          <div className="h-12 w-12 rounded-full bg-academic-bg flex items-center justify-center mb-3 text-academic-fg shadow-sm">
             <CalendarDays className="h-5 w-5" />
           </div>
           <p className="text-base font-medium text-foreground">{t.dashboard.noClassesToday}</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-4">
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-5">
             {t.dashboard.noClassesDesc}
           </p>
           <Link
             href="/courses"
-            className="inline-flex h-11 min-h-[44px] items-center justify-center gap-2 px-4 rounded-lg bg-secondary text-foreground text-xs font-medium hover:bg-secondary/80 active:scale-[0.98] transition-all"
+            className="inline-flex h-11 items-center justify-center gap-2 px-5 rounded-xl bg-academic-bg text-academic-fg text-xs font-semibold hover:bg-academic-border active:scale-[0.98] transition-all"
           >
             <span>{t.dashboard.browseCourses}</span>
             <ArrowIcon className="h-3.5 w-3.5" />
           </Link>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {todayClasses.map((cls, idx) => {
             const TypeIcon = iconMap[cls.type] || BookOpen;
             const typeLabel = t.dashboard.classTypes[cls.type] || t.dashboard.classTypes.lecture;
@@ -105,70 +104,64 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
             return (
               <Link
                 key={idx}
-                href={`/courses/${cls.courseId}`}
+                href={"/courses/" + cls.courseId}
                 className={cn(
-                  "flex items-start gap-3 rounded-xl border bg-card p-3.5 min-h-[56px] transition-all duration-150 ease-out group",
+                  "flex items-start gap-4 rounded-2xl border bg-card p-4 min-h-[56px] transition-all duration-300 ease-out group",
                   isOngoing
-                    ? "border-emerald-500/50 dark:border-emerald-500/40 bg-emerald-500/[0.04] shadow-sm hover:border-emerald-500"
-                    : "border-border hover:border-primary/20 hover:bg-secondary/40 active:scale-[0.98] hover:shadow-sm",
-                  cls.status === "done" && "opacity-60 bg-muted/20"
+                    ? "border-progress-fg/50 dark:border-progress-fg/40 bg-progress-bg/20 shadow-sm hover:border-progress-fg"
+                    : "border-border hover:border-academic-fg/30 hover:bg-academic-bg/10 active:scale-[0.98] hover:shadow-[0_2px_10px_rgba(0,0,0,0.02)] dark:hover:shadow-[0_2px_10px_rgba(0,0,0,0.1)]",
+                  cls.status === "done" && "opacity-60 bg-muted/10"
                 )}
               >
-                {/* Color strip */}
+                {/* Visual Indicator */}
                 <div
-                  className="mt-0.5 h-10 w-1.5 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: cls.color || "#8B5CF6" }}
+                  className="mt-1 h-10 w-1.5 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: cls.color || "#3b82f6" }}
                 />
 
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-sm font-medium leading-tight text-foreground truncate group-hover:text-primary transition-colors">
+                      <p className="text-sm font-semibold leading-tight text-foreground truncate group-hover:text-academic-fg transition-colors">
                         {displayName}
                       </p>
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                      <p className="text-xs text-muted-foreground mt-1 truncate">
                         {cls.courseCode} · {instructorName}
                       </p>
                     </div>
-
-                    <div className={cn("flex-shrink-0", isRtl ? "text-left" : "text-right")}>
-                      <p className="text-xs font-semibold tabular-nums text-foreground flex items-center gap-1 justify-end">
-                        <Clock className="h-3 w-3 text-muted-foreground" />
-                        {formatTime(cls.startTime, language === "en" ? "en" : "ar")}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground tabular-nums">
-                        {t.dashboard.until} {formatTime(cls.endTime, language === "en" ? "en" : "ar")}
-                      </p>
+                    <div className="text-right flex-shrink-0">
+                      <div className="flex items-center justify-end gap-1.5 text-foreground font-semibold tabular-nums">
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-sm">{formatTime(cls.startTime)}</span>
+                      </div>
+                      {isOngoing ? (
+                        <div className="inline-flex items-center gap-1.5 mt-1.5 text-[10px] font-bold text-progress-fg bg-progress-bg px-2 py-0.5 rounded-full">
+                          <span className="relative flex h-1.5 w-1.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-progress-fg opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-progress-fg"></span>
+                          </span>
+                          الآن
+                        </div>
+                      ) : (
+                        <div className="text-xs text-muted-foreground mt-1 tabular-nums font-medium">
+                          {formatTime(cls.endTime)}
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 mt-2 flex-wrap">
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <MapPin className="h-3 w-3" />
-                      <span>{translateRoom(cls.room, language)}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-3 mt-3">
+                    <Badge variant="secondary" className="font-medium text-[10px] h-6 px-2.5 rounded-md gap-1.5 border-transparent bg-academic-bg text-academic-fg">
                       <TypeIcon className="h-3 w-3" />
-                      <span>{typeLabel}</span>
+                      {typeLabel}
+                    </Badge>
+                    
+                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                      <MapPin className="h-3 w-3" />
+                      <span className="truncate max-w-[120px] sm:max-w-[180px]">
+                        {translateRoom(cls.room, language)}
+                      </span>
                     </div>
-
-                    {/* Class Status Badges */}
-                    {isOngoing && (
-                      <Badge variant="success" className="gap-1 font-semibold">
-                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
-                        {t.dashboard.classStatus.ongoing}
-                      </Badge>
-                    )}
-                    {cls.status === "upcoming" && (
-                      <Badge variant="secondary">
-                        {t.dashboard.classStatus.upcoming}
-                      </Badge>
-                    )}
-                    {cls.status === "done" && (
-                      <Badge variant="neutral">
-                        {t.dashboard.classStatus.done}
-                      </Badge>
-                    )}
                   </div>
                 </div>
               </Link>

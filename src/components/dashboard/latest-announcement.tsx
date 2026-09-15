@@ -34,21 +34,21 @@ export function LatestAnnouncementWidget() {
 
   return (
     <Link href="/announcements" className="block mb-6">
-      <div className="bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl p-4 flex items-center justify-between transition-all duration-200 hover:shadow-sm active:scale-[0.98] min-h-[44px]">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary/10 text-primary p-2 rounded-full">
-            <Megaphone className="w-4 h-4" />
+      <div className="bg-academic-bg/40 dark:bg-academic-bg/10 hover:bg-academic-bg/60 border border-academic-border rounded-2xl p-4 flex items-center justify-between transition-all duration-300 hover:shadow-sm active:scale-[0.98] min-h-[44px]">
+        <div className="flex items-center gap-4">
+          <div className="bg-academic-bg text-academic-fg p-2.5 rounded-xl">
+            <Megaphone className="w-5 h-5" strokeWidth={1.75} />
           </div>
           <div>
-            <div className="text-xs font-semibold text-primary mb-0.5">
-              {announcement.isPinned ? "إعلان مهم" : "إعلان جديد"}
+            <div className="text-xs font-semibold text-academic-fg/80 mb-1">
+              {announcement.isPinned ? "إعلان مثبت" : "أحدث إعلان"}
             </div>
             <div className="text-sm font-medium text-foreground line-clamp-1">
               {announcement.title}
             </div>
           </div>
         </div>
-        <ChevronLeft className="w-5 h-5 text-muted-foreground rtl:rotate-180" />
+        <ChevronLeft className="w-5 h-5 text-academic-fg/60 rtl:rotate-180" />
       </div>
     </Link>
   );
