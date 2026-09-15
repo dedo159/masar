@@ -49,7 +49,7 @@ export function ReadinessClient() {
         github_languages: githubLanguages,
         github_repos_count: githubReposCount,
         top_projects_descriptions: topProjects,
-        self_declared_skills: profile?.skills ? JSON.parse(profile.skills).join(", ") : "React, Node.js"
+        self_declared_skills: (profile?.skills && Array.isArray(profile?.skills)) ? profile.skills.join(", ") : "React, Node.js"
       };
 
       const res = await fetch("/api/student/readiness", {
