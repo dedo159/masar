@@ -116,17 +116,16 @@ export function ProfileEditor({
 
         {/* Add skill row */}
         <div className="flex gap-2">
-          <Input value={newSkill}
+          <select
+            value={newSkill}
             onChange={(e) => setNewSkill(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                handleAddSkill();
-              }
-            }}
-            placeholder={t.profile.skillPlaceholder}
-            className="flex-1 min-h-[44px]"
-          />
+            className="flex flex-1 h-11 min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <option value="" disabled>اختر مهارة تقنية...</option>
+            {AVAILABLE_SKILLS.filter(s => !skills.includes(s)).map(skill => (
+              <option key={skill} value={skill}>{skill}</option>
+            ))}
+          </select>
           <Button
             type="button"
             variant="secondary"
