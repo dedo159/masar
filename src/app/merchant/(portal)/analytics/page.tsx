@@ -38,12 +38,12 @@ export default async function MerchantAnalyticsPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-gray-500">
               إجمالي الاستخدامات
             </span>
-            <div className="h-9 w-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+            <div className="h-9 w-9 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
               <Tag className="h-5 w-5" />
             </div>
           </div>
@@ -56,12 +56,12 @@ export default async function MerchantAnalyticsPage() {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-gray-500">
               العروض النشطة
             </span>
-            <div className="h-9 w-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+            <div className="h-9 w-9 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
               <CheckCircle2 className="h-5 w-5" />
             </div>
           </div>
@@ -74,12 +74,12 @@ export default async function MerchantAnalyticsPage() {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-gray-500">
               نسبة العملاء العائدين
             </span>
-            <div className="h-9 w-9 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+            <div className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
               <RotateCcw className="h-5 w-5" />
             </div>
           </div>
@@ -94,12 +94,12 @@ export default async function MerchantAnalyticsPage() {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-gray-500">
               ساعة الذروة اليومية
             </span>
-            <div className="h-9 w-9 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600">
+            <div className="h-9 w-9 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
               <Clock className="h-5 w-5" />
             </div>
           </div>
@@ -118,7 +118,7 @@ export default async function MerchantAnalyticsPage() {
       </div>
 
       {/* Top Performing Deals */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -186,7 +186,7 @@ export default async function MerchantAnalyticsPage() {
       </div>
 
       {/* Hourly Distribution Grid */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+      <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
         <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-1">
           <Clock className="h-5 w-5 text-purple-600" />
           توزيع الإقبال حسب ساعات اليوم
@@ -202,7 +202,7 @@ export default async function MerchantAnalyticsPage() {
             return (
               <div
                 key={hour}
-                className={`p-2.5 rounded-xl border text-center transition-all ${
+                className={`p-2.5 rounded-lg border text-center transition-all ${
                   isPeak
                     ? "bg-amber-100 border-amber-300 ring-2 ring-amber-400"
                     : count > 0

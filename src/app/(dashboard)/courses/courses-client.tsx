@@ -31,7 +31,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
       <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
         {enrolledCourses.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border bg-card/60 text-center">
-            <div className="h-14 w-14 rounded-2xl fintech-gradient-blue flex items-center justify-center mb-3 text-foreground shadow-lg">
+            <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-3 text-foreground shadow-lg">
               <BookOpen className="h-6 w-6 fill-white/20" strokeWidth={2} />
             </div>
             <h3 className="text-base font-bold text-foreground">{t.courses.emptyTitle}</h3>
@@ -40,7 +40,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
             </p>
             <Link
               href="/"
-              className="mt-4 inline-flex h-11 min-h-[44px] items-center justify-center px-6 rounded-xl fintech-gradient-blue text-foreground text-xs font-bold hover:fintech-glow-blue transition-all duration-300"
+              className="mt-4 inline-flex h-11 min-h-[44px] items-center justify-center px-6 rounded-lg bg-[#0a72ef] text-white text-foreground text-xs font-bold hover:bg-[#0070f3] transition-all duration-300"
             >
               {t.courses.backHome}
             </Link>
@@ -67,9 +67,9 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
                         <div
-                          className="h-11 w-11 rounded-2xl flex-shrink-0 flex items-center justify-center text-xs font-bold shadow-md text-foreground"
+                          className="h-11 w-11 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-bold shadow-md text-foreground"
                           style={{
-                            background: `linear-gradient(135deg, ${course.color || "#3B82F6"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
+                            background: `linear-gradient(135deg, ${course.color || "#0070f3"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
                           }}
                         >
                           <BookOpen className="h-5 w-5 fill-white/20" strokeWidth={1.75} />
@@ -116,7 +116,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                     <span className="text-muted-foreground/60">{semesterName}</span>
                     <div className="flex items-center gap-2">
                       {pendingAssignments > 0 ? (
-                        <div className="flex items-center gap-1.5 text-foreground bg-[#EF4444] px-2.5 py-1 rounded-full shadow-md font-bold">
+                        <div className="flex items-center gap-1.5 text-foreground bg-[#ff5b4f] px-2.5 py-1 rounded-full shadow-md font-bold">
                           <Clock className="h-3 w-3" />
                           <span>{pendingAssignments} {t.courses.pendingTasks}</span>
                         </div>

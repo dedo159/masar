@@ -235,7 +235,7 @@ export default function DealsPage() {
       {/* Modal / Dialog Overlay */}
       {selectedDeal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-background w-full max-w-lg rounded-xl shadow-xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 relative">
+          <div className="bg-background w-full max-w-lg rounded-lg shadow-xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 relative">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border z-10 relative">
               <div className="flex items-center gap-3">

@@ -8,9 +8,9 @@ export default function CourseDetailLoading() {
       <div className="px-4 py-5 max-w-5xl mx-auto space-y-6">
         
         {/* Main Course Info Card Skeleton */}
-        <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
+        <div className="rounded-lg border border-border bg-card overflow-hidden shadow-sm">
           <div className="bg-primary/5 p-4 sm:p-5 flex flex-col sm:flex-row sm:items-start gap-4">
-            <Skeleton className="h-14 w-14 rounded-xl shrink-0" />
+            <Skeleton className="h-14 w-14 rounded-lg shrink-0" />
             <div className="flex-1 space-y-3 w-full">
               <Skeleton className="h-6 w-3/4 max-w-[250px]" />
               <div className="flex flex-wrap gap-x-4 gap-y-2">
@@ -43,7 +43,7 @@ export default function CourseDetailLoading() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="flex items-start gap-4 rounded-xl border border-border bg-card p-4 shadow-sm"
+                className="flex items-start gap-4 rounded-lg border border-border bg-card p-4 shadow-sm"
               >
                 <div className="flex-1 space-y-2">
                   <div className="flex justify-between items-center">

@@ -60,7 +60,7 @@ function EmptyStateCard({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 rounded-lg border border-dashed border-border bg-card text-center transition-colors">
-      <div className="h-14 w-14 rounded-2xl fintech-gradient-blue flex items-center justify-center mb-4 shadow-lg text-foreground">
+      <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-4 shadow-lg text-foreground">
         <Icon className="h-6 w-6 fill-white/20" strokeWidth={2} />
       </div>
       <p className="text-base font-bold text-foreground">{title}</p>
@@ -103,8 +103,8 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
   > = {
     pending: { label: t.courseDetail.assignmentStatus.pending, bg: "bg-[#ff5b4f]/10 border-[#ff5b4f]/20", text: "text-[#ff5b4f]" },
     submitted: { label: t.courseDetail.assignmentStatus.submitted, bg: "bg-[#0a72ef]/10 border-[#0a72ef]/20", text: "text-[#0a72ef]" },
-    graded: { label: t.courseDetail.assignmentStatus.graded, bg: "bg-[#3B82F6]/10 border-[#3B82F6]/20", text: "text-[#3B82F6]" },
-    late: { label: t.courseDetail.assignmentStatus.late, bg: "bg-[#EF4444]/10 border-[#EF4444]/20", text: "text-[#EF4444]" },
+    graded: { label: t.courseDetail.assignmentStatus.graded, bg: "bg-[#0070f3]/10 border-[#0070f3]/20", text: "text-[#0070f3]" },
+    late: { label: t.courseDetail.assignmentStatus.late, bg: "bg-[#ff5b4f]/10 border-[#ff5b4f]/20", text: "text-[#ff5b4f]" },
   };
 
   const hasGrades =
@@ -126,13 +126,13 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
         {/* Course Header Hero Card */}
         <div className="vercel-card p-5 shadow-sm relative overflow-hidden">
           {/* Subtle Glow */}
-          <div className="absolute top-0 right-0 w-48 h-48 bg-[#3B82F6]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-48 h-48 bg-[#0070f3]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           <div className="flex items-start gap-4 relative z-10">
             <div
-              className="h-14 w-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-foreground shadow-lg"
+              className="h-14 w-14 rounded-lg flex-shrink-0 flex items-center justify-center text-foreground shadow-lg"
               style={{
-                background: `linear-gradient(135deg, ${course.color || "#3B82F6"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
+                background: `linear-gradient(135deg, ${course.color || "#0070f3"} 0%, ${course.color || "#8B5CF6"}99 100%)`,
               }}
             >
               <BookOpen className="h-6 w-6 fill-white/20" strokeWidth={2} />
@@ -148,7 +148,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                 </div>
 
                 {course.grade?.total !== undefined && (
-                  <div className="inline-flex items-center gap-2 self-start sm:self-auto bg-secondary px-3 py-1.5 rounded-xl border border-border">
+                  <div className="inline-flex items-center gap-2 self-start sm:self-auto bg-secondary px-3 py-1.5 rounded-lg border border-border">
                     <span className="text-xs text-muted-foreground font-semibold">{t.courseDetail.totalGrade}:</span>
                     <span className="text-base font-extrabold tabular-nums text-foreground">
                       {course.grade.total} <span className="text-[10px] text-muted-foreground/60">/ 100</span>
@@ -178,16 +178,16 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
         {/* 4 Clean Tabs */}
         <Tabs defaultValue="schedule" className="space-y-4">
           <TabsList className="w-full grid grid-cols-2 sm:grid-cols-4 h-auto p-1.5 gap-1.5 bg-secondary/50 border border-border rounded-lg">
-            <TabsTrigger value="schedule" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-muted data-[state=active]:text-foreground">
+            <TabsTrigger value="schedule" className="min-h-[40px] text-xs font-bold rounded-lg data-[state=active]:bg-muted data-[state=active]:text-foreground">
               {t.courseDetail.scheduleTab}
             </TabsTrigger>
-            <TabsTrigger value="assignments" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-muted data-[state=active]:text-foreground">
+            <TabsTrigger value="assignments" className="min-h-[40px] text-xs font-bold rounded-lg data-[state=active]:bg-muted data-[state=active]:text-foreground">
               {t.courseDetail.assignmentsTab} ({course.assignments.length})
             </TabsTrigger>
-            <TabsTrigger value="files" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-muted data-[state=active]:text-foreground">
+            <TabsTrigger value="files" className="min-h-[40px] text-xs font-bold rounded-lg data-[state=active]:bg-muted data-[state=active]:text-foreground">
               {t.courseDetail.filesTab} ({course.files.length})
             </TabsTrigger>
-            <TabsTrigger value="grades" className="min-h-[40px] text-xs font-bold rounded-xl data-[state=active]:bg-muted data-[state=active]:text-foreground">
+            <TabsTrigger value="grades" className="min-h-[40px] text-xs font-bold rounded-lg data-[state=active]:bg-muted data-[state=active]:text-foreground">
               {t.courseDetail.gradesTab}
             </TabsTrigger>
           </TabsList>
@@ -211,7 +211,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                       key={index}
                       className="flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-border/50 hover:bg-white/[0.02]"
                     >
-                      <div className="h-10 w-10 rounded-2xl fintech-gradient-blue flex items-center justify-center flex-shrink-0 shadow-md">
+                      <div className="h-10 w-10 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center flex-shrink-0 shadow-md">
                         {isLab ? (
                           <FlaskConical className="h-4 w-4 text-foreground fill-white/20" strokeWidth={2} />
                         ) : (
@@ -266,11 +266,11 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                       key={assignment.id}
                       className={cn(
                         "flex flex-col sm:flex-row sm:items-start gap-4 rounded-lg border bg-card p-4 transition-all relative overflow-hidden",
-                        isUrgent ? "border-[#EF4444]/40 hover:border-[#EF4444]/80 shadow-[0_0_15px_rgba(239,68,68,0.1)]" : "border-border hover:border-border/50 hover:bg-white/[0.02]"
+                        isUrgent ? "border-[#ff5b4f]/40 hover:border-[#ff5b4f]/80 shadow-[0_0_15px_rgba(239,68,68,0.1)]" : "border-border hover:border-border/50 hover:bg-white/[0.02]"
                       )}
                     >
                       {isUrgent && (
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-[#EF4444]/15 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-[#ff5b4f]/15 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                       )}
 
                       <div className="flex-1 min-w-0 z-10">
@@ -308,7 +308,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                         </div>
                         
                         {assignment.status === "pending" && (
-                          <div className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md", isUrgent ? "text-[#EF4444] bg-[#EF4444]/10" : "text-[#ff5b4f] bg-[#ff5b4f]/10")}>
+                          <div className={cn("text-[10px] font-bold px-2 py-0.5 rounded-md", isUrgent ? "text-[#ff5b4f] bg-[#ff5b4f]/10" : "text-[#ff5b4f] bg-[#ff5b4f]/10")}>
                             {isUrgent ? t.dashboard.urgentBadge : t.dashboard.soonBadge}: {relTime}
                           </div>
                         )}
@@ -348,11 +348,11 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                       rel="noopener noreferrer"
                       className="group flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-border/50 hover:bg-white/[0.02]"
                     >
-                      <div className="h-10 w-10 rounded-2xl fintech-gradient-blue flex items-center justify-center flex-shrink-0 shadow-md">
+                      <div className="h-10 w-10 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center flex-shrink-0 shadow-md">
                         <FileIconCmp className="h-4 w-4 text-foreground fill-white/20" strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-foreground truncate transition-colors group-hover:text-[#3B82F6]">
+                        <p className="text-sm font-bold text-foreground truncate transition-colors group-hover:text-[#0070f3]">
                           {translateAssignmentTitle(file.name, language)}
                         </p>
                         <div className="flex items-center gap-3 mt-1.5 text-[10px] font-semibold text-muted-foreground">
@@ -379,10 +379,10 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {course.grade?.total !== undefined && (
-                  <div className="sm:col-span-2 rounded-lg border border-[#3B82F6]/20 bg-[#3B82F6]/5 p-6 flex items-center justify-between shadow-[0_0_30px_rgba(59,130,246,0.1)] relative overflow-hidden">
-                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#3B82F6]/20 rounded-full blur-3xl pointer-events-none" />
+                  <div className="sm:col-span-2 rounded-lg border border-[#0070f3]/20 bg-[#0070f3]/5 p-6 flex items-center justify-between shadow-[0_0_30px_rgba(59,130,246,0.1)] relative overflow-hidden">
+                    <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#0070f3]/20 rounded-full blur-3xl pointer-events-none" />
                     <div className="relative z-10">
-                      <p className="text-sm font-bold text-[#3B82F6] mb-1">{t.courseDetail.totalGrade}</p>
+                      <p className="text-sm font-bold text-[#0070f3] mb-1">{t.courseDetail.totalGrade}</p>
                       
                     </div>
                     <div className="text-right relative z-10">

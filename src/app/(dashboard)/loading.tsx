@@ -8,7 +8,7 @@ export default function HomeLoading() {
 
       <div className="px-4 py-5 space-y-6 max-w-7xl mx-auto">
         {/* Latest Announcement Skeleton */}
-        <div className="mb-6 bg-muted/20 border border-border/50 rounded-xl p-4 flex items-center justify-between min-h-[44px]">
+        <div className="mb-6 bg-muted/20 border border-border/50 rounded-lg p-4 flex items-center justify-between min-h-[44px]">
           <div className="flex items-center gap-3 w-full">
             <Skeleton className="h-8 w-8 rounded-full" />
             <div className="space-y-1.5 flex-1 max-w-[200px]">
@@ -24,7 +24,7 @@ export default function HomeLoading() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="flex flex-col justify-between rounded-xl border border-border bg-card p-4 min-h-[96px] shadow-sm"
+              className="flex flex-col justify-between rounded-lg border border-border bg-card p-4 min-h-[96px] shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <Skeleton className="h-8 w-8 rounded-lg" />
@@ -51,7 +51,7 @@ export default function HomeLoading() {
                 {[1, 2].map((i) => (
                   <div
                     key={i}
-                    className="flex items-start gap-3 rounded-xl border border-border bg-card p-3.5 min-h-[56px] shadow-sm"
+                    className="flex items-start gap-3 rounded-lg border border-border bg-card p-3.5 min-h-[56px] shadow-sm"
                   >
                     <Skeleton className="h-10 w-1.5 rounded-full" />
                     <div className="flex-1 space-y-2.5">
@@ -80,7 +80,7 @@ export default function HomeLoading() {
                 {[1, 2].map((i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3.5 rounded-xl border border-border bg-card p-3.5 min-h-[52px] shadow-sm"
+                    className="flex items-center gap-3.5 rounded-lg border border-border bg-card p-3.5 min-h-[52px] shadow-sm"
                   >
                     <Skeleton className="h-2.5 w-2.5 rounded-full" />
                     <div className="flex-1 space-y-2">

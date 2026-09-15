@@ -46,7 +46,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="fintech-gradient-blue p-2 rounded-xl text-foreground shadow-md">
+          <div className="bg-[#0a72ef] text-white p-2 rounded-lg text-foreground shadow-md">
              <CalendarDays className="h-4 w-4 fill-white/20" strokeWidth={2} />
           </div>
           <h2 className="text-sm font-bold text-foreground">{t.dashboard.todayClasses}</h2>
@@ -67,7 +67,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
               <span>مزامنة التقويم</span>
             </a>
           )}
-          <span className="text-xs text-foreground font-bold fintech-gradient-blue px-3 py-1 rounded-full shadow-md">
+          <span className="text-xs text-foreground font-bold bg-[#0a72ef] text-white px-3 py-1 rounded-full shadow-md">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
           </span>
         </div>
@@ -76,7 +76,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
       {/* Empty State */}
       {!hasClasses ? (
         <div className="flex flex-col items-center justify-center py-12 px-4 rounded-lg border border-dashed border-border bg-card text-center transition-colors">
-          <div className="h-14 w-14 rounded-2xl fintech-gradient-blue flex items-center justify-center mb-4 text-foreground shadow-lg">
+          <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-4 text-foreground shadow-lg">
             <CalendarDays className="h-6 w-6 fill-white/20" strokeWidth={2} />
           </div>
           <p className="text-base font-bold text-foreground">{t.dashboard.noClassesToday}</p>
@@ -85,7 +85,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
           </p>
           <Link
             href="/courses"
-            className="inline-flex h-11 items-center justify-center gap-2 px-6 rounded-xl fintech-gradient-blue text-foreground text-xs font-bold hover:fintech-glow-blue active:scale-[0.98] transition-all shadow-md"
+            className="inline-flex h-11 items-center justify-center gap-2 px-6 rounded-lg bg-[#0a72ef] text-white text-foreground text-xs font-bold hover:bg-[#0070f3] active:scale-[0.98] transition-all shadow-md"
           >
             <span>{t.dashboard.browseCourses}</span>
             <ArrowIcon className="h-4 w-4" />
@@ -107,7 +107,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
                 className={cn(
                   "flex items-start gap-4 rounded-lg border bg-card p-4 min-h-[56px] transition-all duration-300 ease-out group relative overflow-hidden",
                   isOngoing
-                    ? "border-[#059669]/50 shadow-[0_0_20px_rgba(5,150,105,0.15)] hover:border-[#059669]"
+                    ? "border-[#0070f3]/50 shadow-[0_0_20px_rgba(5,150,105,0.15)] hover:border-[#0070f3]"
                     : "border-border hover:border-border/50 active:scale-[0.98] hover:bg-white/[0.02]"
                 )}
               >
@@ -132,7 +132,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
                         <span className="text-sm">{formatTime(cls.startTime)}</span>
                       </div>
                       {isOngoing ? (
-                        <div className="inline-flex items-center gap-1.5 mt-1.5 text-[10px] font-bold text-foreground bg-[#059669] px-2.5 py-0.5 rounded-full shadow-md">
+                        <div className="inline-flex items-center gap-1.5 mt-1.5 text-[10px] font-bold text-foreground bg-[#0070f3] px-2.5 py-0.5 rounded-full shadow-md">
                           <span className="relative flex h-1.5 w-1.5">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>

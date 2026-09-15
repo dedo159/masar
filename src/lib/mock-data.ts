@@ -177,7 +177,7 @@ export const mockCourses: Course[] = [
     credits: 3,
     instructor: "د. عمر حسين",
     room: "B2-305",
-    color: "#10B981",
+    color: "#0070f3",
     semester: "الفصل الثاني 2024-2025",
     status: "enrolled",
     schedule: [

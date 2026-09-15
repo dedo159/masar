@@ -98,7 +98,7 @@ export default function MoodleTestPage() {
 
       <div className="px-4 py-4 space-y-6 max-w-4xl mx-auto">
         {/* شريط تنبيه الأمان */}
-        <div className="flex items-start gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20 text-xs text-muted-foreground leading-relaxed">
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-primary/5 border border-primary/20 text-xs text-muted-foreground leading-relaxed">
           <ShieldCheck className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
           <div>
             <span className="font-semibold text-foreground block mb-0.5">ضمانات الأمان والخصوصية:</span>
@@ -293,7 +293,7 @@ export default function MoodleTestPage() {
                     </Badge>
                   )}
                 </div>
-                <div className="rounded-xl border border-border bg-muted/40 p-4 max-h-96 overflow-auto">
+                <div className="rounded-lg border border-border bg-muted/40 p-4 max-h-96 overflow-auto">
                   <pre
                     dir="ltr"
                     className="text-xs font-mono text-foreground whitespace-pre-wrap break-all leading-relaxed"

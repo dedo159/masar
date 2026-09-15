@@ -94,7 +94,7 @@ export default function InternshipsPage() {
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-xl font-medium transition-colors inline-flex items-center gap-2"
+          className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
         >
           <span>➕</span>
           نشر فرصة جديدة
@@ -104,7 +104,7 @@ export default function InternshipsPage() {
       {loading ? (
         <div className="text-center py-12 text-gray-500">جاري التحميل...</div>
       ) : internships.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
           <span className="text-4xl mb-3 inline-block">💼</span>
           <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">لا توجد فرص تدريب</h3>
           <p className="text-gray-500 mt-1">قم بنشر أول فرصة تدريب لشركتك</p>
@@ -112,7 +112,7 @@ export default function InternshipsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {internships.map((internship) => (
-            <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 flex flex-col shadow-sm">
+            <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex flex-col shadow-sm">
               <div className="flex justify-between items-start mb-4">
                 <h3 className="font-bold text-lg text-gray-900 dark:text-foreground line-clamp-2">{internship.title}</h3>
                 <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
@@ -155,7 +155,7 @@ export default function InternshipsPage() {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" dir="rtl">
-          <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-800 shadow-2xl">
+          <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-800 shadow-2xl">
             <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-10">
               <h2 className="text-xl font-bold text-gray-900 dark:text-foreground">نشر فرصة تدريب جديدة</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700 text-xl">✕</button>
@@ -165,18 +165,18 @@ export default function InternshipsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">المسمى الوظيفي *</label>
-                  <input required name="title" value={formData.title} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                  <input required name="title" value={formData.title} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الموقع *</label>
-                  <input required name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                  <input required name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">نوع التدريب</label>
-                  <select name="type" value={formData.type} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground">
+                  <select name="type" value={formData.type} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground">
                     <option value="onsite">حضوري</option>
                     <option value="remote">عن بعد</option>
                     <option value="hybrid">مدمج</option>
@@ -184,34 +184,34 @@ export default function InternshipsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">المدة *</label>
-                  <input required name="duration" value={formData.duration} onChange={handleChange} placeholder="مثال: 3 أشهر" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                  <input required name="duration" value={formData.duration} onChange={handleChange} placeholder="مثال: 3 أشهر" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">آخر موعد للتقديم</label>
-                  <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                  <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الكلمات المفتاحية (مفصولة بفاصلة)</label>
-                <input name="tags" value={formData.tags} onChange={handleChange} placeholder="مثال: React, Node.js, برمجة" className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <input name="tags" value={formData.tags} onChange={handleChange} placeholder="مثال: React, Node.js, برمجة" className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">رابط التقديم الخارجي (اختياري)</label>
-                <input type="url" name="applyUrl" value={formData.applyUrl} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <input type="url" name="applyUrl" value={formData.applyUrl} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">الوصف *</label>
-                <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground resize-none"></textarea>
+                <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground resize-none"></textarea>
               </div>
 
               <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <button type="submit" disabled={submitting} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-foreground py-2.5 rounded-xl font-medium transition-colors disabled:opacity-70">
+                <button type="submit" disabled={submitting} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-foreground py-2.5 rounded-lg font-medium transition-colors disabled:opacity-70">
                   {submitting ? "جاري الحفظ..." : "نشر الفرصة"}
                 </button>
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
                   إلغاء
                 </button>
               </div>

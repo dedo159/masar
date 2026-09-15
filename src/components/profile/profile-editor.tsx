@@ -57,7 +57,7 @@ export function ProfileEditor({
   };
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 space-y-5 shadow-xs">
+    <div className="rounded-lg border border-border bg-card p-5 space-y-5 shadow-xs">
       <div className="flex items-center justify-between pb-3 border-b border-border">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-foreground font-medium" />

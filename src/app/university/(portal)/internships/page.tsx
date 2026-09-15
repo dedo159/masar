@@ -23,7 +23,7 @@ export default async function InternshipsPage() {
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {internships.map((internship) => (
-          <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-md transition-shadow">
+          <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start gap-2 mb-2">
               <h3 className="text-lg font-bold text-gray-900 dark:text-foreground line-clamp-2">{internship.title}</h3>
               <span className="bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
@@ -53,7 +53,7 @@ export default async function InternshipsPage() {
         ))}
 
         {internships.length === 0 && (
-          <div className="col-span-full p-8 text-center bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+          <div className="col-span-full p-8 text-center bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
             <p className="text-gray-500 dark:text-gray-400">لا توجد فرص تدريب متاحة حالياً</p>
           </div>
         )}

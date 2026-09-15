@@ -133,17 +133,17 @@ export default function RegisterPage() {
         {/* Form Card */}
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-border bg-card p-6 space-y-4 shadow-sm"
+          className="rounded-lg border border-border bg-card p-6 space-y-4 shadow-sm"
         >
           {error && (
-            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-destructive/10 text-destructive text-xs leading-relaxed border border-destructive/20">
+            <div className="flex items-start gap-2.5 p-3.5 rounded-lg bg-destructive/10 text-destructive text-xs leading-relaxed border border-destructive/20">
               <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
           {success && (
-            <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs leading-relaxed border border-emerald-500/20">
+            <div className="flex items-start gap-2.5 p-3.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs leading-relaxed border border-emerald-500/20">
               <CheckCircle2 className="h-4 w-4 flex-shrink-0 mt-0.5" />
               <span>{success}</span>
             </div>

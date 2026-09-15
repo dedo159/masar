@@ -26,8 +26,8 @@ export function QuickStatsClient({
       value: coursesCount,
       unit: t.dashboard.stats.coursesUnit,
       icon: BookOpen,
-      gradient: "fintech-gradient-blue",
-      glow: "hover:fintech-glow-blue",
+      gradient: "bg-[#0a72ef] text-white",
+      glow: "hover:bg-[#0070f3]",
       href: "/courses",
     },
     {
@@ -73,7 +73,7 @@ export function QuickStatsClient({
           )}
         >
           <div className="flex items-center justify-between">
-            <div className={cn("h-11 w-11 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg text-foreground", gradient)}>
+            <div className={cn("h-11 w-11 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-lg text-foreground", gradient)}>
               <Icon className="h-5 w-5 fill-white/20" strokeWidth={2} />
             </div>
             <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center group-hover:bg-muted transition-colors">

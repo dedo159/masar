@@ -94,7 +94,7 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
   };
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 shadow-sm mt-6">
+    <div className="bg-card border border-border rounded-lg p-5 shadow-sm mt-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center gap-2">
           <Award className="h-5 w-5 text-primary" />
@@ -152,14 +152,14 @@ export function CertificatesSection({ certificates }: { certificates: Certificat
       )}
 
       {certificates.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-muted/30 text-center transition-colors">
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-lg border border-dashed border-border bg-muted/30 text-center transition-colors">
           <div className="h-14 w-14 rounded-full bg-secondary/80 flex items-center justify-center mb-4 shadow-sm text-muted-foreground"><Award className="h-6 w-6" strokeWidth={1.5} /></div>
           <p>{isRtl ? "لا توجد شهادات مضافة حتى الآن." : "No certificates added yet."}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {certificates.map((cert) => (
-            <div key={cert.id} className="flex p-3 rounded-xl border border-border bg-background hover:border-border hover:shadow-sm vercel-card active:scale-[0.98] transition-all duration-200 group min-h-[56px]">
+            <div key={cert.id} className="flex p-3 rounded-lg border border-border bg-background hover:border-border hover:shadow-sm vercel-card active:scale-[0.98] transition-all duration-200 group min-h-[56px]">
               <div className="h-10 w-10 rounded-md bg-primary/10 text-primary flex items-center justify-center me-3 shrink-0">
                 <FileText className="h-5 w-5" />
               </div>

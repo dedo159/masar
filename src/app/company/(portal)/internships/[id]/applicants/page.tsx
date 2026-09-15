@@ -59,13 +59,13 @@ export default function ApplicantsPage() {
       {loading ? (
         <div className="text-center py-12 text-gray-500">جاري التحميل...</div>
       ) : !data || data.applications.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
           <span className="text-4xl mb-3 inline-block">📭</span>
           <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">لا يوجد متقدمين بعد</h3>
           <p className="text-gray-500 mt-1">لم يقم أحد بالتقديم على هذه الفرصة حتى الآن</p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-right">
               <thead className="bg-gray-50 dark:bg-gray-800/50 text-gray-600 dark:text-gray-300 font-medium border-b border-gray-200 dark:border-gray-800">

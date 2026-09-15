@@ -156,12 +156,12 @@ export default async function UniversityAnalyticsPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               الطلاب المعرضون للخطر
             </span>
-            <div className="h-9 w-9 rounded-xl bg-red-50 dark:bg-red-950/50 flex items-center justify-center text-red-600">
+            <div className="h-9 w-9 rounded-lg bg-red-50 dark:bg-red-950/50 flex items-center justify-center text-red-600">
               <AlertTriangle className="h-5 w-5" />
             </div>
           </div>
@@ -179,12 +179,12 @@ export default async function UniversityAnalyticsPage() {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               معدل التسليم بالموعد
             </span>
-            <div className="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
+            <div className="h-9 w-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
               <CheckCircle2 className="h-5 w-5" />
             </div>
           </div>
@@ -199,12 +199,12 @@ export default async function UniversityAnalyticsPage() {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               تفاعل المحتوى الدراسي
             </span>
-            <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600">
+            <div className="h-9 w-9 rounded-lg bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600">
               <FileText className="h-5 w-5" />
             </div>
           </div>
@@ -220,12 +220,12 @@ export default async function UniversityAnalyticsPage() {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               الإقبال على التدريب
             </span>
-            <div className="h-9 w-9 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
+            <div className="h-9 w-9 rounded-lg bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
               <Briefcase className="h-5 w-5" />
             </div>
           </div>
@@ -241,7 +241,7 @@ export default async function UniversityAnalyticsPage() {
       </div>
 
       {/* Bottleneck Courses Section */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2">
@@ -318,7 +318,7 @@ export default async function UniversityAnalyticsPage() {
       {/* Skills Gap & Employment Indicators */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Skills Gap */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Award className="h-5 w-5 text-indigo-600" />
             تحليل فجوة المهارات وسوق العمل
@@ -339,7 +339,7 @@ export default async function UniversityAnalyticsPage() {
                   topStudentSkills.map((s) => (
                     <span
                       key={s.name}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/50"
                     >
                       <span>{s.name}</span>
                       <span className="bg-blue-200 dark:bg-blue-800 px-1.5 py-0.2 rounded-md text-[10px]">
@@ -362,7 +362,7 @@ export default async function UniversityAnalyticsPage() {
                   topMarketSkills.map((s) => (
                     <span
                       key={s.name}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/50"
                     >
                       <span>{s.name}</span>
                       <span className="bg-emerald-200 dark:bg-emerald-800 px-1.5 py-0.2 rounded-md text-[10px]">
@@ -377,7 +377,7 @@ export default async function UniversityAnalyticsPage() {
         </div>
 
         {/* Employment Indicators */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <GraduationCap className="h-5 w-5 text-purple-600" />
             مؤشرات الجاهزية والتوظيف
@@ -387,7 +387,7 @@ export default async function UniversityAnalyticsPage() {
           </p>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+            <div className="flex items-center justify-between p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/50">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">
                   {totalApplications}
@@ -401,7 +401,7 @@ export default async function UniversityAnalyticsPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+            <div className="flex items-center justify-between p-3.5 rounded-lg bg-slate-50 dark:bg-slate-800/50">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
                   {acceptedApplications}
@@ -418,7 +418,7 @@ export default async function UniversityAnalyticsPage() {
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30">
+            <div className="p-4 rounded-lg bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/30">
               <div className="text-xs text-indigo-900 dark:text-indigo-300 font-medium">
                 💡 التوصية التشغيلية: تركيز الورش العملية على المهارات الأعلى طلباً في سوق العمل لرفع نسبة القبول التنافسية للطلبة.
               </div>

@@ -42,7 +42,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
 
       <div className="px-4 py-5 space-y-5 max-w-5xl mx-auto">
         {internships.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-xl border border-dashed border-border bg-muted/50 text-center transition-colors">
+          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border bg-muted/50 text-center transition-colors">
             <div className="h-14 w-14 rounded-full bg-secondary flex items-center justify-center mb-4 shadow-sm text-foreground">
               <Briefcase className="h-6 w-6 text-foreground" strokeWidth={1.5} />
             </div>

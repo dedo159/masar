@@ -10,9 +10,9 @@ export default function SettingsLoading() {
         {/* Account & Profile Summary */}
         <div className="space-y-2">
           <Skeleton className="h-4 w-28 ms-4" />
-          <div className="rounded-2xl border border-border bg-card p-4 min-h-[64px] shadow-sm flex items-center justify-between">
+          <div className="rounded-lg border border-border bg-card p-4 min-h-[64px] shadow-sm flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-11 w-11 rounded-xl" />
+              <Skeleton className="h-11 w-11 rounded-lg" />
               <div className="space-y-2">
                 <Skeleton className="h-4 w-40" />
                 <Skeleton className="h-3 w-32" />
@@ -25,9 +25,9 @@ export default function SettingsLoading() {
         {/* Moodle Sync Integration */}
         <div className="space-y-2">
           <Skeleton className="h-4 w-24 ms-4" />
-          <div className="rounded-2xl border border-border bg-card p-4 space-y-4 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-4 space-y-4 shadow-sm">
             <div className="flex items-start gap-3">
-              <Skeleton className="h-10 w-10 rounded-xl flex-shrink-0" />
+              <Skeleton className="h-10 w-10 rounded-lg flex-shrink-0" />
               <div className="space-y-2 flex-1 pt-1">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-4 w-32" />
@@ -43,14 +43,14 @@ export default function SettingsLoading() {
         {/* Appearance & Theme */}
         <div className="space-y-2">
           <Skeleton className="h-4 w-20 ms-4" />
-          <div className="rounded-2xl border border-border bg-card p-4 space-y-4 shadow-sm">
+          <div className="rounded-lg border border-border bg-card p-4 space-y-4 shadow-sm">
             <div className="space-y-2">
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-3 w-48" />
             </div>
             <div className="grid grid-cols-3 gap-2">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-14 min-h-[56px] rounded-xl" />
+                <Skeleton key={i} className="h-14 min-h-[56px] rounded-lg" />
               ))}
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function SettingsLoading() {
         {[1, 2, 3].map((section) => (
           <div key={section} className="space-y-2">
             <Skeleton className="h-4 w-32 ms-4" />
-            <div className="rounded-2xl border border-border bg-card p-4 shadow-sm">
+            <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
               <div className="flex items-center gap-3 min-h-[40px]">
                 <Skeleton className="h-9 w-9 rounded-lg flex-shrink-0" />
                 <div className="space-y-2 flex-1">

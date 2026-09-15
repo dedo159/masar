@@ -10,13 +10,13 @@ export default function InternshipsLoading() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="rounded-2xl border border-border bg-card p-5 flex flex-col justify-between gap-4 shadow-sm"
+              className="rounded-lg border border-border bg-card p-5 flex flex-col justify-between gap-4 shadow-sm"
             >
               {/* Top info */}
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <Skeleton className="h-12 w-12 rounded-xl flex-shrink-0" />
+                    <Skeleton className="h-12 w-12 rounded-lg flex-shrink-0" />
                     <div className="space-y-2 flex-1 pt-1">
                       <Skeleton className="h-3 w-24" />
                       <Skeleton className="h-4 w-4/5 max-w-[200px]" />

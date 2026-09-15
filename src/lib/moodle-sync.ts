@@ -92,7 +92,7 @@ export async function syncMoodleDataForStudent(
     },
   });
 
-  const colors = ["#8B5CF6", "#F59E0B", "#10B981", "#06B6D4", "#6366F1"];
+  const colors = ["#8B5CF6", "#F59E0B", "#0070f3", "#06B6D4", "#6366F1"];
   const courseMoodleIds: number[] = [];
 
   for (let i = 0; i < normalizedCourses.length; i++) {

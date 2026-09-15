@@ -36,7 +36,7 @@ export function LatestAnnouncementWidget() {
     <Link href="/announcements" className="block mb-6">
       <div className="bg-card border border-border rounded-lg p-4 flex items-center justify-between transition-all duration-300 hover:border-border/50 hover:bg-[#383838] dark:hover:bg-[#e0e0e0] active:scale-[0.98] min-h-[44px]">
         <div className="flex items-center gap-4">
-          <div className="bg-[#171717] dark:bg-white text-white dark:text-black text-foreground p-3 rounded-2xl shadow-lg">
+          <div className="bg-[#171717] dark:bg-white text-white dark:text-black text-foreground p-3 rounded-lg shadow-lg">
             <Megaphone className="w-5 h-5 fill-white/20" strokeWidth={2} />
           </div>
           <div>

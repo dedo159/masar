@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4" dir="rtl">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-xl">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 shadow-xl">
         <div className="text-center mb-8">
           <span className="text-4xl inline-block mb-4">🏢</span>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">بوابة الشركات — مسار</h1>
@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-xl text-sm">
+          <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg text-sm">
             {error}
           </div>
         )}
@@ -64,7 +64,7 @@ export default function LoginPage() {
             <input
               type="email"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@company.com"
@@ -76,7 +76,7 @@ export default function LoginPage() {
             <input
               type="password"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground focus:ring-2 focus:ring-emerald-500 outline-none"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -86,7 +86,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-foreground rounded-xl font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-foreground rounded-lg font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>

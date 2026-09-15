@@ -44,7 +44,7 @@ export default function UniversityLoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4" dir="rtl">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
         <div className="text-center mb-8">
           <span className="text-4xl mb-4 block">🏫</span>
           <h1 className="text-2xl font-bold text-blue-800 dark:text-blue-400">بوابة الجامعة — مسار</h1>

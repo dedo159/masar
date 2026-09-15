@@ -236,7 +236,7 @@ export function NotificationsDropdown() {
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className={`absolute ${isRtl ? "left-0" : "right-0"} mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150`}
+          className={`absolute ${isRtl ? "left-0" : "right-0"} mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-card shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150`}
           dir={isRtl ? "rtl" : "ltr"}
         >
           {/* Header */}

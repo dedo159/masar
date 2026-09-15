@@ -153,13 +153,13 @@ export default function SettingsPage() {
       <div className="max-w-3xl mx-auto px-4 py-4 space-y-2">
         {/* Account & Profile Summary */}
         <SectionLabel>{t.settings.accountSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <Link
             href="/profile"
             className="flex items-center justify-between p-4 min-h-[64px] hover:bg-secondary/40 active:bg-secondary/80 transition-all duration-200"
           >
             <div className="flex items-center gap-3">
-              <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
+              <div className="h-11 w-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
                 {displayInitial}
               </div>
               <div className="text-start">
@@ -176,10 +176,10 @@ export default function SettingsPage() {
 
         {/* Moodle Sync Integration */}
         <SectionLabel>{t.settings.moodleSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
-              <div className="h-10 w-10 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 flex items-center justify-center flex-shrink-0">
                 <BookOpen className="h-5 w-5" />
               </div>
               <div>
@@ -229,7 +229,7 @@ export default function SettingsPage() {
 
         {/* Appearance & Theme (3 options) */}
         <SectionLabel>{t.settings.appearanceSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">{t.settings.appearanceTitle}</p>
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("light")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-xl border transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-lg border transition-all cursor-pointer ${
                 mounted && theme === "light"
                   ? "border-primary bg-primary/10 text-primary font-semibold shadow-xs"
                   : "border-border bg-secondary/30 text-muted-foreground hover:text-foreground"
@@ -256,7 +256,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("dark")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-xl border transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-lg border transition-all cursor-pointer ${
                 mounted && theme === "dark"
                   ? "border-primary bg-primary/10 text-primary font-semibold shadow-xs"
                   : "border-border bg-secondary/30 text-muted-foreground hover:text-foreground"
@@ -269,7 +269,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setTheme("system")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-xl border transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[56px] rounded-lg border transition-all cursor-pointer ${
                 mounted && theme === "system"
                   ? "border-primary bg-primary/10 text-primary font-semibold shadow-xs"
                   : "border-border bg-secondary/30 text-muted-foreground hover:text-foreground"
@@ -283,7 +283,7 @@ export default function SettingsPage() {
 
         {/* Calendar Integrations */}
         <SectionLabel>{t.settings.calendarSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <SettingRow
             icon={Calendar}
             label={t.settings.googleCalendar}
@@ -321,7 +321,7 @@ export default function SettingsPage() {
 
         {/* Notifications */}
         <SectionLabel>{t.settings.notificationsSection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
           <SettingRow
             icon={Bell}
             label={t.settings.generalNotifications}
@@ -367,7 +367,7 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <SectionLabel>{t.settings.securitySection}</SectionLabel>
-        <div className="rounded-2xl border border-border bg-card overflow-hidden mb-6 shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card overflow-hidden mb-6 shadow-sm transition-all">
           <SettingRow
             icon={LogOut}
             label={t.settings.logoutTitle}

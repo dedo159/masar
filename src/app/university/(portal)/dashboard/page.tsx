@@ -16,7 +16,7 @@ export default async function DashboardPage() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Card 1 */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
             📊
           </div>
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 text-2xl">
             ⚠️
           </div>
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
           <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
             🔗
           </div>

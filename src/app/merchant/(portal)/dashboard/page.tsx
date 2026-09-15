@@ -69,21 +69,21 @@ export default function MerchantDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
           <p className="text-sm text-gray-500 mb-1">العروض النشطة</p>
           <p className="text-3xl font-bold text-gray-900">{stats.activeDeals}</p>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
           <p className="text-sm text-gray-500 mb-1">إجمالي الاستخدامات</p>
           <p className="text-3xl font-bold text-amber-600">{stats.totalRedemptions}</p>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-gray-200">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
           <p className="text-sm text-gray-500 mb-1">عروض منتهية أو متوقفة</p>
           <p className="text-3xl font-bold text-gray-900">{stats.inactiveDeals}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-bold text-gray-900">عروضي</h3>
         </div>

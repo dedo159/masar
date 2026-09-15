@@ -11,7 +11,7 @@ export default async function AtRiskPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">الطلاب المعرضون للخطر</h1>
       
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden shadow-sm">
         {atRiskStudents.length === 0 ? (
           <div className="p-8 text-center text-gray-500 dark:text-gray-400">
             <span className="text-4xl block mb-2">🎉</span>

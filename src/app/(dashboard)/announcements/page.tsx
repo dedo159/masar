@@ -122,7 +122,7 @@ export default function AnnouncementsPage() {
           <p>جاري تحميل الإعلانات...</p>
         </div>
       ) : filteredAnnouncements.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-xl bg-secondary/30 border-dashed">
+        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-lg bg-secondary/30 border-dashed">
           <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
             <Megaphone className="w-8 h-8 text-muted-foreground" />
           </div>
@@ -195,7 +195,7 @@ export default function AnnouncementsPage() {
 
       {selectedAnnouncement && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setSelectedAnnouncement(null)}>
-          <div className="bg-background rounded-xl p-6 md:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto relative shadow-2xl border" onClick={e => e.stopPropagation()}>
+          <div className="bg-background rounded-lg p-6 md:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto relative shadow-2xl border" onClick={e => e.stopPropagation()}>
             <div className="flex flex-col gap-3 mb-5">
               <div className="flex items-center gap-2">
                 {selectedAnnouncement.isPinned && (

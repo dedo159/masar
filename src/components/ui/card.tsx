@@ -9,7 +9,7 @@ function Card({ className, hoverLift = false, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-card text-card-foreground shadow-xs",
+        "rounded-lg border border-border bg-card text-card-foreground shadow-xs",
         "transition-all duration-200 ease-out",
         hoverLift && "hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/20 cursor-pointer",
         className

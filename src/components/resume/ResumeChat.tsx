@@ -96,7 +96,7 @@ export function ResumeChat() {
   }, [messages, store, addToolResult]);
 
   return (
-    <div className="flex flex-col h-full bg-card rounded-xl border shadow-sm overflow-hidden">
+    <div className="flex flex-col h-full bg-card rounded-lg border shadow-sm overflow-hidden">
       <div className="p-4 border-b bg-primary/5 flex items-center gap-3">
         <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
           <Sparkles className="h-5 w-5" />
@@ -118,7 +118,7 @@ export function ResumeChat() {
             </div>
             
             <div className={cn(
-              "max-w-[80%] rounded-2xl px-4 py-3 text-sm",
+              "max-w-[80%] rounded-lg px-4 py-3 text-sm",
               m.role === 'user' 
                 ? "bg-[#000000] dark:bg-[#ffffff] text-foreground dark:text-black rounded-lg shadow-sm px-4 py-2" 
                 : "bg-secondary text-foreground border border-border rounded-lg shadow-sm px-4 py-2"
@@ -137,7 +137,7 @@ export function ResumeChat() {
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-muted text-foreground px-4 py-3 rounded-2xl rounded-tl-sm flex items-center gap-2">
+            <div className="bg-muted text-foreground px-4 py-3 rounded-lg rounded-tl-sm flex items-center gap-2">
               <Loader2 className="h-4 w-4 animate-spin" />
               <span className="text-sm">يعالج...</span>
             </div>
@@ -145,7 +145,7 @@ export function ResumeChat() {
         )}
         {error && (
           <div className="flex justify-center my-4">
-            <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-xl text-center max-w-[80%] border border-destructive/20">
+            <div className="bg-destructive/10 text-destructive text-sm px-4 py-2 rounded-lg text-center max-w-[80%] border border-destructive/20">
               حدث خطأ أثناء الاتصال: {error.message || 'يرجى التأكد من مفتاح الذكاء الاصطناعي'}
             </div>
           </div>

@@ -45,12 +45,12 @@ export default async function CompanyAnalyticsPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               فرص التدريب النشطة
             </span>
-            <div className="h-9 w-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
+            <div className="h-9 w-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600">
               <Briefcase className="h-5 w-5" />
             </div>
           </div>
@@ -63,12 +63,12 @@ export default async function CompanyAnalyticsPage() {
         </div>
 
         {/* Card 2 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               إجمالي طلبات التقديم
             </span>
-            <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600">
+            <div className="h-9 w-9 rounded-lg bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-blue-600">
               <Users className="h-5 w-5" />
             </div>
           </div>
@@ -81,12 +81,12 @@ export default async function CompanyAnalyticsPage() {
         </div>
 
         {/* Card 3 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               نسبة القبول العامة
             </span>
-            <div className="h-9 w-9 rounded-xl bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
+            <div className="h-9 w-9 rounded-lg bg-purple-50 dark:bg-purple-950/50 flex items-center justify-center text-purple-600">
               <CheckCircle2 className="h-5 w-5" />
             </div>
           </div>
@@ -101,12 +101,12 @@ export default async function CompanyAnalyticsPage() {
         </div>
 
         {/* Card 4 */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               متوسط وقت المراجعة
             </span>
-            <div className="h-9 w-9 rounded-xl bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-amber-600">
+            <div className="h-9 w-9 rounded-lg bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center text-amber-600">
               <Clock className="h-5 w-5" />
             </div>
           </div>
@@ -123,7 +123,7 @@ export default async function CompanyAnalyticsPage() {
       </div>
 
       {/* Recruitment Funnel */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2">
@@ -137,7 +137,7 @@ export default async function CompanyAnalyticsPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-6">
-          <div className="p-4 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-center">
+          <div className="p-4 rounded-lg bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-center">
             <div className="text-xs text-amber-800 dark:text-amber-400 font-semibold mb-1">
               قيد المراجعة (Pending)
             </div>
@@ -151,7 +151,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 text-center">
+          <div className="p-4 rounded-lg bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 text-center">
             <div className="text-xs text-blue-800 dark:text-blue-400 font-semibold mb-1">
               تمت المراجعة (Reviewed)
             </div>
@@ -165,7 +165,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 text-center">
+          <div className="p-4 rounded-lg bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 text-center">
             <div className="text-xs text-emerald-800 dark:text-emerald-400 font-semibold mb-1">
               مقبول (Accepted)
             </div>
@@ -179,7 +179,7 @@ export default async function CompanyAnalyticsPage() {
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-center">
+          <div className="p-4 rounded-lg bg-rose-50/70 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/40 text-center">
             <div className="text-xs text-rose-800 dark:text-rose-400 font-semibold mb-1">
               مرفوض (Rejected)
             </div>
@@ -198,7 +198,7 @@ export default async function CompanyAnalyticsPage() {
       {/* Internships Performance Table & Skills Demanded */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Internships Performance Table (2 cols) */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Eye className="h-5 w-5 text-blue-600" />
             أداء فرص التدريب ومعدلات التحويل
@@ -250,7 +250,7 @@ export default async function CompanyAnalyticsPage() {
         </div>
 
         {/* Demanded Skills (1 col) */}
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+        <div className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
           <h2 className="text-lg font-bold text-slate-900 dark:text-foreground flex items-center gap-2 mb-1">
             <Award className="h-5 w-5 text-purple-600" />
             المهارات الأكثر طلباً في إعلاناتك
@@ -268,7 +268,7 @@ export default async function CompanyAnalyticsPage() {
               metrics.topSkills.map((s) => (
                 <div
                   key={s.name}
-                  className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40"
+                  className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40"
                 >
                   <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
                     {s.name}

@@ -50,7 +50,7 @@ export default function CompanyPortalLayout({
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-slate-900 border-l border-emerald-100 dark:border-slate-800 shadow-sm">
         <div className="p-6 flex items-center gap-3 border-b border-emerald-50 dark:border-slate-800">
-          <div className="h-10 w-10 rounded-xl bg-emerald-600 text-foreground flex items-center justify-center text-xl shadow-md shadow-emerald-600/20">
+          <div className="h-10 w-10 rounded-lg bg-emerald-600 text-foreground flex items-center justify-center text-xl shadow-md shadow-emerald-600/20">
             🏢
           </div>
           <div>
@@ -67,7 +67,7 @@ export default function CompanyPortalLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   isActive
                     ? "bg-emerald-600 text-foreground shadow-sm shadow-emerald-600/30 font-semibold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-emerald-50/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
@@ -84,7 +84,7 @@ export default function CompanyPortalLayout({
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/40 dark:text-red-400 rounded-xl transition-colors border border-red-200 dark:border-red-900/50"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/40 dark:text-red-400 rounded-lg transition-colors border border-red-200 dark:border-red-900/50"
           >
             <LogOut className="h-3.5 w-3.5" />
             <span>{loggingOut ? "جاري الخروج..." : "تسجيل الخروج"}</span>

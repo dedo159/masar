@@ -70,17 +70,17 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
 
       <div className="px-4 py-5 space-y-5 max-w-4xl mx-auto">
         {/* Main User Profile Card */}
-        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm transition-all">
+        <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <Avatar className="h-20 w-20 rounded-2xl border-2 border-border bg-muted flex-shrink-0">
+            <Avatar className="h-20 w-20 rounded-lg border border-border bg-muted flex-shrink-0">
               {student.avatar && (
                 <AvatarImage
                   src={student.avatar}
                   alt={student.name}
-                  className="rounded-2xl object-cover"
+                  className="rounded-lg object-cover"
                 />
               )}
-              <AvatarFallback className="rounded-2xl text-xl font-bold bg-primary/10 text-primary">
+              <AvatarFallback className="rounded-lg text-xl font-bold bg-primary/10 text-primary">
                 {displayInitials}
               </AvatarFallback>
             </Avatar>
@@ -127,7 +127,7 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
         />
 
         {/* Moodle Integration Card */}
-        <div className="rounded-xl border border-border bg-card p-5 space-y-3 shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="rounded-lg border border-border bg-card p-5 space-y-3 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="h-9 w-9 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-600 dark:text-orange-400">
@@ -170,7 +170,7 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
         <CertificatesSection certificates={student.certificates || []} />
 
         {/* Account Quick Links */}
-        <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden mt-6 shadow-sm">
+        <div className="rounded-lg border border-border bg-card divide-y divide-border overflow-hidden mt-6 shadow-sm">
           <Link
             href="/resume-builder"
             className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary active:bg-muted/80 transition-all duration-200"
