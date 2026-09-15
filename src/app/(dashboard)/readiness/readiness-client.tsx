@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, Briefcase, Code, GitBranch, ShieldCheck, AlertTriangle, ArrowUpRight, Loader2, CheckCircle2, TrendingUp } from "lucide-react";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export function ReadinessClient() {
+    const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(true);
   const [profile, setProfile] = useState<any>(null);
@@ -17,7 +19,7 @@ export function ReadinessClient() {
   const [targetRole, setTargetRole] = useState("Frontend Developer");
   const [githubLanguages, setGithubLanguages] = useState("TypeScript, React, Tailwind CSS");
   const [githubReposCount, setGithubReposCount] = useState("12");
-  const [topProjects, setTopProjects] = useState("منصة تجارة إلكترونية متكاملة، وتطبيق لإدارة المهام باستخدام Next.js");
+  const [topProjects, setTopProjects] = useState(t.readinessclient.key_s1yrnd);
 
   const [result, setResult] = useState<any>(null);
 
@@ -37,8 +39,8 @@ export function ReadinessClient() {
     try {
       // Mocking completed courses based on profile if available, otherwise fallback
       const completedCourses = profile?.completedCredits > 0 
-        ? "مقدمة في البرمجة، هياكل البيانات، هندسة البرمجيات، قواعد البيانات"
-        : "لا يوجد מסاقات مسجلة";
+        ? t.readinessclient.key_kgt7q3
+        : t.readinessclient.key_kt4wl5;
       
       const payload = {
         target_role: targetRole,
@@ -77,8 +79,8 @@ export function ReadinessClient() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="التدقيق المهني الذكي" />
-      <p className="text-[#666666] text-sm mt-2">قيم جاهزيتك الفعلية لسوق العمل واكتشف الفجوات المهارية بدقة، مدعوماً بالذكاء الاصطناعي.</p>
+      <PageHeader title={t.readinessclient.key_toyy3w} />
+      <p className="text-[#666666] text-sm mt-2">{t.readinessclient.key_mjhxrk}</p>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
@@ -88,48 +90,46 @@ export function ReadinessClient() {
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-[#0070f3]" />
-                بيانات التقييم
-              </CardTitle>
+                {t.readinessclient.key_t1qqxv}</CardTitle>
               <CardDescription>
-                أدخل مسارك المهني وبياناتك التقنية ليبدأ التدقيق.
-              </CardDescription>
+                {t.readinessclient.key_xvxtxz}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">المسمى الوظيفي المستهدف</label>
+                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_ywqfcx}</label>
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
                   className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-[#fafafa] px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
-                  <option value="Software Engineer">مهندس برمجيات (Software Engineer)</option>
-                    <option value="Frontend Developer">مطور واجهات أمامية (Frontend Developer)</option>
-                  <option value="Backend Developer">مطور أنظمة خلفية (Backend Developer)</option>
-                  <option value="Full Stack Developer">مطور ويب شامل (Full Stack Developer)</option>
-                  <option value="Mobile App Developer">مطور تطبيقات هواتف (Mobile App Developer)</option>
-                  <option value="UI/UX Designer">مصمم واجهات وتجربة المستخدم (UI/UX Designer)</option>
-                  <option value="Data Analyst">محلل بيانات (Data Analyst)</option>
-                  <option value="Data Scientist">عالم بيانات (Data Scientist)</option>
-                  <option value="DevOps Engineer">مهندس عمليات تطوير (DevOps Engineer)</option>
-                  <option value="Cybersecurity Analyst">محلل أمن سيبراني (Cybersecurity Analyst)</option>
-                  <option value="AI/Machine Learning Engineer">مهندس ذكاء اصطناعي (AI/ML Engineer)</option>
-                  <option value="Systems Analyst">محلل نظم (Systems Analyst)</option>
-                  <option value="Cloud Architect">مهندس حوسبة سحابية (Cloud Architect)</option>
+                  <option value="Software Engineer">{t.readinessclient.key_oc39qi}</option>
+                    <option value="Frontend Developer">{t.readinessclient.key_dxblft}</option>
+                  <option value="Backend Developer">{t.readinessclient.key_iwjtu4}</option>
+                  <option value="Full Stack Developer">{t.readinessclient.key_sxnr1z}</option>
+                  <option value="Mobile App Developer">{t.readinessclient.key_ret7r9}</option>
+                  <option value="UI/UX Designer">{t.readinessclient.key_4qr617}</option>
+                  <option value="Data Analyst">{t.readinessclient.key_1puped}</option>
+                  <option value="Data Scientist">{t.readinessclient.key_v07ldw}</option>
+                  <option value="DevOps Engineer">{t.readinessclient.key_wo3szo}</option>
+                  <option value="Cybersecurity Analyst">{t.readinessclient.key_czkscp}</option>
+                  <option value="AI/Machine Learning Engineer">{t.readinessclient.key_tgrs1e}</option>
+                  <option value="Systems Analyst">{t.readinessclient.key_7glvz5}</option>
+                  <option value="Cloud Architect">{t.readinessclient.key_gosnwx}</option>
                 </select>
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">لغات وتقنيات GitHub</label>
+                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_3ux84x}</label>
                 <Input 
                   value={githubLanguages} 
                   onChange={(e) => setGithubLanguages(e.target.value)} 
-                  placeholder="مثال: Python, Django, PostgreSQL"
+                  placeholder={t.readinessclient.key_4srqlt}
                   className="bg-[#fafafa]"
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">عدد المستودعات العامة (Repos)</label>
+                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_kqgzve}</label>
                 <Input 
                   type="number"
                   value={githubReposCount} 
@@ -139,12 +139,12 @@ export function ReadinessClient() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#666666]">ملخص لأبرز مشاريعك</label>
+                <label className="text-sm font-medium text-[#666666]">{t.readinessclient.key_mlp3m9}</label>
                 <textarea 
                   value={topProjects} 
                   onChange={(e) => setTopProjects(e.target.value)} 
                   className="w-full rounded-md border border-input bg-[#fafafa] px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[100px]"
-                  placeholder="اكتب نبذة عن مشاريعك البرمجية الفعلية..."
+                  placeholder={t.readinessclient.key_733los}
                 />
               </div>
             </CardContent>
@@ -157,13 +157,11 @@ export function ReadinessClient() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    جاري التدقيق...
-                  </>
+                    {t.readinessclient.key_sfodt2}</>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2 ml-2" />
-                    بدء التدقيق الصارم
-                  </>
+                    {t.readinessclient.key_18c4so}</>
                 )}
               </Button>
             </CardFooter>
@@ -175,10 +173,9 @@ export function ReadinessClient() {
           {!result && !loading && (
             <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-[#fafafa]/50 border-border">
               <ShieldCheck className="w-16 h-16 text-[#666666]/30 mb-4" />
-              <h3 className="text-lg font-medium text-[#171717]">في انتظار البيانات</h3>
+              <h3 className="text-lg font-medium text-[#171717]">{t.readinessclient.key_uietee}</h3>
               <p className="text-sm text-[#666666] max-w-sm mt-2">
-                قم بتعبئة النموذج واضغط على "بدء التدقيق" للحصول على تحليل تفصيلي لمدى جاهزيتك لسوق العمل.
-              </p>
+                {t.readinessclient.key_nb66j7}</p>
             </div>
           )}
 
@@ -188,10 +185,9 @@ export function ReadinessClient() {
                 <div className="absolute -inset-4 bg-[#0070f3]/20 rounded-full blur-xl animate-pulse" />
                 <Loader2 className="w-12 h-12 text-[#0070f3] animate-spin relative z-10" />
               </div>
-              <h3 className="text-lg font-medium text-[#171717] mt-6">يتم تحليل السجل والمشاريع...</h3>
+              <h3 className="text-lg font-medium text-[#171717] mt-6">{t.readinessclient.key_rsmy05}</h3>
               <p className="text-sm text-[#666666] mt-2">
-                نطابق مهاراتك مع متطلبات سوق العمل الحالية
-              </p>
+                {t.readinessclient.key_hbomh7}</p>
             </div>
           )}
 
@@ -203,7 +199,7 @@ export function ReadinessClient() {
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
-                      <p className="text-sm font-medium text-[#666666] mb-1">مؤشر الجاهزية الكلي</p>
+                      <p className="text-sm font-medium text-[#666666] mb-1">{t.readinessclient.key_52yk5p}</p>
                       <h2 className="text-3xl font-bold text-[#171717] flex items-center gap-3">
                         <span className={getScoreColor(result.readiness_score)}>
                           {result.readiness_score}%
@@ -227,8 +223,7 @@ export function ReadinessClient() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    المهارات المعتمدة عملياً
-                  </CardTitle>
+                    {t.readinessclient.key_eys6lg}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
@@ -246,8 +241,7 @@ export function ReadinessClient() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 text-[#ff5b4f]" />
-                    الفجوات الحرجة (Critical Gaps)
-                  </CardTitle>
+                    {t.readinessclient.key_75megy}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {result.critical_gaps.map((gap: any, i: number) => (
@@ -271,8 +265,7 @@ export function ReadinessClient() {
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center gap-2">
                     <ArrowUpRight className="w-4 h-4 text-[#0070f3]" />
-                    الخطوة القادمة المقترحة
-                  </CardTitle>
+                    {t.readinessclient.key_n3bmys}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="p-4 rounded-lg bg-white border border-blue-100 shadow-sm">
@@ -281,7 +274,7 @@ export function ReadinessClient() {
                     </p>
                     <div className="mt-4 flex items-center gap-2 text-sm text-[#0070f3] font-semibold bg-blue-50 w-fit px-3 py-1 rounded-full">
                       <TrendingUp className="w-4 h-4" />
-                      الأثر المتوقع: {result.actionable_next_step.project_impact}
+                      {t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}
                     </div>
                   </div>
                 </CardContent>
