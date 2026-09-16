@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Language, translations, TranslationSchema } from "@/lib/translations";
@@ -18,7 +18,7 @@ export function LanguageProvider({ children, initialLanguage = "ar" }: { childre
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    // setMounted(true); moved to end of effect
     try {
       const saved = localStorage.getItem("masar_lang") as Language;
       if (saved === "ar" || saved === "en") {
@@ -66,3 +66,4 @@ export function useLanguage() {
   }
   return context;
 }
+
