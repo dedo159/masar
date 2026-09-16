@@ -52,9 +52,13 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
           <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-4 text-foreground shadow-lg">
             <CalendarDays className="h-6 w-6 fill-white/20" strokeWidth={2} />
           </div>
-          <p className="text-base font-bold text-foreground">{t.dashboard.noClassesToday}</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-5 font-medium">
-            {t.dashboard.noClassesDesc}
+          <p className="text-base font-bold text-foreground">
+            {language === "en" ? "Semester Ended · No Classes Today 🎉" : "انتهى الفصل الدراسي · لا توجد محاضرات اليوم 🎉"}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-5 font-medium leading-relaxed">
+            {language === "en"
+              ? "All courses for this semester have concluded. Best wishes on your final exams and break!"
+              : "انتهت كافة محاضرات هذا الفصل الدراسي. نتمنى لك التوفيق في الامتحانات النهائية وإجازة سعيدة!"}
           </p>
           <Link
             href="/courses"
