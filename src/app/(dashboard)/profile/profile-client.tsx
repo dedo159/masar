@@ -12,7 +12,6 @@ import {
   Link as LinkIcon,
   CheckCircle2,
   Settings,
-  LogOut,
   ChevronLeft,
   ChevronRight,
   Award,
@@ -206,24 +205,6 @@ const { t, isRtl, language } = useLanguage();
             </div>
             <Chevron className="h-4 w-4 text-muted-foreground" />
           </Link>
-
-          <a
-            href={`/api/student/auth/logout?t=${Date.now()}`}
-            className="flex items-center justify-between p-4 min-h-[56px] hover:bg-destructive/10 transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive">
-                <LogOut className="h-4 w-4" strokeWidth={1.5} />
-              </div>
-              <div className="text-start">
-                <p className="text-sm font-medium text-destructive">{t.profile.logoutLink}</p>
-                <p className="text-xs text-muted-foreground">
-                  {t.profile.logoutDesc}
-                </p>
-              </div>
-            </div>
-            <Chevron className="h-4 w-4 text-muted-foreground group-hover:text-destructive transition-colors" />
-          </a>
         </div>
       </div>
     </>

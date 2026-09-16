@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useState, useEffect } from "react";
 
 import Link from "next/link";
@@ -56,17 +56,26 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         </div>
         
         <div className="flex items-center gap-2">
-          {studentId && calendarHref && (
-            <a
-              href={calendarHref}
-              target="_top"
-              
-              className="flex items-center gap-1.5 text-[11px] font-bold text-foreground bg-muted hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors border border-border"
-              title="ظ…ط²ط§ظ…ظ†ط© ط§ظ„ط¬ط¯ظˆظ„ ط§ظ„ط¯ط±ط§ط³ظٹ ظ…ط¹ ط§ظ„طھظ‚ظˆظٹظ… ط§ظ„ط®ط§طµ ط¨ظƒ"
-            >
-              <span>ظ…ط²ط§ظ…ظ†ط© ط§ظ„طھظ‚ظˆظٹظ…</span>
-            </a>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              if (studentId) {
+                window.location.href = `/api/calendar/${studentId}`;
+              } else {
+                fetch('/api/students/me')
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data?.id) window.location.href = `/api/calendar/${data.id}`;
+                  })
+                  .catch(() => {});
+              }
+            }}
+            className="flex items-center gap-1.5 text-[11px] font-bold text-foreground bg-muted hover:bg-muted/80 active:scale-95 px-3 py-1.5 rounded-full transition-all border border-border cursor-pointer"
+            title="مزامنة الجدول الدراسي مع التقويم الخاص بك"
+          >
+            <CalendarDays className="h-3.5 w-3.5" />
+            <span>مزامنة التقويم</span>
+          </button>
           <span className="text-xs text-foreground font-bold bg-[#0a72ef] text-white px-3 py-1 rounded-full shadow-md">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
           </span>
