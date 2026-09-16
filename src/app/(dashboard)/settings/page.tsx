@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
@@ -102,9 +102,10 @@ export default function SettingsPage() {
   const [notifications, setNotifications] = useState(true);
   const [deadlineAlerts, setDeadlineAlerts] = useState(true);
   const [gradeAlerts, setGradeAlerts] = useState(true);
-  const [googleCalendarConnected, setGoogleCalendarConnected] = useState(true);
+  const [googleCalendarConnected, setGoogleCalendarConnected] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [studentId, setStudentId] = useState<string | null>(null);
 
   const [studentName, setStudentName] = useState<string>(t.settings.defaultStudentName);
   const [studentMeta, setStudentMeta] = useState<string>(t.settings.defaultStudentMeta);
@@ -117,6 +118,12 @@ export default function SettingsPage() {
       if (storedName) setStudentName(storedName);
       if (storedMajor) setStudentMeta(storedMajor);
     }
+    
+    // Fetch student ID for calendar sync
+    fetch("/api/students/me")
+      .then(r => r.json())
+      .then(d => { if (d.id) setStudentId(d.id); })
+      .catch(() => {});
   }, [t]);
 
   const displayName = translateStudentName(studentName, language);
@@ -309,8 +316,14 @@ export default function SettingsPage() {
                 <Button
                   variant="default"
                   size="sm"
+                  disabled={!studentId}
                   className="min-h-[44px] text-xs px-4 active:scale-95 transition-transform"
-                  onClick={() => setGoogleCalendarConnected(true)}
+                  onClick={() => {
+                    if (studentId) {
+                      window.location.href = `/api/calendar/${studentId}`;
+                      setGoogleCalendarConnected(true);
+                    }
+                  }}
                 >
                   {t.settings.linkBtn}
                 </Button>
