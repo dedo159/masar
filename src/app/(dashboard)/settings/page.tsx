@@ -293,11 +293,18 @@ export default function SettingsPage() {
                 <Button
                   variant="default"
                   size="sm"
-                  disabled={!studentId}
                   className="min-h-[44px] text-xs px-4 active:scale-95 transition-transform"
-                  onClick={() => {
-                    if (studentId) {
-                      window.location.href = `/api/calendar/${studentId}`;
+                  onClick={async () => {
+                    let targetId = studentId;
+                    if (!targetId) {
+                      try {
+                        const res = await fetch("/api/students/me");
+                        const data = await res.json();
+                        if (data?.id) targetId = data.id;
+                      } catch {}
+                    }
+                    if (targetId) {
+                      window.location.href = `/api/calendar/${targetId}`;
                       setGoogleCalendarConnected(true);
                     }
                   }}
