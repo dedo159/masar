@@ -1,4 +1,4 @@
-const CACHE_NAME = "masar-v2";
+﻿const CACHE_NAME = "masar-v2";
 const STATIC_ASSETS = ["/", "/courses", "/internships", "/profile", "/settings"];
 
 self.addEventListener("install", (event) => {
@@ -25,6 +25,7 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  if (event.request.url.includes("/api/")) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {
@@ -78,3 +79,4 @@ self.addEventListener("notificationclick", (event) => {
     })
   );
 });
+
