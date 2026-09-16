@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { PageHeader } from "@/components/layout/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -207,8 +207,8 @@ const { t, isRtl, language } = useLanguage();
             <Chevron className="h-4 w-4 text-muted-foreground" />
           </Link>
 
-          <Link
-            href="/login"
+          <a
+            href={`/api/student/auth/logout?t=${Date.now()}`}
             className="flex items-center justify-between p-4 min-h-[56px] hover:bg-destructive/10 transition-colors group"
           >
             <div className="flex items-center gap-3">
@@ -223,7 +223,7 @@ const { t, isRtl, language } = useLanguage();
               </div>
             </div>
             <Chevron className="h-4 w-4 text-muted-foreground group-hover:text-destructive transition-colors" />
-          </Link>
+          </a>
         </div>
       </div>
     </>
