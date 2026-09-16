@@ -381,7 +381,7 @@ export default function SettingsPage() {
                 localStorage.removeItem("masar_user_name");
                 localStorage.removeItem("masar_user_major"); document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
               }
-              window.location.href = "/api/student/auth/logout";
+              window.location.href = "/api/student/auth/logout?t=" + Date.now();
             }}
           />
         </div>
@@ -389,6 +389,7 @@ export default function SettingsPage() {
     </>
   );
 }
+
 
 
 
