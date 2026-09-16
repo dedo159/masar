@@ -19,24 +19,8 @@ interface TodayScheduleClientProps {
   studentId?: string;
 }
 
-export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleClientProps) {
+export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) {
   const { t, isRtl, language } = useLanguage();
-  const [calendarHref, setCalendarHref] = useState<string>("");
-
-  useEffect(() => {
-    if (studentId) {
-      const absoluteUrl = "https://" + window.location.host + "/api/calendar/" + studentId;
-      const ua = navigator.userAgent.toLowerCase();
-      
-      if (ua.includes("android")) {
-        setCalendarHref("intent://calendar.google.com/calendar/render?cid=" + encodeURIComponent(absoluteUrl) + "#Intent;scheme=https;package=com.google.android.calendar;end");
-      } else if (ua.includes("iphone") || ua.includes("ipad") || ua.includes("ipod")) {
-        setCalendarHref("webcal://" + window.location.host + "/api/calendar/" + studentId);
-      } else {
-        setCalendarHref("https://calendar.google.com/calendar/render?cid=" + encodeURIComponent(absoluteUrl));
-      }
-    }
-  }, [studentId]);
 
   const hasClasses = todayClasses.length > 0;
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
@@ -56,26 +40,6 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
         </div>
         
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              if (studentId) {
-                window.location.href = `/api/calendar/${studentId}`;
-              } else {
-                fetch('/api/students/me')
-                  .then(res => res.json())
-                  .then(data => {
-                    if (data?.id) window.location.href = `/api/calendar/${data.id}`;
-                  })
-                  .catch(() => {});
-              }
-            }}
-            className="flex items-center gap-1.5 text-[11px] font-bold text-foreground bg-muted hover:bg-muted/80 active:scale-95 px-3 py-1.5 rounded-full transition-all border border-border cursor-pointer"
-            title="مزامنة الجدول الدراسي مع التقويم الخاص بك"
-          >
-            <CalendarDays className="h-3.5 w-3.5" />
-            <span>مزامنة التقويم</span>
-          </button>
           <span className="text-xs text-foreground font-bold bg-[#0a72ef] text-white px-3 py-1 rounded-full shadow-md">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
           </span>
