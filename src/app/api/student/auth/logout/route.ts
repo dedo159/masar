@@ -5,10 +5,7 @@ import { cookies } from 'next/headers';
 export async function POST() {
   const cookieStore = await cookies();
   cookieStore.delete('masar_session');
-  
-  const response = NextResponse.json({ success: true });
-  response.cookies.delete('masar_session');
-  return response;
+  return NextResponse.json({ success: true });
 }
 
 export async function GET(request: Request) {
@@ -19,14 +16,29 @@ export async function GET(request: Request) {
     <!DOCTYPE html>
     <html>
       <head>
-        <meta http-equiv="refresh" content="0; url=/login" />
         <title>Logging out...</title>
       </head>
       <body>
+        <p>Logging out, please wait...</p>
         <script>
+          // Nuke client caches and storage
+          localStorage.clear();
+          sessionStorage.clear();
           document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-          localStorage.removeItem("masar_logged_in");
-          window.location.href = "/login";
+          document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + window.location.hostname + ";";
+          
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              for(let registration of registrations) {
+                registration.unregister();
+              }
+            });
+          }
+
+          // Delay navigation slightly to ensure browser persists the Set-Cookie headers
+          setTimeout(function() {
+            window.location.href = "/login";
+          }, 300);
         </script>
       </body>
     </html>
@@ -35,6 +47,10 @@ export async function GET(request: Request) {
     status: 200,
     headers: { 'Content-Type': 'text/html' }
   });
-  response.cookies.delete('masar_session');
+  
+  // Set multiple deletion variants to catch all domains/secure states
+  response.headers.append('Set-Cookie', 'masar_session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax');
+  response.headers.append('Set-Cookie', 'masar_session=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax');
+  
   return response;
 }
