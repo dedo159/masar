@@ -60,9 +60,7 @@ export default async function RootLayout({
             {children}
           </LanguageProvider>
         </ThemeProvider>
-      <script
-  dangerouslySetInnerHTML={{
-    __html: 
+      <script dangerouslySetInnerHTML={{ __html: `
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for(let registration of registrations) {
@@ -73,9 +71,7 @@ export default async function RootLayout({
           for (let name of names) caches.delete(name);
         });
       }
-    
-  }}
-/>
+    ` }} />
       </body>
     </html>
   );
