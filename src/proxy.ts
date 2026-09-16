@@ -8,7 +8,7 @@ export async function proxy(request: NextRequest) {
   // ================================================
   // 1. ط­ظ…ط§ظٹط© طµظپط­ط© ظˆظ…ط³ط§ط±ط§طھ ط§ط®طھط¨ط§ط± ظ…ظˆظˆط¯ظ„ (Basic Auth)
   // ================================================
-  if (pathname.startsWith("/moodle-test") || pathname.startsWith("/api/moodle-test")) {
+  if (pathname.startsWith("/moodle-test") || (pathname.startsWith("/api/moodle-test") && !pathname.startsWith("/api/moodle-test/connect"))) {
     if (process.env.MOODLE_TEST_ENABLED === "false") {
       return new NextResponse("Not Found", { status: 404 });
     }
@@ -203,4 +203,5 @@ export const config = {
     "/settings/:path*"
   ],
 };
+
 
