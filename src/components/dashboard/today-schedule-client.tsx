@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect } from "react";
 
 import Link from "next/link";
@@ -59,12 +59,12 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
           {studentId && calendarHref && (
             <a
               href={calendarHref}
-              target="_blank"
-              rel="noopener noreferrer"
+              target="_top"
+              
               className="flex items-center gap-1.5 text-[11px] font-bold text-foreground bg-muted hover:bg-white/20 px-3 py-1.5 rounded-full transition-colors border border-border"
-              title="مزامنة الجدول الدراسي مع التقويم الخاص بك"
+              title="ظ…ط²ط§ظ…ظ†ط© ط§ظ„ط¬ط¯ظˆظ„ ط§ظ„ط¯ط±ط§ط³ظٹ ظ…ط¹ ط§ظ„طھظ‚ظˆظٹظ… ط§ظ„ط®ط§طµ ط¨ظƒ"
             >
-              <span>مزامنة التقويم</span>
+              <span>ظ…ط²ط§ظ…ظ†ط© ط§ظ„طھظ‚ظˆظٹظ…</span>
             </a>
           )}
           <span className="text-xs text-foreground font-bold bg-[#0a72ef] text-white px-3 py-1 rounded-full shadow-md">
@@ -123,7 +123,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
                         {displayName}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1 truncate font-medium">
-                        {cls.courseCode} · {instructorName}
+                        {cls.courseCode} آ· {instructorName}
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
@@ -137,7 +137,7 @@ export function TodayScheduleClient({ todayClasses, studentId }: TodayScheduleCl
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
                           </span>
-                          الآن
+                          ط§ظ„ط¢ظ†
                         </div>
                       ) : (
                         <div className="text-xs text-muted-foreground/60 mt-1 tabular-nums font-semibold">
