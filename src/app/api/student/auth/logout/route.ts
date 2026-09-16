@@ -2,7 +2,7 @@
 
 export async function POST() {
   const response = NextResponse.json({ success: true });
-  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/' });
+  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/', secure: true, sameSite: 'lax', httpOnly: true });
   return response;
 }
 
@@ -27,6 +27,6 @@ export async function GET(request: Request) {
     status: 200,
     headers: { 'Content-Type': 'text/html' }
   });
-  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/' });
+  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/', secure: true, sameSite: 'lax', httpOnly: true });
   return response;
 }
