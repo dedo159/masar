@@ -117,6 +117,8 @@ export default function SettingsPage() {
       const storedMajor = localStorage.getItem("masar_user_major");
       if (storedName) setStudentName(storedName);
       if (storedMajor) setStudentMeta(storedMajor);
+      const calConnected = localStorage.getItem("masar_google_calendar_connected");
+      if (calConnected === "true") setGoogleCalendarConnected(true);
     }
     
     // Fetch student ID for calendar sync
@@ -283,8 +285,13 @@ export default function SettingsPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="min-h-[44px] text-xs px-3 active:scale-95 transition-transform"
-                    onClick={() => setGoogleCalendarConnected(false)}
+                    className="min-h-[44px] text-xs px-3 active:scale-95 transition-transform cursor-pointer"
+                    onClick={() => {
+                      setGoogleCalendarConnected(false);
+                      if (typeof window !== "undefined") {
+                        localStorage.removeItem("masar_google_calendar_connected");
+                      }
+                    }}
                   >
                     {t.settings.unlinkBtn}
                   </Button>
@@ -293,7 +300,7 @@ export default function SettingsPage() {
                 <Button
                   variant="default"
                   size="sm"
-                  className="min-h-[44px] text-xs px-4 active:scale-95 transition-transform"
+                  className="min-h-[44px] text-xs px-4 active:scale-95 transition-transform cursor-pointer"
                   onClick={async () => {
                     let targetId = studentId;
                     if (!targetId) {
@@ -303,9 +310,21 @@ export default function SettingsPage() {
                         if (data?.id) targetId = data.id;
                       } catch {}
                     }
-                    if (targetId) {
-                      window.location.href = `/api/calendar/${targetId}`;
-                      setGoogleCalendarConnected(true);
+
+                    const calId = targetId || "s-001";
+                    const feedUrl = `https://${window.location.host}/api/calendar/${calId}`;
+                    const googleUrl = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(feedUrl)}`;
+
+                    // 1. Mark as connected & save permanently
+                    setGoogleCalendarConnected(true);
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("masar_google_calendar_connected", "true");
+                    }
+
+                    // 2. Open Google Calendar in new tab/app, fallback to downloading .ics
+                    const win = window.open(googleUrl, "_blank");
+                    if (!win) {
+                      window.location.href = `/api/calendar/${calId}`;
                     }
                   }}
                 >
