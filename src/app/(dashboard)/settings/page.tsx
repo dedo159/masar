@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { PageHeader } from "@/components/layout/page-header";
@@ -381,7 +381,7 @@ export default function SettingsPage() {
               if (typeof window !== "undefined") {
                 localStorage.removeItem("masar_logged_in");
                 localStorage.removeItem("masar_user_name");
-                localStorage.removeItem("masar_user_major");
+                localStorage.removeItem("masar_user_major"); document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
               }
               window.location.href = "/login";
             }}
@@ -391,4 +391,5 @@ export default function SettingsPage() {
     </>
   );
 }
+
 
