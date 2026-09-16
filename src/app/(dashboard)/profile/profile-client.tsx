@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Award,
-  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { ProfileEditor } from "@/components/profile/profile-editor";
@@ -169,25 +168,7 @@ const { t, isRtl, language } = useLanguage();
         <CertificatesSection certificates={student.certificates || []} />
 
         {/* Account Quick Links */}
-        <div className="rounded-lg border border-border bg-card divide-y divide-border overflow-hidden mt-6 shadow-sm">
-          <Link
-            href="/resume-builder"
-            className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary active:bg-muted/80 transition-all duration-200"
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                <Sparkles className="h-4 w-4" strokeWidth={1.5} />
-              </div>
-              <div className="text-start">
-                <p className="text-sm font-medium text-foreground">{isRtl ? t.appdashboardprofileprofileclienttsx.text_04bl : "AI Resume Builder"}</p>
-                <p className="text-xs text-muted-foreground">
-                  {isRtl ? t.appdashboardprofileprofileclienttsx.text_y7o3 : "Build an ATS-friendly resume with AI assistance"}
-                </p>
-              </div>
-            </div>
-            <Chevron className="h-4 w-4 text-muted-foreground" />
-          </Link>
-
+        <div className="rounded-lg border border-border bg-card overflow-hidden mt-6 shadow-sm">
           <Link
             href="/settings"
             className="flex items-center justify-between p-4 min-h-[56px] hover:bg-secondary transition-colors"
