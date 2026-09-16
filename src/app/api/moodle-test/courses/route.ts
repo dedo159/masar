@@ -154,7 +154,85 @@ export async function GET() {
       );
     }
 
-    // 6. تحديث وقت المزامنة الأخير وحالة النجاح
+    // 6. جلب أحداث التقويم وفحص موعد الامتحانات النهائية وتصفير الفصل إذا بدأ
+    let semesterEnded = false;
+    let finalExamDateStr: string | null = null;
+    let resetMessage = "";
+
+    try {
+      const nowTs = Math.floor(Date.now() / 1000);
+      const calendarUrl = `${baseUrl}/webservice/rest/server.php?wstoken=${encodeURIComponent(
+        token
+      )}&wsfunction=core_calendar_get_calendar_events&moodlewsrestformat=json&events[timestart]=${nowTs - 86400 * 30}`;
+
+      const calRes = await fetch(calendarUrl);
+      if (calRes.ok) {
+        const calData = await calRes.json();
+        const events: any[] = Array.isArray(calData?.events) ? calData.events : [];
+
+        // ابحث عن أول امتحان نهائي (Exam / Final Exam / امتحان نهائي)
+        const finalExams = events.filter((ev) => {
+          const name = (ev.name || "").toLowerCase();
+          const desc = (ev.description || "").toLowerCase();
+          const eventType = (ev.eventtype || "").toLowerCase();
+          return (
+            name.includes("نهائي") ||
+            name.includes("final") ||
+            desc.includes("نهائي") ||
+            desc.includes("final") ||
+            eventType.includes("exam")
+          );
+        });
+
+        if (finalExams.length > 0) {
+          finalExams.sort((a, b) => (a.timestart || 0) - (b.timestart || 0));
+          const earliestExamTs = finalExams[0].timestart * 1000;
+          finalExamDateStr = new Date(earliestExamTs).toLocaleDateString("ar-JO");
+
+          // إذا كان اليوم الحالي هو تاريخ أول امتحان نهائي أو بعده -> تصفر بيانات الفصل الحالي
+          if (Date.now() >= earliestExamTs) {
+            semesterEnded = true;
+
+            // تحديث حالة تسجيلات الطالب إلى مكتملة (completed) لإخفائها وتصفير الفصل
+            await prisma.enrollment.updateMany({
+              where: {
+                studentId: student.id,
+                status: "enrolled",
+              },
+              data: {
+                status: "completed",
+              },
+            });
+
+            // إضافة إشعار رسمي للطالب بانتهاء الفصل الدراسي
+            const existingNotification = await prisma.notification.findFirst({
+              where: {
+                studentId: student.id,
+                title: { contains: "انتهاء الفصل الدراسي" },
+              },
+            });
+
+            if (!existingNotification) {
+              await prisma.notification.create({
+                data: {
+                  studentId: student.id,
+                  type: "announcement",
+                  title: "انتهاء الفصل الدراسي وبدء الامتحانات النهائية 🎓",
+                  body: "انتهى الفصل الدراسي الحالي مع حلول أول أيام الامتحانات النهائية. نتمنى لك دوام التوفيق والنجاح!",
+                  link: "/courses",
+                },
+              });
+            }
+
+            resetMessage = "تم رصد أول أيام الامتحانات النهائية وأرشفة مواد الفصل الحالي بنجاح.";
+          }
+        }
+      }
+    } catch (calErr) {
+      console.warn("Moodle calendar events check skipped or failed:", calErr);
+    }
+
+    // 7. تحديث وقت المزامنة الأخير وحالة النجاح
     await prisma.moodleConnection.update({
       where: { id: connection.id },
       data: {
@@ -163,12 +241,14 @@ export async function GET() {
       },
     });
 
-    // 7. إعادة البيانات الخام كما هي (Raw Data)
+    // 8. إعادة البيانات الخام كما هي (Raw Data)
     return NextResponse.json({
       success: true,
-      message: `تم جلب المواد الحقيقية بنجاح من Moodle (العدد: ${Array.isArray(rawCourses) ? rawCourses.length : 0}).`,
+      message: `تم جلب المواد الحقيقية بنجاح من Moodle (العدد: ${Array.isArray(rawCourses) ? rawCourses.length : 0}). ${resetMessage}`,
       moodleUserId: userId,
       moodleBaseUrl: baseUrl,
+      semesterEnded,
+      finalExamDate: finalExamDateStr,
       rawCourses,
     });
   } catch (error: any) {

@@ -31,12 +31,16 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
       <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
         {enrolledCourses.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border bg-card/60 text-center">
-            <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-3 text-foreground shadow-lg">
-              <BookOpen className="h-6 w-6 fill-white/20" strokeWidth={2} />
+            <div className="h-14 w-14 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 shadow-sm">
+              <BookOpen className="h-6 w-6" strokeWidth={2} />
             </div>
-            <h3 className="text-base font-bold text-foreground">{t.courses.emptyTitle}</h3>
-            <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-              {t.courses.emptyDesc}
+            <h3 className="text-base font-bold text-foreground">
+              {language === "en" ? "Semester Completed 🎉" : "انتهى الفصل الدراسي الحالي 🎉"}
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1.5 max-w-md leading-relaxed">
+              {language === "en"
+                ? "Current semester courses have been archived. Best of luck on your final exams and enjoy your break! New semester courses will appear upon enrollment."
+                : "تمت أرشفة مواد الفصل الحالي مع انطلاق الامتحانات النهائية. نتمنى لك التوفيق وإجازة سعيدة! ستظهر مواد الفصل الجديد فور تسجيلها وبدء دوامها."}
             </p>
             <Link
               href="/"
