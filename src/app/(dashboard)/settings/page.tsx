@@ -158,29 +158,6 @@ export default function SettingsPage() {
       />
 
       <div className="max-w-3xl mx-auto px-4 py-4 space-y-2">
-        {/* Account & Profile Summary */}
-        <SectionLabel>{t.settings.accountSection}</SectionLabel>
-        <div className="rounded-lg border border-border bg-card overflow-hidden divide-y divide-border shadow-sm transition-all">
-          <Link
-            href="/profile"
-            className="flex items-center justify-between p-4 min-h-[64px] hover:bg-secondary/40 active:bg-secondary/80 transition-all duration-200"
-          >
-            <div className="flex items-center gap-3">
-              <div className="h-11 w-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-base border border-primary/20">
-                {displayInitial}
-              </div>
-              <div className="text-start">
-                <p className="text-sm font-semibold text-foreground">{displayName}</p>
-                <p className="text-xs text-muted-foreground">{displayMeta}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 text-xs text-primary font-medium">
-              <span>{t.settings.editProfile}</span>
-              <Chevron className="h-4 w-4" />
-            </div>
-          </Link>
-        </div>
-
         {/* Moodle Sync Integration */}
         <SectionLabel>{t.settings.moodleSection}</SectionLabel>
         <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
