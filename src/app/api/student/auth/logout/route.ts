@@ -8,7 +8,7 @@ export async function POST() {
   return NextResponse.json({ success: true });
 }
 
-export async function GET(request) {
+export async function GET(request: Request) {
   const cookieStore = await cookies();
   cookieStore.delete('masar_session');
 
