@@ -375,15 +375,13 @@ export default function SettingsPage() {
             chevron={Chevron}
             destructive
             onClick={async () => {
-              try {
-                await fetch("/api/student/auth/logout", { method: "POST" });
-              } catch {}
+              
               if (typeof window !== "undefined") {
                 localStorage.removeItem("masar_logged_in");
                 localStorage.removeItem("masar_user_name");
                 localStorage.removeItem("masar_user_major"); document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
               }
-              window.location.href = "/login";
+              window.location.href = "/api/student/auth/logout";
             }}
           />
         </div>
@@ -391,5 +389,6 @@ export default function SettingsPage() {
     </>
   );
 }
+
 
 
