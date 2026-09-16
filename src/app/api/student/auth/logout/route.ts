@@ -1,4 +1,5 @@
-﻿import { NextResponse } from 'next/server';
+﻿export const dynamic = 'force-dynamic';
+import { NextResponse } from 'next/server';
 
 export async function POST() {
   const response = NextResponse.json({ success: true });
@@ -30,3 +31,4 @@ export async function GET(request: Request) {
   response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/', secure: true, sameSite: 'lax', httpOnly: true });
   return response;
 }
+
