@@ -99,8 +99,11 @@ export const getEnrolledCourses = cache(async (
   const resolvedId = await resolveCurrentStudentId(studentId);
   try {
     const enrollments = await prisma.enrollment.findMany({
-    where: { studentId: resolvedId },
-    include: {
+      where: { 
+        studentId: resolvedId,
+        status: "enrolled",
+      },
+      include: {
       course: {
         include: {
           assignments: {
