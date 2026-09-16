@@ -1,13 +1,20 @@
 ﻿export const dynamic = 'force-dynamic';
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export async function POST() {
+  const cookieStore = await cookies();
+  cookieStore.delete('masar_session');
+  
   const response = NextResponse.json({ success: true });
-  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/', secure: true, sameSite: 'lax', httpOnly: true });
+  response.cookies.delete('masar_session');
   return response;
 }
 
 export async function GET(request: Request) {
+  const cookieStore = await cookies();
+  cookieStore.delete('masar_session');
+
   const html = 
     <!DOCTYPE html>
     <html>
@@ -28,7 +35,6 @@ export async function GET(request: Request) {
     status: 200,
     headers: { 'Content-Type': 'text/html' }
   });
-  response.cookies.set('masar_session', '', { maxAge: 0, expires: new Date(0), path: '/', secure: true, sameSite: 'lax', httpOnly: true });
+  response.cookies.delete('masar_session');
   return response;
 }
-
