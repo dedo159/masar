@@ -654,42 +654,13 @@ export default function DealsPage() {
             </div>
             
             {/* Footer */}
-            <div className="p-4 border-t border-border bg-muted/20 relative z-10 flex items-center gap-3">
+            <div className="p-4 border-t border-border bg-muted/20 relative z-10 flex items-center justify-end">
               <Button 
-                className={`w-full font-bold h-11 text-xs active:scale-95 transition-transform cursor-pointer ${
-                  getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal)
-                    ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
-                    : ""
-                }`} 
-                onClick={() => handleRedeem(selectedDeal)}
-                disabled={
-                  redeemLoading || 
-                  redeemSuccess || 
-                  getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal)
-                }
+                variant="outline"
+                className="w-full font-medium h-10 text-xs border-border hover:bg-muted active:scale-95 transition-transform cursor-pointer" 
+                onClick={closeDialog}
               >
-                {redeemLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    <span>{t.deals.activating}</span>
-                  </>
-                ) : getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal) ? (
-                  <span className="flex items-center gap-1.5 text-rose-500 font-semibold">
-                    <span>استنفدت الحد الأقصى لاستخدام الكود ({getDealUsageLimit(selectedDeal)} / {getDealUsageLimit(selectedDeal)})</span>
-                  </span>
-                ) : redeemSuccess ? (
-                  <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                    <Check className="h-4 w-4" />
-                    <span>تم توثيق العرض للاستخدام ({getStudentUsedCount(selectedDeal.id)} من {getDealUsageLimit(selectedDeal)}) ✓</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1.5">
-                    <QrCode className="h-4 w-4" />
-                    <span>
-                      تأكيد جاهزية الكوبون والاستخدام الآن ({getStudentUsedCount(selectedDeal.id) + 1} من {getDealUsageLimit(selectedDeal)})
-                    </span>
-                  </span>
-                )}
+                {t.deals.close || "إغلاق"}
               </Button>
             </div>
           </div>
