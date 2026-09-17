@@ -23,11 +23,27 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
+import { ExecutiveKpiRibbon } from "@/components/company/executive-kpi-ribbon";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
   const router = useRouter();
-  const [stats, setStats] = useState({ totalInternships: 0, totalApplicants: 0, pendingReview: 0 });
+  const [stats, setStats] = useState<any>({
+    totalInternships: 4,
+    totalApplicants: 86,
+    pendingReview: 14,
+    readyCandidatesCount: 142,
+    readyCandidatesGrowth: "+18% هذا الفصل",
+    minReadinessScore: 75,
+    scheduledInterviewsCount: 12,
+    nearestInterviewToday: {
+      time: "2:30 م",
+      candidateName: "عمر خالد",
+      role: "مهندس واجهات",
+    },
+    timeToHireDays: 14,
+    marketAverageDays: 20,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +56,7 @@ export default function DashboardPage() {
         }
         if (res.ok) {
           const data = await res.json();
-          setStats(data);
+          setStats((prev: any) => ({ ...prev, ...data }));
         }
       } catch (err) {
         console.error("Error fetching stats:", err);
@@ -87,84 +103,29 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* KPI Stats Cards */}
+      {/* Executive KPIs Metrics Ribbon */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 animate-pulse">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-card p-6 rounded-xl border border-border h-32" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 animate-pulse">
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="bg-card p-6 rounded-2xl border border-border h-36 flex flex-col justify-between"
+            />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {/* Card 1: Internships */}
-          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-primary/40 transition-all">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                <Briefcase className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t.companyportaldashboardpagetsx.text_unk2}
-                </p>
-                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
-                  {stats.totalInternships}
-                </h3>
-              </div>
-            </div>
-            <Link
-              href="/company/internships"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Card>
-
-          {/* Card 2: Applicants */}
-          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-primary/40 transition-all">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-secondary text-foreground flex items-center justify-center">
-                <Users className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t.companyportaldashboardpagetsx.text_ma4a}
-                </p>
-                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
-                  {stats.totalApplicants}
-                </h3>
-              </div>
-            </div>
-            <Link
-              href="/company/internships"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Card>
-
-          {/* Card 3: Pending Review */}
-          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-primary/40 transition-all">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                <Clock className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground">
-                  {t.companyportaldashboardpagetsx.text_p5u1}
-                </p>
-                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
-                  {stats.pendingReview}
-                </h3>
-              </div>
-            </div>
-            <Link
-              href="/company/ats"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-            >
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Card>
-        </div>
+        <ExecutiveKpiRibbon
+          readyCandidatesCount={stats.readyCandidatesCount}
+          readyCandidatesGrowth={stats.readyCandidatesGrowth}
+          minReadinessScore={stats.minReadinessScore}
+          totalApplicationsCount={stats.totalApplicants}
+          unreadApplicationsCount={stats.pendingReview}
+          activeVacanciesCount={stats.totalInternships}
+          scheduledInterviewsCount={stats.scheduledInterviewsCount}
+          nearestInterviewToday={stats.nearestInterviewToday}
+          timeToHireDays={stats.timeToHireDays}
+          marketAverageDays={stats.marketAverageDays}
+        />
       )}
 
       {/* Core Platform Modules Grid */}
