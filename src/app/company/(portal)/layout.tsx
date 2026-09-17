@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Briefcase, BarChart3, LogOut, Sparkles } from "lucide-react";
+import { LayoutDashboard, Briefcase, BarChart3, LogOut, Sparkles, Kanban } from "lucide-react";
 import { useState } from "react";
 import { MasarLogo } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
@@ -39,6 +39,11 @@ export default function CompanyPortalLayout({
       href: "/company/talents",
       label: "استقطاب الكفاءات",
       icon: Sparkles,
+    },
+    {
+      href: "/company/ats",
+      label: "مسار التوظيف (ATS)",
+      icon: Kanban,
     },
     {
       href: "/company/analytics",
