@@ -6,38 +6,111 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Briefcase, Code, GitBranch, ShieldCheck, AlertTriangle, ArrowUpRight, Loader2, CheckCircle2, TrendingUp } from "lucide-react";
+import { 
+  Sparkles, 
+  Briefcase, 
+  Code2, 
+  GitBranch, 
+  ShieldCheck, 
+  AlertTriangle, 
+  ArrowUpRight, 
+  Loader2, 
+  CheckCircle2, 
+  TrendingUp, 
+  RefreshCw, 
+  Layers, 
+  Check, 
+  ChevronDown, 
+  ChevronUp,
+  SlidersHorizontal
+} from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
+import Link from "next/link";
 
 export function ReadinessClient() {
-    const { t } = useLanguage();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [fetchingProfile, setFetchingProfile] = useState(true);
+  const [scanningGithub, setScanningGithub] = useState(false);
   const [profile, setProfile] = useState<any>(null);
-  
+  const [profileSkills, setProfileSkills] = useState<string[]>([]);
+
   // Form State
   const [targetRole, setTargetRole] = useState("Frontend Developer");
-  const [githubLanguages, setGithubLanguages] = useState("TypeScript, React, Tailwind CSS");
-  const [githubReposCount, setGithubReposCount] = useState("12");
-  const [topProjects, setTopProjects] = useState(t.readinessclient.key_s1yrnd);
+  const [githubUrl, setGithubUrl] = useState("");
+  const [githubLanguages, setGithubLanguages] = useState("");
+  const [githubReposCount, setGithubReposCount] = useState("");
+  const [topProjects, setTopProjects] = useState("");
+  const [scannedMeta, setScannedMeta] = useState<{ username?: string; reposCount?: number; languages?: string[] } | null>(null);
+  const [showAdvancedEdit, setShowAdvancedEdit] = useState(false);
 
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
-    fetch("/api/students/me")
+    // Initial fetch of profile + automatic GitHub scan
+    fetch("/api/student/readiness/scan")
       .then(res => res.json())
       .then(data => {
-        setProfile(data);
+        if (data.student) setProfile(data.student);
+        if (Array.isArray(data.profileSkills)) setProfileSkills(data.profileSkills);
+        if (data.githubUrl) setGithubUrl(data.githubUrl);
+
+        if (data.scan) {
+          setGithubLanguages(data.scan.languagesString || "");
+          setGithubReposCount(String(data.scan.reposCount || 0));
+          setTopProjects(data.scan.topProjects || "");
+          setScannedMeta({
+            username: data.scan.username,
+            reposCount: data.scan.reposCount,
+            languages: data.scan.languages
+          });
+        }
         setFetchingProfile(false);
       })
-      .catch(() => setFetchingProfile(false));
+      .catch((err) => {
+        console.warn("Auto-scan on mount failed:", err);
+        setFetchingProfile(false);
+      });
   }, []);
+
+  const handleManualScan = async (overrideUrl?: string) => {
+    const urlToScan = (overrideUrl !== undefined ? overrideUrl : githubUrl).trim();
+    if (!urlToScan) {
+      alert("يرجى إدخال اسم مستخدم أو رابط حساب GitHub");
+      return;
+    }
+
+    setScanningGithub(true);
+    try {
+      const res = await fetch("/api/student/readiness/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ github_url: urlToScan, skills: profileSkills })
+      });
+
+      const data = await res.json();
+      if (data.scan) {
+        setGithubLanguages(data.scan.languagesString || "");
+        setGithubReposCount(String(data.scan.reposCount || 0));
+        setTopProjects(data.scan.topProjects || "");
+        setScannedMeta({
+          username: data.scan.username,
+          reposCount: data.scan.reposCount,
+          languages: data.scan.languages
+        });
+      }
+    } catch (err: any) {
+      console.error("Manual scan error:", err);
+      alert(`حدث خطأ أثناء فحص الحساب: ${err.message}`);
+    } finally {
+      setScanningGithub(false);
+    }
+  };
 
   const handleAudit = async () => {
     setLoading(true);
     setResult(null);
     try {
-      // Mocking completed courses based on profile if available, otherwise fallback
       const completedCourses = profile?.completedCredits > 0 
         ? t.readinessclient.key_kgt7q3
         : t.readinessclient.key_kt4wl5;
@@ -51,7 +124,7 @@ export function ReadinessClient() {
         github_languages: githubLanguages,
         github_repos_count: githubReposCount,
         top_projects_descriptions: topProjects,
-        self_declared_skills: (profile?.skills && Array.isArray(profile?.skills) && profile.skills.length > 0) ? profile.skills.join(", ") : githubLanguages
+        self_declared_skills: profileSkills.length > 0 ? profileSkills.join(", ") : githubLanguages
       };
 
       const res = await fetch("/api/student/readiness", {
@@ -60,7 +133,10 @@ export function ReadinessClient() {
         body: JSON.stringify(payload)
       });
       
-      if (!res.ok) { const errorData = await res.json().catch(() => ({})); throw new Error(errorData.error || `فشل في جلب التقييم: HTTP ${res.status}`); }
+      if (!res.ok) { 
+        const errorData = await res.json().catch(() => ({})); 
+        throw new Error(errorData.error || `فشل في جلب التقييم: HTTP ${res.status}`); 
+      }
       const data = await res.json();
       setResult(data);
     } catch (error: any) {
@@ -85,25 +161,32 @@ export function ReadinessClient() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Input Form Column */}
-        <div className="md:col-span-5 space-y-6">
+        <div className="md:col-span-5 space-y-5">
           <Card className="vercel-card border-border/50">
-            <CardHeader>
+            <CardHeader className="pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Briefcase className="w-5 h-5 text-[#0070f3]" />
-                {t.readinessclient.key_t1qqxv}</CardTitle>
+                {t.readinessclient.key_t1qqxv}
+              </CardTitle>
               <CardDescription>
-                {t.readinessclient.key_xvxtxz}</CardDescription>
+                يتم استخراج لغات ومشاريع GitHub ومهاراتك المعتمدة تلقائياً من حسابك
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              
+              {/* Target Role Selector */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_ywqfcx}</label>
+                <label className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-primary" />
+                  {t.readinessclient.key_ywqfcx}
+                </label>
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
                   className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-background px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <option value="Software Engineer">{t.readinessclient.key_oc39qi}</option>
-                    <option value="Frontend Developer">{t.readinessclient.key_dxblft}</option>
+                  <option value="Frontend Developer">{t.readinessclient.key_dxblft}</option>
                   <option value="Backend Developer">{t.readinessclient.key_iwjtu4}</option>
                   <option value="Full Stack Developer">{t.readinessclient.key_sxnr1z}</option>
                   <option value="Mobile App Developer">{t.readinessclient.key_ret7r9}</option>
@@ -117,51 +200,165 @@ export function ReadinessClient() {
                   <option value="Cloud Architect">{t.readinessclient.key_gosnwx}</option>
                 </select>
               </div>
-              
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_3ux84x}</label>
-                <Input 
-                  value={githubLanguages} 
-                  onChange={(e) => setGithubLanguages(e.target.value)} 
-                  placeholder={t.readinessclient.key_4srqlt}
-                  className="bg-background"
-                />
+
+              {/* GitHub Auto-Sync Box */}
+              <div className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <GitBranch className="w-4 h-4 text-[#0070f3]" />
+                    المزامنة التلقائية مع GitHub
+                  </span>
+                  {scannedMeta?.username && (
+                    <Badge variant="outline" className="text-[11px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 gap-1">
+                      <Check className="w-3 h-3" />
+                      متصل: @{scannedMeta.username}
+                    </Badge>
+                  )}
+                </div>
+
+                {scannedMeta ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground bg-background/80 p-2.5 rounded-lg border border-border/60">
+                      <span>المستودعات المرصودة: <strong className="text-foreground">{githubReposCount || 0}</strong></span>
+                      <span>اللغات الأساسية: <strong className="text-foreground">{githubLanguages || "مكتشفة"}</strong></span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2 pt-1">
+                      <p className="text-[11px] text-muted-foreground truncate">
+                        المشاريع: {topProjects ? topProjects.slice(0, 60) + "..." : "تم رصد المشاريع"}
+                      </p>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        disabled={scanningGithub}
+                        onClick={() => handleManualScan()}
+                        className="h-7 text-xs gap-1 text-[#0070f3] hover:text-[#0070f3] flex-shrink-0"
+                      >
+                        <RefreshCw className={`w-3 h-3 ${scanningGithub ? "animate-spin" : ""}`} />
+                        تحديث الفحص
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-xs text-muted-foreground">
+                      أدخل رابط أو اسم مستخدم GitHub لاستخراج مشاريعك ولغاتك تلقائياً:
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        value={githubUrl}
+                        onChange={(e) => setGithubUrl(e.target.value)}
+                        placeholder="https://github.com/username"
+                        className="text-xs h-9 bg-background"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => handleManualScan()}
+                        disabled={scanningGithub}
+                        className="h-9 text-xs gap-1 bg-[#0070f3] text-white flex-shrink-0"
+                      >
+                        {scanningGithub ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                        فحص الآن
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_kqgzve}</label>
-                <Input 
-                  type="number"
-                  value={githubReposCount} 
-                  onChange={(e) => setGithubReposCount(e.target.value)} 
-                  className="bg-background"
-                />
+              {/* Profile Skills Box */}
+              <div className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <Layers className="w-4 h-4 text-emerald-500" />
+                    المهارات المعتمدة في ملفك الشخصي
+                  </span>
+                  <Link href="/profile" className="text-[11px] text-[#0070f3] hover:underline">
+                    تعديل في الملف
+                  </Link>
+                </div>
+
+                {profileSkills.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {profileSkills.map((skill, idx) => (
+                      <Badge key={idx} variant="secondary" className="text-[11px] font-normal py-0.5 px-2 bg-background border border-border/80">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground pt-1">
+                    لم تقم بإضافة مهارات في ملفك بعد. يمكنك إضافتها من صفحة الملف الشخصي لتعزيز دقة التقييم.
+                  </p>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-muted-foreground">{t.readinessclient.key_mlp3m9}</label>
-                <textarea 
-                  value={topProjects} 
-                  onChange={(e) => setTopProjects(e.target.value)} 
-                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[100px]"
-                  placeholder={t.readinessclient.key_733los}
-                />
+              {/* Collapsible Advanced Edit */}
+              <div className="border-t border-border/50 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedEdit(!showAdvancedEdit)}
+                  className="flex items-center justify-between w-full text-xs font-medium text-muted-foreground hover:text-foreground py-1.5 transition-colors"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <SlidersHorizontal className="w-3.5 h-3.5" />
+                    تخصيص البيانات التقنية يدوياً (اختياري)
+                  </span>
+                  {showAdvancedEdit ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+
+                {showAdvancedEdit && (
+                  <div className="space-y-3 pt-3 animate-in fade-in duration-200">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_3ux84x}</label>
+                      <Input 
+                        value={githubLanguages} 
+                        onChange={(e) => setGithubLanguages(e.target.value)} 
+                        placeholder={t.readinessclient.key_4srqlt}
+                        className="bg-background text-xs h-9"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_kqgzve}</label>
+                      <Input 
+                        type="number"
+                        value={githubReposCount} 
+                        onChange={(e) => setGithubReposCount(e.target.value)} 
+                        className="bg-background text-xs h-9"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_mlp3m9}</label>
+                      <textarea 
+                        value={topProjects} 
+                        onChange={(e) => setTopProjects(e.target.value)} 
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[70px]"
+                        placeholder={t.readinessclient.key_733los}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
+
             </CardContent>
-            <CardFooter>
+            <CardFooter className="pt-2">
               <Button 
                 onClick={handleAudit} 
-                disabled={loading || fetchingProfile} 
-                className="w-full bg-[#0070f3] hover:bg-[#0070f3]/90 text-white font-medium"
+                disabled={loading || fetchingProfile || scanningGithub} 
+                className="w-full bg-[#0070f3] hover:bg-[#0070f3]/90 text-white font-semibold h-11 text-sm shadow-sm"
               >
                 {loading ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    {t.readinessclient.key_sfodt2}</>
+                    <Loader2 className="w-4 h-4 mr-2 ml-2 animate-spin" />
+                    {t.readinessclient.key_sfodt2}
+                  </>
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2 ml-2" />
-                    {t.readinessclient.key_18c4so}</>
+                    بدء التدقيق المهني الذكي
+                  </>
                 )}
               </Button>
             </CardFooter>

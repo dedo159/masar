@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { getStudentProfile } from "@/lib/db-queries";
+import { getSession } from "@/lib/auth";
+import { scanGitHubUser } from "@/lib/github-scanner";
 
 const systemPrompt = `أنت مدقق مسار مهني تقني (Technical Career Auditor) لتقييم جاهزية طلاب هندسة البرمجيات وتكنولوجيا المعلومات لسوق العمل وفرص التدريب (Internships / Junior Roles).
 
@@ -288,15 +291,46 @@ export async function POST(req: Request) {
       self_declared_skills 
     } = body;
 
+    // Auto-resolve from student profile & GitHub if needed
+    let resolvedLanguages = github_languages;
+    let resolvedReposCount = github_repos_count;
+    let resolvedTopProjects = top_projects_descriptions;
+    let resolvedSkills = self_declared_skills;
+
+    try {
+      const session = await getSession().catch(() => null);
+      const studentId = session?.userType === "student" ? session.userId : undefined;
+      const studentProfile = await getStudentProfile(studentId).catch(() => null);
+
+      if (studentProfile) {
+        if (!resolvedSkills && studentProfile.skills && studentProfile.skills.length > 0) {
+          resolvedSkills = studentProfile.skills.join(", ");
+        }
+        if ((!resolvedLanguages || !resolvedTopProjects) && studentProfile.github) {
+          const scan = await scanGitHubUser(studentProfile.github, studentProfile.skills || []);
+          if (!resolvedLanguages && scan.languagesString) resolvedLanguages = scan.languagesString;
+          if (!resolvedReposCount && scan.reposCount) resolvedReposCount = scan.reposCount;
+          if (!resolvedTopProjects && scan.topProjects) resolvedTopProjects = scan.topProjects;
+        }
+      }
+    } catch (e: any) {
+      console.warn("Auto-resolution of profile in readiness failed:", e?.message);
+    }
+
+    body.github_languages = resolvedLanguages;
+    body.github_repos_count = resolvedReposCount;
+    body.top_projects_descriptions = resolvedTopProjects;
+    body.self_declared_skills = resolvedSkills;
+
     const userPrompt = `تحليل جاهزية لسوق العمل:
 - المسمى المستهدف: ${target_role || "Software Engineer"}
 - المقررات المنجزة: ${completed_courses_list || "هياكل بيانات، خوارزميات، قواعد بيانات"}
 - المعدل التراكمي: ${gpa || 3.0} من 4.00
 - الساعات المعتمدة المقطوعة: ${completed_credit_hours || 90} من أصل ${total_credit_hours || 132}
-- لغات وتقنيات GitHub: ${github_languages || "غير محدد"}
-- عدد المستودعات العامة: ${github_repos_count || 0}
-- ملخص المشاريع المنجزة: ${top_projects_descriptions || "مشاريع جامعية وتطبيقات مبسطة"}
-- المهارات المصرح بها: ${self_declared_skills || "برمجة وحل مشكلات"}
+- لغات وتقنيات GitHub: ${resolvedLanguages || "غير محدد"}
+- عدد المستودعات العامة: ${resolvedReposCount || 0}
+- ملخص المشاريع المنجزة: ${resolvedTopProjects || "مشاريع جامعية وتطبيقات مبسطة"}
+- المهارات المصرح بها: ${resolvedSkills || "برمجة وحل مشكلات"}
 
 قم بإجراء تقييم دقيق ومتفرد لهذه المدخلات تحديداً وأخرج كائن JSON صالح باللغة العربية حصراً.`;
 
