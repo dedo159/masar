@@ -589,102 +589,8 @@ export default function MerchantDashboardPage() {
             </div>
           </div>
         </div>
-
-        {/* Clean Student-Style Sub-Tabs Navigation (Properly separated, never overlapping) */}
-        <div className="mt-4 pt-3.5 border-t border-border">
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-muted border border-border overflow-x-auto scrollbar-none max-w-full">
-            <button
-              type="button"
-              onClick={() => setActiveTab("redemption")}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "redemption"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <ScanLine className="h-3.5 w-3.5 text-primary" />
-              <span>أداة الاستبدال</span>
-              <span className="px-1.5 py-0.2 rounded bg-primary/10 text-primary text-[10px] font-mono">
-                POS
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("anti-fraud")}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "anti-fraud"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <ShieldCheck className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
-              <span>مكافحة الاحتيال</span>
-              <span className="px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-[10px] font-mono">
-                30s
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("settlements")}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "settlements"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <DollarSign className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>التسويات والفواتير</span>
-              <span className="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono">
-                PDF
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("campus-drops")}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "campus-drops"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <Radio className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
-              <span>حملات الحرم (Drops)</span>
-              <span className="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-mono">
-                Push
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("deals")}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "deals"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <Tag className="h-3.5 w-3.5 text-primary" />
-              <span>مدير العروض ({deals.filter((d) => d.isActive).length})</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab("logs")}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
-                activeTab === "logs"
-                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
-                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
-              }`}
-            >
-              <TrendingUp className="h-3.5 w-3.5 text-primary" />
-              <span>سجل العمليات</span>
-            </button>
-          </div>
-        </div>
       </div>
+
 
       {/* ========================================================================= */}
       {/* التبويب 1: أداة التحقق الفوري والاستبدال (Instant Redemption Tool) */}
@@ -696,7 +602,6 @@ export default function MerchantDashboardPage() {
             <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
 
             <div className="max-w-2xl mx-auto space-y-6">
-              {/* Header Title & Mode Badge */}
               {/* Header Title & Mode Badge */}
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-mono">
