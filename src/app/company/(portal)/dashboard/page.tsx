@@ -24,6 +24,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
 import { ExecutiveKpiRibbon } from "@/components/company/executive-kpi-ribbon";
+import { ActiveOpeningsPipelineStrip } from "@/components/company/active-openings-pipeline-strip";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
@@ -127,6 +128,9 @@ export default function DashboardPage() {
           marketAverageDays={stats.marketAverageDays}
         />
       )}
+
+      {/* Active Openings Pipeline Strip (شريط المتابعة السريعة للشواغر المفتوحة) */}
+      <ActiveOpeningsPipelineStrip />
 
       {/* Core Platform Modules Grid */}
       <div className="space-y-4">
