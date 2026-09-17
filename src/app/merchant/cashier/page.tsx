@@ -400,38 +400,38 @@ export default function CashierPosPage() {
       className="min-h-screen bg-background text-foreground flex flex-col font-sans select-none"
     >
       {/* 1. Cashier POS Dedicated Top Navigation Bar */}
-      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md px-4 sm:px-8 py-3 shadow-xs">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-md px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 shadow-xs">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2.5 sm:gap-4">
           {/* Logo & POS Terminal Badge */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 shrink-0">
             <MasarLogo size="sm" priority />
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base font-bold text-foreground tracking-tight">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <span className="text-sm sm:text-base font-bold text-foreground tracking-tight">
                   مسار
                 </span>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] sm:text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>محطة الكاشير · Cashier POS</span>
+                  <span>محطة الكاشير</span>
                 </span>
               </div>
-              <p className="text-[11px] text-muted-foreground hidden sm:block">
+              <span className="text-[10px] text-muted-foreground hidden md:block">
                 واجهة الكاشير المستقلة لمسح وتوثيق عروض الطلاب
-              </p>
+              </span>
             </div>
           </div>
 
           {/* Branch & Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Branch Selector Popover */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                className="text-xs text-foreground bg-muted hover:bg-muted/80 border border-border transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 px-2.5 rounded-xl"
+                className="text-xs text-foreground bg-muted hover:bg-muted/80 border border-border transition-colors flex items-center gap-1.5 font-medium cursor-pointer py-1.5 px-2 sm:px-2.5 rounded-xl"
               >
                 <Store className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                <span className="max-w-[140px] sm:max-w-[200px] truncate font-semibold">
+                <span className="max-w-[110px] sm:max-w-[180px] md:max-w-[220px] truncate font-semibold">
                   {currentBranch.split("—")[0]}
                 </span>
                 <ChevronDown
@@ -447,13 +447,14 @@ export default function CashierPosPage() {
                     className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs"
                     onClick={() => setIsBranchDropdownOpen(false)}
                   />
-                  <div className="absolute top-full left-0 sm:right-0 mt-2 z-50 w-72 sm:w-80 rounded-xl border border-border bg-card p-2 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                  {/* Position dropdown correctly anchored to right in RTL */}
+                  <div className="absolute top-full right-0 mt-2 z-50 w-72 sm:w-80 rounded-xl border border-border bg-card p-2 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-150">
                     <div className="px-2 py-1 text-[11px] font-semibold text-muted-foreground border-b border-border flex items-center justify-between mb-1">
                       <span>اختر فرع نقطة البيع:</span>
                       <button
                         type="button"
                         onClick={() => setIsBranchDropdownOpen(false)}
-                        className="text-muted-foreground hover:text-foreground p-0.5"
+                        className="text-muted-foreground hover:text-foreground p-0.5 cursor-pointer"
                       >
                         ✕
                       </button>
@@ -492,7 +493,7 @@ export default function CashierPosPage() {
               <button
                 type="button"
                 onClick={() => setTheme(isDark ? "light" : "dark")}
-                className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted border border-border transition-colors cursor-pointer"
+                className="p-1.5 sm:p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted border border-border transition-colors cursor-pointer"
                 title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
               >
                 {isDark ? (
@@ -507,7 +508,7 @@ export default function CashierPosPage() {
             <button
               type="button"
               onClick={handleLogout}
-              className="py-1.5 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+              className="py-1.5 px-2.5 sm:px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/20 transition-all cursor-pointer flex items-center gap-1 sm:gap-1.5 text-xs font-semibold shrink-0"
               title="تسجيل خروج الكاشير وقفل الشاشة"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -518,15 +519,15 @@ export default function CashierPosPage() {
       </header>
 
       {/* 2. Main POS Content Body */}
-      <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
-        {/* Quick Shift Overview Pills */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <main className="flex-1 max-w-5xl w-full mx-auto p-3.5 sm:p-6 lg:p-8 space-y-5 sm:space-y-6">
+        {/* Quick Shift Overview Pills — Responsive 1 col on mobile, 3 cols on tablet/desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="rounded-xl border border-border bg-card p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
+            <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 shrink-0">
               <ScanLine className="h-5 w-5" />
             </div>
-            <div>
-              <span className="text-[11px] text-muted-foreground block">
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] text-muted-foreground block truncate">
                 عمليات الوردية الحالية
               </span>
               <span className="text-base sm:text-lg font-bold text-foreground font-mono">
@@ -536,71 +537,71 @@ export default function CashierPosPage() {
           </div>
 
           <div className="rounded-xl border border-border bg-card p-3.5 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500">
+            <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 shrink-0">
               <Store className="h-5 w-5" />
             </div>
-            <div>
-              <span className="text-[11px] text-muted-foreground block">
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] text-muted-foreground block truncate">
                 المتجر والفرع
               </span>
-              <span className="text-xs sm:text-sm font-bold text-foreground truncate block max-w-[140px] sm:max-w-[180px]">
+              <span className="text-xs sm:text-sm font-bold text-foreground truncate block">
                 {storeName}
               </span>
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-3.5 col-span-2 sm:col-span-1 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500">
+          <div className="rounded-xl border border-border bg-card p-3.5 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 shrink-0">
               <Clock className="h-5 w-5" />
             </div>
-            <div>
-              <span className="text-[11px] text-muted-foreground block">
+            <div className="min-w-0 flex-1">
+              <span className="text-[11px] text-muted-foreground block truncate">
                 حالة نقطة البيع (POS)
               </span>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-mono">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-                <span>متصل وجاهز للمسح</span>
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shrink-0 animate-pulse" />
+                <span className="truncate">متصل وجاهز للمسح</span>
               </span>
             </div>
           </div>
         </div>
 
         {/* 3. Primary POS Scanner Card */}
-        <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div className="rounded-2xl border border-border bg-card p-5 sm:p-8 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
 
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="max-w-2xl mx-auto space-y-5 sm:space-y-6">
             {/* Scanner Title */}
             <div className="text-center space-y-1.5">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">
                 مسح رمز الـ QR والتحقق من حساب الطالب
               </h2>
-              <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
                 وجّه كاميرا الجهاز إلى هاتف الطالب لمسح الكوبون وتوثيق الخصم وخصم المحاولة تلقائياً.
               </p>
             </div>
 
             {/* QR Scanner Big Action Hero Box */}
-            <div className="rounded-2xl border-2 border-dashed border-emerald-500/30 bg-background/50 p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
-              <div className="w-20 h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 shadow-xl shadow-emerald-950/20">
-                <QrCode className="h-10 w-10 animate-pulse" />
+            <div className="rounded-2xl border-2 border-dashed border-emerald-500/30 bg-background/50 p-5 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 shadow-xl shadow-emerald-950/20 shrink-0">
+                <QrCode className="h-8 w-8 sm:h-10 sm:w-10 animate-pulse" />
               </div>
 
-              <div className="space-y-1">
-                <h3 className="text-base sm:text-lg font-bold text-foreground">
+              <div className="space-y-1 max-w-sm">
+                <h3 className="text-sm sm:text-base font-bold text-foreground">
                   جاهز لمسح باركود الطالب (QR Code)
                 </h3>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-normal">
                   يدعم الكاميرا الأمامية والخلفية للهواتف والأجهزة اللوحية والماسحات الضوئية.
                 </p>
               </div>
 
-              <div className="w-full max-w-md pt-2">
+              <div className="w-full max-w-md pt-1 sm:pt-2">
                 <Button
                   onClick={() => setScannerOpen(true)}
-                  className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:from-emerald-700 text-white font-bold text-base rounded-xl transition-all shadow-xl shadow-emerald-950/40 flex items-center justify-center gap-3 cursor-pointer"
+                  className="w-full h-12 sm:h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:from-emerald-700 text-white font-bold text-sm sm:text-base rounded-xl transition-all shadow-xl shadow-emerald-950/40 flex items-center justify-center gap-2.5 cursor-pointer"
                 >
-                  <Camera className="h-5 w-5" />
+                  <Camera className="h-5 w-5 shrink-0" />
                   <span>تشغيل كاميرا المسح الفوري</span>
                 </Button>
               </div>
@@ -608,34 +609,34 @@ export default function CashierPosPage() {
 
             {/* 4. Verification Results: Success Card */}
             {verificationResult.status === "success" && (
-              <div className="rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/[0.12] via-card to-card p-5 sm:p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-4">
-                <div className="flex items-center justify-between border-b border-border pb-4 flex-wrap gap-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center border border-emerald-500/30">
+              <div className="rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/[0.10] via-card to-card p-4 sm:p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-4 gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center border border-emerald-500/30 shrink-0">
                       <CheckCircle2 className="h-6 w-6" />
                     </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-base font-bold text-foreground">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm sm:text-base font-bold text-foreground">
                           تم اعتماد الاستخدام بنجاح!
                         </span>
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white dark:text-black font-bold text-[10px]">
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-white dark:text-black font-bold text-[10px] shrink-0">
                           معتمد ✓
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground truncate">
                         تم تسجيل العملية وإصدار الرقم المرجعي الموثق.
                       </p>
                     </div>
                   </div>
 
                   {/* Transaction Reference ID */}
-                  <div className="flex items-center gap-2 bg-background px-3 py-1.5 rounded-xl border border-border font-mono text-xs text-foreground/80">
+                  <div className="flex items-center justify-between sm:justify-start gap-2 bg-background px-3 py-1.5 rounded-xl border border-border font-mono text-xs text-foreground/80 shrink-0">
                     <span>{verificationResult.trxId}</span>
                     <button
                       type="button"
                       onClick={handleCopyTrx}
-                      className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                      className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer p-0.5"
                       title="نسخ رقم العملية"
                     >
                       {copiedTrx ? (
@@ -648,21 +649,21 @@ export default function CashierPosPage() {
                 </div>
 
                 {/* Highlight: Usage Count / Limit Monitor */}
-                <div className="p-4 rounded-xl bg-background/80 border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                <div className="p-4 rounded-xl bg-background/80 border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                   {/* Student Limit Tracker */}
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
-                        <UserCheck className="h-4 w-4 text-emerald-500" />
-                        <span>سجل استخدام الطالب للكود:</span>
+                  <div className="space-y-1.5 min-w-0">
+                    <div className="flex items-center justify-between text-xs gap-2">
+                      <span className="text-foreground/80 font-semibold flex items-center gap-1.5 truncate">
+                        <UserCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                        <span className="truncate">سجل استخدام الطالب للكود:</span>
                       </span>
-                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+                      <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm shrink-0">
                         المرة {verificationResult.studentUsageCount} من{" "}
                         {verificationResult.studentMaxAllowed}
                       </span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
-                      <span>الحصة المتبقية للطالب:</span>
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground font-mono">
+                      <span>الحصة المتبقية:</span>
                       <span className="font-bold text-amber-500">
                         {verificationResult.remainingForStudent &&
                         verificationResult.remainingForStudent > 0
@@ -673,20 +674,20 @@ export default function CashierPosPage() {
                   </div>
 
                   {/* Store Deal Total Cap Tracker */}
-                  <div className="space-y-1.5 sm:border-r sm:border-border sm:pr-4">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
-                        <Hash className="h-4 w-4 text-amber-500" />
-                        <span>إجمالي استهلاك الكود بالفرع:</span>
+                  <div className="space-y-1.5 min-w-0 pt-3 sm:pt-0 sm:border-s sm:border-border sm:ps-4 border-t sm:border-t-0 border-border/60">
+                    <div className="flex items-center justify-between text-xs gap-2">
+                      <span className="text-foreground/80 font-semibold flex items-center gap-1.5 truncate">
+                        <Hash className="h-4 w-4 text-amber-500 shrink-0" />
+                        <span className="truncate">إجمالي استهلاك الكود:</span>
                       </span>
-                      <span className="font-mono text-foreground font-bold">
+                      <span className="font-mono text-foreground font-bold shrink-0">
                         {verificationResult.dealCurrentUsage} /{" "}
                         {verificationResult.dealTotalCap}
                       </span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-emerald-500 to-amber-500"
+                        className="h-full bg-gradient-to-r from-emerald-500 to-amber-500 transition-all"
                         style={{
                           width: `${Math.min(
                             100,
@@ -703,23 +704,23 @@ export default function CashierPosPage() {
                 </div>
 
                 {/* Student & Deal Details Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div className="p-3.5 rounded-xl bg-background border border-border space-y-1">
-                    <span className="text-muted-foreground">بيانات الطالب المستفيد:</span>
-                    <p className="text-sm font-bold text-foreground">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
+                  <div className="p-3.5 rounded-xl bg-background border border-border space-y-1.5 min-w-0">
+                    <span className="text-muted-foreground block text-[11px]">بيانات الطالب المستفيد:</span>
+                    <p className="text-sm font-bold text-foreground truncate">
                       {verificationResult.studentName}
                     </p>
                     <p className="text-muted-foreground font-mono text-[11px]">
                       رقم جامعي: {verificationResult.studentId}
                     </p>
-                    <p className="text-emerald-600 dark:text-emerald-400 text-[11px]">
+                    <p className="text-emerald-600 dark:text-emerald-400 text-[11px] truncate">
                       {verificationResult.university}
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-background border border-border space-y-1">
-                    <span className="text-muted-foreground">تفاصيل الخصم المطبق:</span>
-                    <p className="text-sm font-bold text-amber-500">
+                  <div className="p-3.5 rounded-xl bg-background border border-border space-y-1.5 min-w-0">
+                    <span className="text-muted-foreground block text-[11px]">تفاصيل الخصم المطبق:</span>
+                    <p className="text-sm font-bold text-amber-500 truncate">
                       {verificationResult.dealTitle}
                     </p>
                     <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border mt-1 font-mono">
@@ -741,18 +742,18 @@ export default function CashierPosPage() {
                   </div>
                 </div>
 
-                {/* Next Scan Action */}
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-[11px] text-muted-foreground font-mono">
+                {/* Next Scan Action — Stack on mobile, row on desktop */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                  <span className="text-[11px] text-muted-foreground font-mono text-center sm:text-start">
                     تمت معالجة الخصم بنجاح وتحديث عداد الاستخدام
                   </span>
 
                   <Button
                     size="sm"
                     onClick={handleResetCashier}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold h-9 px-4 rounded-lg cursor-pointer flex items-center gap-1.5 shadow-md"
+                    className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold h-10 sm:h-9 px-4 rounded-xl cursor-pointer flex items-center justify-center gap-1.5 shadow-md"
                   >
-                    <QrCode className="h-3.5 w-3.5" />
+                    <QrCode className="h-3.5 w-3.5 shrink-0" />
                     <span>مسح QR جديد (العملية التالية)</span>
                   </Button>
                 </div>
@@ -761,10 +762,10 @@ export default function CashierPosPage() {
 
             {/* Error Result Card */}
             {verificationResult.status === "error" && (
-              <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-5 text-rose-600 dark:text-rose-400 space-y-3 animate-in zoom-in-95 duration-200">
+              <div className="rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 sm:p-5 text-rose-600 dark:text-rose-400 space-y-3 animate-in zoom-in-95 duration-200">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-rose-500" />
-                  <div className="space-y-1">
+                  <div className="space-y-1 min-w-0 flex-1">
                     <h4 className="font-bold text-sm">تعذر استبدال الكوبون</h4>
                     <p className="text-xs leading-relaxed text-foreground/80">
                       {verificationResult.errorMessage}
@@ -777,7 +778,7 @@ export default function CashierPosPage() {
                     size="sm"
                     variant="outline"
                     onClick={handleResetCashier}
-                    className="border-rose-500/30 hover:bg-rose-500/10 text-xs font-medium cursor-pointer flex items-center gap-1"
+                    className="w-full sm:w-auto border-rose-500/30 hover:bg-rose-500/10 text-xs font-medium cursor-pointer flex items-center justify-center gap-1.5 rounded-xl"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
                     <span>إعادة المحاولة ومسح QR آخر</span>
@@ -791,17 +792,17 @@ export default function CashierPosPage() {
         {/* 5. Cashier Shift Transactions Log (Read-only) */}
         <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
           <div className="p-4 sm:p-5 border-b border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h3 className="font-bold text-base text-foreground">
+            <div className="min-w-0">
+              <h3 className="font-bold text-sm sm:text-base text-foreground truncate">
                 سجل عمليات وردية الكاشير الحالية
               </h3>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground truncate">
                 عرض العمليات المعتمدة للطلبة خلال دوام هذه الوردية في {currentBranch.split("—")[0]}
               </p>
             </div>
 
             {/* Search Filter */}
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full sm:w-64 shrink-0">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <input
                 type="text"
@@ -813,11 +814,11 @@ export default function CashierPosPage() {
             </div>
           </div>
 
-          {/* Table */}
+          {/* Table with horizontal scroll container and min-width to avoid column collisions */}
           <div className="overflow-x-auto">
-            <table className="w-full text-xs text-right">
+            <table className="w-full text-xs text-right min-w-[550px]">
               <thead>
-                <tr className="bg-muted/50 border-b border-border text-muted-foreground font-semibold">
+                <tr className="bg-muted/50 border-b border-border text-muted-foreground font-semibold whitespace-nowrap">
                   <th className="py-3 px-4">رقم العملية</th>
                   <th className="py-3 px-4">الطالب</th>
                   <th className="py-3 px-4">العرض والخصم</th>
@@ -839,30 +840,30 @@ export default function CashierPosPage() {
                       key={log.id}
                       className="hover:bg-muted/40 transition-colors"
                     >
-                      <td className="py-3 px-4 font-mono font-bold text-foreground">
+                      <td className="py-3 px-4 font-mono font-bold text-foreground whitespace-nowrap">
                         {log.trxId}
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-foreground">
+                      <td className="py-3 px-4 min-w-[140px]">
+                        <div className="font-semibold text-foreground truncate">
                           {log.studentName}
                         </div>
-                        <div className="text-[11px] text-muted-foreground">
+                        <div className="text-[11px] text-muted-foreground truncate">
                           {log.university}
                         </div>
                       </td>
-                      <td className="py-3 px-4">
-                        <div className="text-foreground font-medium">{log.dealTitle}</div>
+                      <td className="py-3 px-4 min-w-[160px]">
+                        <div className="text-foreground font-medium truncate">{log.dealTitle}</div>
                         <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">
                           {log.discountLabel} ({log.usageSequence})
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-center font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                      <td className="py-3 px-4 text-center font-mono font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
                         {log.finalPrice.toFixed(2)} د.أ
                       </td>
-                      <td className="py-3 px-4 text-center text-muted-foreground text-[11px]">
+                      <td className="py-3 px-4 text-center text-muted-foreground text-[11px] whitespace-nowrap font-mono">
                         {log.timestamp}
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-3 px-4 text-center whitespace-nowrap">
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono text-[10px]">
                           <CheckCircle2 className="h-3 w-3" />
                           <span>معتمد</span>

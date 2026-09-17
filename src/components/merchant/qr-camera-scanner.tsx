@@ -214,7 +214,7 @@ export function QrCameraScanner({ isOpen, onClose, onScanSuccess }: QrCameraScan
       dir="rtl"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
     >
-      <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl space-y-4 text-start">
+      <div className="relative w-full max-w-md max-h-[92vh] overflow-y-auto rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl space-y-4 text-start">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2.5">
@@ -365,12 +365,6 @@ export function QrCameraScanner({ isOpen, onClose, onScanSuccess }: QrCameraScan
               </Button>
             </div>
           </div>
-        </div>
-
-        {/* Footer Security */}
-        <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 font-mono pt-1">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-          <span>تشفير الكاميرا والماسح متوافق مع معايير نقاط البيع السريعة</span>
         </div>
       </div>
     </div>
