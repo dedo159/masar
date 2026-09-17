@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans_Arabic, Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -16,8 +16,8 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: "ظ…ط³ط§ط± | ظ†ط¸ط§ظ… ط§ظ„ط·ط§ظ„ط¨ ط§ظ„ط±ظ‚ظ…ظٹ",
-  description: "ظ†ط¸ط§ظ… ط§ظ„طھط´ط؛ظٹظ„ ط§ظ„ط±ظ‚ظ…ظٹ ظ„ط­ظٹط§طھظƒ ط§ظ„ط¬ط§ظ…ط¹ظٹط©",
+  title: "مسار | نظام الطالب الرقمي",
+  description: "نظام التشغيل الرقمي لحياتك الجامعية",
   icons: {
     icon: "/icons/icon-192.png",
     apple: "/apple-touch-icon.png",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "ظ…ط³ط§ط±",
+    title: "مسار",
   },
 };
 
