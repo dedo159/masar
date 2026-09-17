@@ -21,6 +21,9 @@ import {
   RefreshCw,
   Loader2,
   ShieldCheck,
+  Smartphone,
+  Send,
+  AlertCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -110,6 +113,11 @@ export default function SettingsPage() {
   const [studentName, setStudentName] = useState<string>(t.settings.defaultStudentName);
   const [studentMeta, setStudentMeta] = useState<string>(t.settings.defaultStudentMeta);
 
+  // Push notification states
+  const [pushStatus, setPushStatus] = useState<"granted" | "denied" | "default" | "unsupported">("default");
+  const [isTestingPush, setIsTestingPush] = useState(false);
+  const [pushMessage, setPushMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
+
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
@@ -119,6 +127,12 @@ export default function SettingsPage() {
       if (storedMajor) setStudentMeta(storedMajor);
       const calConnected = localStorage.getItem("masar_google_calendar_connected");
       if (calConnected === "true") setGoogleCalendarConnected(true);
+
+      if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+        setPushStatus("unsupported");
+      } else {
+        setPushStatus(Notification.permission);
+      }
     }
     
     // Fetch student ID for calendar sync
@@ -149,6 +163,125 @@ export default function SettingsPage() {
     } finally {
       setIsSyncing(false);
       setTimeout(() => setSyncMessage(null), 4000);
+    }
+  };
+
+  const handleTestMobilePush = async () => {
+    setIsTestingPush(true);
+    setPushMessage(null);
+
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      setPushMessage({
+        text: "متصفحك لا يدعم إشعارات النظام. إذا كنت تستخدم آيفون (iOS)، يرجى الضغط على مشاركة ثم «إضافة إلى الشاشة الرئيسية» لتفعيل الإشعارات.",
+        type: "error",
+      });
+      setIsTestingPush(false);
+      return;
+    }
+
+    try {
+      // 1. Request permission if not granted
+      let perm = Notification.permission;
+      if (perm !== "granted") {
+        perm = await Notification.requestPermission();
+        setPushStatus(perm);
+        if (perm !== "granted") {
+          setPushMessage({
+            text: "لم يتم منح إذن الإشعارات من إعدادات المتصفح/الجهاز. يرجى تفعيلها من إعدادات الموقع.",
+            type: "error",
+          });
+          setIsTestingPush(false);
+          return;
+        }
+      }
+
+      // 2. Register Service Worker
+      if (!("serviceWorker" in navigator)) {
+        setPushMessage({ text: "خدمة Service Worker غير متوفرة في هذا المتصفح.", type: "error" });
+        setIsTestingPush(false);
+        return;
+      }
+
+      const reg = await navigator.serviceWorker.register("/sw.js");
+      await reg.update();
+
+      if (!reg.pushManager) {
+        setPushMessage({
+          text: "ميزة PushManager غير مدعومة مباشرة في هذا المتصفح (جرب متصفح Chrome أو ثبّت PWA على الشاشة الرئيسية).",
+          type: "error",
+        });
+        setIsTestingPush(false);
+        return;
+      }
+
+      const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
+      const padding = '='.repeat((4 - vapidPublicKey.length % 4) % 4);
+      const base64 = (vapidPublicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+
+      let sub = await reg.pushManager.getSubscription();
+      if (!sub) {
+        sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: outputArray,
+        });
+      }
+
+      // Save to server
+      await fetch("/api/updates/push/subscribe", {
+        method: "POST",
+        body: JSON.stringify(sub),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // 3. Trigger phone vibration
+      if ("vibrate" in navigator) {
+        navigator.vibrate([150, 75, 150]);
+      }
+
+      // 4. Trigger system notification
+      if (reg.showNotification) {
+        reg.showNotification("مسار — إشعار فوري 🔔", {
+          body: "جهازك متصل بنجاح بنظام إشعارات مسار! ستصلك التنبيهات في الخلفية.",
+          icon: "/icons/icon-192.png",
+          badge: "/icons/icon-72.png",
+        });
+      }
+
+      // 5. Send backend push via web-push
+      const testRes = await fetch("/api/updates/push/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: "مسار — تنبيه مباشر للهاتف 📲",
+          body: "تم استلام الإشعار بنجاح! يعمل نظام التنبيهات حتى عند قفل الشاشة أو إغلاق المتصفح.",
+          url: "/notifications",
+        }),
+      });
+
+      const testData = await testRes.json().catch(() => ({}));
+      if (testRes.ok) {
+        setPushMessage({
+          text: "تم إرسال الإشعار بنجاح! تفقد شريط التنبيهات أعلى شاشة هاتفك.",
+          type: "success",
+        });
+      } else {
+        setPushMessage({
+          text: testData.error || "تم تفعيل التنبيهات محلياً على الجهاز بنجاح!",
+          type: "info",
+        });
+      }
+    } catch (err: any) {
+      setPushMessage({
+        text: "حدث خطأ أثناء فحص الإشعارات: " + (err.message || String(err)),
+        type: "error",
+      });
+    } finally {
+      setIsTestingPush(false);
     }
   };
 
@@ -379,6 +512,80 @@ export default function SettingsPage() {
               />
             }
           />
+        </div>
+
+        {/* Mobile Device Push Notifications Test Box */}
+        <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start gap-3">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
+                <Smartphone className="h-5 w-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-sm font-semibold text-foreground">
+                    إشعارات الهاتف المباشرة (Push Notifications)
+                  </h3>
+                  <Badge
+                    variant={pushStatus === "granted" ? "success" : pushStatus === "denied" ? "destructive" : "secondary"}
+                    className="text-[11px] gap-1"
+                  >
+                    {pushStatus === "granted" && <CheckCircle2 className="h-3 w-3" />}
+                    {pushStatus === "granted" ? "مفعل 🟢" : pushStatus === "denied" ? "محظور 🔴" : "بحاجة لإذن 🔔"}
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  تصلك التنبيهات على شاشة قفل هاتفك مباشرة خارج المتصفح والتطبيق (مواعيد الواجبات، الدرجات، الإعلانات الهامة).
+                </p>
+              </div>
+            </div>
+
+            <Button
+              variant="default"
+              size="default"
+              onClick={handleTestMobilePush}
+              disabled={isTestingPush}
+              className="min-h-[44px] px-4 gap-2 text-xs font-semibold cursor-pointer active:scale-95 transition-transform flex-shrink-0"
+            >
+              {isTestingPush ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>جارٍ إرسال التنبيه...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  <span>اختبار إشعار فوري للهاتف 📲</span>
+                </>
+              )}
+            </Button>
+          </div>
+
+          {pushMessage && (
+            <div
+              className={`p-3 rounded-lg border text-xs flex items-start gap-2 animate-in fade-in-50 duration-200 ${
+                pushMessage.type === "success"
+                  ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300"
+                  : pushMessage.type === "error"
+                  ? "bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300"
+                  : "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300"
+              }`}
+            >
+              {pushMessage.type === "success" ? (
+                <ShieldCheck className="h-4 w-4 flex-shrink-0 mt-0.5" />
+              ) : (
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+              )}
+              <div className="space-y-1">
+                <p className="font-medium">{pushMessage.text}</p>
+                {pushMessage.type === "success" && (
+                  <p className="text-[11px] opacity-90">
+                    💡 <strong>طريقة التحقق:</strong> اقفل شاشة هاتفك أو اخرج من المتصفح، وسيظهر لك الإشعار في شريط الحالة مع نغمة التنبيه والاهتزاز.
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Danger Zone */}

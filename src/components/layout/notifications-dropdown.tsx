@@ -58,45 +58,46 @@ export function NotificationsDropdown() {
     return outputArray;
   }
 
-  const subscribeToPush = async () => {
+  const subscribeToPush = async (silent: boolean = false) => {
     if (!("serviceWorker" in navigator)) {
-      alert("متصفحك لا يدعم Service Worker");
+      if (!silent) alert("متصفحك لا يدعم Service Worker");
       return;
     }
     try {
-      // Fix for mobile browsers where .ready hangs
       const registration = await navigator.serviceWorker.register("/sw.js");
       if (!registration) {
-        alert("فشل تسجيل Service Worker (النتيجة فارغة)");
+        if (!silent) alert("فشل تسجيل Service Worker");
         return;
       }
       if (!registration.pushManager) {
-        alert("متصفحك لا يدعم خدمة الإشعارات الخلفية (PushManager غير متوفر). جرب متصفح كروم الأساسي.");
+        if (!silent) alert("متصفحك لا يدعم خدمة الإشعارات الخلفية (PushManager غير متوفر). يرجى فتح الموقع في متصفح كروم أو تثبيته على الشاشة الرئيسية.");
         return;
       }
 
-      // Hardcoded for demo to ensure it works on Vercel without env setup
       const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
       
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
-      });
+      let subscription = await registration.pushManager.getSubscription();
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        });
+      }
 
-      const response = await fetch("/api/notifications/push/subscribe", {
+      const response = await fetch("/api/updates/push/subscribe", {
         method: "POST",
         body: JSON.stringify(subscription),
         headers: { "Content-Type": "application/json" },
       });
       
       if (response.ok) {
-        alert("تم الاشتراك بإشعارات الهاتف بنجاح! 🚀");
+        if (!silent) alert("تم تفعيل إشعارات الهاتف بنجاح! 🚀");
       } else {
         const errorText = await response.text();
-        alert("فشل حفظ الاشتراك في السيرفر: " + errorText);
+        if (!silent) alert("فشل حفظ الاشتراك في السيرفر: " + errorText);
       }
     } catch (e: any) {
-      alert("خطأ أثناء تفعيل الإشعارات: " + e.message);
+      if (!silent) alert("خطأ أثناء تفعيل الإشعارات: " + e.message);
       console.error("Push subscription failed", e);
     }
   };
@@ -263,12 +264,17 @@ export function NotificationsDropdown() {
                 <button
                   type="button"
                   onClick={async () => {
-                    // Try subscribing again just in case it failed previously
-                    await subscribeToPush();
-                    const res = await fetch("/api/notifications/push/test", { method: "POST" });
-                    if (!res.ok) {
-                      const data = await res.json();
-                      alert("فشل إرسال الإشعار: " + (data.error || ""));
+                    try {
+                      await subscribeToPush(true);
+                      const res = await fetch("/api/updates/push/test", { method: "POST" });
+                      const data = await res.json().catch(() => ({}));
+                      if (res.ok) {
+                        alert("تم إرسال الإشعار لهاتفك بنجاح! 🚀\nتفقد شريط الإشعارات أعلى الشاشة.");
+                      } else {
+                        alert("تنبيه: " + (data.error || "فشل إرسال الإشعار"));
+                      }
+                    } catch (e: any) {
+                      alert("خطأ: " + e.message);
                     }
                   }}
                   className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"

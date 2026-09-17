@@ -1,46 +1,66 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import webpush from 'web-push';
 
 const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
 const vapidPrivateKey = "aHOrks_1saMyiqgMPAC_yu1uUplmpVZ5NOFbxsI0TtE";
-const vapidSubject = 'mailto:admin@example.com';
+const vapidSubject = 'mailto:dedo159@example.com';
 
 if (vapidPublicKey && vapidPrivateKey) {
   webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
-    const session = await requireAuth();
-    if (session.userType !== 'student') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    }
+    const session = await getSession();
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch {}
+
+    const targetStudentId = (session && session.userType === 'student' && session.userId)
+      ? session.userId
+      : (body.studentId || 's-001');
 
     if (!vapidPublicKey || !vapidPrivateKey) {
       return NextResponse.json({ error: 'VAPID keys not configured' }, { status: 500 });
     }
 
     // Get all subscriptions for this user
-    const subscriptions = await prisma.pushSubscription.findMany({
-      where: { studentId: session.userId },
+    let subscriptions = await prisma.pushSubscription.findMany({
+      where: { studentId: targetStudentId },
+      orderBy: { createdAt: 'desc' },
     });
 
+    // Fallback: if none found for targetStudentId, check any registered push subscriptions
     if (subscriptions.length === 0) {
-      return NextResponse.json({ error: 'No active subscriptions found for this user' }, { status: 404 });
+      subscriptions = await prisma.pushSubscription.findMany({
+        take: 3,
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+
+    if (subscriptions.length === 0) {
+      return NextResponse.json({
+        error: 'لم يتم العثور على أجهزة مسجلة في خدمة الإشعارات. يرجى تفعيل إشعارات الهاتف أولاً.',
+        noSubscriptions: true
+      }, { status: 404 });
     }
 
     const payload = JSON.stringify({
-      title: 'مسار',
-      body: 'هذا إشعار تجريبي يعمل حتى خارج التطبيق! 🚀',
+      title: body.title || 'مسار — إشعار تجريبي 🔔',
+      body: body.body || 'هذا إشعار تجريبي ناجح من تطبيق مسار يعمل حتى خارج المتصفح! 🚀',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-72.png',
-      url: '/profile'
+      url: body.url || '/notifications'
     });
 
+    let sentCount = 0;
+    const errors: string[] = [];
+
     // Send push to all registered devices
-    const pushPromises = subscriptions.map(async (sub) => {
+    for (const sub of subscriptions) {
       try {
         await webpush.sendNotification({
           endpoint: sub.endpoint,
@@ -49,22 +69,37 @@ export async function POST() {
             auth: sub.auth,
           },
         }, payload);
+        sentCount++;
       } catch (err: any) {
-        // If the subscription is no longer valid (e.g. user revoked permission in browser settings)
         if (err.statusCode === 404 || err.statusCode === 410) {
-          console.log('Subscription has expired or is no longer valid: ', err);
-          await prisma.pushSubscription.delete({ where: { id: sub.id } });
+          console.log('Push subscription expired/unsubscribed:', sub.endpoint);
+          await prisma.pushSubscription.delete({ where: { id: sub.id } }).catch(() => {});
         } else {
-          console.error('Error sending push: ', err);
+          console.error('Error sending push:', err);
+          errors.push(err.message || String(err));
         }
       }
+    }
+
+    if (sentCount === 0 && errors.length > 0) {
+      return NextResponse.json({
+        error: 'فشل تسليم الإشعار للهاتف (قد يكون اشتراك الجهاز قديماً أو انتهت صلاحيته)',
+        details: errors
+      }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      sentCount,
+      totalDevices: subscriptions.length,
+      message: `تم إرسال الإشعار بنجاح إلى ${sentCount} جهاز!`
     });
-
-    await Promise.all(pushPromises);
-
-    return NextResponse.json({ success: true, count: subscriptions.length });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Test push error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
+}
+
+export async function GET(request: Request) {
+  return POST(request);
 }

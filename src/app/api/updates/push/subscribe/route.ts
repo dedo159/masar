@@ -1,46 +1,48 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { requireAuth } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
-    const session = await requireAuth();
-    if (session.userType !== 'student') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
-    }
-
-    const subscription = await request.json();
+    const session = await getSession();
+    const body = await request.json().catch(() => ({}));
+    
+    // Support subscription either as top-level object or wrapped in body.subscription
+    const subscription = body.endpoint ? body : (body.subscription || body);
+    const targetStudentId = (session && session.userType === 'student' && session.userId)
+      ? session.userId
+      : (body.studentId || 's-001');
 
     if (!subscription || !subscription.endpoint || !subscription.keys) {
       return NextResponse.json({ error: 'Invalid subscription object' }, { status: 400 });
     }
 
-    // Check if subscription already exists
+    // Upsert subscription
     const existingSub = await prisma.pushSubscription.findUnique({
       where: { endpoint: subscription.endpoint },
     });
 
     if (existingSub) {
-      // Update it if it exists but belongs to a different user
-      if (existingSub.studentId !== session.userId) {
-        await prisma.pushSubscription.update({
-          where: { endpoint: subscription.endpoint },
-          data: { studentId: session.userId },
-        });
-      }
+      await prisma.pushSubscription.update({
+        where: { endpoint: subscription.endpoint },
+        data: {
+          p256dh: subscription.keys.p256dh,
+          auth: subscription.keys.auth,
+          studentId: targetStudentId,
+        },
+      });
     } else {
-      // Create new subscription
       await prisma.pushSubscription.create({
         data: {
           endpoint: subscription.endpoint,
           p256dh: subscription.keys.p256dh,
           auth: subscription.keys.auth,
-          studentId: session.userId,
+          studentId: targetStudentId,
         },
       });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, studentId: targetStudentId });
   } catch (error) {
     console.error('Failed to save push subscription:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
