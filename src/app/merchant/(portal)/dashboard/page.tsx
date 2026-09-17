@@ -697,104 +697,44 @@ export default function MerchantDashboardPage() {
 
             <div className="max-w-2xl mx-auto space-y-6">
               {/* Header Title & Mode Badge */}
+              {/* Header Title & Mode Badge */}
               <div className="text-center space-y-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-mono">
                   <ScanLine className="h-3.5 w-3.5" />
-                  <span>محطة الكاشير ونقاط البيع الفورية · Fast POS Terminal</span>
+                  <span>محطة الكاشير ونقاط البيع الفورية · QR POS Terminal</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  التحقق من كوبون الطالب وحساب الحصة
+                  مسح رمز الـ QR والتحقق من حساب الطالب
                 </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  أدخل رمز الخصم أو امسح الـ QR Code بالكاميرا للتحقق من عدد مرات الاستخدام المتبقية للطالب واعتماد الفاتورة.
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
+                  قم بمسح رمز الـ QR الديناميكي مباشرة من هاتف الطالب عبر كاميرا جهاز نقطة البيع لتوثيق الخصم وخصم المحاولة تلقائياً.
                 </p>
               </div>
 
-              {/* 1. Voucher Input (Large Typography & Mono) */}
-              <div className="space-y-3">
-                <div className="relative">
-                  <input
-                    type="text"
-                    maxLength={14}
-                    placeholder="MASAR20 أو رمز الخصم"
-                    value={voucherCode}
-                    onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleVerifyCode();
-                      }
-                    }}
-                    className="w-full h-18 sm:h-20 text-2xl sm:text-3xl font-mono font-bold text-center tracking-[0.2em] rounded-2xl border-2 border-emerald-500/30 bg-background text-white placeholder-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner uppercase"
-                  />
-                  {voucherCode && (
-                    <button
-                      type="button"
-                      onClick={() => setVoucherCode("")}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-muted-foreground hover:text-white hover:bg-white/10 transition-colors"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  )}
+              {/* QR Scanner Big Action Hero Box */}
+              <div className="rounded-2xl border-2 border-dashed border-emerald-500/30 bg-background/50 p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-xl shadow-emerald-950/40">
+                  <QrCode className="h-10 w-10 animate-pulse" />
                 </div>
 
-                {/* Quick Test Codes Pills with Limit Testing */}
-                <div className="flex items-center justify-center gap-1.5 flex-wrap text-xs font-mono">
-                  <span className="text-muted-foreground text-[11px]">أكواد تجريبية:</span>
-                  {[
-                    { label: "MASAR20 (استخدام 1/3)", code: "MASAR20" },
-                    { label: "BURGER50 (استخدام 2/2)", code: "BURGER50" },
-                    { label: "FREECOFFEE (مشروب 1/5)", code: "FREECOFFEE" },
-                    { label: "LIMIT_TEST (تجربة تجاوز الحد)", code: "LIMIT_TEST" },
-                    { label: "EXPIRED99 (منتهي)", code: "EXPIRED99" },
-                  ].map((item) => (
-                    <button
-                      key={item.code}
-                      type="button"
-                      onClick={() => {
-                        setVoucherCode(item.code);
-                        handleVerifyCode(item.code);
-                      }}
-                      className={`px-2.5 py-1 rounded-lg border transition-all ${
-                        item.code === "LIMIT_TEST"
-                          ? "border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
-                          : "border-border bg-white/[0.03] text-foreground/80 hover:border-emerald-500/40 hover:text-emerald-400"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-lg font-bold text-white">
+                    جاهز لمسح باركود الطالب (QR Code)
+                  </h3>
+                  <p className="text-xs text-muted-foreground">
+                    يدعم الكاميرا الأمامية والخلفية لأجهزة الهاتف، التابلت، والماسحات الضوئية.
+                  </p>
                 </div>
-              </div>
 
-              {/* Action Buttons: Verify Now & QR Scanner */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                <Button
-                  onClick={() => handleVerifyCode()}
-                  disabled={isVerifying || !voucherCode.trim()}
-                  className="h-13 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-emerald-950/60 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  {isVerifying ? (
-                    <>
-                      <span className="animate-spin text-white">⏳</span>
-                      <span>جاري فحص رصيد الكوبونات...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="h-5 w-5" />
-                      <span>تحقق واعتماد الاستخدام</span>
-                      <span className="text-[11px] font-mono opacity-75">↵</span>
-                    </>
-                  )}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() => setScannerOpen(true)}
-                  className="h-13 border-border bg-white/[0.03] hover:bg-white/[0.08] text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <QrCode className="h-5 w-5 text-amber-400" />
-                  <span>مسح الـ QR Code بكاميرا الجهاز</span>
-                </Button>
+                <div className="w-full max-w-md pt-2">
+                  <Button
+                    onClick={() => setScannerOpen(true)}
+                    className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:from-emerald-700 text-white font-bold text-base rounded-xl transition-all shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-3 cursor-pointer"
+                  >
+                    <Camera className="h-5 w-5" />
+                    <span>تشغيل كاميرا المسح الفوري</span>
+                  </Button>
+                </div>
               </div>
 
               {/* 3. Real-time Feedback Card with Usage Counter Quota */}

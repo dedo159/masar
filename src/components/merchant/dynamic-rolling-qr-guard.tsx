@@ -16,6 +16,7 @@ import {
   Smartphone,
   ScanLine,
   Terminal,
+  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -416,35 +417,6 @@ export function DynamicRollingQrGuard() {
             </div>
           </div>
 
-          {/* Rolling Token Display & One-Click Copy */}
-          <div className="w-full mt-4 p-3 rounded-xl bg-background border border-border flex items-center justify-between">
-            <div>
-              <span className="text-[10px] text-muted-foreground block">رمز التحقق المتغير (Rolling Token):</span>
-              <span className="text-lg font-mono font-bold text-white tracking-widest text-start block">
-                {currentToken}
-              </span>
-            </div>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopyCurrentToken}
-              className="border-border hover:bg-white/5 text-xs text-foreground gap-1.5"
-            >
-              {copiedToken ? (
-                <>
-                  <Check className="h-3.5 w-3.5 text-emerald-400" />
-                  <span>تم النسخ</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3.5 w-3.5" />
-                  <span>نسخ الرمز</span>
-                </>
-              )}
-            </Button>
-          </div>
-
           {/* Anti-Screenshot Guard Badge */}
           <div className="w-full mt-3 p-2.5 rounded-xl bg-amber-500/5 border border-amber-500/20 text-[11px] text-amber-300 flex items-start gap-2">
             <Lock className="h-3.5 w-3.5 text-amber-400 shrink-0 mt-0.5" />
@@ -472,65 +444,28 @@ export function DynamicRollingQrGuard() {
               </span>
             </div>
 
-            {/* Input & Scanner Form */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-foreground/80 flex items-center justify-between">
-                <span>أدخل رمز الطالب المتغير (أو امسح الكود بالكاميرا):</span>
-                <span className="text-[10px] font-mono text-muted-foreground">تنسيق: MSR-XXXX-X</span>
-              </label>
-
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Input
-                    type="text"
-                    value={inputCode}
-                    onChange={(e) => setInputCode(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleValidateCode();
-                    }}
-                    placeholder="مثال: MSR-8829-X"
-                    className="bg-background border-border text-white font-mono tracking-widest text-lg h-12 text-center rounded-xl focus:border-cyan-500 focus:ring-cyan-500/20 placeholder:text-slate-600 uppercase"
-                  />
-                  {inputCode && (
-                    <button
-                      type="button"
-                      onClick={() => setInputCode("")}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white text-xs"
-                    >
-                      مسح
-                    </button>
-                  )}
+            {/* QR Scanner Action Banner */}
+            <div className="rounded-xl border border-dashed border-cyan-500/30 bg-background/60 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3 text-start">
+                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+                  <QrCode className="h-6 w-6 animate-pulse" />
                 </div>
-
-                <Button
-                  type="button"
-                  onClick={() => setIsCameraOpen(!isCameraOpen)}
-                  className={`h-12 px-4 rounded-xl border flex items-center gap-2 text-xs font-semibold cursor-pointer transition-all ${
-                    isCameraOpen
-                      ? "bg-rose-500/10 border-rose-500/30 text-rose-300 hover:bg-rose-500/20"
-                      : "bg-background border-border text-foreground hover:bg-white/5 hover:border-cyan-500/40"
-                  }`}
-                >
-                  <Camera className="h-4 w-4 text-cyan-400" />
-                  <span className="hidden sm:inline">{isCameraOpen ? "إغلاق الكاميرا" : "مسح بالكاميرا"}</span>
-                </Button>
-
-                <Button
-                  type="button"
-                  onClick={() => handleValidateCode()}
-                  disabled={isValidating || !inputCode.trim()}
-                  className="h-12 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-600 hover:from-cyan-400 hover:to-emerald-500 text-white font-bold text-xs shadow-lg shadow-cyan-950/40 cursor-pointer disabled:opacity-50"
-                >
-                  {isValidating ? (
-                    <RotateCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <span className="flex items-center gap-1.5">
-                      <span>فحص فوري</span>
-                      <ScanLine className="h-4 w-4" />
-                    </span>
-                  )}
-                </Button>
+                <div>
+                  <h4 className="text-sm font-bold text-white">التحقق عبر مسح رمز الـ QR بالكاميرا</h4>
+                  <p className="text-xs text-muted-foreground">
+                    وجّه كاميرا الجهاز نحو شاشة هاتف الطالب للتحقق الآلي من الحصة وصلاحية الرمز
+                  </p>
+                </div>
               </div>
+
+              <Button
+                type="button"
+                onClick={() => setIsCameraOpen(true)}
+                className="h-12 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-600 hover:from-cyan-400 hover:to-emerald-500 text-white font-bold text-xs shadow-lg shadow-cyan-950/40 cursor-pointer flex items-center gap-2 shrink-0"
+              >
+                <Camera className="h-4 w-4" />
+                <span>تشغيل ماسح الكاميرا</span>
+              </Button>
             </div>
 
             {/* Embedded Live Camera Scanner Modal */}

@@ -231,14 +231,6 @@ export default function DealsPage() {
     return language === "en" ? t.deals.categories.other : cat;
   };
 
-  // Derive the voucher code to present to cashier
-  const getVoucherCode = (deal: Deal) => {
-    const title = deal.title.toLowerCase();
-    if (title.includes("برغر") || title.includes("burger") || deal.discountLabel.includes("50")) return "BURGER50";
-    if (title.includes("قهوة") || title.includes("مشروب") || title.includes("coffee") || title.includes("مجاني")) return "FREECOFFEE";
-    return "MASAR20";
-  };
-
   const currentCategory = categories.find((c) => c.id === activeCategory);
   const filteredDeals = activeCategory === "all" 
     ? deals 
