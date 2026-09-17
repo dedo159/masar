@@ -16,7 +16,6 @@ import {
   Sun,
   Moon,
   ArrowRight,
-  ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -328,29 +327,20 @@ export default function MerchantRegisterPage() {
           </div>
         </div>
 
-        {/* Trust badge */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-muted-foreground/75 font-mono">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-          <span>التحقق الفوري من الهوية والاعتماد التجاري الرسمي</span>
-        </div>
       </main>
 
-      {/* Vercel Status Footer */}
+      {/* Footer */}
       <footer className="relative z-10 w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 text-[11px] text-muted-foreground border-t border-border/50">
         <div className="flex items-center gap-2 font-mono">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span>منظومة الشركاء السحابية متصلة بالكامل</span>
+          <span>بوابة الشركاء — مسار</span>
         </div>
 
         <div className="flex items-center gap-4 font-mono text-[10px]">
-          <span>MASAR PARTNER NETWORK</span>
-          <span className="text-border">•</span>
-          <span>EDGE</span>
-          <span className="text-border">•</span>
-          <span>v2.6</span>
+          <span>© 2026 مسار. كافة الحقوق محفوظة.</span>
         </div>
       </footer>
     </div>

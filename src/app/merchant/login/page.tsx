@@ -12,7 +12,6 @@ import {
   AlertCircle,
   ArrowRight,
   Sparkles,
-  ShieldCheck,
   CheckCircle2,
   ScanLine,
   KeyRound,
@@ -259,7 +258,7 @@ export default function MerchantLoginPage() {
           {success && (
             <div className="mb-5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs p-3 rounded-xl flex items-center gap-2.5 animate-in fade-in duration-200">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-              <span>تم التحقق والاعتماد بنجاح! جاري التوجيه إلى البوابة...</span>
+              <span>تم تسجيل الدخول بنجاح! جاري التوجيه إلى البوابة...</span>
             </div>
           )}
 
@@ -389,7 +388,7 @@ export default function MerchantLoginPage() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin text-white" />
-                    <span>جاري التحقق والاعتماد...</span>
+                    <span>جاري تسجيل الدخول...</span>
                   </>
                 ) : (
                   <>
@@ -436,11 +435,6 @@ export default function MerchantLoginPage() {
           </div>
         </div>
 
-        {/* Security & POS Encryption */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-muted-foreground font-mono">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-          <span>تشفير نقطة البيع مفعّل بمعايير TLS 1.3 · شبكة مسار المعتمدة</span>
-        </div>
       </main>
 
       {/* 5. تذييل الصفحة (Footer) */}
@@ -450,7 +444,7 @@ export default function MerchantLoginPage() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
-          <span>منظومة نقاط البيع وبوابة الشركاء v2.6.4</span>
+          <span>بوابة الشركاء — مسار</span>
           <span className="text-slate-600">•</span>
           <span>© 2026 مسار. كافة الحقوق محفوظة.</span>
         </div>
