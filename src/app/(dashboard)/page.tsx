@@ -8,7 +8,7 @@ import { getServerTranslations } from "@/lib/translations/server";
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-    const t = await getServerTranslations();
+  const t = await getServerTranslations();
   const today = new Date().toLocaleDateString("ar-JO", {
     timeZone: "Asia/Amman",
     weekday: "long",
@@ -24,17 +24,20 @@ export default async function HomePage() {
         subtitle={today}
       />
 
-      <div className="px-4 py-5 space-y-6 max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         <LatestAnnouncementWidget />
 
         {/* 1. Quick Stats (KPIs) */}
         <QuickStatsSection />
 
-        {/* 2. Main Dashboard Grid */}
+        {/* 2. Main Dashboard Grid (Balanced 2-Column on Desktop) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Main Column: Daily Operations (Schedule & Urgent Deadlines) */}
-          <div className="lg:col-span-12 xl:col-span-12 space-y-6">
+          {/* Lecture Schedule */}
+          <div className="lg:col-span-7 space-y-6">
             <TodayScheduleSection />
+          </div>
+          {/* Urgent Homework & Deadlines */}
+          <div className="lg:col-span-5 space-y-6">
             <UrgentDeadlinesSection />
           </div>
         </div>

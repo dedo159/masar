@@ -122,7 +122,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
         subtitle={`${course.code} آ· ${instructorName}`}
       />
 
-      <div className="px-4 py-5 max-w-5xl mx-auto space-y-5">
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         {/* Course Header Hero Card */}
         <div className="vercel-card p-5 shadow-sm relative overflow-hidden">
           {/* Subtle Glow */}

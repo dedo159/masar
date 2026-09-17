@@ -28,7 +28,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
         subtitle={subtitleText}
       />
 
-      <div className="px-4 py-5 space-y-4 max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         {enrolledCourses.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 px-4 rounded-lg border border-dashed border-border bg-card/60 text-center">
             <div className="h-14 w-14 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 shadow-sm">

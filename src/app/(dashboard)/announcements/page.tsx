@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/layout/page-header";
+import { useLanguage } from "@/components/providers/language-provider";
 
 interface Announcement {
   id: string;
@@ -35,6 +37,7 @@ const CATEGORY_ICONS: Record<string, any> = {
 };
 
 export default function AnnouncementsPage() {
+  const { t, language } = useLanguage();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("الكل");
@@ -87,18 +90,24 @@ export default function AnnouncementsPage() {
   );
 
   return (
-    <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Megaphone className="w-6 h-6 text-primary" />
-            إعلانات الكلية
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            أهم الأخبار والتحديثات الخاصة بجامعتك
-          </p>
+    <>
+      <PageHeader
+        title={t.nav.announcements}
+        subtitle={language === "en" ? "Faculty News, Official Memos & Campus Opportunities" : "أهم الأخبار والتعاميم والفرص في الحرم الجامعي"}
+      />
+
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-xl font-bold flex items-center gap-2 text-foreground">
+              <Megaphone className="w-5 h-5 text-primary" />
+              <span>{language === "en" ? "Official Announcements" : "الإعلانات الرسمية"}</span>
+            </h2>
+            <p className="text-muted-foreground mt-0.5 text-xs">
+              {language === "en" ? "Latest news and updates from your university administration" : "أحدث التنبيهات والأخبار المعتمدة من عمادة الكلية"}
+            </p>
+          </div>
         </div>
-      </div>
 
       {!loading && announcements.length > 0 && (
         <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
@@ -235,6 +244,7 @@ export default function AnnouncementsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }

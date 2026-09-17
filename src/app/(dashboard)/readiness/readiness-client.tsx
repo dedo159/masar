@@ -150,11 +150,13 @@ export function ReadinessClient() {
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader title={t.readinessclient.key_toyy3w} />
-      <p className="text-muted-foreground text-sm mt-2">{t.readinessclient.key_mjhxrk}</p>
-
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <>
+      <PageHeader
+        title={t.readinessclient.key_toyy3w}
+        subtitle={t.readinessclient.key_mjhxrk}
+      />
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Input Form Column */}
         <div className="md:col-span-5 space-y-5">
@@ -434,7 +436,8 @@ export function ReadinessClient() {
           )}
         </div>
 
+        </div>
       </div>
-    </div>
+    </>
   );
 }

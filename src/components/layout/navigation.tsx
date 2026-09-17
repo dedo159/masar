@@ -29,12 +29,12 @@ export function BottomNav() {
     { href: "/internships", icon: Briefcase, label: t.nav.internshipsShort || t.nav.internships },
     { href: "/readiness", icon: TrendingUp, label: t.nav.readinessShort || t.nav.readiness },
     { href: "/deals", icon: Tag, label: t.nav.dealsShort },
-    { href: "/profile", icon: User, label: t.nav.profile },
+    { href: "/profile", icon: User, label: t.nav.profileShort || t.nav.profile },
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm md:hidden">
-      <div className="grid grid-cols-7 w-full items-center px-1 py-1.5">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-md md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-0.5 select-none shadow-md">
+      <div className="grid grid-cols-7 w-full max-w-full items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -42,15 +42,22 @@ export function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 px-0.5 min-w-0 transition-all duration-150 text-center",
-                isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                "flex flex-col items-center justify-center gap-0.5 rounded-lg py-1 px-0.5 min-w-0 transition-all duration-150 text-center group",
+                isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              <Icon
-                className={cn("h-5 w-5 transition-all duration-150 flex-shrink-0", isActive && "scale-110")}
-                strokeWidth={isActive ? 2 : 1.5}
-              />
-              <span className="text-[10px] font-medium truncate w-full block text-center leading-tight">
+              <div
+                className={cn(
+                  "p-1 rounded-md transition-all duration-150 flex items-center justify-center",
+                  isActive ? "bg-primary/10 text-primary" : "group-hover:bg-muted"
+                )}
+              >
+                <Icon
+                  className={cn("h-4.5 w-4.5 transition-transform duration-150 flex-shrink-0", isActive && "scale-105")}
+                  strokeWidth={isActive ? 2.2 : 1.7}
+                />
+              </div>
+              <span className="text-[9.5px] sm:text-[10px] font-medium tracking-tight truncate w-full block text-center leading-none mt-0.5">
                 {label}
               </span>
             </Link>

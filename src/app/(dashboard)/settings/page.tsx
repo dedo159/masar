@@ -313,7 +313,7 @@ export default function SettingsPage() {
         subtitle={t.settings.subtitle}
       />
 
-      <div className="max-w-3xl mx-auto px-4 py-4 space-y-2">
+      <div className="max-w-4xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-4">
         {/* Moodle Sync Integration */}
         <SectionLabel>{t.settings.moodleSection}</SectionLabel>
         <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">

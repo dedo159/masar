@@ -66,7 +66,7 @@ const { t, isRtl, language } = useLanguage();
         subtitle={t.profile.subtitle}
       />
 
-      <div className="px-4 py-5 space-y-5 max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         {/* Main User Profile Card */}
         <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-all">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">

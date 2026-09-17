@@ -130,7 +130,7 @@ export default function DealsPage() {
         subtitle={t.deals.subtitle} 
       />
       
-      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         <Tabs defaultValue="all" onValueChange={setActiveCategory} className="w-full">
           <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-4 h-auto py-2 px-1 bg-secondary/50 border border-border rounded-lg">
             {categories.map((cat) => (

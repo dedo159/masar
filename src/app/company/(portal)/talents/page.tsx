@@ -243,10 +243,10 @@ export default function TalentSearchPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950/90 text-slate-900 dark:text-slate-100 flex flex-col">
-      {/* Header Banner - Linear-inspired typography & accent */}
-      <div className="border-b border-border bg-card/60 backdrop-blur-md px-4 sm:px-6 py-4 sticky top-16 z-20">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6" dir="rtl">
+      {/* Header Section */}
+      <div className="border-b border-border pb-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <div className="h-6 px-2 rounded-full text-[10px] font-semibold bg-primary/10 text-primary border border-primary/20 inline-flex items-center gap-1">
@@ -294,7 +294,7 @@ export default function TalentSearchPage() {
       </div>
 
       {/* Main Search & Workspace Container */}
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 flex-1 flex flex-col md:flex-row gap-6 items-start">
+      <div className="w-full flex-1 flex flex-col md:flex-row gap-6 items-start">
         {/* ============================================================ */}
         {/* SIDEBAR FILTERS (لوحة الفلاتر الجانبية)                         */}
         {/* ============================================================ */}

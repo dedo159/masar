@@ -3,10 +3,25 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  Briefcase,
+  Plus,
+  MapPin,
+  Clock,
+  Users,
+  Trash2,
+  ExternalLink,
+  X,
+  Sparkles,
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/components/providers/language-provider";
 
 export default function InternshipsPage() {
-    const { t } = useLanguage();
+  const { t } = useLanguage();
   const router = useRouter();
   const [internships, setInternships] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,133 +103,210 @@ export default function InternshipsPage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-6" dir="rtl">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_5zyo}</h2>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">{t.companyportalinternshipspagetsx.text_oxwt}</p>
+          <div className="flex items-center gap-2">
+            <span className="p-2 rounded-xl bg-primary/10 text-primary">
+              <Briefcase className="h-6 w-6" />
+            </span>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
+              {t.companyportalinternshipspagetsx.text_5zyo}
+            </h1>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1.5">
+            {t.companyportalinternshipspagetsx.text_oxwt}
+          </p>
         </div>
-        <button
+
+        <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
+          className="h-10 px-4 text-xs font-semibold gap-2 shadow-xs"
         >
-          <span>➕</span>
-          {t.companyportalinternshipspagetsx.text_v066}</button>
+          <Plus className="h-4 w-4" />
+          <span>{t.companyportalinternshipspagetsx.text_v066}</span>
+        </Button>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-500">{t.companyportalinternshipspagetsx.text_ebo6}</div>
-      ) : internships.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
-          <span className="text-4xl mb-3 inline-block">💼</span>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_43wb}</h3>
-          <p className="text-gray-500 mt-1">{t.companyportalinternshipspagetsx.text_lsu1}</p>
+        <div className="text-center py-16 text-muted-foreground text-sm animate-pulse">
+          {t.companyportalinternshipspagetsx.text_ebo6}
         </div>
+      ) : internships.length === 0 ? (
+        <Card className="text-center py-16 px-4 border-dashed">
+          <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3">
+            <Briefcase className="h-6 w-6" />
+          </div>
+          <h3 className="text-base font-bold text-foreground">{t.companyportalinternshipspagetsx.text_43wb}</h3>
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">{t.companyportalinternshipspagetsx.text_lsu1}</p>
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            size="sm"
+            className="mt-4 gap-1.5 text-xs font-semibold"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>{t.companyportalinternshipspagetsx.text_v066}</span>
+          </Button>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {internships.map((internship) => (
-            <div key={internship.id} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex flex-col shadow-sm">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="font-bold text-lg text-gray-900 dark:text-foreground line-clamp-2">{internship.title}</h3>
-                <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium whitespace-nowrap">
-                  {internship.type === 'remote' ? t.companyportalinternshipspagetsx.text_0bzt : internship.type === 'hybrid' ? t.companyportalinternshipspagetsx.text_85wz : t.companyportalinternshipspagetsx.text_1f64}
-                </span>
-              </div>
-              
-              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2 mb-6 flex-1">
-                <div className="flex items-center gap-2">
-                  <span>📍</span> {internship.location}
+            <Card key={internship.id} className="p-5 flex flex-col justify-between hover:border-primary/40 transition-all shadow-xs group">
+              <div>
+                <div className="flex justify-between items-start gap-2 mb-3">
+                  <h3 className="font-bold text-base text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+                    {internship.title}
+                  </h3>
+                  <Badge variant="outline" className="text-[11px] font-semibold shrink-0">
+                    {internship.type === "remote"
+                      ? t.companyportalinternshipspagetsx.text_0bzt
+                      : internship.type === "hybrid"
+                      ? t.companyportalinternshipspagetsx.text_85wz
+                      : t.companyportalinternshipspagetsx.text_1f64}
+                  </Badge>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span>⏱️</span> {internship.duration}
+
+                <div className="text-xs text-muted-foreground space-y-2 mb-5">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span>{internship.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <span>{internship.duration}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-3.5 w-3.5 text-primary shrink-0" />
+                    <span className="font-semibold text-foreground">
+                      {internship._count?.applications || 0} {t.companyportalinternshipspagetsx.text_kn29}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span>👥</span> {internship._count?.applications || 0} {t.companyportalinternshipspagetsx.text_kn29}</div>
               </div>
 
-              <div className="flex gap-2 pt-4 border-t border-gray-100 dark:border-gray-800">
+              <div className="flex items-center gap-2 pt-4 border-t border-border">
                 <Link
                   href={`/company/internships/${internship.id}/applicants`}
-                  className="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:hover:bg-emerald-900/50 dark:text-emerald-400 py-2 rounded-lg text-center text-sm font-medium transition-colors"
+                  className="flex-1"
                 >
-                  {t.companyportalinternshipspagetsx.text_7omr}</Link>
-                <button
+                  <Button variant="outline" size="sm" className="w-full text-xs font-semibold gap-1.5 h-9">
+                    <Users className="h-3.5 w-3.5" />
+                    <span>{t.companyportalinternshipspagetsx.text_7omr}</span>
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => handleDelete(internship.id)}
-                  className="px-3 bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/40 dark:text-red-400 rounded-lg text-sm transition-colors"
+                  className="h-9 px-2.5 text-destructive hover:bg-destructive/10"
                   title={t.companyportalinternshipspagetsx.text_fbls}
                 >
-                  🗑️
-                </button>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       )}
 
-      {/* Modal */}
+      {/* New Internship Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" dir="rtl">
-          <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-800 shadow-2xl">
-            <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur z-10">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-foreground">{t.companyportalinternshipspagetsx.text_oss9}</h2>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-500 hover:text-gray-700 text-xl">✕</button>
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl border-border">
+            <div className="p-5 border-b border-border flex justify-between items-center sticky top-0 bg-card/95 backdrop-blur-sm z-10">
+              <h2 className="text-lg font-bold text-foreground">
+                {t.companyportalinternshipspagetsx.text_oss9}
+              </h2>
+              <Button variant="ghost" size="sm" onClick={() => setIsModalOpen(false)} className="h-8 w-8 p-0">
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_ok2m}</label>
-                  <input required name="title" value={formData.title} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+
+            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-foreground">
+                    {t.companyportalinternshipspagetsx.text_ok2m}
+                  </label>
+                  <Input required name="title" value={formData.title} onChange={handleChange} className="h-10 text-xs" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_ornd}</label>
-                  <input required name="location" value={formData.location} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-foreground">
+                    {t.companyportalinternshipspagetsx.text_ornd}
+                  </label>
+                  <Input required name="location" value={formData.location} onChange={handleChange} className="h-10 text-xs" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_7abo}</label>
-                  <select name="type" value={formData.type} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-foreground">
+                    {t.companyportalinternshipspagetsx.text_7abo}
+                  </label>
+                  <select
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                    className="w-full h-10 px-3 text-xs font-semibold rounded-lg border border-input bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  >
                     <option value="onsite">{t.companyportalinternshipspagetsx.text_e06a}</option>
                     <option value="remote">{t.companyportalinternshipspagetsx.text_p58p}</option>
                     <option value="hybrid">{t.companyportalinternshipspagetsx.text_m6si}</option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_8tld}</label>
-                  <input required name="duration" value={formData.duration} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_og45} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-foreground">
+                    {t.companyportalinternshipspagetsx.text_8tld}
+                  </label>
+                  <Input required name="duration" value={formData.duration} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_og45} className="h-10 text-xs" />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_tm0k}</label>
-                  <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-foreground">
+                    {t.companyportalinternshipspagetsx.text_tm0k}
+                  </label>
+                  <Input type="date" name="deadline" value={formData.deadline} onChange={handleChange} className="h-10 text-xs" />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_owu7}</label>
-                <input name="tags" value={formData.tags} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_t5to} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-foreground">
+                  {t.companyportalinternshipspagetsx.text_owu7}
+                </label>
+                <Input name="tags" value={formData.tags} onChange={handleChange} placeholder={t.companyportalinternshipspagetsx.text_t5to} className="h-10 text-xs" />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_n9j4}</label>
-                <input type="url" name="applyUrl" value={formData.applyUrl} onChange={handleChange} placeholder="https://..." className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground" />
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-foreground">
+                  {t.companyportalinternshipspagetsx.text_n9j4}
+                </label>
+                <Input type="url" name="applyUrl" value={formData.applyUrl} onChange={handleChange} placeholder="https://..." className="h-10 text-xs" />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.companyportalinternshipspagetsx.text_3oye}</label>
-                <textarea required name="description" value={formData.description} onChange={handleChange} rows={4} className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-foreground resize-none"></textarea>
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-foreground">
+                  {t.companyportalinternshipspagetsx.text_3oye}
+                </label>
+                <textarea
+                  required
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full p-3 rounded-lg border border-input bg-card text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                />
               </div>
 
-              <div className="flex gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <button type="submit" disabled={submitting} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-foreground py-2.5 rounded-lg font-medium transition-colors disabled:opacity-70">
+              <div className="flex gap-3 pt-4 border-t border-border">
+                <Button type="submit" disabled={submitting} className="flex-1 h-10 text-xs font-semibold">
                   {submitting ? t.companyportalinternshipspagetsx.text_jfpm : t.companyportalinternshipspagetsx.text_rd9u}
-                </button>
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium transition-colors">
-                  {t.companyportalinternshipspagetsx.text_jpzg}</button>
+                </Button>
+                <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)} className="h-10 px-6 text-xs font-semibold">
+                  {t.companyportalinternshipspagetsx.text_jpzg}
+                </Button>
               </div>
             </form>
-          </div>
+          </Card>
         </div>
       )}
     </div>
