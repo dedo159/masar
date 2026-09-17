@@ -418,19 +418,11 @@ export default function DealsPage() {
               {/* باركود الطالب وكود القسيمة (Student QR Code & Voucher Presentation) */}
               {/* ========================================================================= */}
               <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5 flex flex-col items-center text-center relative overflow-hidden space-y-3">
-                {/* QR Header & Status */}
-                <div className="w-full flex items-center justify-between pb-2 border-b border-border/70 text-xs">
+                {/* QR Header */}
+                <div className="w-full flex items-center justify-center pb-2 border-b border-border/70 text-xs">
                   <span className="font-semibold text-foreground flex items-center gap-1.5">
                     <QrCode className="h-4 w-4 text-primary" />
-                    <span>رمز الاستبدال عند الكاشير (Dynamic Rolling QR):</span>
-                  </span>
-
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full border bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span>ديناميكي مفعّل (30s)</span>
+                    <span>رمز الاستبدال عند الكاشير (QR Voucher):</span>
                   </span>
                 </div>
 
