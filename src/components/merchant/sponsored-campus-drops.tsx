@@ -143,7 +143,7 @@ export function SponsoredCampusDrops() {
   return (
     <div className="space-y-6">
       {/* Module Header Banner */}
-      <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-5 shadow-xl relative overflow-hidden">
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ export function SponsoredCampusDrops() {
                   Campus Geo-Push
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 بث إشعارات فورية (Push Notifications) لشاشات قفل هواتف الطلبة المتواجدين داخل الحرم بدقة جغرافية متناهية.
               </p>
             </div>
@@ -167,10 +167,10 @@ export function SponsoredCampusDrops() {
 
           <div className="flex items-center gap-3">
             {/* Merchant Drops Credit */}
-            <div className="px-3.5 py-2 rounded-xl bg-[#090d14] border border-white/10 text-xs flex items-center gap-2">
+            <div className="px-3.5 py-2 rounded-xl bg-background border border-border text-xs flex items-center gap-2">
               <Zap className="h-4 w-4 text-amber-400" />
               <div>
-                <span className="text-[10px] text-slate-400 block">رصيد البث المتاح:</span>
+                <span className="text-[10px] text-muted-foreground block">رصيد البث المتاح:</span>
                 <span className="font-mono font-bold text-white">{merchantBalance.toFixed(2)} د.أ</span>
               </div>
             </div>
@@ -183,8 +183,8 @@ export function SponsoredCampusDrops() {
         {/* ========================================================================= */}
         {/* 1. Flash Drop Launcher Form (7 Cols) */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-7 rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl space-y-5">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="lg:col-span-7 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl space-y-5">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-amber-400" />
               <span className="text-xs font-bold text-white tracking-wide">
@@ -200,22 +200,22 @@ export function SponsoredCampusDrops() {
           <div className="space-y-4">
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+              <label className="text-xs font-semibold text-foreground/80 flex items-center justify-between">
                 <span>عنوان العرض السريع (Flash Deal Title):</span>
-                <span className="text-[10px] text-slate-500 font-mono">حتى 60 حرفاً</span>
+                <span className="text-[10px] text-muted-foreground font-mono">حتى 60 حرفاً</span>
               </label>
               <Input
                 type="text"
                 value={dealTitle}
                 onChange={(e) => setDealTitle(e.target.value)}
                 placeholder="مثال: خصم 50% على البرغر خلال استراحة الغداء!"
-                className="bg-[#090d14] border-white/10 text-white text-xs h-11 rounded-xl focus:border-amber-500 focus:ring-amber-500/20"
+                className="bg-background border-border text-white text-xs h-11 rounded-xl focus:border-amber-500 focus:ring-amber-500/20"
               />
             </div>
 
             {/* Description / Subtitle */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-300">
+              <label className="text-xs font-semibold text-foreground/80">
                 تفاصيل الإشعار الموجه للطالب (Call-to-Action Text):
               </label>
               <textarea
@@ -223,13 +223,13 @@ export function SponsoredCampusDrops() {
                 onChange={(e) => setDealDescription(e.target.value)}
                 rows={2}
                 placeholder="تفاصيل العرض والشروط السريعة..."
-                className="w-full rounded-xl bg-[#090d14] border border-white/10 p-3 text-xs text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
+                className="w-full rounded-xl bg-background border border-border p-3 text-xs text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
               />
             </div>
 
             {/* Geo-fencing Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+              <label className="text-xs font-semibold text-foreground/80 flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="h-3.5 w-3.5 text-rose-400" />
                   <span>الاستهداف الجغرافي للحرم (Geo-fencing Selector):</span>
@@ -250,19 +250,19 @@ export function SponsoredCampusDrops() {
                       className={`p-3 rounded-xl border text-right transition-all cursor-pointer ${
                         isSelected
                           ? "bg-amber-500/10 border-amber-500/40 shadow-lg shadow-amber-950/20"
-                          : "bg-[#090d14] border-white/5 hover:border-white/20 text-slate-400"
+                          : "bg-background border-border/60 hover:border-border text-muted-foreground"
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-base">{zone.icon}</span>
-                          <span className={`text-xs font-bold ${isSelected ? "text-white" : "text-slate-300"}`}>
+                          <span className={`text-xs font-bold ${isSelected ? "text-white" : "text-foreground/80"}`}>
                             {zone.name}
                           </span>
                         </div>
                         {isSelected && <Check className="h-3.5 w-3.5 text-amber-400" />}
                       </div>
-                      <p className="text-[10px] text-slate-500 mt-1 line-clamp-1">{zone.subtext}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1 line-clamp-1">{zone.subtext}</p>
                       <div className="mt-2 flex items-center gap-1 text-[10px] font-mono text-emerald-400">
                         <Users className="h-3 w-3" />
                         <span>{zone.studentCount.toLocaleString()} طالب نشط</span>
@@ -275,7 +275,7 @@ export function SponsoredCampusDrops() {
 
             {/* Validity Window Selector */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-amber-400" />
                 <span>نافذة الصلاحية الزمنية للعرض:</span>
               </label>
@@ -290,16 +290,16 @@ export function SponsoredCampusDrops() {
                       className={`p-2.5 rounded-xl border text-right transition-all cursor-pointer ${
                         isSelected
                           ? "bg-amber-500/10 border-amber-500/40 text-white"
-                          : "bg-[#090d14] border-white/5 hover:border-white/20 text-slate-400"
+                          : "bg-background border-border/60 hover:border-border text-muted-foreground"
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`text-xs font-semibold ${isSelected ? "text-amber-300" : "text-slate-300"}`}>
+                        <span className={`text-xs font-semibold ${isSelected ? "text-amber-300" : "text-foreground/80"}`}>
                           {opt.label}
                         </span>
                         {isSelected && <Check className="h-3.5 w-3.5 text-amber-400" />}
                       </div>
-                      <span className="text-[10px] text-slate-500 block mt-0.5">{opt.sub}</span>
+                      <span className="text-[10px] text-muted-foreground block mt-0.5">{opt.sub}</span>
                     </button>
                   );
                 })}
@@ -307,14 +307,14 @@ export function SponsoredCampusDrops() {
             </div>
 
             {/* Campaign Pricing & Instant Launch Button */}
-            <div className="p-4 rounded-xl bg-[#090d14] border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="p-4 rounded-xl bg-background border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">تكلفة البث الفوري:</span>
+                  <span className="text-xs text-muted-foreground">تكلفة البث الفوري:</span>
                   <span className="text-base font-mono font-bold text-amber-400">{dropFee.toFixed(2)} د.أ</span>
-                  <span className="text-[10px] text-slate-500">/ للبث الواحد</span>
+                  <span className="text-[10px] text-muted-foreground">/ للبث الواحد</span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-muted-foreground mt-0.5">
                   يصل الإشعار إلى <strong className="text-white font-mono">{activeZone.studentCount.toLocaleString()}</strong> طالب مستهدف في النطاق.
                 </p>
               </div>
@@ -351,17 +351,17 @@ export function SponsoredCampusDrops() {
                     {broadcastSuccess.dropId}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-slate-300">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-foreground/80">
                   <div>
-                    <span className="text-slate-500 block text-[10px]">الطلاب المستلمون:</span>
+                    <span className="text-muted-foreground block text-[10px]">الطلاب المستلمون:</span>
                     <span className="font-bold font-mono text-white">{broadcastSuccess.sentCount.toLocaleString()} طالب</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px]">النطاق الجغرافي:</span>
+                    <span className="text-muted-foreground block text-[10px]">النطاق الجغرافي:</span>
                     <span className="font-bold text-white">{broadcastSuccess.zoneName}</span>
                   </div>
                   <div>
-                    <span className="text-slate-500 block text-[10px]">سرعة التسليم:</span>
+                    <span className="text-muted-foreground block text-[10px]">سرعة التسليم:</span>
                     <span className="font-mono text-emerald-400">99.4% خلال 1.2s</span>
                   </div>
                 </div>
@@ -373,8 +373,8 @@ export function SponsoredCampusDrops() {
         {/* ========================================================================= */}
         {/* 2. Real-Time Smartphone Lockscreen Push Preview (5 Cols) */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-5 rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl flex flex-col items-center">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-white/10 mb-5">
+        <div className="lg:col-span-5 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl flex flex-col items-center">
+          <div className="w-full flex items-center justify-between pb-3 border-b border-border mb-5">
             <div className="flex items-center gap-2">
               <Smartphone className="h-4 w-4 text-amber-400" />
               <span className="text-xs font-bold text-white tracking-wide">
@@ -395,7 +395,7 @@ export function SponsoredCampusDrops() {
 
             {/* Lockscreen Clock */}
             <div className="text-center mt-6 space-y-1">
-              <span className="text-[11px] font-medium text-slate-300 block">
+              <span className="text-[11px] font-medium text-foreground/80 block">
                 الخميس، 18 أيلول
               </span>
               <span className="text-5xl font-extrabold text-white font-mono tracking-tight block">
@@ -404,16 +404,16 @@ export function SponsoredCampusDrops() {
             </div>
 
             {/* Simulated Push Notification Banner */}
-            <div className="my-auto w-full rounded-2xl bg-black/70 backdrop-blur-xl border border-white/15 p-3.5 shadow-2xl text-right space-y-2 transform hover:scale-[1.02] transition-transform">
+            <div className="my-auto w-full rounded-2xl bg-black/70 backdrop-blur-xl border border-border p-3.5 shadow-2xl text-right space-y-2 transform hover:scale-[1.02] transition-transform">
               {/* Push Header */}
-              <div className="flex items-center justify-between text-[10px] text-slate-400">
+              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <div className="w-4 h-4 rounded-md bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-[9px] text-white font-bold">
                     ▲
                   </div>
                   <span className="font-bold text-white">مسار · شريك الحرم</span>
                 </div>
-                <span className="font-mono text-slate-400">الآن</span>
+                <span className="font-mono text-muted-foreground">الآن</span>
               </div>
 
               {/* Push Body */}
@@ -422,14 +422,14 @@ export function SponsoredCampusDrops() {
                   <Sparkles className="h-3 w-3 shrink-0 text-amber-400" />
                   <span className="line-clamp-1">{dealTitle || "عرض حصري في الحرم!"}</span>
                 </div>
-                <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-foreground/80 line-clamp-2 leading-relaxed">
                   {dealDescription || "خصم حصري موجه للطلبة في هذا النطاق."}
                 </p>
               </div>
 
               {/* Geo-tag & Validity Badge */}
-              <div className="pt-1.5 border-t border-white/10 flex items-center justify-between text-[10px]">
-                <span className="text-slate-400 flex items-center gap-1 truncate max-w-[150px]">
+              <div className="pt-1.5 border-t border-border flex items-center justify-between text-[10px]">
+                <span className="text-muted-foreground flex items-center gap-1 truncate max-w-[150px]">
                   <MapPin className="h-3 w-3 text-rose-400 shrink-0" />
                   <span className="truncate">{activeZone.name}</span>
                 </span>
@@ -441,17 +441,17 @@ export function SponsoredCampusDrops() {
 
             {/* Lockscreen Bottom Buttons */}
             <div className="w-full flex items-center justify-between px-4 pb-2">
-              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-white/10 flex items-center justify-center text-xs text-white">
+              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-border flex items-center justify-center text-xs text-white">
                 🔦
               </div>
               <div className="w-16 h-1 bg-white/40 rounded-full mx-auto" />
-              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-white/10 flex items-center justify-center text-xs text-white">
+              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-border flex items-center justify-center text-xs text-white">
                 📷
               </div>
             </div>
           </div>
 
-          <span className="text-[11px] text-slate-500 mt-3 text-center">
+          <span className="text-[11px] text-muted-foreground mt-3 text-center">
             تحديث حي ومباشر للمعاينة بالتزامن مع كتابة محتوى الإشعار واختيار الموقع.
           </span>
         </div>

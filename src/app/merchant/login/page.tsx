@@ -157,7 +157,7 @@ export default function MerchantLoginPage() {
   return (
     <div
       dir="rtl"
-      className="relative min-h-screen bg-[#090d14] text-slate-100 flex flex-col justify-between items-center p-4 sm:p-8 overflow-hidden select-none font-sans"
+      className="relative min-h-screen bg-background text-foreground flex flex-col justify-between items-center p-4 sm:p-8 overflow-hidden select-none font-sans"
     >
       {/* Background Engineering Grids & Radial Accents (Linear / Vercel style) */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
@@ -185,7 +185,7 @@ export default function MerchantLoginPage() {
             <div className="flex flex-col text-start">
               <div className="flex items-center gap-2">
                 <span className="text-base font-bold tracking-tight text-white">مسار</span>
-                <span className="text-xs text-slate-400 font-mono">/ الشركاء</span>
+                <span className="text-xs text-muted-foreground font-mono">/ الشركاء</span>
               </div>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-medium text-emerald-400">
@@ -201,7 +201,7 @@ export default function MerchantLoginPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="text-xs font-medium text-slate-300 hover:text-white transition-all px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.03] hover:bg-white/[0.08] inline-flex items-center gap-1.5 shadow-sm"
+            className="text-xs font-medium text-foreground/80 hover:text-white transition-all px-3 py-1.5 rounded-lg border border-border bg-white/[0.03] hover:bg-white/[0.08] inline-flex items-center gap-1.5 shadow-sm"
           >
             <span>بوابة الطلاب الرئيسية</span>
             <ArrowRight className="h-3.5 w-3.5 rotate-180 text-emerald-400" />
@@ -211,13 +211,13 @@ export default function MerchantLoginPage() {
 
       {/* 3. بطاقة ونموذج تسجيل الدخول (Login Form Card) */}
       <main className="relative z-10 w-full max-w-[440px] my-auto">
-        <div className="relative rounded-2xl border border-white/10 bg-[#0f1724] shadow-2xl backdrop-blur-xl p-6 sm:p-8 overflow-hidden">
+        <div className="relative rounded-2xl border border-border bg-card shadow-2xl backdrop-blur-xl p-6 sm:p-8 overflow-hidden">
           {/* Top glowing hairline border on card */}
           <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
 
           {/* Quick Demo Helper Bar */}
           <div className="flex items-center justify-between mb-5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.03] text-[10px] font-mono text-slate-400">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-white/[0.03] text-[10px] font-mono text-muted-foreground">
               <Store className="h-3 w-3 text-amber-400" />
               <span>نظام نقاط البيع والخصومات</span>
             </span>
@@ -234,7 +234,7 @@ export default function MerchantLoginPage() {
           </div>
 
           {/* Mode Tabs: Full Merchant vs Cashier POS */}
-          <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-[#090d14] border border-white/5 mb-6 text-xs">
+          <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-background border border-border/60 mb-6 text-xs">
             <button
               type="button"
               onClick={() => {
@@ -243,8 +243,8 @@ export default function MerchantLoginPage() {
               }}
               className={`py-2 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
                 authMode === "credentials"
-                  ? "bg-[#0f1724] text-white shadow-sm border border-white/10"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-card text-white shadow-sm border border-border"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Lock className="h-3.5 w-3.5 text-emerald-400" />
@@ -259,8 +259,8 @@ export default function MerchantLoginPage() {
               }}
               className={`py-2 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
                 authMode === "pin"
-                  ? "bg-[#0f1724] text-white shadow-sm border border-white/10"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-card text-white shadow-sm border border-border"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <ScanLine className="h-3.5 w-3.5 text-amber-400" />
@@ -273,7 +273,7 @@ export default function MerchantLoginPage() {
             <h1 className="text-2xl font-bold tracking-tight text-white">
               {authMode === "credentials" ? "تسجيل الدخول للمتجر" : "الدخول السريع للكاشير"}
             </h1>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {authMode === "credentials"
                 ? "أدر العروض والخصومات الطلابية الحصرية وتابع مؤشرات الأداء والمبيعات."
                 : "أدخل رمز PIN المخصص لنقطة البيع لبدء مسح وقبول كوبونات الطلاب فورياً."}
@@ -301,7 +301,7 @@ export default function MerchantLoginPage() {
               <>
                 {/* Email Field */}
                 <div className="space-y-1.5 text-start">
-                  <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                  <label className="text-xs font-medium text-foreground/80 flex items-center gap-1.5">
                     <Mail className="h-3.5 w-3.5 text-emerald-400" />
                     <span>البريد الإلكتروني للفرع / النشاط التجاري</span>
                   </label>
@@ -310,7 +310,7 @@ export default function MerchantLoginPage() {
                       required
                       type="email"
                       placeholder="store@example.jo"
-                      className="w-full h-11 px-3.5 py-2 rounded-xl border border-white/10 bg-[#090d14]/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                      className="w-full h-11 px-3.5 py-2 rounded-xl border border-border bg-background/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                       value={formData.contactEmail}
                       onChange={(e) =>
                         setFormData({ ...formData, contactEmail: e.target.value })
@@ -322,7 +322,7 @@ export default function MerchantLoginPage() {
                 {/* Password Field */}
                 <div className="space-y-1.5 text-start">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
+                    <label className="text-xs font-medium text-foreground/80 flex items-center gap-1.5">
                       <Lock className="h-3.5 w-3.5 text-emerald-400" />
                       <span>كلمة المرور</span>
                     </label>
@@ -332,7 +332,7 @@ export default function MerchantLoginPage() {
                         e.preventDefault();
                         alert("يرجى التواصل مع الدعم الفني أو البريد المسجل لإعادة ضبط كلمة المرور: support@masar.jo");
                       }}
-                      className="text-[11px] text-slate-400 hover:text-emerald-400 transition-colors"
+                      className="text-[11px] text-muted-foreground hover:text-emerald-400 transition-colors"
                     >
                       نسيت كلمة المرور؟
                     </Link>
@@ -342,7 +342,7 @@ export default function MerchantLoginPage() {
                       required
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••••••"
-                      className="w-full h-11 px-3.5 py-2 pl-10 rounded-xl border border-white/10 bg-[#090d14]/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                      className="w-full h-11 px-3.5 py-2 pl-10 rounded-xl border border-border bg-background/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                       value={formData.password}
                       onChange={(e) =>
                         setFormData({ ...formData, password: e.target.value })
@@ -351,7 +351,7 @@ export default function MerchantLoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1 cursor-pointer"
                       tabIndex={-1}
                       aria-label="إظهار/إخفاء كلمة المرور"
                     >
@@ -366,12 +366,12 @@ export default function MerchantLoginPage() {
 
                 {/* Remember POS device */}
                 <div className="flex items-center justify-between pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer text-xs text-slate-400 hover:text-slate-200 select-none">
+                  <label className="flex items-center gap-2 cursor-pointer text-xs text-muted-foreground hover:text-foreground select-none">
                     <input
                       type="checkbox"
                       checked={rememberDevice}
                       onChange={(e) => setRememberDevice(e.target.checked)}
-                      className="rounded border-white/20 bg-[#090d14] text-emerald-500 accent-emerald-500 h-3.5 w-3.5 cursor-pointer"
+                      className="rounded border-border bg-background text-emerald-500 accent-emerald-500 h-3.5 w-3.5 cursor-pointer"
                     />
                     <span>تذكر هذا الجهاز / نقطة البيع (POS)</span>
                   </label>
@@ -384,10 +384,10 @@ export default function MerchantLoginPage() {
                   <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-2">
                     <KeyRound className="h-6 w-6" />
                   </div>
-                  <label className="text-xs font-medium text-slate-300">
+                  <label className="text-xs font-medium text-foreground/80">
                     رمز PIN للفرع (Branch PIN Code)
                   </label>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-muted-foreground">
                     أدخل الرمز الرباعي الممنوح للكاشير لفتح شاشة فحص العروض
                   </p>
                 </div>
@@ -404,7 +404,7 @@ export default function MerchantLoginPage() {
                       value={pinCode[index]}
                       onChange={(e) => handlePinChange(index, e.target.value)}
                       onKeyDown={(e) => handlePinKeyDown(index, e)}
-                      className="w-12 h-14 text-center text-xl font-bold font-mono rounded-xl border border-white/15 bg-[#090d14] text-amber-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+                      className="w-12 h-14 text-center text-xl font-bold font-mono rounded-xl border border-border bg-background text-amber-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
                     />
                   ))}
                 </div>
@@ -438,7 +438,7 @@ export default function MerchantLoginPage() {
           </form>
 
           {/* 4. بطاقة التحقق السريع لنقاط البيع (Cashier Quick-Access Banner) */}
-          <div className="mt-6 pt-5 border-t border-white/10">
+          <div className="mt-6 pt-5 border-t border-border">
             <div
               onClick={() => {
                 setAuthMode(authMode === "credentials" ? "pin" : "credentials");
@@ -456,7 +456,7 @@ export default function MerchantLoginPage() {
                       ? "تسجيل دخول سريع لنقاط البيع عبر رمز PIN للفرع"
                       : "العودة لتسجيل الدخول ببيانات الحساب الكاملة"}
                   </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5">
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
                     {authMode === "credentials"
                       ? "دخول مخصص للكاشير ومسح الكوبونات دون صلاحيات الإدارة"
                       : "الوصول لكافة لوحات التحكم والتقارير المالية للتاجر"}
@@ -469,14 +469,14 @@ export default function MerchantLoginPage() {
         </div>
 
         {/* Security & POS Encryption */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-slate-400 font-mono">
+        <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-muted-foreground font-mono">
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
           <span>تشفير نقطة البيع مفعّل بمعايير TLS 1.3 · شبكة مسار المعتمدة</span>
         </div>
       </main>
 
       {/* 5. تذييل الصفحة (Footer) */}
-      <footer className="relative z-10 w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 text-[11px] text-slate-400 border-t border-white/10">
+      <footer className="relative z-10 w-full max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-3 pt-8 text-[11px] text-muted-foreground border-t border-border">
         <div className="flex items-center gap-2 font-mono">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />

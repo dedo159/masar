@@ -304,7 +304,7 @@ export function DynamicRollingQrGuard() {
   return (
     <div className="space-y-6">
       {/* Module Header Banner */}
-      <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-5 shadow-xl relative overflow-hidden">
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-xl relative overflow-hidden">
         <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -320,14 +320,14 @@ export function DynamicRollingQrGuard() {
                   Anti-Fraud Pro
                 </span>
               </div>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-muted-foreground mt-0.5">
                 توليد ومطابقة الرموز المشفرة المتغيرة كل 30 ثانية مع حماية لقطات الشاشة وتقييد معدل الاستخدام الزمني (Rate Limiting).
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-[#090d14] border border-white/10 text-slate-300 flex items-center gap-2">
+            <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-background border border-border text-foreground/80 flex items-center gap-2">
               <Clock className="h-3.5 w-3.5 text-amber-400 animate-spin" />
               <span>دورة التحديث: 30 ثانية</span>
             </span>
@@ -338,12 +338,12 @@ export function DynamicRollingQrGuard() {
       {/* Grid: Left = Student Client Mockup, Right = Merchant POS Validator */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* 1. Client-Side Student Simulation */}
-        <div className="lg:col-span-5 rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col items-center">
+        <div className="lg:col-span-5 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col items-center">
           <div className="absolute inset-0 bg-[radial-gradient(#ffffff04_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
           <div className="absolute -top-12 -right-12 w-36 h-36 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
           {/* Frame Header */}
-          <div className="w-full flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+          <div className="w-full flex items-center justify-between pb-4 border-b border-border mb-5">
             <div className="flex items-center gap-2">
               <Smartphone className="h-4 w-4 text-cyan-400" />
               <span className="text-xs font-bold text-white tracking-wide">
@@ -356,7 +356,7 @@ export function DynamicRollingQrGuard() {
           </div>
 
           {/* Student Verification Badge */}
-          <div className="w-full rounded-xl bg-[#090d14] border border-white/10 p-3 mb-4 flex items-center justify-between">
+          <div className="w-full rounded-xl bg-background border border-border p-3 mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs">
                 {student.firstName[0]}
@@ -368,7 +368,7 @@ export function DynamicRollingQrGuard() {
                     {student.maskedId}
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400">{student.university}</p>
+                <p className="text-[10px] text-muted-foreground">{student.university}</p>
               </div>
             </div>
             <div className="text-left">
@@ -400,7 +400,7 @@ export function DynamicRollingQrGuard() {
           {/* Linear Progress Bar (30s) */}
           <div className="w-full mt-4 space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-400 flex items-center gap-1">
+              <span className="text-muted-foreground flex items-center gap-1">
                 <RotateCw className={`h-3 w-3 text-cyan-400 ${countdown <= 5 ? "animate-spin" : ""}`} />
                 <span>تجدد الرمز تلقائياً:</span>
               </span>
@@ -417,9 +417,9 @@ export function DynamicRollingQrGuard() {
           </div>
 
           {/* Rolling Token Display & One-Click Copy */}
-          <div className="w-full mt-4 p-3 rounded-xl bg-[#090d14] border border-white/10 flex items-center justify-between">
+          <div className="w-full mt-4 p-3 rounded-xl bg-background border border-border flex items-center justify-between">
             <div>
-              <span className="text-[10px] text-slate-400 block">رمز التحقق المتغير (Rolling Token):</span>
+              <span className="text-[10px] text-muted-foreground block">رمز التحقق المتغير (Rolling Token):</span>
               <span className="text-lg font-mono font-bold text-white tracking-widest text-start block">
                 {currentToken}
               </span>
@@ -429,7 +429,7 @@ export function DynamicRollingQrGuard() {
               variant="outline"
               size="sm"
               onClick={handleCopyCurrentToken}
-              className="border-white/10 hover:bg-white/5 text-xs text-slate-200 gap-1.5"
+              className="border-border hover:bg-white/5 text-xs text-foreground gap-1.5"
             >
               {copiedToken ? (
                 <>
@@ -458,9 +458,9 @@ export function DynamicRollingQrGuard() {
         </div>
 
         {/* 2. Merchant POS Validator Interface */}
-        <div className="lg:col-span-7 rounded-2xl border border-white/10 bg-[#0f1724] p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
+        <div className="lg:col-span-7 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl flex flex-col justify-between">
           <div className="space-y-5">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2">
                 <Terminal className="h-4 w-4 text-emerald-400" />
                 <span className="text-xs font-bold text-white tracking-wide">
@@ -474,9 +474,9 @@ export function DynamicRollingQrGuard() {
 
             {/* Input & Scanner Form */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+              <label className="text-xs font-semibold text-foreground/80 flex items-center justify-between">
                 <span>أدخل رمز الطالب المتغير (أو امسح الكود بالكاميرا):</span>
-                <span className="text-[10px] font-mono text-slate-400">تنسيق: MSR-XXXX-X</span>
+                <span className="text-[10px] font-mono text-muted-foreground">تنسيق: MSR-XXXX-X</span>
               </label>
 
               <div className="flex gap-2">
@@ -489,13 +489,13 @@ export function DynamicRollingQrGuard() {
                       if (e.key === "Enter") handleValidateCode();
                     }}
                     placeholder="مثال: MSR-8829-X"
-                    className="bg-[#090d14] border-white/10 text-white font-mono tracking-widest text-lg h-12 text-center rounded-xl focus:border-cyan-500 focus:ring-cyan-500/20 placeholder:text-slate-600 uppercase"
+                    className="bg-background border-border text-white font-mono tracking-widest text-lg h-12 text-center rounded-xl focus:border-cyan-500 focus:ring-cyan-500/20 placeholder:text-slate-600 uppercase"
                   />
                   {inputCode && (
                     <button
                       type="button"
                       onClick={() => setInputCode("")}
-                      className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white text-xs"
                     >
                       مسح
                     </button>
@@ -508,7 +508,7 @@ export function DynamicRollingQrGuard() {
                   className={`h-12 px-4 rounded-xl border flex items-center gap-2 text-xs font-semibold cursor-pointer transition-all ${
                     isCameraOpen
                       ? "bg-rose-500/10 border-rose-500/30 text-rose-300 hover:bg-rose-500/20"
-                      : "bg-[#090d14] border-white/10 text-slate-200 hover:bg-white/5 hover:border-cyan-500/40"
+                      : "bg-background border-border text-foreground hover:bg-white/5 hover:border-cyan-500/40"
                   }`}
                 >
                   <Camera className="h-4 w-4 text-cyan-400" />
@@ -547,8 +547,8 @@ export function DynamicRollingQrGuard() {
             />
 
             {/* Quick Test Scenarios */}
-            <div className="p-3 rounded-xl bg-[#090d14] border border-white/10 space-y-2">
-              <span className="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+            <div className="p-3 rounded-xl bg-background border border-border space-y-2">
+              <span className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5">
                 <Sparkles className="h-3 w-3 text-cyan-400" />
                 <span>حالات الاختبار السريع (محاكاة الكاشير):</span>
               </span>
@@ -593,7 +593,7 @@ export function DynamicRollingQrGuard() {
                     setInputCode("FAKE-9999-Z");
                     handleValidateCode("FAKE-9999-Z");
                   }}
-                  className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-white/10 text-[11px] font-mono text-slate-300 text-center transition-all cursor-pointer"
+                  className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-border text-[11px] font-mono text-foreground/80 text-center transition-all cursor-pointer"
                 >
                   ✕ رمز غير صالح (Invalid)
                 </button>
@@ -615,19 +615,19 @@ export function DynamicRollingQrGuard() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">اسم وهوية الطالب:</span>
+                    <span className="text-[10px] text-muted-foreground block">اسم وهوية الطالب:</span>
                     <span className="font-semibold text-white">
                       {validationResponse.details.studentName}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">العرض الترويجي:</span>
+                    <span className="text-[10px] text-muted-foreground block">العرض الترويجي:</span>
                     <span className="font-semibold text-emerald-300">
                       {validationResponse.details.deal}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">قيمة الخصم / السعر النهائي:</span>
+                    <span className="text-[10px] text-muted-foreground block">قيمة الخصم / السعر النهائي:</span>
                     <span className="font-mono font-bold text-white">
                       خصم {validationResponse.details.discountAmount?.toFixed(2)} د.أ ← {validationResponse.details.finalPrice?.toFixed(2)} د.أ
                     </span>
@@ -635,7 +635,7 @@ export function DynamicRollingQrGuard() {
                 </div>
 
                 <div className="pt-2 flex items-center justify-between border-t border-emerald-500/20">
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-[11px] text-muted-foreground">
                     يمكن تسجيل رقم العملية في شاشة الكاشير للربط المحاسبي.
                   </span>
                   <Button
@@ -676,7 +676,7 @@ export function DynamicRollingQrGuard() {
                 <p className="text-xs text-rose-200/90 leading-relaxed">
                   {validationResponse.message}
                 </p>
-                <div className="p-2.5 rounded-lg bg-[#090d14] border border-rose-500/20 text-[11px] font-mono text-slate-300 flex items-center justify-between">
+                <div className="p-2.5 rounded-lg bg-background border border-rose-500/20 text-[11px] font-mono text-foreground/80 flex items-center justify-between">
                   <span>الوقت المتبقي لفك الحظر:</span>
                   <span className="text-rose-400 font-bold">5 ساعات و 18 دقيقة</span>
                 </div>
@@ -697,15 +697,15 @@ export function DynamicRollingQrGuard() {
 
             {/* API Contract Headers Panel */}
             {validationResponse.details?.apiHeaders && (
-              <div className="rounded-xl border border-white/5 bg-[#090d14] p-3 space-y-1.5">
-                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono pb-1 border-b border-white/5">
+              <div className="rounded-xl border border-border/60 bg-background p-3 space-y-1.5">
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground font-mono pb-1 border-b border-border/60">
                   <span className="flex items-center gap-1">
                     <Terminal className="h-3 w-3 text-cyan-400" />
                     <span>HTTP Response Headers (API Contract):</span>
                   </span>
                   <span>HTTP/1.1 {validationResponse.status === "success" ? "200 OK" : validationResponse.status === "rate_limited" ? "429 Too Many Requests" : "400 Bad Request"}</span>
                 </div>
-                <div className="font-mono text-[10px] text-slate-400 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5">
+                <div className="font-mono text-[10px] text-muted-foreground grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-0.5">
                   <div>X-RateLimit-Limit: <span className="text-cyan-400">{validationResponse.details.apiHeaders["X-RateLimit-Limit"]}</span></div>
                   <div>X-RateLimit-Remaining: <span className="text-cyan-400">{validationResponse.details.apiHeaders["X-RateLimit-Remaining"]}</span></div>
                   <div>X-RateLimit-Reset: <span className="text-cyan-400">{validationResponse.details.apiHeaders["X-RateLimit-Reset"]}</span></div>

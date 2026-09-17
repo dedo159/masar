@@ -513,7 +513,7 @@ export default function MerchantDashboardPage() {
   return (
     <div className="space-y-6">
       {/* 1. Fixed / Sticky Top Merchant Header */}
-      <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-5 shadow-xl backdrop-blur-xl">
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-xl backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Store Info & Live POS Indicator */}
           <div className="flex items-center gap-4">
@@ -534,14 +534,14 @@ export default function MerchantDashboardPage() {
                 <button
                   type="button"
                   onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                  className="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1 font-medium cursor-pointer"
+                  className="text-xs text-muted-foreground hover:text-white transition-colors flex items-center gap-1 font-medium cursor-pointer"
                 >
                   <span>{currentBranch}</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-slate-500" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </button>
 
                 {isBranchDropdownOpen && (
-                  <div className="absolute top-6 right-0 z-30 w-72 rounded-xl border border-white/10 bg-[#090d14] p-1.5 shadow-2xl space-y-1">
+                  <div className="absolute top-6 right-0 z-30 w-72 rounded-xl border border-border bg-background p-1.5 shadow-2xl space-y-1">
                     {[
                       "فرع الجامعة الأردنية — مجمّع العلوم والطب",
                       "فرع جامعة عمان الأهلية — البوابة الرئيسية",
@@ -557,7 +557,7 @@ export default function MerchantDashboardPage() {
                         className={`w-full text-right px-3 py-2 rounded-lg text-xs transition-colors ${
                           currentBranch === branch
                             ? "bg-emerald-500/20 text-emerald-400 font-semibold"
-                            : "text-slate-300 hover:bg-white/5"
+                            : "text-foreground/80 hover:bg-white/5"
                         }`}
                       >
                         {branch}
@@ -570,14 +570,14 @@ export default function MerchantDashboardPage() {
           </div>
 
           {/* 3 Core Navigation Tabs */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090d14] border border-white/10 self-start lg:self-auto overflow-x-auto max-w-full">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-background border border-border self-start lg:self-auto overflow-x-auto max-w-full">
             <button
               type="button"
               onClick={() => setActiveTab("redemption")}
               className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "redemption"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <ScanLine className="h-4 w-4" />
@@ -593,7 +593,7 @@ export default function MerchantDashboardPage() {
               className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "anti-fraud"
                   ? "bg-cyan-600 text-white shadow-md shadow-cyan-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <ShieldCheck className="h-4 w-4 text-cyan-400" />
@@ -609,7 +609,7 @@ export default function MerchantDashboardPage() {
               className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "settlements"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <DollarSign className="h-4 w-4 text-emerald-400" />
@@ -625,7 +625,7 @@ export default function MerchantDashboardPage() {
               className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "campus-drops"
                   ? "bg-amber-600 text-white shadow-md shadow-amber-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <Radio className="h-4 w-4 text-amber-400" />
@@ -641,7 +641,7 @@ export default function MerchantDashboardPage() {
               className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "deals"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <Tag className="h-4 w-4" />
@@ -654,7 +654,7 @@ export default function MerchantDashboardPage() {
               className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "logs"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-white"
               }`}
             >
               <TrendingUp className="h-4 w-4" />
@@ -670,7 +670,7 @@ export default function MerchantDashboardPage() {
       {activeTab === "redemption" && (
         <div className="space-y-6">
           {/* Cashier Main Card */}
-          <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+          <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
 
             <div className="max-w-2xl mx-auto space-y-6">
@@ -683,7 +683,7 @@ export default function MerchantDashboardPage() {
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                   التحقق من كوبون الطالب وحساب الحصة
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-400">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   أدخل رمز الخصم أو امسح الـ QR Code بالكاميرا للتحقق من عدد مرات الاستخدام المتبقية للطالب واعتماد الفاتورة.
                 </p>
               </div>
@@ -702,13 +702,13 @@ export default function MerchantDashboardPage() {
                         handleVerifyCode();
                       }
                     }}
-                    className="w-full h-18 sm:h-20 text-2xl sm:text-3xl font-mono font-bold text-center tracking-[0.2em] rounded-2xl border-2 border-emerald-500/30 bg-[#090d14] text-white placeholder-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner uppercase"
+                    className="w-full h-18 sm:h-20 text-2xl sm:text-3xl font-mono font-bold text-center tracking-[0.2em] rounded-2xl border-2 border-emerald-500/30 bg-background text-white placeholder-slate-700 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-500/10 transition-all shadow-inner uppercase"
                   />
                   {voucherCode && (
                     <button
                       type="button"
                       onClick={() => setVoucherCode("")}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-colors"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-muted-foreground hover:text-white hover:bg-white/10 transition-colors"
                     >
                       <X className="h-5 w-5" />
                     </button>
@@ -717,7 +717,7 @@ export default function MerchantDashboardPage() {
 
                 {/* Quick Test Codes Pills with Limit Testing */}
                 <div className="flex items-center justify-center gap-1.5 flex-wrap text-xs font-mono">
-                  <span className="text-slate-500 text-[11px]">أكواد تجريبية:</span>
+                  <span className="text-muted-foreground text-[11px]">أكواد تجريبية:</span>
                   {[
                     { label: "MASAR20 (استخدام 1/3)", code: "MASAR20" },
                     { label: "BURGER50 (استخدام 2/2)", code: "BURGER50" },
@@ -735,7 +735,7 @@ export default function MerchantDashboardPage() {
                       className={`px-2.5 py-1 rounded-lg border transition-all ${
                         item.code === "LIMIT_TEST"
                           ? "border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
-                          : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400"
+                          : "border-border bg-white/[0.03] text-foreground/80 hover:border-emerald-500/40 hover:text-emerald-400"
                       }`}
                     >
                       {item.label}
@@ -768,7 +768,7 @@ export default function MerchantDashboardPage() {
                 <Button
                   variant="outline"
                   onClick={() => setScannerOpen(true)}
-                  className="h-13 border-white/15 bg-white/[0.03] hover:bg-white/[0.08] text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  className="h-13 border-border bg-white/[0.03] hover:bg-white/[0.08] text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <QrCode className="h-5 w-5 text-amber-400" />
                   <span>مسح الـ QR Code بكاميرا الجهاز</span>
@@ -778,7 +778,7 @@ export default function MerchantDashboardPage() {
               {/* 3. Real-time Feedback Card with Usage Counter Quota */}
               {verificationResult.status === "success" && (
                 <div className="rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/[0.12] via-[#090d14] to-[#090d14] p-5 sm:p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <div className="flex items-center justify-between border-b border-border pb-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
                         <CheckCircle2 className="h-6 w-6" />
@@ -792,19 +792,19 @@ export default function MerchantDashboardPage() {
                             معتمد ✓
                           </span>
                         </div>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-muted-foreground">
                           تم تسجيل العملية وإصدار الرقم المرجعي الموثق.
                         </p>
                       </div>
                     </div>
 
                     {/* Transaction Reference ID */}
-                    <div className="flex items-center gap-2 bg-[#090d14] px-3 py-1.5 rounded-xl border border-white/10 font-mono text-xs text-slate-300">
+                    <div className="flex items-center gap-2 bg-background px-3 py-1.5 rounded-xl border border-border font-mono text-xs text-foreground/80">
                       <span>{verificationResult.trxId}</span>
                       <button
                         type="button"
                         onClick={handleCopyTrx}
-                        className="text-slate-400 hover:text-white transition-colors"
+                        className="text-muted-foreground hover:text-white transition-colors"
                         title="نسخ رقم العملية"
                       >
                         {copiedTrx ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
@@ -813,11 +813,11 @@ export default function MerchantDashboardPage() {
                   </div>
 
                   {/* Highlight: Usage Count / Limit Monitor */}
-                  <div className="p-4 rounded-xl bg-[#0f1724] border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                  <div className="p-4 rounded-xl bg-card border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
                     {/* Student Limit Tracker */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                        <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
                           <UserCheck className="h-4 w-4 text-emerald-400" />
                           <span>سجل استخدام الطالب للكود:</span>
                         </span>
@@ -825,7 +825,7 @@ export default function MerchantDashboardPage() {
                           المرة {verificationResult.studentUsageCount} من {verificationResult.studentMaxAllowed}
                         </span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
                         <span>الحصة المتبقية للطالب:</span>
                         <span className="font-bold text-amber-400">
                           {verificationResult.remainingForStudent && verificationResult.remainingForStudent > 0
@@ -836,9 +836,9 @@ export default function MerchantDashboardPage() {
                     </div>
 
                     {/* Store Deal Total Cap Tracker */}
-                    <div className="space-y-1.5 sm:border-r sm:border-white/10 sm:pr-4">
+                    <div className="space-y-1.5 sm:border-r sm:border-border sm:pr-4">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                        <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
                           <Hash className="h-4 w-4 text-amber-400" />
                           <span>إجمالي استهلاك الكود بالفرع:</span>
                         </span>
@@ -846,7 +846,7 @@ export default function MerchantDashboardPage() {
                           {verificationResult.dealCurrentUsage} / {verificationResult.dealTotalCap}
                         </span>
                       </div>
-                      <div className="h-1.5 w-full rounded-full bg-[#090d14] overflow-hidden">
+                      <div className="h-1.5 w-full rounded-full bg-background overflow-hidden">
                         <div
                           className="h-full bg-gradient-to-r from-emerald-500 to-amber-500"
                           style={{
@@ -866,21 +866,21 @@ export default function MerchantDashboardPage() {
 
                   {/* Student & Deal Details Grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
-                      <span className="text-slate-500">بيانات الطالب المستفيد:</span>
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-border/60 space-y-1">
+                      <span className="text-muted-foreground">بيانات الطالب المستفيد:</span>
                       <p className="text-sm font-bold text-white">{verificationResult.studentName}</p>
-                      <p className="text-slate-400 font-mono text-[11px]">
+                      <p className="text-muted-foreground font-mono text-[11px]">
                         رقم جامعي: {verificationResult.studentId}
                       </p>
                       <p className="text-emerald-400 text-[11px]">{verificationResult.university}</p>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 space-y-1">
-                      <span className="text-slate-500">تفاصيل الخصم المطبق:</span>
+                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-border/60 space-y-1">
+                      <span className="text-muted-foreground">تفاصيل الخصم المطبق:</span>
                       <p className="text-sm font-bold text-amber-400">{verificationResult.dealTitle}</p>
-                      <div className="flex items-center justify-between text-[11px] pt-1 border-t border-white/5 mt-1 font-mono">
-                        <span className="text-slate-400">قيمة الفاتورة الأصلية:</span>
-                        <span className="text-slate-300 line-through">
+                      <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/60 mt-1 font-mono">
+                        <span className="text-muted-foreground">قيمة الفاتورة الأصلية:</span>
+                        <span className="text-foreground/80 line-through">
                           {verificationResult.originalPrice?.toFixed(2)} د.أ
                         </span>
                       </div>
@@ -888,7 +888,7 @@ export default function MerchantDashboardPage() {
                         <span>المبلغ الموفر للطالب:</span>
                         <span>- {verificationResult.discountAmount?.toFixed(2)} د.أ</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs font-mono text-white font-extrabold pt-1 border-t border-white/5">
+                      <div className="flex items-center justify-between text-xs font-mono text-white font-extrabold pt-1 border-t border-border/60">
                         <span>المبلغ المستحق للدفع:</span>
                         <span className="text-base text-emerald-400">
                           {verificationResult.finalPrice?.toFixed(2)} د.أ
@@ -899,7 +899,7 @@ export default function MerchantDashboardPage() {
 
                   {/* Reset Cashier Action */}
                   <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
                       <ShieldCheck className="h-4 w-4 text-emerald-400" />
                       <span>محمية ضد التكرار ومقيدة بسقف عدد مرات الاستخدام</span>
                     </div>
@@ -926,7 +926,7 @@ export default function MerchantDashboardPage() {
                       <h4 className="text-sm font-bold text-rose-400">
                         فحص الكود: تم رفض العملية
                       </h4>
-                      <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                      <p className="text-xs text-foreground/80 leading-relaxed font-sans">
                         {verificationResult.errorMessage}
                       </p>
                     </div>
@@ -937,7 +937,7 @@ export default function MerchantDashboardPage() {
                       size="sm"
                       variant="outline"
                       onClick={handleResetCashier}
-                      className="text-xs border-white/10 hover:bg-white/10 text-white h-8 cursor-pointer"
+                      className="text-xs border-border hover:bg-white/10 text-white h-8 cursor-pointer"
                     >
                       إعادة المحاولة
                     </Button>
@@ -949,46 +949,46 @@ export default function MerchantDashboardPage() {
 
           {/* 4. Shift Summary Strip (إحصائيات الوردية الحالية) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>استبدالات الوردية اليوم</span>
                 <ScanLine className="h-4 w-4 text-emerald-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.todayRedemptions} <span className="text-xs text-slate-400 font-sans">عملية</span>
+                {shiftStats.todayRedemptions} <span className="text-xs text-muted-foreground font-sans">عملية</span>
               </p>
               <p className="text-[11px] text-emerald-400 font-mono">+12 عملية عن نفس التوقيت أمس</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>مبيعات الطلاب الميدانية</span>
                 <DollarSign className="h-4 w-4 text-amber-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.shiftSalesVolume.toFixed(2)} <span className="text-xs text-slate-400 font-sans">د.أ</span>
+                {shiftStats.shiftSalesVolume.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
-              <p className="text-[11px] text-slate-400 font-mono">عبر بوابة الدفع السريع والخصومات</p>
+              <p className="text-[11px] text-muted-foreground font-mono">عبر بوابة الدفع السريع والخصومات</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>إجمالي التوفير للطلبة</span>
                 <Sparkles className="h-4 w-4 text-emerald-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-emerald-400">
-                {shiftStats.studentSavingsTotal.toFixed(2)} <span className="text-xs text-slate-400 font-sans">د.أ</span>
+                {shiftStats.studentSavingsTotal.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
-              <p className="text-[11px] text-slate-400 font-mono">حافز زيارة ومبيعات إضافية</p>
+              <p className="text-[11px] text-muted-foreground font-mono">حافز زيارة ومبيعات إضافية</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>الزبائن الجدد من الطلاب</span>
                 <Users className="h-4 w-4 text-purple-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.newStudentCustomers} <span className="text-xs text-slate-400 font-sans">طالب</span>
+                {shiftStats.newStudentCustomers} <span className="text-xs text-muted-foreground font-sans">طالب</span>
               </p>
               <p className="text-[11px] text-purple-400 font-mono">أول تجربة شراء عبر مسار</p>
             </div>
@@ -1002,9 +1002,9 @@ export default function MerchantDashboardPage() {
       {activeTab === "deals" && (
         <div className="space-y-6">
           {/* Deals Control Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl border border-white/10 bg-[#0f1724]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl border border-border bg-card">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold text-slate-400 ml-2">تصنيف العروض:</span>
+              <span className="text-xs font-semibold text-muted-foreground ml-2">تصنيف العروض:</span>
               {["الكل", "وجبات", "مشروبات", "خدمات"].map((category) => (
                 <button
                   key={category}
@@ -1013,7 +1013,7 @@ export default function MerchantDashboardPage() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                     dealFilter === category
                       ? "bg-emerald-600 text-white"
-                      : "bg-[#090d14] text-slate-400 hover:text-white border border-white/5"
+                      : "bg-background text-muted-foreground hover:text-white border border-border/60"
                   }`}
                 >
                   {category}
@@ -1038,7 +1038,7 @@ export default function MerchantDashboardPage() {
               return (
                 <div
                   key={deal.id}
-                  className="p-6 rounded-2xl border border-white/10 bg-[#0f1724] shadow-xl hover:border-white/20 transition-all flex flex-col justify-between space-y-4 text-start"
+                  className="p-6 rounded-2xl border border-border bg-card shadow-xl hover:border-border transition-all flex flex-col justify-between space-y-4 text-start"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between flex-wrap gap-2">
@@ -1061,7 +1061,7 @@ export default function MerchantDashboardPage() {
                           className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
                             deal.isActive
                               ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : "bg-slate-800 text-slate-400 border border-white/5"
+                              : "bg-slate-800 text-muted-foreground border border-border/60"
                           }`}
                         >
                           {deal.isActive ? "نشط · Active" : "متوقف مؤقتاً"}
@@ -1073,33 +1073,33 @@ export default function MerchantDashboardPage() {
                     </div>
 
                     <h3 className="text-base font-bold text-white leading-snug">{deal.title}</h3>
-                    <p className="text-xs text-slate-400 leading-relaxed">{deal.terms}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{deal.terms}</p>
                   </div>
 
                   {/* Usage Cap Progress Bar */}
-                  <div className="space-y-2 pt-3 border-t border-white/10">
+                  <div className="space-y-2 pt-3 border-t border-border">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-slate-400">سقف استهلاك الكوبونات الإجمالي:</span>
+                      <span className="text-muted-foreground">سقف استهلاك الكوبونات الإجمالي:</span>
                       <span className="text-white font-semibold">
                         {deal.usedCount} من أصل {deal.totalCap} كوبون ({usagePercent}%)
                       </span>
                     </div>
 
-                    <div className="h-2 w-full rounded-full bg-[#090d14] overflow-hidden border border-white/5">
+                    <div className="h-2 w-full rounded-full bg-background overflow-hidden border border-border/60">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-amber-500 transition-all duration-500"
                         style={{ width: `${usagePercent}%` }}
                       />
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 font-mono">
+                    <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1 font-mono">
                       <span>صالح لغاية: {deal.validUntil}</span>
                       <span>متبقي: {deal.totalCap - deal.usedCount} كوبون</span>
                     </div>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/60">
                     <button
                       type="button"
                       onClick={() => handleToggleDealStatus(deal.id)}
@@ -1115,7 +1115,7 @@ export default function MerchantDashboardPage() {
                     <button
                       type="button"
                       onClick={() => handleDeleteDeal(deal.id)}
-                      className="px-3 py-1.5 rounded-lg text-xs text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                     >
                       حذف
                     </button>
@@ -1134,66 +1134,66 @@ export default function MerchantDashboardPage() {
         <div className="space-y-6">
           {/* Commercial KPIs Ribbon */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>إجمالي مبيعات طلبة مسار</span>
                 <DollarSign className="h-4 w-4 text-emerald-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">
-                2,480.00 <span className="text-xs text-slate-400 font-sans">د.أ</span>
+                2,480.00 <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
               <p className="text-[11px] text-emerald-400 font-mono">+24% نمو هذا الشهر</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>ساعة الذروة الطلابية</span>
                 <Clock className="h-4 w-4 text-purple-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">01:00 م - 03:30 م</p>
-              <p className="text-[11px] text-slate-400 font-mono">بين المحاضرات وفترات الغداء</p>
+              <p className="text-[11px] text-muted-foreground font-mono">بين المحاضرات وفترات الغداء</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>معدل عودة الطلاب (Retention)</span>
                 <RotateCcw className="h-4 w-4 text-amber-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-amber-400">68%</p>
-              <p className="text-[11px] text-slate-400 font-mono">يعودون للشراء خلال 14 يوماً</p>
+              <p className="text-[11px] text-muted-foreground font-mono">يعودون للشراء خلال 14 يوماً</p>
             </div>
 
-            <div className="p-5 rounded-2xl border border-white/10 bg-[#0f1724] space-y-1">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>متوسط التوفير لكل فاتورة</span>
                 <Sparkles className="h-4 w-4 text-emerald-400" />
               </div>
               <p className="text-2xl font-bold font-mono text-white">
-                2.15 <span className="text-xs text-slate-400 font-sans">د.أ</span>
+                2.15 <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
               <p className="text-[11px] text-emerald-400 font-mono">معدل خصم مثالي يحقق الربحية</p>
             </div>
           </div>
 
           {/* Granular Logs Table with Usage Sequence */}
-          <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-6 shadow-xl space-y-4">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-white">سجل استبدالات الكوبونات المباشر</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-muted-foreground">
                   رصد دقيق لكافة العمليات بالدقائق وعدد مرات استخدام كل طالب لمنع الاحتيال وضبط المحاسبة.
                 </p>
               </div>
 
               {/* Search input */}
               <div className="relative w-full sm:w-72">
-                <Search className="h-4 w-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2" />
+                <Search className="h-4 w-4 text-muted-foreground absolute right-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="بحث باسم الطالب أو رقم #TRX..."
                   value={logSearchQuery}
                   onChange={(e) => setLogSearchQuery(e.target.value)}
-                  className="w-full h-10 pr-9 pl-4 text-xs font-mono rounded-xl border border-white/10 bg-[#090d14] text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-10 pr-9 pl-4 text-xs font-mono rounded-xl border border-border bg-background text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -1202,7 +1202,7 @@ export default function MerchantDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-right text-xs">
                 <thead>
-                  <tr className="border-b border-white/10 text-slate-400 font-mono">
+                  <tr className="border-b border-border text-muted-foreground font-mono">
                     <th className="py-3 px-4">رقم العملية</th>
                     <th className="py-3 px-4">التوقيت الدقيق</th>
                     <th className="py-3 px-4">الطالب والجامعة</th>
@@ -1218,10 +1218,10 @@ export default function MerchantDashboardPage() {
                       <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
                         {log.trxId}
                       </td>
-                      <td className="py-3.5 px-4 text-slate-400 font-mono">{log.timestamp}</td>
+                      <td className="py-3.5 px-4 text-muted-foreground font-mono">{log.timestamp}</td>
                       <td className="py-3.5 px-4">
                         <div className="font-semibold text-white">{log.studentName}</div>
-                        <div className="text-[11px] text-slate-400 font-mono">
+                        <div className="text-[11px] text-muted-foreground font-mono">
                           {log.studentId} • {log.university}
                         </div>
                       </td>
@@ -1274,8 +1274,8 @@ export default function MerchantDashboardPage() {
       {/* ========================================================================= */}
       {isNewDealModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0f1724] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-start">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-start">
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center gap-2">
                 <Tag className="h-5 w-5 text-emerald-400" />
                 <h3 className="text-base font-bold text-white">إضافة عرض وترويج طلابي جديد</h3>
@@ -1283,7 +1283,7 @@ export default function MerchantDashboardPage() {
               <button
                 type="button"
                 onClick={() => setIsNewDealModalOpen(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                className="text-muted-foreground hover:text-white cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -1291,24 +1291,24 @@ export default function MerchantDashboardPage() {
 
             <form onSubmit={handleCreateDeal} className="space-y-3.5 text-xs">
               <div>
-                <label className="text-slate-300 font-semibold mb-1 block">عنوان العرض</label>
+                <label className="text-foreground/80 font-semibold mb-1 block">عنوان العرض</label>
                 <input
                   required
                   type="text"
                   placeholder="مثال: خصم 25% على كافة وجبات الغداء"
                   value={newDealForm.title}
                   onChange={(e) => setNewDealForm({ ...newDealForm, title: e.target.value })}
-                  className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">التصنيف</label>
+                  <label className="text-foreground/80 font-semibold mb-1 block">التصنيف</label>
                   <select
                     value={newDealForm.category}
                     onChange={(e) => setNewDealForm({ ...newDealForm, category: e.target.value })}
-                    className="w-full h-10 px-3 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
                   >
                     <option value="وجبات">🍔 وجبات ومطاعم</option>
                     <option value="مشروبات">☕ مقاهي ومشروبات</option>
@@ -1318,7 +1318,7 @@ export default function MerchantDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">نوع الخصم</label>
+                  <label className="text-foreground/80 font-semibold mb-1 block">نوع الخصم</label>
                   <select
                     value={newDealForm.discountType}
                     onChange={(e) =>
@@ -1327,7 +1327,7 @@ export default function MerchantDashboardPage() {
                         discountType: e.target.value as any,
                       })
                     }
-                    className="w-full h-10 px-3 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
                   >
                     <option value="percentage">نسبة مئوية (Percentage)</option>
                     <option value="bogo">BOGO (اشتري 1 واحصل على 1)</option>
@@ -1339,19 +1339,19 @@ export default function MerchantDashboardPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">قيمة الخصم المعلنة</label>
+                  <label className="text-foreground/80 font-semibold mb-1 block">قيمة الخصم المعلنة</label>
                   <input
                     required
                     type="text"
                     placeholder="مثال: 20% أو بطاطا مجانية"
                     value={newDealForm.discountValue}
                     onChange={(e) => setNewDealForm({ ...newDealForm, discountValue: e.target.value })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">سقف الكوبونات الإجمالي (Total Cap)</label>
+                  <label className="text-foreground/80 font-semibold mb-1 block">سقف الكوبونات الإجمالي (Total Cap)</label>
                   <input
                     required
                     type="number"
@@ -1359,7 +1359,7 @@ export default function MerchantDashboardPage() {
                     placeholder="مثال: 300"
                     value={newDealForm.totalCap}
                     onChange={(e) => setNewDealForm({ ...newDealForm, totalCap: Number(e.target.value) })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
@@ -1367,7 +1367,7 @@ export default function MerchantDashboardPage() {
               {/* Explicit Field: Max Uses Per Student */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block flex items-center gap-1">
+                  <label className="text-foreground/80 font-semibold mb-1 block flex items-center gap-1">
                     <UserCheck className="h-3.5 w-3.5 text-purple-400" />
                     <span>الحد الأقصى لكل طالب (Usage Limit)</span>
                   </label>
@@ -1379,7 +1379,7 @@ export default function MerchantDashboardPage() {
                         maxUsesPerStudent: Number(e.target.value),
                       })
                     }
-                    className="w-full h-10 px-3 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
                   >
                     <option value={1}>مرة واحدة فقط (1x - الأكثر أماناً)</option>
                     <option value={2}>مرتان لكل طالب (2x)</option>
@@ -1390,24 +1390,24 @@ export default function MerchantDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">تاريخ الانتهاء</label>
+                  <label className="text-foreground/80 font-semibold mb-1 block">تاريخ الانتهاء</label>
                   <input
                     required
                     type="date"
                     value={newDealForm.validUntil}
                     onChange={(e) => setNewDealForm({ ...newDealForm, validUntil: e.target.value })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
+                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-slate-300 font-semibold mb-1 block">الشروط والأحكام</label>
+                <label className="text-foreground/80 font-semibold mb-1 block">الشروط والأحكام</label>
                 <textarea
                   rows={2}
                   value={newDealForm.terms}
                   onChange={(e) => setNewDealForm({ ...newDealForm, terms: e.target.value })}
-                  className="w-full p-3 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 text-xs"
+                  className="w-full p-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 text-xs"
                 />
               </div>
 
@@ -1416,7 +1416,7 @@ export default function MerchantDashboardPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setIsNewDealModalOpen(false)}
-                  className="border-white/10 text-white hover:bg-white/10 h-10 text-xs cursor-pointer"
+                  className="border-border text-white hover:bg-white/10 h-10 text-xs cursor-pointer"
                 >
                   إلغاء
                 </Button>
