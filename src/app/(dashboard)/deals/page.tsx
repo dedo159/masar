@@ -15,7 +15,6 @@ import {
   Loader2,
   X,
   QrCode,
-  Copy,
   Check,
   ShieldCheck,
   Sparkles,
@@ -145,7 +144,6 @@ export default function DealsPage() {
   const [redeemLoading, setRedeemLoading] = useState(false);
   const [redeemSuccess, setRedeemSuccess] = useState(false);
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
-  const [copiedCode, setCopiedCode] = useState(false);
   const [rollingTimer, setRollingTimer] = useState(30);
   const [rollingToken, setRollingToken] = useState("MSR-8829-X");
   const [tokenSeed, setTokenSeed] = useState(8829);
@@ -284,12 +282,6 @@ export default function DealsPage() {
       setLoading(false);
       setRedeemLoading(false);
     }
-  };
-
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
   };
 
   const closeDialog = () => {
@@ -546,15 +538,15 @@ export default function DealsPage() {
                 </div>
 
                 {/* Linear Countdown Bar (30s cycle) */}
-                <div className="w-full space-y-1">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <RotateCw className={`h-3 w-3 text-cyan-500 ${rollingTimer <= 5 ? "animate-spin" : ""}`} />
-                      <span>يتجدد الرمز تلقائياً خلال:</span>
+                <div className="w-full space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-muted-foreground">
+                    <span className="flex items-center gap-1.5">
+                      <RotateCw className={`h-3.5 w-3.5 text-cyan-500 ${rollingTimer <= 5 ? "animate-spin" : ""}`} />
+                      <span>يتجدد رمز الـ QR تلقائياً خلال:</span>
                     </span>
                     <span className="font-bold text-cyan-600 dark:text-cyan-400">{rollingTimer} ثانية</span>
                   </div>
-                  <div className="w-full h-1 rounded-full bg-secondary overflow-hidden">
+                  <div className="w-full h-1.5 rounded-full bg-secondary overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-1000 ease-linear rounded-full"
                       style={{ width: `${(rollingTimer / 30) * 100}%` }}
@@ -562,59 +554,9 @@ export default function DealsPage() {
                   </div>
                 </div>
 
-                {/* Voucher Code Strings & Copy Buttons */}
-                <div className="w-full space-y-2">
-                  <div className="w-full flex items-center justify-between p-2.5 rounded-xl bg-background border border-border">
-                    <div className="text-right">
-                      <span className="text-[10px] text-muted-foreground block font-medium">
-                        رمز التحقق المتغير (يتجدد كل 30 ثانية):
-                      </span>
-                      <span className="text-base sm:text-lg font-mono font-bold text-cyan-600 dark:text-cyan-400 tracking-widest block">
-                        {rollingToken}
-                      </span>
-                    </div>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleCopyCode(rollingToken)}
-                      className="border-border text-xs gap-1.5 h-8 sm:h-9 cursor-pointer"
-                    >
-                      {copiedCode ? (
-                        <>
-                          <Check className="h-3.5 w-3.5 text-emerald-500" />
-                          <span>تم النسخ</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3.5 w-3.5" />
-                          <span>نسخ الرمز</span>
-                        </>
-                      )}
-                    </Button>
-                  </div>
-
-                  <div className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-background/60 border border-border/60 text-xs">
-                    <div className="text-right">
-                      <span className="text-[10px] text-muted-foreground">كود العرض الثابت:</span>
-                      <span className="font-mono font-semibold text-foreground mr-1.5">
-                        {getVoucherCode(selectedDeal)}
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopyCode(getVoucherCode(selectedDeal))}
-                      className="text-[11px] text-primary hover:underline font-mono"
-                    >
-                      نسخ الكوبون
-                    </button>
-                  </div>
-                </div>
-
                 {/* Instructions */}
-                <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  أبرز هذا الرمز لموظف الصندوق / الكاشير ليقوم بمسحه مباشرة بكاميرا نقطة البيع أو إدخال الكود أعلاه. يتجدد الرمز مرة واحدة كل 30 ثانية لضمان الأمان ومكافحة الاحتيال.
+                <p className="text-[11px] text-muted-foreground leading-relaxed pt-1">
+                  أبرز رمز الـ QR هذا لموظف الصندوق / الكاشير ليقوم بمسحه مباشرة عبر كاميرا نقطة البيع لتوثيق الخصم. يتجدد الرمز تلقائياً كل 30 ثانية لضمان الأمان ومكافحة الاحتيال.
                 </p>
               </div>
 
