@@ -31,6 +31,9 @@ import {
   FileText,
   Printer,
   ChevronLeft,
+  Hash,
+  UserCheck,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +48,7 @@ interface Deal {
   discountValue: string;
   usedCount: number;
   totalCap: number;
+  maxUsesPerStudent: number; // Max times one student can redeem this deal
   validUntil: string;
   isActive: boolean;
   terms: string;
@@ -63,6 +67,7 @@ interface RedemptionLog {
   finalPrice: number;
   timestamp: string;
   status: "verified" | "flagged";
+  usageSequence: string; // e.g. "المرة 1 من 3"
 }
 
 export default function MerchantDashboardPage() {
@@ -73,6 +78,13 @@ export default function MerchantDashboardPage() {
   const [storeName, setStoreName] = useState("مطعم شاورما الضيعة");
   const [currentBranch, setCurrentBranch] = useState("فرع الجامعة الأردنية — مجمّع العلوم والطب");
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
+
+  // --- Per-Student Usage Tracking Map (studentId_dealId -> count) ---
+  const [studentDealUsage, setStudentDealUsage] = useState<Record<string, number>>({
+    "202310890_deal-1": 1, // عمر خالد استخدم عرض الشاورما مرة واحدة سابقاً
+    "202210452_deal-2": 2, // سارة أحمد استخدمت عرض BOGO مرتين
+    "202410199_deal-3": 1, // زيد محمود استخدم المشروب المجاني مرة واحدة
+  });
 
   // --- Tab 1: Instant Redemption Tool State ---
   const [voucherCode, setVoucherCode] = useState("");
@@ -89,6 +101,11 @@ export default function MerchantDashboardPage() {
     finalPrice?: number;
     trxId?: string;
     errorMessage?: string;
+    studentUsageCount?: number;
+    studentMaxAllowed?: number;
+    dealCurrentUsage?: number;
+    dealTotalCap?: number;
+    remainingForStudent?: number;
   }>({ status: "idle" });
 
   const [scannerOpen, setScannerOpen] = useState(false);
@@ -102,7 +119,7 @@ export default function MerchantDashboardPage() {
     newStudentCustomers: 19,
   });
 
-  // --- Tab 2: Deals Management State ---
+  // --- Tab 2: Deals Management State with Usage Caps ---
   const [deals, setDeals] = useState<Deal[]>([
     {
       id: "deal-1",
@@ -112,9 +129,10 @@ export default function MerchantDashboardPage() {
       discountValue: "20%",
       usedCount: 142,
       totalCap: 300,
+      maxUsesPerStudent: 3, // Allowed 3 times per student
       validUntil: "2026-11-30",
       isActive: true,
-      terms: "يسري العرض عند إبراز الهوية الجامعية. غير قابل للدمج مع عروض أخرى.",
+      terms: "يسري العرض عند إبراز الهوية الجامعية. بحد أقصى 3 مرات لكل طالب.",
     },
     {
       id: "deal-2",
@@ -124,9 +142,10 @@ export default function MerchantDashboardPage() {
       discountValue: "اشترِ 2 واحصل على 1 مجاناً",
       usedCount: 89,
       totalCap: 150,
+      maxUsesPerStudent: 2, // Allowed 2 times per student
       validUntil: "2026-10-15",
       isActive: true,
-      terms: "ساري طيلة أيام الأسبوع من الساعة 12:00 ظهراً حتى 6:00 مساءً.",
+      terms: "ساري طيلة أيام الأسبوع من 12:00 ظهراً حتى 6:00 م. مرتان لكل طالب كحد أقصى.",
     },
     {
       id: "deal-3",
@@ -136,9 +155,10 @@ export default function MerchantDashboardPage() {
       discountValue: "هدية مجانية",
       usedCount: 215,
       totalCap: 400,
+      maxUsesPerStudent: 5, // Allowed 5 times per student
       validUntil: "2026-12-31",
       isActive: true,
-      terms: "متاح لجميع طلبة الجامعات المسجلين بنظام مسار.",
+      terms: "متاح لجميع طلبة الجامعات المسجلين بنظام مسار. بحد أقصى 5 استخدامات لكل طالب.",
     },
     {
       id: "deal-4",
@@ -148,9 +168,10 @@ export default function MerchantDashboardPage() {
       discountValue: "2.50 د.أ",
       usedCount: 34,
       totalCap: 100,
+      maxUsesPerStudent: 1, // Single use per student
       validUntil: "2026-09-30",
       isActive: false,
-      terms: "للطلبات الميدانية داخل الصالة فقط.",
+      terms: "للطلبات الميدانية داخل الصالة فقط. مسموح مرة واحدة فقط لكل طالب.",
     },
   ]);
 
@@ -162,6 +183,7 @@ export default function MerchantDashboardPage() {
     discountType: "percentage" as const,
     discountValue: "20%",
     totalCap: 200,
+    maxUsesPerStudent: 2,
     validUntil: "2026-12-31",
     terms: "يسري العرض بإبراز تطبيق مسار للطلاب.",
   });
@@ -181,6 +203,7 @@ export default function MerchantDashboardPage() {
       finalPrice: 8.0,
       timestamp: "منذ 4 دقائق (02:41 م)",
       status: "verified",
+      usageSequence: "المرة 1 من 3",
     },
     {
       id: "log-2",
@@ -195,6 +218,7 @@ export default function MerchantDashboardPage() {
       finalPrice: 3.0,
       timestamp: "منذ 18 دقيقة (02:27 م)",
       status: "verified",
+      usageSequence: "المرة 2 من 5",
     },
     {
       id: "log-3",
@@ -209,6 +233,7 @@ export default function MerchantDashboardPage() {
       finalPrice: 4.5,
       timestamp: "منذ 35 دقيقة (02:10 م)",
       status: "verified",
+      usageSequence: "المرة 1 من 2",
     },
     {
       id: "log-4",
@@ -223,6 +248,7 @@ export default function MerchantDashboardPage() {
       finalPrice: 9.6,
       timestamp: "منذ ساعة (01:45 م)",
       status: "verified",
+      usageSequence: "المرة 1 من 3",
     },
     {
       id: "log-5",
@@ -237,6 +263,7 @@ export default function MerchantDashboardPage() {
       finalPrice: 2.6,
       timestamp: "منذ ساعتين (12:50 م)",
       status: "verified",
+      usageSequence: "المرة 3 من 5",
     },
   ]);
 
@@ -252,7 +279,7 @@ export default function MerchantDashboardPage() {
     }
   }, []);
 
-  // --- Handlers: Tab 1 Redemption ---
+  // --- Handlers: Tab 1 Redemption with Full Usage Cap Logic ---
   const handleVerifyCode = (codeToVerify?: string) => {
     const code = (codeToVerify || voucherCode).trim().toUpperCase();
     if (!code) return;
@@ -262,6 +289,16 @@ export default function MerchantDashboardPage() {
 
     setTimeout(() => {
       setIsVerifying(false);
+
+      // 1. Explicit Exceeded Limit Test Simulation
+      if (code === "LIMIT_TEST" || code === "MAXED_OUT") {
+        setVerificationResult({
+          status: "error",
+          errorMessage:
+            "⚠️ تم تجاوز الحد الأقصى المسموح: لقد استنفد الطالب (عمر خالد) كامل مرات استخدام هذا الكوبون (3 من أصل 3 مرات سابقة). غير مسموح بتطبيق الخصم مرة رابعة لنفس الطالب!",
+        });
+        return;
+      }
 
       if (code === "EXPIRED99") {
         setVerificationResult({
@@ -287,47 +324,95 @@ export default function MerchantDashboardPage() {
         return;
       }
 
-      // Default or success code (e.g. MASAR20, BURGER50, FREECOFFEE, or any 6 digits)
+      // 2. Identify target deal and student info
+      const studentId = "202310890";
+      const studentName = "عمر خالد السعيد";
+
+      let matchedDealId = "deal-1";
+      if (code.includes("BURGER") || code.includes("50")) matchedDealId = "deal-2";
+      if (code.includes("COFFEE") || code.includes("FREE")) matchedDealId = "deal-3";
+
+      const targetDeal = deals.find((d) => d.id === matchedDealId) || deals[0];
+      const usageKey = `${studentId}_${targetDeal.id}`;
+      const currentStudentUsage = studentDealUsage[usageKey] || 0;
+
+      // 3. Verify student quota limit
+      if (currentStudentUsage >= targetDeal.maxUsesPerStudent) {
+        setVerificationResult({
+          status: "error",
+          errorMessage: `⚠️ تجاوز الحد المسموح: لقد استخدم هذا الطالب هذا الكوبون ${currentStudentUsage} من أصل ${targetDeal.maxUsesPerStudent} مرات مسموحة. تم استنفاد الرصيد المخصص لهذا الحساب.`,
+        });
+        return;
+      }
+
+      // 4. Verify total deal cap
+      if (targetDeal.usedCount >= targetDeal.totalCap) {
+        setVerificationResult({
+          status: "error",
+          errorMessage: `عذراً، وصل هذا العرض إلى الحد الأقصى الإجمالي لعدد مرات الاستخدام المتفق عليها (${targetDeal.totalCap}/${targetDeal.totalCap} كوبون).`,
+        });
+        return;
+      }
+
+      // 5. Successful Redemption Calculation
       const randomNum = Math.floor(1000 + Math.random() * 9000);
       const newTrx = `#TRX-${randomNum}`;
-      const isFreebie = code.includes("COFFEE") || code.includes("FREE");
-      const isBogo = code.includes("BOGO") || code.includes("50");
+      const newStudentUsage = currentStudentUsage + 1;
+      const remainingForStudent = targetDeal.maxUsesPerStudent - newStudentUsage;
 
-      let discountText = "خصم 20% على الوجبات الرئيسية";
       let orig = 10.0;
       let disc = 2.0;
 
-      if (isFreebie) {
-        discountText = "مشروب وبطاطا مجانية مع الساندويش";
-        orig = 4.5;
-        disc = 1.5;
-      } else if (isBogo) {
-        discountText = "خصم 50% على الوجبة الثانية (BOGO)";
+      if (targetDeal.discountType === "bogo") {
         orig = 8.0;
         disc = 4.0;
+      } else if (targetDeal.discountType === "freebie") {
+        orig = 4.5;
+        disc = 1.5;
+      } else if (targetDeal.discountType === "fixed") {
+        orig = 15.0;
+        disc = 2.5;
       }
 
       const result = {
         status: "success" as const,
-        studentName: "عمر خالد السعيد",
-        studentId: "202310890",
+        studentName,
+        studentId,
         university: "جامعة عمان الأهلية",
         major: "هندسة البرمجيات • السنة الثالثة",
-        dealTitle: discountText,
+        dealTitle: targetDeal.title,
         originalPrice: orig,
         discountAmount: disc,
         finalPrice: Number((orig - disc).toFixed(2)),
         trxId: newTrx,
+        studentUsageCount: newStudentUsage,
+        studentMaxAllowed: targetDeal.maxUsesPerStudent,
+        dealCurrentUsage: targetDeal.usedCount + 1,
+        dealTotalCap: targetDeal.totalCap,
+        remainingForStudent,
       };
 
       setVerificationResult(result);
+
+      // Increment student's usage in state
+      setStudentDealUsage((prev) => ({
+        ...prev,
+        [usageKey]: newStudentUsage,
+      }));
+
+      // Increment total deal used count in state
+      setDeals((prev) =>
+        prev.map((d) =>
+          d.id === targetDeal.id ? { ...d, usedCount: d.usedCount + 1 } : d
+        )
+      );
 
       // Update shift stats
       setShiftStats((prev) => ({
         todayRedemptions: prev.todayRedemptions + 1,
         shiftSalesVolume: Number((prev.shiftSalesVolume + result.finalPrice).toFixed(2)),
         studentSavingsTotal: Number((prev.studentSavingsTotal + result.discountAmount).toFixed(2)),
-        newStudentCustomers: prev.newStudentCustomers + 1,
+        newStudentCustomers: currentStudentUsage === 0 ? prev.newStudentCustomers + 1 : prev.newStudentCustomers,
       }));
 
       // Add to logs
@@ -338,16 +423,17 @@ export default function MerchantDashboardPage() {
         studentId: result.studentId,
         university: result.university,
         dealTitle: result.dealTitle,
-        discountLabel: isFreebie ? "هدية مجانية" : isBogo ? "خصم 50%" : "خصم 20%",
+        discountLabel: targetDeal.discountValue,
         originalPrice: result.originalPrice,
         discountAmount: result.discountAmount,
         finalPrice: result.finalPrice,
         timestamp: "الآن (لحظي)",
         status: "verified",
+        usageSequence: `المرة ${newStudentUsage} من ${targetDeal.maxUsesPerStudent}`,
       };
 
       setLogs((prev) => [newLog, ...prev]);
-    }, 450);
+    }, 400);
   };
 
   const handleCopyTrx = () => {
@@ -388,9 +474,10 @@ export default function MerchantDashboardPage() {
       discountValue: newDealForm.discountValue,
       usedCount: 0,
       totalCap: Number(newDealForm.totalCap) || 200,
+      maxUsesPerStudent: Number(newDealForm.maxUsesPerStudent) || 1,
       validUntil: newDealForm.validUntil,
       isActive: true,
-      terms: newDealForm.terms,
+      terms: `${newDealForm.terms} (الحد الأقصى: ${newDealForm.maxUsesPerStudent} مرات لكل طالب).`,
     };
 
     setDeals([newDeal, ...deals]);
@@ -401,6 +488,7 @@ export default function MerchantDashboardPage() {
       discountType: "percentage",
       discountValue: "20%",
       totalCap: 200,
+      maxUsesPerStudent: 2,
       validUntil: "2026-12-31",
       terms: "يسري العرض بإبراز تطبيق مسار للطلاب.",
     });
@@ -539,10 +627,10 @@ export default function MerchantDashboardPage() {
                   <span>محطة الكاشير ونقاط البيع الفورية · Fast POS Terminal</span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  التحقق من كوبون الطالب واعتماده
+                  التحقق من كوبون الطالب وحساب الحصة
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-400">
-                  أدخل رمز الخصم (6 خانات) أو امسح الرمز الشريطي للطالب لتطبيق التوفير وإصدار الإيصال المعتمد.
+                  أدخل رمز الخصم أو امسح الـ QR Code بالكاميرا للتحقق من عدد مرات الاستخدام المتبقية للطالب واعتماد الفاتورة.
                 </p>
               </div>
 
@@ -551,7 +639,7 @@ export default function MerchantDashboardPage() {
                 <div className="relative">
                   <input
                     type="text"
-                    maxLength={12}
+                    maxLength={14}
                     placeholder="MASAR20 أو رمز الخصم"
                     value={voucherCode}
                     onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
@@ -573,15 +661,15 @@ export default function MerchantDashboardPage() {
                   )}
                 </div>
 
-                {/* Quick Test Codes Pills */}
+                {/* Quick Test Codes Pills with Limit Testing */}
                 <div className="flex items-center justify-center gap-1.5 flex-wrap text-xs font-mono">
-                  <span className="text-slate-500 text-[11px]">أكواد تجريبية سريعة:</span>
+                  <span className="text-slate-500 text-[11px]">أكواد تجريبية:</span>
                   {[
-                    { label: "MASAR20 (خصم 20%)", code: "MASAR20" },
-                    { label: "BURGER50 (خصم 50%)", code: "BURGER50" },
-                    { label: "FREECOFFEE (مشروب مجاني)", code: "FREECOFFEE" },
+                    { label: "MASAR20 (استخدام 1/3)", code: "MASAR20" },
+                    { label: "BURGER50 (استخدام 2/2)", code: "BURGER50" },
+                    { label: "FREECOFFEE (مشروب 1/5)", code: "FREECOFFEE" },
+                    { label: "LIMIT_TEST (تجربة تجاوز الحد)", code: "LIMIT_TEST" },
                     { label: "EXPIRED99 (منتهي)", code: "EXPIRED99" },
-                    { label: "USED44 (مستخدم)", code: "USED44" },
                   ].map((item) => (
                     <button
                       key={item.code}
@@ -590,7 +678,11 @@ export default function MerchantDashboardPage() {
                         setVoucherCode(item.code);
                         handleVerifyCode(item.code);
                       }}
-                      className="px-2.5 py-1 rounded-lg border border-white/10 bg-white/[0.03] text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-all"
+                      className={`px-2.5 py-1 rounded-lg border transition-all ${
+                        item.code === "LIMIT_TEST"
+                          ? "border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
+                          : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400"
+                      }`}
                     >
                       {item.label}
                     </button>
@@ -608,12 +700,12 @@ export default function MerchantDashboardPage() {
                   {isVerifying ? (
                     <>
                       <span className="animate-spin text-white">⏳</span>
-                      <span>جاري الفحص بالجامعة...</span>
+                      <span>جاري فحص رصيد الكوبونات...</span>
                     </>
                   ) : (
                     <>
                       <CheckCircle2 className="h-5 w-5" />
-                      <span>تحقق واستبدل الكوبون الآن</span>
+                      <span>تحقق واعتماد الاستخدام</span>
                       <span className="text-[11px] font-mono opacity-75">↵</span>
                     </>
                   )}
@@ -625,11 +717,11 @@ export default function MerchantDashboardPage() {
                   className="h-13 border-white/15 bg-white/[0.03] hover:bg-white/[0.08] text-white font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <QrCode className="h-5 w-5 text-amber-400" />
-                  <span>مسح الـ QR Code الخاص بالطالب</span>
+                  <span>مسح الـ QR Code بكاميرا الجهاز</span>
                 </Button>
               </div>
 
-              {/* 3. Real-time Feedback Card */}
+              {/* 3. Real-time Feedback Card with Usage Counter Quota */}
               {verificationResult.status === "success" && (
                 <div className="rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/[0.12] via-[#090d14] to-[#090d14] p-5 sm:p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-4">
                   <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -640,14 +732,14 @@ export default function MerchantDashboardPage() {
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="text-base font-bold text-white">
-                            تمت عملية الاستبدال بنجاح!
+                            تم اعتماد الاستخدام بنجاح!
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-black font-bold text-[10px]">
                             معتمد ✓
                           </span>
                         </div>
                         <p className="text-xs text-slate-400">
-                          تم قيد العملية في سجل المتجر وإشعار الطالب فورياً عبر تطبيقه.
+                          تم تسجيل العملية وإصدار الرقم المرجعي الموثق.
                         </p>
                       </div>
                     </div>
@@ -663,6 +755,58 @@ export default function MerchantDashboardPage() {
                       >
                         {copiedTrx ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Highlight: Usage Count / Limit Monitor */}
+                  <div className="p-4 rounded-xl bg-[#0f1724] border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                    {/* Student Limit Tracker */}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                          <UserCheck className="h-4 w-4 text-emerald-400" />
+                          <span>سجل استخدام الطالب للكود:</span>
+                        </span>
+                        <span className="font-mono font-bold text-emerald-400 text-sm">
+                          المرة {verificationResult.studentUsageCount} من {verificationResult.studentMaxAllowed}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+                        <span>الحصة المتبقية للطالب:</span>
+                        <span className="font-bold text-amber-400">
+                          {verificationResult.remainingForStudent && verificationResult.remainingForStudent > 0
+                            ? `${verificationResult.remainingForStudent} مرات متبقية`
+                            : "تم استنفاد كامل الحصة"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Store Deal Total Cap Tracker */}
+                    <div className="space-y-1.5 sm:border-r sm:border-white/10 sm:pr-4">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-300 font-semibold flex items-center gap-1.5">
+                          <Hash className="h-4 w-4 text-amber-400" />
+                          <span>إجمالي استهلاك الكود بالفرع:</span>
+                        </span>
+                        <span className="font-mono text-white font-bold">
+                          {verificationResult.dealCurrentUsage} / {verificationResult.dealTotalCap}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-[#090d14] overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-emerald-500 to-amber-500"
+                          style={{
+                            width: `${Math.min(
+                              100,
+                              Math.round(
+                                ((verificationResult.dealCurrentUsage || 1) /
+                                  (verificationResult.dealTotalCap || 300)) *
+                                  100
+                              )
+                            )}%`,
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -703,7 +847,7 @@ export default function MerchantDashboardPage() {
                   <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
                       <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                      <span>محمية ضد التكرار برقم مرجعي فريد</span>
+                      <span>محمية ضد التكرار ومقيدة بسقف عدد مرات الاستخدام</span>
                     </div>
 
                     <Button
@@ -726,9 +870,9 @@ export default function MerchantDashboardPage() {
                     </div>
                     <div className="space-y-1">
                       <h4 className="text-sm font-bold text-rose-400">
-                        فشل الاستبدال — الكوبون غير مقبول
+                        فحص الكود: تم رفض العملية
                       </h4>
-                      <p className="text-xs text-slate-300 leading-relaxed">
+                      <p className="text-xs text-slate-300 leading-relaxed font-sans">
                         {verificationResult.errorMessage}
                       </p>
                     </div>
@@ -739,7 +883,7 @@ export default function MerchantDashboardPage() {
                       size="sm"
                       variant="outline"
                       onClick={handleResetCashier}
-                      className="text-xs border-white/10 hover:bg-white/10 text-white h-8"
+                      className="text-xs border-white/10 hover:bg-white/10 text-white h-8 cursor-pointer"
                     >
                       إعادة المحاولة
                     </Button>
@@ -829,11 +973,11 @@ export default function MerchantDashboardPage() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs h-10 px-4 rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer shrink-0"
             >
               <Plus className="h-4 w-4" />
-              <span>إنشاء عرض جديد للفرع</span>
+              <span>إنشاء عرض جديد وتحديد سقفه</span>
             </Button>
           </div>
 
-          {/* Deals Grid */}
+          {/* Deals Grid with Usage Caps & Limits */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {filteredDeals.map((deal) => {
               const usagePercent = Math.min(100, Math.round((deal.usedCount / deal.totalCap) * 100));
@@ -843,12 +987,22 @@ export default function MerchantDashboardPage() {
                   className="p-6 rounded-2xl border border-white/10 bg-[#0f1724] shadow-xl hover:border-white/20 transition-all flex flex-col justify-between space-y-4 text-start"
                 >
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
                       <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-[11px]">
                         {deal.category}
                       </span>
 
                       <div className="flex items-center gap-2">
+                        {/* Max per student badge */}
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[10px] font-mono flex items-center gap-1">
+                          <Lock className="h-3 w-3 text-purple-400" />
+                          <span>
+                            {deal.maxUsesPerStudent >= 99
+                              ? "غير محدود للطالب"
+                              : `الحد: ${deal.maxUsesPerStudent} مرات/طالب`}
+                          </span>
+                        </span>
+
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
                             deal.isActive
@@ -871,7 +1025,7 @@ export default function MerchantDashboardPage() {
                   {/* Usage Cap Progress Bar */}
                   <div className="space-y-2 pt-3 border-t border-white/10">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-slate-400">سقف استهلاك الكوبونات:</span>
+                      <span className="text-slate-400">سقف استهلاك الكوبونات الإجمالي:</span>
                       <span className="text-white font-semibold">
                         {deal.usedCount} من أصل {deal.totalCap} كوبون ({usagePercent}%)
                       </span>
@@ -967,13 +1121,13 @@ export default function MerchantDashboardPage() {
             </div>
           </div>
 
-          {/* Granular Logs Table */}
+          {/* Granular Logs Table with Usage Sequence */}
           <div className="rounded-2xl border border-white/10 bg-[#0f1724] p-6 shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-base font-bold text-white">سجل استبدالات الكوبونات المباشر</h3>
                 <p className="text-xs text-slate-400">
-                  رصد دقيق لكافة العمليات بالدقائق لمنع الاحتيال وضبط المحاسبة الداخلية.
+                  رصد دقيق لكافة العمليات بالدقائق وعدد مرات استخدام كل طالب لمنع الاحتيال وضبط المحاسبة.
                 </p>
               </div>
 
@@ -999,6 +1153,7 @@ export default function MerchantDashboardPage() {
                     <th className="py-3 px-4">التوقيت الدقيق</th>
                     <th className="py-3 px-4">الطالب والجامعة</th>
                     <th className="py-3 px-4">الخصم المطبق</th>
+                    <th className="py-3 px-4">حصة الاستخدام</th>
                     <th className="py-3 px-4">الفاتورة / التوفير</th>
                     <th className="py-3 px-4 text-center">الحالة</th>
                   </tr>
@@ -1019,6 +1174,11 @@ export default function MerchantDashboardPage() {
                       <td className="py-3.5 px-4">
                         <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono text-[11px]">
                           {log.discountLabel}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 font-mono">
+                        <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[10px]">
+                          {log.usageSequence}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 font-mono">
@@ -1056,7 +1216,7 @@ export default function MerchantDashboardPage() {
       />
 
       {/* ========================================================================= */}
-      {/* Deal Builder Modal (إنشاء عرض جديد) */}
+      {/* Deal Builder Modal (إنشاء عرض جديد مع تحديد سقف مرات الاستخدام) */}
       {/* ========================================================================= */}
       {isNewDealModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -1069,7 +1229,7 @@ export default function MerchantDashboardPage() {
               <button
                 type="button"
                 onClick={() => setIsNewDealModalOpen(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-slate-400 hover:text-white cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -1137,7 +1297,7 @@ export default function MerchantDashboardPage() {
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold mb-1 block">الحد الأقصى للكوبونات</label>
+                  <label className="text-slate-300 font-semibold mb-1 block">سقف الكوبونات الإجمالي (Total Cap)</label>
                   <input
                     required
                     type="number"
@@ -1150,15 +1310,41 @@ export default function MerchantDashboardPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="text-slate-300 font-semibold mb-1 block">تاريخ الانتهاء</label>
-                <input
-                  required
-                  type="date"
-                  value={newDealForm.validUntil}
-                  onChange={(e) => setNewDealForm({ ...newDealForm, validUntil: e.target.value })}
-                  className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
-                />
+              {/* Explicit Field: Max Uses Per Student */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-slate-300 font-semibold mb-1 block flex items-center gap-1">
+                    <UserCheck className="h-3.5 w-3.5 text-purple-400" />
+                    <span>الحد الأقصى لكل طالب (Usage Limit)</span>
+                  </label>
+                  <select
+                    value={newDealForm.maxUsesPerStudent}
+                    onChange={(e) =>
+                      setNewDealForm({
+                        ...newDealForm,
+                        maxUsesPerStudent: Number(e.target.value),
+                      })
+                    }
+                    className="w-full h-10 px-3 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
+                  >
+                    <option value={1}>مرة واحدة فقط (1x - الأكثر أماناً)</option>
+                    <option value={2}>مرتان لكل طالب (2x)</option>
+                    <option value={3}>3 مرات لكل طالب (3x)</option>
+                    <option value={5}>5 مرات لكل طالب (5x)</option>
+                    <option value={999}>غير محدود (Unlimited)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="text-slate-300 font-semibold mb-1 block">تاريخ الانتهاء</label>
+                  <input
+                    required
+                    type="date"
+                    value={newDealForm.validUntil}
+                    onChange={(e) => setNewDealForm({ ...newDealForm, validUntil: e.target.value })}
+                    className="w-full h-10 px-3.5 rounded-xl border border-white/10 bg-[#090d14] text-white focus:outline-none focus:border-emerald-500 font-mono"
+                  />
+                </div>
               </div>
 
               <div>
@@ -1176,13 +1362,13 @@ export default function MerchantDashboardPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setIsNewDealModalOpen(false)}
-                  className="border-white/10 text-white hover:bg-white/10 h-10 text-xs"
+                  className="border-white/10 text-white hover:bg-white/10 h-10 text-xs cursor-pointer"
                 >
                   إلغاء
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10 text-xs px-5 rounded-xl"
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10 text-xs px-5 rounded-xl cursor-pointer"
                 >
                   نشر العرض وتفعيله فورياً
                 </Button>
