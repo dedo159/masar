@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/components/providers/language-provider";
 import { ExecutiveKpiRibbon } from "@/components/company/executive-kpi-ribbon";
 import { ActiveOpeningsPipelineStrip } from "@/components/company/active-openings-pipeline-strip";
+import { FacultyTechPulse } from "@/components/company/faculty-tech-pulse";
 
 export default function DashboardPage() {
   const { t } = useLanguage();
@@ -131,6 +132,9 @@ export default function DashboardPage() {
 
       {/* Active Openings Pipeline Strip (شريط المتابعة السريعة للشواغر المفتوحة) */}
       <ActiveOpeningsPipelineStrip />
+
+      {/* Faculty Tech Pulse (رصد اتجاهات التقنية ومشاريع الطلاب في كلية الـ IT) */}
+      <FacultyTechPulse />
 
       {/* Core Platform Modules Grid */}
       <div className="space-y-4">
