@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   SlidersHorizontal,
@@ -65,6 +66,7 @@ const DEFAULT_POPULAR_SKILLS = [
 ];
 
 export default function TalentSearchPage() {
+  const router = useRouter();
   const [candidates, setCandidates] = useState<TalentCandidate[]>([]);
   const [skillCounts, setSkillCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
@@ -810,19 +812,27 @@ export default function TalentSearchPage() {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <Button
-                          variant="secondary"
+                          variant="ghost"
                           size="sm"
-                          className="min-h-[34px] text-xs font-semibold px-3 gap-1.5 group-hover:border-emerald-500/40"
+                          className="min-h-[34px] text-xs font-semibold px-2 gap-1 text-muted-foreground hover:text-foreground"
                           onClick={(e) => {
                             e.stopPropagation();
                             setPreviewCandidate(candidate);
                           }}
                         >
-                          <Eye className="h-3.5 w-3.5 text-emerald-600" />
-                          <span>معاينة الملف الكامل</span>
+                          <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                          <span>معاينة سريعة</span>
                         </Button>
+                        <Link
+                          href={`/company/talents/${candidate.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="min-h-[34px] text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 inline-flex items-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-colors shadow-2xs"
+                        >
+                          <span>الملف الكامل</span>
+                          <ChevronLeft className="h-3.5 w-3.5" />
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -985,7 +995,15 @@ export default function TalentSearchPage() {
                 )}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Link
+                  href={`/company/talents/${previewCandidate.id}`}
+                  className="min-h-[38px] px-3.5 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                >
+                  <Eye className="h-3.5 w-3.5" />
+                  <span>فتح الملف التفاعلي المباشر (Live Profile)</span>
+                </Link>
+
                 <button
                   type="button"
                   onClick={() => toggleBookmark(previewCandidate.id)}
@@ -1003,7 +1021,7 @@ export default function TalentSearchPage() {
 
                 <a
                   href={`mailto:${previewCandidate.email}?subject=دعوة لمقابلة تدريب / عمل — منصة مسار&body=مرحباً ${previewCandidate.name}،%0D%0A%0D%0Aاطلعنا على ملفك التقني ومشاريعك عبر منصة مسار ونود دعوتك لإجراء مقابلة تقنية بخصوص فرص العمل والتدريب المتاحة لدينا.`}
-                  className="min-h-[38px] px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-foreground text-xs font-bold inline-flex items-center gap-2 shadow-sm shadow-emerald-600/20 active:scale-95 transition-all"
+                  className="min-h-[38px] px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold inline-flex items-center gap-2 shadow-sm shadow-emerald-600/20 active:scale-95 transition-all"
                 >
                   <Send className="h-3.5 w-3.5" />
                   <span>دعوة لمقابلة وتواصل ✉️</span>
