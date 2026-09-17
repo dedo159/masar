@@ -117,6 +117,7 @@ export default function SettingsPage() {
   const [pushStatus, setPushStatus] = useState<"granted" | "denied" | "default" | "unsupported">("default");
   const [isTestingPush, setIsTestingPush] = useState(false);
   const [pushMessage, setPushMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
+  const [isApk, setIsApk] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -128,7 +129,11 @@ export default function SettingsPage() {
       const calConnected = localStorage.getItem("masar_google_calendar_connected");
       if (calConnected === "true") setGoogleCalendarConnected(true);
 
-      if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+      const isCap = !!(window as any).Capacitor;
+      const isAndroidWebView = /wv|Android.*Version\/[0-9.]+/i.test(navigator.userAgent);
+      setIsApk(isCap || isAndroidWebView);
+
+      if (!("Notification" in window)) {
         setPushStatus("unsupported");
       } else {
         setPushStatus(Notification.permission);
@@ -170,89 +175,99 @@ export default function SettingsPage() {
     setIsTestingPush(true);
     setPushMessage(null);
 
-    if (typeof window === "undefined" || !("Notification" in window)) {
-      setPushMessage({
-        text: "متصفحك لا يدعم إشعارات النظام. إذا كنت تستخدم آيفون (iOS)، يرجى الضغط على مشاركة ثم «إضافة إلى الشاشة الرئيسية» لتفعيل الإشعارات.",
-        type: "error",
-      });
-      setIsTestingPush(false);
-      return;
-    }
+    const hasNotification = typeof window !== "undefined" && "Notification" in window;
+    const hasServiceWorker = typeof window !== "undefined" && "serviceWorker" in navigator;
 
     try {
-      // 1. Request permission if not granted
-      let perm = Notification.permission;
-      if (perm !== "granted") {
-        perm = await Notification.requestPermission();
-        setPushStatus(perm);
+      // 1. Request permission if Notification API is available
+      if (hasNotification) {
+        let perm: NotificationPermission = Notification.permission;
         if (perm !== "granted") {
-          setPushMessage({
-            text: "لم يتم منح إذن الإشعارات من إعدادات المتصفح/الجهاز. يرجى تفعيلها من إعدادات الموقع.",
-            type: "error",
-          });
-          setIsTestingPush(false);
-          return;
+          try {
+            const res: any = Notification.requestPermission();
+            perm = res && typeof res.then === "function" ? await res : (res as NotificationPermission);
+          } catch {
+            perm = await new Promise<NotificationPermission>((resolve) => {
+              try { Notification.requestPermission((p) => resolve(p as NotificationPermission)); }
+              catch { resolve("default"); }
+            });
+          }
+          setPushStatus(perm);
+          if (perm !== "granted") {
+            setPushMessage({
+              text: isApk
+                ? "لم يتم منح إذن الإشعارات لتطبيق الـ APK. يرجى تفعيلها من: إعدادات الهاتف > التطبيقات > مسار > الإشعارات > السماح بالإشعارات."
+                : "لم يتم منح إذن الإشعارات من إعدادات المتصفح/الجهاز. يرجى السماح بالإشعارات لتجربة التنبيه.",
+              type: "error",
+            });
+            setIsTestingPush(false);
+            return;
+          }
         }
       }
 
-      // 2. Register Service Worker
-      if (!("serviceWorker" in navigator)) {
-        setPushMessage({ text: "خدمة Service Worker غير متوفرة في هذا المتصفح.", type: "error" });
-        setIsTestingPush(false);
-        return;
+      // 2. Trigger phone vibration immediately
+      if (typeof window !== "undefined" && "vibrate" in navigator) {
+        navigator.vibrate([200, 100, 200]);
       }
 
-      const reg = await navigator.serviceWorker.register("/sw.js");
-      await reg.update();
-
-      if (!reg.pushManager) {
-        setPushMessage({
-          text: "ميزة PushManager غير مدعومة مباشرة في هذا المتصفح (جرب متصفح Chrome أو ثبّت PWA على الشاشة الرئيسية).",
-          type: "error",
-        });
-        setIsTestingPush(false);
-        return;
+      // 3. Register Service Worker
+      let reg: ServiceWorkerRegistration | null = null;
+      if (hasServiceWorker) {
+        try {
+          reg = await navigator.serviceWorker.register("/sw.js");
+          await reg.update();
+        } catch (swErr) {
+          console.warn("ServiceWorker registration note:", swErr);
+        }
       }
 
-      const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
-      const padding = '='.repeat((4 - vapidPublicKey.length % 4) % 4);
-      const base64 = (vapidPublicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
-      const rawData = window.atob(base64);
-      const outputArray = new Uint8Array(rawData.length);
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
+      // 4. Try showing local notification via Service Worker
+      if (reg && reg.showNotification) {
+        try {
+          await reg.showNotification("مسار — إشعار فوري 🔔", {
+            body: "جهازك متصل بنجاح بنظام إشعارات مسار! يعمل التنبيه الصوتي والاهتزاز.",
+            icon: "/icons/icon-192.png",
+            badge: "/icons/icon-72.png",
+          });
+        } catch {}
       }
 
-      let sub = await reg.pushManager.getSubscription();
-      if (!sub) {
-        sub = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: outputArray,
-        });
+      // 5. Try WebPush subscription if PushManager is available
+      let pushSubscribed = false;
+      if (reg && reg.pushManager) {
+        try {
+          const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
+          const padding = '='.repeat((4 - vapidPublicKey.length % 4) % 4);
+          const base64 = (vapidPublicKey + padding).replace(/-/g, '+').replace(/_/g, '/');
+          const rawData = window.atob(base64);
+          const outputArray = new Uint8Array(rawData.length);
+          for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
+          }
+
+          let sub = await reg.pushManager.getSubscription();
+          if (!sub) {
+            sub = await reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: outputArray,
+            });
+          }
+
+          if (sub) {
+            await fetch("/api/updates/push/subscribe", {
+              method: "POST",
+              body: JSON.stringify(sub),
+              headers: { "Content-Type": "application/json" },
+            });
+            pushSubscribed = true;
+          }
+        } catch (subErr) {
+          console.warn("Push subscription note:", subErr);
+        }
       }
 
-      // Save to server
-      await fetch("/api/updates/push/subscribe", {
-        method: "POST",
-        body: JSON.stringify(sub),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // 3. Trigger phone vibration
-      if ("vibrate" in navigator) {
-        navigator.vibrate([150, 75, 150]);
-      }
-
-      // 4. Trigger system notification
-      if (reg.showNotification) {
-        reg.showNotification("مسار — إشعار فوري 🔔", {
-          body: "جهازك متصل بنجاح بنظام إشعارات مسار! ستصلك التنبيهات في الخلفية.",
-          icon: "/icons/icon-192.png",
-          badge: "/icons/icon-72.png",
-        });
-      }
-
-      // 5. Send backend push via web-push
+      // 6. Send backend push via web-push
       const testRes = await fetch("/api/updates/push/test", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -264,14 +279,20 @@ export default function SettingsPage() {
       });
 
       const testData = await testRes.json().catch(() => ({}));
+
       if (testRes.ok) {
         setPushMessage({
           text: "تم إرسال الإشعار بنجاح! تفقد شريط التنبيهات أعلى شاشة هاتفك.",
           type: "success",
         });
+      } else if (isApk && !pushSubscribed) {
+        setPushMessage({
+          text: "تطبيقات الـ APK (WebView) تقيد استقبال الـ Web Push في الخلفية. لتجربة التنبيهات الفورية حتى عند قفل الشاشة، افتح الرابط في متصفح Google Chrome وثبته على هاتفك كـ PWA.",
+          type: "info",
+        });
       } else {
         setPushMessage({
-          text: testData.error || "تم تفعيل التنبيهات محلياً على الجهاز بنجاح!",
+          text: testData.error || "تم إرسال التنبيه لهاتفك!",
           type: "info",
         });
       }
@@ -531,12 +552,23 @@ export default function SettingsPage() {
                     className="text-[11px] gap-1"
                   >
                     {pushStatus === "granted" && <CheckCircle2 className="h-3 w-3" />}
-                    {pushStatus === "granted" ? "مفعل 🟢" : pushStatus === "denied" ? "محظور 🔴" : "بحاجة لإذن 🔔"}
+                    {pushStatus === "granted"
+                      ? "مفعل 🟢"
+                      : pushStatus === "denied"
+                      ? "محظور 🔴"
+                      : pushStatus === "unsupported"
+                      ? "غير مدعوم مباشرة في الـ APK ⚠️"
+                      : "بحاجة لإذن 🔔"}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   تصلك التنبيهات على شاشة قفل هاتفك مباشرة خارج المتصفح والتطبيق (مواعيد الواجبات، الدرجات، الإعلانات الهامة).
                 </p>
+                {isApk && (
+                  <p className="text-[11px] text-amber-600 dark:text-amber-400 mt-1.5 font-medium bg-amber-500/10 px-2.5 py-1.5 rounded-md border border-amber-500/20">
+                    📱 مستخدم تطبيق الـ APK: يرجى تفعيل الإذن من <strong>ضبط الهاتف &gt; التطبيقات &gt; مسار &gt; الإشعارات &gt; تفعيل</strong>.
+                  </p>
+                )}
               </div>
             </div>
 
