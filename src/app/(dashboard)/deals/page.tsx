@@ -49,6 +49,8 @@ interface Deal {
   validFrom: string;
   validUntil: string;
   merchant: Merchant;
+  usedCount?: number;
+  maxUsesPerStudent?: number;
 }
 
 // Crisp 25x25 Procedural SVG QR Code Renderer
@@ -148,6 +150,27 @@ export default function DealsPage() {
   const [rollingToken, setRollingToken] = useState("MSR-8829-X");
   const [tokenSeed, setTokenSeed] = useState(8829);
 
+  // Track student usage count per deal: { dealId: number of times used }
+  const [studentUsageMap, setStudentUsageMap] = useState<Record<string, number>>({
+    "deal-1": 1, // عمر خالد استخدم العرض الأول مرة واحدة
+    "deal-2": 2, // استخدم العرض الثاني مرتين
+    "deal-3": 1, // استخدم العرض الثالث مرة واحدة
+  });
+
+  // Helper to determine allowed usage limit for each deal (e.g. 3 times, 5 times)
+  const getDealUsageLimit = (deal: Deal) => {
+    if (deal.maxUsesPerStudent) return deal.maxUsesPerStudent;
+    const title = deal.title.toLowerCase();
+    if (title.includes("شاورما") || title.includes("برغر") || title.includes("burger")) return 3;
+    if (title.includes("قهوة") || title.includes("مشروب") || title.includes("coffee")) return 5;
+    if (title.includes("bogo") || title.includes("مجانية")) return 2;
+    return 3; // Default limit: 3 times per student
+  };
+
+  const getStudentUsedCount = (dealId: string) => {
+    return studentUsageMap[dealId] || 0;
+  };
+
   const categories = [
     { id: "all", label: t.deals.categories.all, matchAr: "الكل", matchEn: "all" },
     { id: "restaurants", label: t.deals.categories.restaurants, matchAr: "مطاعم", matchEn: "restaurant" },
@@ -231,6 +254,13 @@ export default function DealsPage() {
       });
 
   const handleRedeem = async (deal: Deal) => {
+    const currentUsage = getStudentUsedCount(deal.id);
+    const maxAllowed = getDealUsageLimit(deal);
+    if (currentUsage >= maxAllowed) {
+      alert(language === "en" ? "You have reached the maximum allowed uses for this deal" : "لقد استنفدت الحد الأقصى المسموح به لاستخدام هذا العرض");
+      return;
+    }
+
     setRedeemLoading(true);
     setRedeemSuccess(false);
     try {
@@ -241,6 +271,10 @@ export default function DealsPage() {
       if (data.success) {
         setRedeemSuccess(true);
         setRedeemedDeals((prev) => new Set(prev).add(deal.id));
+        setStudentUsageMap((prev) => ({
+          ...prev,
+          [deal.id]: (prev[deal.id] || 0) + 1,
+        }));
       } else {
         alert(data.error || (language === "en" ? "An error occurred" : "حدث خطأ"));
       }
@@ -339,7 +373,19 @@ export default function DealsPage() {
                         <p className="text-xs text-muted-foreground line-clamp-2 text-sm">
                           {translateDealDescription(deal.description, language)}
                         </p>
-                        <div className="flex items-center gap-1 mt-4 text-[11px] text-muted-foreground">
+                        {/* Usage Counter Pill (عدد مرات الاستخدام من أصل المسموح) */}
+                        <div className="mt-3 pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px]">
+                          <span className="text-muted-foreground">مرات الاستخدام:</span>
+                          <span className={`font-mono font-bold px-2 py-0.5 rounded-md ${
+                            getStudentUsedCount(deal.id) >= getDealUsageLimit(deal)
+                              ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
+                              : "bg-primary/10 text-primary border border-primary/20"
+                          }`}>
+                            {getStudentUsedCount(deal.id)} / {getDealUsageLimit(deal)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1 mt-2.5 text-[11px] text-muted-foreground">
                           <Calendar className="h-3 w-3" />
                           <span>
                             {t.deals.expiresOn} {new Date(deal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
@@ -414,6 +460,59 @@ export default function DealsPage() {
                     {translateDealDescription(selectedDeal.description, language)}
                   </p>
                 )}
+              </div>
+
+              {/* ========================================================================= */}
+              {/* عداد مرات استخدام الكود من أصل المسموح (Deal Usage Quota Tracker) */}
+              {/* ========================================================================= */}
+              <div className="rounded-xl border border-border bg-background/80 p-3.5 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-1.5 font-medium text-foreground">
+                    <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                    <span>مرات استخدام الكود:</span>
+                  </div>
+                  <div className="flex items-center gap-1 font-mono">
+                    <span className="text-base font-bold text-foreground">
+                      {getStudentUsedCount(selectedDeal.id)}
+                    </span>
+                    <span className="text-muted-foreground">/</span>
+                    <span className="text-xs text-muted-foreground font-semibold">
+                      {getDealUsageLimit(selectedDeal)} مرات مسموحة
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar of usage quota */}
+                <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-500 rounded-full ${
+                      getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal)
+                        ? "bg-rose-500"
+                        : "bg-gradient-to-r from-emerald-500 to-teal-400"
+                    }`}
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (getStudentUsedCount(selectedDeal.id) / getDealUsageLimit(selectedDeal)) * 100
+                      )}%`,
+                    }}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>
+                    {getDealUsageLimit(selectedDeal) - getStudentUsedCount(selectedDeal.id) > 0 ? (
+                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                        متبقي لك {getDealUsageLimit(selectedDeal) - getStudentUsedCount(selectedDeal.id)} استخدامات
+                      </span>
+                    ) : (
+                      <span className="text-rose-500 font-medium">
+                        استنفدت كامل الحد المسموح لهذا العرض
+                      </span>
+                    )}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">حصة الطالب الفردية</span>
+                </div>
               </div>
 
               {/* ========================================================================= */}
@@ -557,24 +656,38 @@ export default function DealsPage() {
             {/* Footer */}
             <div className="p-4 border-t border-border bg-muted/20 relative z-10 flex items-center gap-3">
               <Button 
-                className="w-full font-bold h-11 text-xs active:scale-95 transition-transform cursor-pointer" 
+                className={`w-full font-bold h-11 text-xs active:scale-95 transition-transform cursor-pointer ${
+                  getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal)
+                    ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                    : ""
+                }`} 
                 onClick={() => handleRedeem(selectedDeal)}
-                disabled={redeemLoading || redeemSuccess || redeemedDeals.has(selectedDeal.id)}
+                disabled={
+                  redeemLoading || 
+                  redeemSuccess || 
+                  getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal)
+                }
               >
                 {redeemLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     <span>{t.deals.activating}</span>
                   </>
-                ) : redeemSuccess || redeemedDeals.has(selectedDeal.id) ? (
-                  <span className="flex items-center gap-1.5">
+                ) : getStudentUsedCount(selectedDeal.id) >= getDealUsageLimit(selectedDeal) ? (
+                  <span className="flex items-center gap-1.5 text-rose-500 font-semibold">
+                    <span>استنفدت الحد الأقصى لاستخدام الكود ({getDealUsageLimit(selectedDeal)} / {getDealUsageLimit(selectedDeal)})</span>
+                  </span>
+                ) : redeemSuccess ? (
+                  <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                     <Check className="h-4 w-4" />
-                    <span>تم توثيق العرض للاستخدام ✓</span>
+                    <span>تم توثيق العرض للاستخدام ({getStudentUsedCount(selectedDeal.id)} من {getDealUsageLimit(selectedDeal)}) ✓</span>
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5">
                     <QrCode className="h-4 w-4" />
-                    <span>تأكيد جاهزية الكوبون والاستخدام الآن</span>
+                    <span>
+                      تأكيد جاهزية الكوبون والاستخدام الآن ({getStudentUsedCount(selectedDeal.id) + 1} من {getDealUsageLimit(selectedDeal)})
+                    </span>
                   </span>
                 )}
               </Button>
