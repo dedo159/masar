@@ -6,7 +6,7 @@ import { createSession } from '@/lib/auth';
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
-    const { email, password } = body;
+    const { email, password, rememberMe } = body;
     
     if (!email || !password) {
       return NextResponse.json({ error: 'البريد الإلكتروني وكلمة المرور مطلوبان' }, { status: 400 });
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
       companyId: recruiter.companyId,
       name: recruiter.name,
       email: recruiter.email,
-    });
+    }, Boolean(rememberMe));
 
     return NextResponse.json({ success: true, name: recruiter.name, company: recruiter.company.name });
   } catch (error) {
