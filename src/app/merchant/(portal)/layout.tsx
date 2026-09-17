@@ -178,21 +178,13 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
               </button>
             )}
 
-            <Link
-              href="/"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors text-[11px] font-medium flex items-center gap-1"
-              title="العودة لبوابة الطلاب"
-            >
-              <span>الطلاب</span>
-              <ArrowRight className="h-3 w-3 rotate-180" />
-            </Link>
-
             <button
               onClick={handleLogout}
-              className="p-2 rounded-lg text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10 transition-colors cursor-pointer"
+              className="p-2 rounded-lg text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium"
               title="تسجيل الخروج"
             >
               <LogOut className="h-4 w-4" />
+              <span>تسجيل الخروج</span>
             </button>
           </div>
         </div>
@@ -228,20 +220,13 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
                 <button
                   type="button"
                   onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer flex items-center gap-1.5 text-xs"
                   title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
                 >
                   {isDark ? <Sun className="h-4 w-4 text-amber-500" /> : <Moon className="h-4 w-4 text-slate-600" />}
+                  <span className="hidden sm:inline text-[11px]">{isDark ? "نهاري" : "ليلي"}</span>
                 </button>
               )}
-
-              <Link
-                href="/"
-                className="text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors px-2.5 py-1.5 rounded-lg border border-border flex items-center gap-1.5"
-              >
-                <span>بوابة الطلاب</span>
-                <ArrowRight className="h-3 w-3 rotate-180" />
-              </Link>
             </div>
           </div>
         </header>
