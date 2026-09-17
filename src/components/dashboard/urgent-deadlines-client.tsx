@@ -53,12 +53,12 @@ export function UrgentDeadlinesClient({ upcoming, urgentCount }: UrgentDeadlines
 
       {/* Empty State vs List */}
       {upcoming.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-xl border border-dashed border-border bg-card/60 text-center transition-colors">
-          <div className="h-12 w-12 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-3 shadow-xs">
-            <CheckCircle2 className="h-5 w-5" strokeWidth={1.75} />
+        <div className="flex flex-col items-center justify-center py-12 px-4 rounded-lg border border-dashed border-border bg-card text-center transition-colors">
+          <div className="h-14 w-14 rounded-lg vercel-button-primary flex items-center justify-center mb-4 text-foreground shadow-lg">
+            <CheckCircle2 className="h-6 w-6 fill-white/20" strokeWidth={2} />
           </div>
-          <p className="text-sm font-semibold text-foreground">{t.dashboard.noDeadlines}</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+          <p className="text-base font-bold text-foreground">{t.dashboard.noDeadlines}</p>
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm font-medium">
             {t.dashboard.allCaughtUp}
           </p>
         </div>
