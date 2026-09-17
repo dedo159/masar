@@ -38,6 +38,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { QrCameraScanner } from "@/components/merchant/qr-camera-scanner";
+import { DynamicRollingQrGuard } from "@/components/merchant/dynamic-rolling-qr-guard";
+import { SettlementInvoicingHub } from "@/components/merchant/settlement-invoicing-hub";
+import { SponsoredCampusDrops } from "@/components/merchant/sponsored-campus-drops";
+import { Radio } from "lucide-react";
 
 // --- Types ---
 interface Deal {
@@ -72,7 +76,9 @@ interface RedemptionLog {
 
 export default function MerchantDashboardPage() {
   // Active Tab: "redemption" | "deals" | "logs"
-  const [activeTab, setActiveTab] = useState<"redemption" | "deals" | "logs">("redemption");
+  const [activeTab, setActiveTab] = useState<
+    "redemption" | "deals" | "logs" | "anti-fraud" | "settlements" | "campus-drops"
+  >("redemption");
 
   // Store & Branch Header State
   const [storeName, setStoreName] = useState("مطعم شاورما الضيعة");
@@ -568,7 +574,7 @@ export default function MerchantDashboardPage() {
             <button
               type="button"
               onClick={() => setActiveTab("redemption")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "redemption"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
                   : "text-slate-400 hover:text-white"
@@ -583,8 +589,56 @@ export default function MerchantDashboardPage() {
 
             <button
               type="button"
+              onClick={() => setActiveTab("anti-fraud")}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                activeTab === "anti-fraud"
+                  ? "bg-cyan-600 text-white shadow-md shadow-cyan-950/50"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <ShieldCheck className="h-4 w-4 text-cyan-400" />
+              <span>مكافحة الاحتيال (Dynamic QR)</span>
+              <span className="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono">
+                30s
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("settlements")}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                activeTab === "settlements"
+                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <DollarSign className="h-4 w-4 text-emerald-400" />
+              <span>التسويات والفواتير</span>
+              <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">
+                PDF
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab("campus-drops")}
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+                activeTab === "campus-drops"
+                  ? "bg-amber-600 text-white shadow-md shadow-amber-950/50"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <Radio className="h-4 w-4 text-amber-400" />
+              <span>حملات البث للحرم (Drops)</span>
+              <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono">
+                Push
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab("deals")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "deals"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
                   : "text-slate-400 hover:text-white"
@@ -597,14 +651,14 @@ export default function MerchantDashboardPage() {
             <button
               type="button"
               onClick={() => setActiveTab("logs")}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
                 activeTab === "logs"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
                   : "text-slate-400 hover:text-white"
               }`}
             >
               <TrendingUp className="h-4 w-4" />
-              <span>سجل العمليات والتحليلات</span>
+              <span>سجل العمليات</span>
             </button>
           </div>
         </div>
