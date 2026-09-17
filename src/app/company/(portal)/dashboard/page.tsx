@@ -5,19 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Plus,
-  Briefcase,
-  Users,
-  Clock,
-  ArrowUpRight,
   Sparkles,
-  Kanban,
-  BarChart3,
-  Search,
-  CheckCircle2,
   Building2,
-  Calendar,
   ShieldCheck,
-  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -136,157 +126,7 @@ export default function DashboardPage() {
       {/* Faculty Tech Pulse (رصد اتجاهات التقنية ومشاريع الطلاب في كلية الـ IT) */}
       <FacultyTechPulse />
 
-      {/* Core Platform Modules Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-foreground">
-            أقسام بوابة التوظيف وإدارة الكفاءات
-          </h2>
-          <span className="text-xs text-muted-foreground">وصول سريع لجميع أدوات مسؤول التوظيف</span>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {/* Module 1: ATS Kanban */}
-          <Card className="p-6 border border-border bg-card hover:border-primary/40 transition-all flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <Kanban className="h-5 w-5" />
-                </div>
-                <Badge variant="outline" className="text-[10px] font-mono">
-                  لوحة كانبان
-                </Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                  مسار التوظيف وتتبع المتقدمين (ATS Pipeline)
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  نظام تفاعلي متكامل للسحب والإفلات لمتابعة مراحل المرشحين: طلبات جديدة، التدقيق التقني، المقابلات المجدولة، وعروض القبول.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-5 border-t border-border/60 mt-4 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                {stats.pendingReview} طلب بانتظار اتخاذ إجراء
-              </span>
-              <Link
-                href="/company/ats"
-                className="text-xs font-semibold text-primary inline-flex items-center gap-1 group-hover:underline"
-              >
-                <span>فتح لوحة ATS</span>
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </Card>
-
-          {/* Module 2: Talent Search */}
-          <Card className="p-6 border border-border bg-card hover:border-primary/40 transition-all flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <Badge variant="outline" className="text-[10px] font-mono">
-                  جاهزية الذكاء الاصطناعي
-                </Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                  محرك استقطاب الكفاءات (Talent Search Engine)
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  بحث وفلترة دقيقة لطلبة وخريجي الجامعات التقنية استناداً إلى تدقيق كود GitHub الفعلي ومؤشر الجاهزية لسوق العمل.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-5 border-t border-border/60 mt-4 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                كفاءات مفحوصة وموثقة أكاديمياً
-              </span>
-              <Link
-                href="/company/talents"
-                className="text-xs font-semibold text-primary inline-flex items-center gap-1 group-hover:underline"
-              >
-                <span>استكشاف المرشحين</span>
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </Card>
-
-          {/* Module 3: Analytics */}
-          <Card className="p-6 border border-border bg-card hover:border-primary/40 transition-all flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <BarChart3 className="h-5 w-5" />
-                </div>
-                <Badge variant="outline" className="text-[10px] font-mono">
-                  لوحة المؤشرات
-                </Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                  التحليلات ومؤشرات الأداء (Employer Analytics)
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  مؤشرات قمع التوظيف، معدل التطابق، متوسط زمن إغلاق الشواغر، مع رادار المواهب الأكاديمية بالجامعات.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-5 border-t border-border/60 mt-4 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                تقارير ورؤى استراتيجية
-              </span>
-              <Link
-                href="/company/analytics"
-                className="text-xs font-semibold text-primary inline-flex items-center gap-1 group-hover:underline"
-              >
-                <span>عرض التحليلات</span>
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </Card>
-
-          {/* Module 4: Internships */}
-          <Card className="p-6 border border-border bg-card hover:border-primary/40 transition-all flex flex-col justify-between group">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                  <Briefcase className="h-5 w-5" />
-                </div>
-                <Badge variant="outline" className="text-[10px] font-mono">
-                  الشواغر
-                </Badge>
-              </div>
-              <div>
-                <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                  إدارة الشواغر التدريبية (Internship Listings)
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  نشر وتعديل الشواغر التدريبية ومتابعة المتقدمين وقوائم المرشحين لكل فرصة مع تفاصيل التقديم.
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-5 border-t border-border/60 mt-4 flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                {stats.totalInternships} فرصة منشورة
-              </span>
-              <Link
-                href="/company/internships"
-                className="text-xs font-semibold text-primary inline-flex items-center gap-1 group-hover:underline"
-              >
-                <span>إدارة الشواغر</span>
-                <ChevronLeft className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </Card>
-        </div>
-      </div>
 
       {/* Trust & Academic Validation Banner */}
       <Card className="p-6 border border-border bg-secondary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl">
