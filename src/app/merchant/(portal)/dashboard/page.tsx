@@ -869,9 +869,10 @@ export default function MerchantDashboardPage() {
                     <Button
                       size="sm"
                       onClick={handleResetCashier}
-                      className="bg-white/10 hover:bg-white/20 text-white text-xs h-9 px-4 rounded-lg cursor-pointer"
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold h-9 px-4 rounded-lg cursor-pointer flex items-center gap-1.5 shadow-md"
                     >
-                      استبدال كوبون تالي (Shift + N)
+                      <QrCode className="h-3.5 w-3.5" />
+                      <span>مسح QR جديد (العملية التالية)</span>
                     </Button>
                   </div>
                 </div>
