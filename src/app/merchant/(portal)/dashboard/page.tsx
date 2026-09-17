@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { QrCameraScanner } from "@/components/merchant/qr-camera-scanner";
 
 // --- Types ---
 interface Deal {
@@ -1042,70 +1043,17 @@ export default function MerchantDashboardPage() {
       )}
 
       {/* ========================================================================= */}
-      {/* Simulated Camera Scanner Modal */}
+      {/* Real Device Camera QR Scanner Modal */}
       {/* ========================================================================= */}
-      {scannerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f1724] p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Camera className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-sm font-bold text-white">ماسح QR Code الميداني للكاشير</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setScannerOpen(false)}
-                className="text-slate-400 hover:text-white"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            {/* Camera Viewport Simulation */}
-            <div className="relative w-full h-64 rounded-xl bg-black overflow-hidden border border-emerald-500/40 flex items-center justify-center">
-              {/* Laser Scanning Beam */}
-              <div className="absolute inset-x-0 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_15px_#10b981] animate-bounce top-1/2" />
-
-              {/* Viewfinder brackets */}
-              <div className="w-48 h-48 border-2 border-dashed border-emerald-400/60 rounded-2xl flex items-center justify-center">
-                <QrCode className="h-24 w-24 text-emerald-500/20" />
-              </div>
-
-              <div className="absolute bottom-3 text-[11px] font-mono text-emerald-400 bg-black/60 px-3 py-1 rounded-full">
-                وجّه الكاميرا نحو رمز QR بهاتف الطالب...
-              </div>
-            </div>
-
-            {/* Quick Simulate Buttons */}
-            <div className="space-y-2 pt-2">
-              <span className="text-xs text-slate-400 block text-start">محاكاة مسح رمز الطالب:</span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <Button
-                  onClick={() => {
-                    setScannerOpen(false);
-                    setVoucherCode("MASAR20");
-                    handleVerifyCode("MASAR20");
-                  }}
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10 rounded-xl"
-                >
-                  مسح كود عمر (خصم 20%)
-                </Button>
-
-                <Button
-                  onClick={() => {
-                    setScannerOpen(false);
-                    setVoucherCode("BURGER50");
-                    handleVerifyCode("BURGER50");
-                  }}
-                  className="bg-amber-600 hover:bg-amber-500 text-white font-bold h-10 rounded-xl"
-                >
-                  مسح كود سارة (BOGO)
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <QrCameraScanner
+        isOpen={scannerOpen}
+        onClose={() => setScannerOpen(false)}
+        onScanSuccess={(code) => {
+          setScannerOpen(false);
+          setVoucherCode(code);
+          handleVerifyCode(code);
+        }}
+      />
 
       {/* ========================================================================= */}
       {/* Deal Builder Modal (إنشاء عرض جديد) */}
