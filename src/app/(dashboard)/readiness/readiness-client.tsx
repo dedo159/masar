@@ -19,10 +19,7 @@ import {
   TrendingUp, 
   RefreshCw, 
   Layers, 
-  Check, 
-  ChevronDown, 
-  ChevronUp,
-  SlidersHorizontal
+  Check
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import Link from "next/link";
@@ -42,7 +39,6 @@ export function ReadinessClient() {
   const [githubReposCount, setGithubReposCount] = useState("");
   const [topProjects, setTopProjects] = useState("");
   const [scannedMeta, setScannedMeta] = useState<{ username?: string; reposCount?: number; languages?: string[] } | null>(null);
-  const [showAdvancedEdit, setShowAdvancedEdit] = useState(false);
 
   const [result, setResult] = useState<any>(null);
 
@@ -217,15 +213,22 @@ export function ReadinessClient() {
                 </div>
 
                 {scannedMeta ? (
-                  <div className="space-y-2">
+                  <div className="space-y-2.5">
                     <div className="flex items-center justify-between text-xs text-muted-foreground bg-background/80 p-2.5 rounded-lg border border-border/60">
                       <span>المستودعات المرصودة: <strong className="text-foreground">{githubReposCount || 0}</strong></span>
                       <span>اللغات الأساسية: <strong className="text-foreground">{githubLanguages || "مكتشفة"}</strong></span>
                     </div>
-                    <div className="flex items-center justify-between gap-2 pt-1">
-                      <p className="text-[11px] text-muted-foreground truncate">
-                        المشاريع: {topProjects ? topProjects.slice(0, 60) + "..." : "تم رصد المشاريع"}
-                      </p>
+                    {topProjects && (
+                      <div className="p-2.5 rounded-lg bg-background/80 border border-border/60 text-xs">
+                        <span className="text-[11px] font-semibold text-muted-foreground block mb-1">
+                          أبرز المشاريع المستخرجة تلقائياً:
+                        </span>
+                        <p className="text-foreground leading-relaxed text-[11px] max-h-24 overflow-y-auto">
+                          {topProjects}
+                        </p>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-end pt-0.5">
                       <Button
                         type="button"
                         variant="ghost"
@@ -235,14 +238,14 @@ export function ReadinessClient() {
                         className="h-7 text-xs gap-1 text-[#0070f3] hover:text-[#0070f3] flex-shrink-0"
                       >
                         <RefreshCw className={`w-3 h-3 ${scanningGithub ? "animate-spin" : ""}`} />
-                        تحديث الفحص
+                        إعادة فحص وتحديث
                       </Button>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <p className="text-xs text-muted-foreground">
-                      أدخل رابط أو اسم مستخدم GitHub لاستخراج مشاريعك ولغاتك تلقائياً:
+                      أدخل رابط أو اسم مستخدم GitHub لفحص مشاريعك ولغاتك تلقائياً دون الحاجة لكتابتها:
                     </p>
                     <div className="flex gap-2">
                       <Input
@@ -292,56 +295,6 @@ export function ReadinessClient() {
                   </p>
                 )}
               </div>
-
-              {/* Collapsible Advanced Edit */}
-              <div className="border-t border-border/50 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowAdvancedEdit(!showAdvancedEdit)}
-                  className="flex items-center justify-between w-full text-xs font-medium text-muted-foreground hover:text-foreground py-1.5 transition-colors"
-                >
-                  <span className="flex items-center gap-1.5">
-                    <SlidersHorizontal className="w-3.5 h-3.5" />
-                    تخصيص البيانات التقنية يدوياً (اختياري)
-                  </span>
-                  {showAdvancedEdit ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                </button>
-
-                {showAdvancedEdit && (
-                  <div className="space-y-3 pt-3 animate-in fade-in duration-200">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_3ux84x}</label>
-                      <Input 
-                        value={githubLanguages} 
-                        onChange={(e) => setGithubLanguages(e.target.value)} 
-                        placeholder={t.readinessclient.key_4srqlt}
-                        className="bg-background text-xs h-9"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_kqgzve}</label>
-                      <Input 
-                        type="number"
-                        value={githubReposCount} 
-                        onChange={(e) => setGithubReposCount(e.target.value)} 
-                        className="bg-background text-xs h-9"
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-medium text-muted-foreground">{t.readinessclient.key_mlp3m9}</label>
-                      <textarea 
-                        value={topProjects} 
-                        onChange={(e) => setTopProjects(e.target.value)} 
-                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring min-h-[70px]"
-                        placeholder={t.readinessclient.key_733los}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-
             </CardContent>
             <CardFooter className="pt-2">
               <Button 
