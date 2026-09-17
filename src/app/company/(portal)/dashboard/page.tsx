@@ -3,10 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Plus, Briefcase, Users, Clock, ArrowUpRight, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/components/providers/language-provider";
 
 export default function DashboardPage() {
-    const { t } = useLanguage();
+  const { t } = useLanguage();
   const router = useRouter();
   const [stats, setStats] = useState({ totalInternships: 0, totalApplicants: 0, pendingReview: 0 });
   const [loading, setLoading] = useState(true);
@@ -33,59 +36,135 @@ export default function DashboardPage() {
   }, [router]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-foreground">{t.companyportaldashboardpagetsx.text_8sxs}</h2>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">{t.companyportaldashboardpagetsx.text_nhry}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {t.companyportaldashboardpagetsx.text_8sxs}
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            {t.companyportaldashboardpagetsx.text_nhry}
+          </p>
         </div>
-        <Link
-          href="/company/internships"
-          className="bg-emerald-600 hover:bg-emerald-700 text-foreground px-5 py-2.5 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
-        >
-          <span>➕</span>
-          {t.companyportaldashboardpagetsx.text_ol3e}</Link>
+
+        <div className="flex items-center gap-3">
+          <Link href="/company/talents">
+            <Button variant="outline" className="text-xs font-semibold gap-1.5 h-10 px-4">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span>استقطاب الكفاءات (Talent Search)</span>
+            </Button>
+          </Link>
+
+          <Link href="/company/internships">
+            <Button className="text-xs font-semibold gap-1.5 h-10 px-4">
+              <Plus className="h-4 w-4" />
+              <span>{t.companyportaldashboardpagetsx.text_ol3e}</span>
+            </Button>
+          </Link>
+        </div>
       </div>
 
+      {/* KPI Stats Cards */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-pulse">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 animate-pulse">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 h-32"></div>
+            <div key={i} className="bg-card p-6 rounded-xl border border-border h-32" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center gap-4 shadow-sm">
-            <div className="w-14 h-14 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
-              📋
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {/* Card 1: Internships */}
+          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-border/80 transition-all">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Briefcase className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {t.companyportaldashboardpagetsx.text_unk2}
+                </p>
+                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
+                  {stats.totalInternships}
+                </h3>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.companyportaldashboardpagetsx.text_unk2}</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.totalInternships}</h3>
-            </div>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center gap-4 shadow-sm">
-            <div className="w-14 h-14 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl">
-              👥
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.companyportaldashboardpagetsx.text_ma4a}</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.totalApplicants}</h3>
-            </div>
-          </div>
+            <Link
+              href="/company/internships"
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Card>
 
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-800 flex items-center gap-4 shadow-sm">
-            <div className="w-14 h-14 rounded-full bg-yellow-50 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600 dark:text-yellow-400 text-2xl">
-              ⏳
+          {/* Card 2: Applicants */}
+          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-border/80 transition-all">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-secondary text-foreground flex items-center justify-center">
+                <Users className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {t.companyportaldashboardpagetsx.text_ma4a}
+                </p>
+                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
+                  {stats.totalApplicants}
+                </h3>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.companyportaldashboardpagetsx.text_p5u1}</p>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-foreground mt-1">{stats.pendingReview}</h3>
+            <Link
+              href="/company/internships"
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Card>
+
+          {/* Card 3: Pending Review */}
+          <Card className="p-6 flex items-center justify-between shadow-xs hover:border-border/80 transition-all">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <Clock className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground">
+                  {t.companyportaldashboardpagetsx.text_p5u1}
+                </p>
+                <h3 className="text-2xl font-bold text-foreground mt-1 tabular-nums font-mono">
+                  {stats.pendingReview}
+                </h3>
+              </div>
             </div>
-          </div>
+            <Link
+              href="/company/internships"
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </Card>
         </div>
       )}
+
+      {/* Talent Search Quick Callout Card */}
+      <Card className="p-6 border border-border bg-secondary/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <h2 className="text-base font-bold text-foreground">
+              محرك البحث الذكي عن الكفاءات الطلابية (Talent Search)
+            </h2>
+          </div>
+          <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
+            استكشف طلاب الجامعات المتميزين بناءً على فحص كود GitHub الفعلي، ومؤشر الجاهزية لسوق العمل، ومعدل المواد البرمجية الأساسية.
+          </p>
+        </div>
+
+        <Link href="/company/talents">
+          <Button className="text-xs font-semibold h-10 px-5">
+            استعراض الكفاءات المعتمدة
+          </Button>
+        </Link>
+      </Card>
     </div>
   );
 }

@@ -249,7 +249,7 @@ export default function TalentSearchPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <div className="h-6 px-2 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 inline-flex items-center gap-1">
+              <div className="h-6 px-2 rounded-full text-[10px] font-semibold bg-primary/10 text-primary border border-primary/20 inline-flex items-center gap-1">
                 <Sparkles className="h-3 w-3" />
                 <span>محرك استقطاب الكفاءات المعتمدة • Talent Search</span>
               </div>
@@ -270,7 +270,7 @@ export default function TalentSearchPage() {
               onClick={() => setShowBookmarksOnly((prev) => !prev)}
               className={`min-h-[40px] px-3.5 rounded-lg border text-xs font-semibold inline-flex items-center gap-2 transition-all cursor-pointer ${
                 showBookmarksOnly
-                  ? "bg-emerald-600 text-foreground border-emerald-600 shadow-sm"
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
                   : "bg-card hover:bg-secondary text-muted-foreground hover:text-foreground border-border"
               }`}
             >
@@ -286,7 +286,7 @@ export default function TalentSearchPage() {
               onClick={() => setSidebarOpenMobile((prev) => !prev)}
               className="md:hidden min-h-[40px] px-3 rounded-lg border border-border bg-card text-xs font-semibold inline-flex items-center gap-2 cursor-pointer"
             >
-              <SlidersHorizontal className="h-4 w-4 text-emerald-600" />
+              <SlidersHorizontal className="h-4 w-4 text-primary" />
               <span>الفلاتر ({selectedSkills.length + (minReadiness > 0 ? 1 : 0) + (minGpa > 2.0 ? 1 : 0)})</span>
             </button>
           </div>
@@ -307,13 +307,13 @@ export default function TalentSearchPage() {
           <div className="rounded-xl border border-border bg-card p-4 space-y-5 shadow-xs">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2 text-sm font-bold text-foreground">
-                <SlidersHorizontal className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+                <SlidersHorizontal className="h-4 w-4 text-primary" />
                 <span>فلاتر البحث الدقيقة</span>
               </div>
               {hasActiveFilters && (
                 <button
                   onClick={clearAllFilters}
-                  className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1 font-semibold cursor-pointer"
+                  className="text-[11px] text-primary hover:underline flex items-center gap-1 font-semibold cursor-pointer"
                 >
                   <RotateCcw className="h-3 w-3" />
                   <span>إعادة ضبط</span>
@@ -325,10 +325,10 @@ export default function TalentSearchPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs font-semibold text-foreground">
                 <span className="flex items-center gap-1.5">
-                  <TrendingUp className="h-3.5 w-3.5 text-emerald-600" />
+                  <TrendingUp className="h-3.5 w-3.5 text-primary" />
                   <span>الحد الأدنى للجاهزية:</span>
                 </span>
-                <span className="font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded text-[11px]">
+                <span className="font-mono text-primary bg-primary/10 px-2 py-0.5 rounded text-[11px]">
                   {minReadiness > 0 ? `${minReadiness}%+` : "الكل"}
                 </span>
               </div>
@@ -339,7 +339,7 @@ export default function TalentSearchPage() {
                 step="5"
                 value={minReadiness}
                 onChange={(e) => setMinReadiness(Number(e.target.value))}
-                className="w-full accent-emerald-600 cursor-pointer h-1.5 bg-secondary rounded-lg"
+                className="w-full accent-primary cursor-pointer h-1.5 bg-secondary rounded-lg"
               />
               <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-0.5">
                 <button
@@ -350,19 +350,19 @@ export default function TalentSearchPage() {
                 </button>
                 <button
                   onClick={() => setMinReadiness(75)}
-                  className={`hover:text-foreground cursor-pointer ${minReadiness === 75 ? "font-bold text-emerald-600" : ""}`}
+                  className={`hover:text-foreground cursor-pointer ${minReadiness === 75 ? "font-bold text-primary" : ""}`}
                 >
                   +75% (مؤهل)
                 </button>
                 <button
                   onClick={() => setMinReadiness(85)}
-                  className={`hover:text-foreground cursor-pointer ${minReadiness === 85 ? "font-bold text-emerald-600" : ""}`}
+                  className={`hover:text-foreground cursor-pointer ${minReadiness === 85 ? "font-bold text-primary" : ""}`}
                 >
                   +85% (جاهز)
                 </button>
                 <button
                   onClick={() => setMinReadiness(90)}
-                  className={`hover:text-foreground cursor-pointer ${minReadiness === 90 ? "font-bold text-emerald-600" : ""}`}
+                  className={`hover:text-foreground cursor-pointer ${minReadiness === 90 ? "font-bold text-primary" : ""}`}
                 >
                   +90% (نخبة)
                 </button>
@@ -414,7 +414,7 @@ export default function TalentSearchPage() {
                       key={item.id}
                       className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-xs cursor-pointer transition-all ${
                         checked
-                          ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold"
+                          ? "border-primary/50 bg-primary/10 text-primary font-semibold"
                           : "border-transparent hover:bg-secondary/60 text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -423,7 +423,7 @@ export default function TalentSearchPage() {
                           type="checkbox"
                           checked={checked}
                           onChange={() => toggleStanding(item.id)}
-                          className="rounded border-input text-emerald-600 focus:ring-emerald-500 h-3.5 w-3.5"
+                          className="rounded border-input text-primary focus:ring-primary h-3.5 w-3.5"
                         />
                         <span>{item.label}</span>
                       </div>
@@ -452,7 +452,7 @@ export default function TalentSearchPage() {
                       onClick={() => toggleWorkType(wt.id)}
                       className={`text-xs px-2.5 py-1 rounded-md border transition-all cursor-pointer ${
                         checked
-                          ? "border-emerald-600 bg-emerald-600 text-foreground font-semibold shadow-xs"
+                          ? "border-primary bg-primary text-primary-foreground font-semibold shadow-xs"
                           : "border-border bg-secondary/30 text-muted-foreground hover:text-foreground"
                       }`}
                     >
@@ -490,7 +490,7 @@ export default function TalentSearchPage() {
                       onClick={() => toggleSkill(skill)}
                       className={`text-[11px] px-2.5 py-1 rounded-md border font-mono transition-all inline-flex items-center gap-1.5 cursor-pointer ${
                         isSelected
-                          ? "border-emerald-600 bg-emerald-600 text-foreground font-bold shadow-xs scale-102"
+                          ? "border-primary bg-primary text-primary-foreground font-bold shadow-xs scale-102"
                           : "border-border bg-secondary/40 text-muted-foreground hover:text-foreground hover:border-border/80"
                       }`}
                     >
@@ -526,7 +526,7 @@ export default function TalentSearchPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="ابحث بالاسم، المسمى الوظيفي (Frontend, DevOps), أو المهارة (React, Docker, Java)..."
-                  className="pr-10 pl-9 min-h-[42px] text-xs bg-background/50 border-border focus-visible:ring-emerald-500"
+                  className="pr-10 pl-9 min-h-[42px] text-xs bg-background/50 border-border focus-visible:ring-primary"
                 />
                 {searchQuery && (
                   <button
@@ -544,7 +544,7 @@ export default function TalentSearchPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="min-h-[42px] px-3 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
+                  className="min-h-[42px] px-3 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
                 >
                   <option value="readiness">الأعلى جاهزية لسوق العمل</option>
                   <option value="gpa">الأعلى معدلاً تراكمياً</option>
@@ -560,7 +560,7 @@ export default function TalentSearchPage() {
                 <span className="font-semibold text-foreground text-[11px]">
                   النتائج المطابقة:
                 </span>
-                <span className="font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full text-[11px]">
+                <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full text-[11px]">
                   {filteredCandidates.length} كفاءة تقنية
                 </span>
 
@@ -579,7 +579,7 @@ export default function TalentSearchPage() {
                 {minReadiness > 0 && (
                   <Badge
                     variant="outline"
-                    className="text-[10px] gap-1 text-emerald-600 border-emerald-500/30 cursor-pointer"
+                    className="text-[10px] gap-1 text-primary border-primary/30 cursor-pointer"
                     onClick={() => setMinReadiness(0)}
                   >
                     <span>جاهزية: +{minReadiness}%</span>
@@ -662,7 +662,7 @@ export default function TalentSearchPage() {
                 const isBookmarked = bookmarkedIds.includes(candidate.id);
                 const scoreColor =
                   candidate.readinessScore >= 90
-                    ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
+                    ? "text-primary bg-primary/10 border-primary/30"
                     : candidate.readinessScore >= 75
                     ? "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/30"
                     : "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30";
@@ -671,13 +671,13 @@ export default function TalentSearchPage() {
                   <div
                     key={candidate.id}
                     onClick={() => setPreviewCandidate(candidate)}
-                    className="group relative rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs hover:border-emerald-500/40 hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between"
+                    className="group relative rounded-xl border border-border bg-card p-5 space-y-4 shadow-xs hover:border-primary/40 hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between"
                   >
                     {/* Top Row: Avatar/Initials + Name + Bookmark */}
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
                         {/* Avatar / Initials */}
-                        <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/15 to-blue-500/15 border border-emerald-500/20 text-foreground flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
+                        <div className="h-11 w-11 rounded-xl bg-gradient-to-br from-emerald-500/15 to-blue-500/15 border border-primary/20 text-foreground flex items-center justify-center font-bold text-sm shrink-0 shadow-xs">
                           {candidate.name
                             .split(" ")
                             .slice(0, 2)
@@ -687,7 +687,7 @@ export default function TalentSearchPage() {
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <h3 className="text-sm font-bold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
+                            <h3 className="text-sm font-bold text-foreground group-hover:text-primary dark:group-hover:text-emerald-400 transition-colors truncate">
                               {candidate.name}
                             </h3>
                             {candidate.featured && (
@@ -697,7 +697,7 @@ export default function TalentSearchPage() {
                             )}
                           </div>
 
-                          <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300 truncate mt-0.5">
+                          <p className="text-xs font-semibold text-primary truncate mt-0.5">
                             {candidate.targetRole}
                           </p>
 
@@ -716,7 +716,7 @@ export default function TalentSearchPage() {
                         aria-label="حفظ في المفضلة"
                         className={`p-1.5 rounded-lg border transition-all cursor-pointer ${
                           isBookmarked
-                            ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                            ? "border-primary/40 bg-primary/15 text-primary"
                             : "border-transparent text-muted-foreground hover:bg-secondary hover:text-foreground"
                         }`}
                       >
@@ -768,8 +768,8 @@ export default function TalentSearchPage() {
                             }}
                             className={`text-[10px] font-mono px-2 py-0.5 rounded border transition-colors cursor-pointer ${
                               selectedSkills.includes(skill)
-                                ? "bg-emerald-600 text-foreground border-emerald-600 font-bold"
-                                : "bg-secondary/40 text-muted-foreground hover:text-foreground hover:border-emerald-500/40 border-border"
+                                ? "bg-primary text-primary-foreground border-primary font-bold"
+                                : "bg-secondary/40 text-muted-foreground hover:text-foreground hover:border-primary/40 border-border"
                             }`}
                           >
                             {skill}
@@ -828,7 +828,7 @@ export default function TalentSearchPage() {
                         <Link
                           href={`/company/talents/${candidate.id}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="min-h-[34px] text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 inline-flex items-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-colors shadow-2xs"
+                          className="min-h-[34px] text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-50/80 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-primary inline-flex items-center gap-1 border border-emerald-200 dark:border-emerald-800 transition-colors shadow-2xs"
                         >
                           <span>الملف الكامل</span>
                           <ChevronLeft className="h-3.5 w-3.5" />
@@ -859,7 +859,7 @@ export default function TalentSearchPage() {
             {/* Modal Header */}
             <div className="flex items-start justify-between gap-4 pb-4 border-b border-border">
               <div className="flex items-start gap-3.5">
-                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-emerald-500/30 text-foreground flex items-center justify-center font-bold text-lg shrink-0">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-primary/30 text-foreground flex items-center justify-center font-bold text-lg shrink-0">
                   {previewCandidate.name
                     .split(" ")
                     .slice(0, 2)
@@ -877,7 +877,7 @@ export default function TalentSearchPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mt-0.5">
+                  <p className="text-sm font-semibold text-primary mt-0.5">
                     {previewCandidate.targetRole}
                   </p>
                   <p className="text-xs text-muted-foreground mt-0.5">
@@ -898,7 +898,7 @@ export default function TalentSearchPage() {
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 rounded-xl border border-border bg-secondary/30 text-center">
                 <span className="text-[10px] text-muted-foreground block">مؤشر الجاهزية (AI)</span>
-                <span className="text-lg font-extrabold font-mono text-emerald-600 dark:text-emerald-400">
+                <span className="text-lg font-extrabold font-mono text-primary">
                   {previewCandidate.readinessScore}%
                 </span>
               </div>
@@ -917,8 +917,8 @@ export default function TalentSearchPage() {
             </div>
 
             {/* AI Career Readiness Audit Report */}
-            <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+            <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-primary">
                 <Sparkles className="h-4 w-4" />
                 <span>تقرير تدقيق الجاهزية التقنية (Masar AI Engine):</span>
               </div>
@@ -945,7 +945,7 @@ export default function TalentSearchPage() {
                       key={i}
                       className="flex items-start gap-2 text-xs text-muted-foreground bg-secondary/30 p-2 rounded-lg border border-border/60"
                     >
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
                       <span>{h}</span>
                     </div>
                   ))}
@@ -998,7 +998,7 @@ export default function TalentSearchPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <Link
                   href={`/company/talents/${previewCandidate.id}`}
-                  className="min-h-[38px] px-3.5 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
+                  className="min-h-[38px] px-3.5 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors shadow-2xs"
                 >
                   <Eye className="h-3.5 w-3.5" />
                   <span>فتح الملف التفاعلي المباشر (Live Profile)</span>
@@ -1009,7 +1009,7 @@ export default function TalentSearchPage() {
                   onClick={() => toggleBookmark(previewCandidate.id)}
                   className={`min-h-[38px] px-3.5 rounded-lg border text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer ${
                     bookmarkedIds.includes(previewCandidate.id)
-                      ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                      ? "bg-primary/15 border-primary/30 text-primary"
                       : "bg-card border-border hover:bg-secondary text-muted-foreground"
                   }`}
                 >
@@ -1021,7 +1021,7 @@ export default function TalentSearchPage() {
 
                 <a
                   href={`mailto:${previewCandidate.email}?subject=دعوة لمقابلة تدريب / عمل — منصة مسار&body=مرحباً ${previewCandidate.name}،%0D%0A%0D%0Aاطلعنا على ملفك التقني ومشاريعك عبر منصة مسار ونود دعوتك لإجراء مقابلة تقنية بخصوص فرص العمل والتدريب المتاحة لدينا.`}
-                  className="min-h-[38px] px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold inline-flex items-center gap-2 shadow-sm shadow-emerald-600/20 active:scale-95 transition-all"
+                  className="min-h-[38px] px-4 rounded-lg bg-primary hover:bg-primary/90 text-white text-xs font-bold inline-flex items-center gap-2 shadow-sm shadow-sm active:scale-95 transition-all"
                 >
                   <Send className="h-3.5 w-3.5" />
                   <span>دعوة لمقابلة وتواصل ✉️</span>

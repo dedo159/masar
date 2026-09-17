@@ -194,9 +194,9 @@ export default function CandidateProfilePage({
           </Badge>
           <Badge
             variant="secondary"
-            className="text-xs px-2.5 py-1 text-emerald-700 bg-emerald-50 dark:bg-emerald-950/40 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+            className="text-xs px-2.5 py-1 text-primary bg-primary/10 border border-primary/20"
           >
-            <ShieldCheck className="h-3 w-3 ml-1 text-emerald-600 inline" />
+            <ShieldCheck className="h-3 w-3 ml-1 text-primary inline" />
             بيانات مدققة وموثقة رسمياً
           </Badge>
         </div>
@@ -207,13 +207,13 @@ export default function CandidateProfilePage({
           ========================================================================= */}
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
         {/* Background gradient hint */}
-        <div className="absolute top-0 right-0 left-0 h-32 bg-gradient-to-b from-emerald-500/10 via-primary/5 to-transparent pointer-events-none" />
+        <div className="absolute top-0 right-0 left-0 h-32 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
 
         <div className="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           {/* Avatar & Candidate Identity */}
           <div className="flex items-start gap-5">
             <div className="relative flex-shrink-0">
-              <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-slate-800 text-white font-bold text-2xl md:text-3xl flex items-center justify-center shadow-lg shadow-emerald-600/20 border-2 border-background">
+              <div className="h-20 w-20 md:h-24 md:w-24 rounded-2xl bg-secondary text-foreground font-bold text-2xl md:text-3xl flex items-center justify-center border border-border shadow-xs">
                 {candidate.avatar ? (
                   <img
                     src={candidate.avatar}
@@ -245,13 +245,13 @@ export default function CandidateProfilePage({
                 </h1>
                 <Badge
                   variant="outline"
-                  className="bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 text-xs font-semibold px-2.5 py-0.5"
+                  className="bg-secondary text-foreground border-border text-xs font-semibold px-2.5 py-0.5"
                 >
                   {candidate.standingLabel}
                 </Badge>
               </div>
 
-              <p className="text-base font-semibold text-emerald-700 dark:text-emerald-400">
+              <p className="text-base font-semibold text-primary">
                 {candidate.targetRole}
               </p>
 
@@ -313,7 +313,7 @@ export default function CandidateProfilePage({
                   className="h-10 px-3.5 rounded-xl border border-border bg-secondary/50 hover:bg-secondary text-foreground text-xs font-semibold inline-flex items-center gap-2 transition-colors shadow-xs"
                   title="المحفظة الشخصية"
                 >
-                  <Code2 className="h-4 w-4 text-emerald-600" />
+                  <Code2 className="h-4 w-4 text-primary" />
                   <span className="hidden sm:inline">Portfolio</span>
                   <ExternalLink className="h-3 w-3 text-muted-foreground" />
                 </a>
@@ -323,7 +323,7 @@ export default function CandidateProfilePage({
             {/* Primary Action Button */}
             <Button
               onClick={() => setShowInviteModal(true)}
-              className="h-10 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs inline-flex items-center justify-center gap-2 shadow-sm shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="h-10 px-5 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs inline-flex items-center justify-center gap-2 shadow-sm shadow-xs transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Send className="h-3.5 w-3.5" />
               <span>دعوة لمقابلة / تواصل</span>
@@ -360,14 +360,14 @@ export default function CandidateProfilePage({
       {/* =========================================================================
           2. AI AUDIT SUMMARY (بطاقة تدقيق الذكاء الاصطناعي مع إطار متوهج مضيء)
           ========================================================================= */}
-      <div className="relative rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-br from-card via-card to-emerald-950/20 p-6 md:p-8 shadow-xl shadow-emerald-500/10 ring-4 ring-emerald-500/20 transition-all">
+      <div className="relative rounded-2xl rounded-2xl border border-border bg-card p-6 md:p-8 shadow-xs transition-all">
         {/* Ambient Top Glow Line */}
-        <div className="absolute -top-px right-10 left-10 h-[2px] bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_12px_#10b981]" />
+        <div className="absolute -top-px right-10 left-10 h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-emerald-500/20">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-border">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <Sparkles className="h-4 w-4 animate-pulse" />
               </span>
               <h2 className="text-lg font-bold text-foreground">
@@ -380,14 +380,14 @@ export default function CandidateProfilePage({
           </div>
 
           {/* Readiness Score Gauge Badge */}
-          <div className="flex items-center gap-4 bg-background/80 backdrop-blur-xs border border-emerald-500/40 px-5 py-3 rounded-2xl shadow-inner">
+          <div className="flex items-center gap-4 bg-background/80 backdrop-blur-xs border border-border px-5 py-3 rounded-2xl shadow-inner">
             <div className="text-right">
               <div className="text-[11px] text-muted-foreground font-medium">مؤشر الجاهزية المعتمد</div>
-              <div className="text-xl md:text-2xl font-black font-mono text-emerald-600 dark:text-emerald-400">
+              <div className="text-xl md:text-2xl font-black font-mono text-primary">
                 {candidate.aiAudit.marketReadinessLabel}
               </div>
             </div>
-            <div className="h-12 w-12 rounded-full border-4 border-emerald-500/30 border-t-emerald-500 flex items-center justify-center font-bold text-sm text-foreground">
+            <div className="h-12 w-12 rounded-full border-4 border-primary/20 border-t-primary flex items-center justify-center font-bold text-sm text-foreground">
               {candidate.aiAudit.readinessScore}%
             </div>
           </div>
@@ -399,10 +399,10 @@ export default function CandidateProfilePage({
           <div className="lg:col-span-7 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-primary" />
                 <span>ملخص نقاط القوة الهندسية (Core Strengths):</span>
               </h3>
-              <span className="text-[11px] text-emerald-600 font-semibold bg-emerald-500/10 px-2 py-0.5 rounded-md">
+              <span className="text-[11px] text-primary font-semibold bg-primary/10 px-2 py-0.5 rounded-md">
                 {candidate.aiAudit.recommendationLevel}
               </span>
             </div>
@@ -413,7 +413,7 @@ export default function CandidateProfilePage({
                   key={idx}
                   className="text-xs md:text-sm leading-relaxed p-3 rounded-xl bg-secondary/30 border border-border/70 flex items-start gap-3 text-foreground"
                 >
-                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-emerald-500/15 text-emerald-600 text-xs font-bold flex items-center justify-center mt-0.5">
+                  <span className="flex-shrink-0 h-5 w-5 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center mt-0.5">
                     {idx + 1}
                   </span>
                   <span>{strength}</span>
@@ -474,7 +474,7 @@ export default function CandidateProfilePage({
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-              <FolderGit2 className="h-5 w-5 text-emerald-600" />
+              <FolderGit2 className="h-5 w-5 text-primary" />
               <span>إثبات الكود ومشاريع GitHub المعتمدة (Verified Code Proof)</span>
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -498,10 +498,10 @@ export default function CandidateProfilePage({
 
           <div className="rounded-xl border border-border bg-card p-4 space-y-1">
             <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-              <GitCommit className="h-3.5 w-3.5 text-emerald-600" />
+              <GitCommit className="h-3.5 w-3.5 text-primary" />
               <span>المساهمات خلال العام</span>
             </div>
-            <div className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
+            <div className="text-2xl font-bold font-mono text-primary">
               {candidate.gitHubProof.totalCommitsPastYear}+
             </div>
             <div className="text-[11px] text-muted-foreground">Commits في مستودعات نشطة</div>
@@ -520,13 +520,13 @@ export default function CandidateProfilePage({
 
           <div className="rounded-xl border border-border bg-card p-4 space-y-1">
             <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-              <Award className="h-3.5 w-3.5 text-emerald-600" />
+              <Award className="h-3.5 w-3.5 text-primary" />
               <span>تقييم جودة وهندسة الكود</span>
             </div>
             <div className="text-2xl font-bold font-mono text-foreground">
               {candidate.gitHubProof.codeQualityRating}
             </div>
-            <div className="text-[11px] text-emerald-600 font-medium">Clean Code & Tests</div>
+            <div className="text-[11px] text-primary font-medium">Clean Code & Tests</div>
           </div>
         </div>
 
@@ -581,7 +581,7 @@ export default function CandidateProfilePage({
               return (
                 <div
                   key={project.id}
-                  className="rounded-2xl border border-border bg-card flex flex-col justify-between overflow-hidden hover:border-emerald-500/50 transition-all shadow-xs"
+                  className="rounded-2xl border border-border bg-card flex flex-col justify-between overflow-hidden hover:border-primary/40 transition-all shadow-xs"
                 >
                   <div className="p-6 space-y-4">
                     <div className="flex items-start justify-between gap-3">
@@ -589,7 +589,7 @@ export default function CandidateProfilePage({
                         <h4 className="text-base font-bold text-foreground">
                           {project.title}
                         </h4>
-                        <p className="text-xs text-emerald-700 dark:text-emerald-400 font-medium mt-0.5">
+                        <p className="text-xs text-primary font-medium mt-0.5">
                           {project.tagline}
                         </p>
                       </div>
@@ -625,7 +625,7 @@ export default function CandidateProfilePage({
                       <ul className="space-y-1 text-xs text-muted-foreground">
                         {project.architectureHighlights.map((h, i) => (
                           <li key={i} className="flex items-start gap-1.5">
-                            <span className="text-emerald-600 mt-1">•</span>
+                            <span className="text-primary mt-1">•</span>
                             <span>{h}</span>
                           </li>
                         ))}
@@ -653,7 +653,7 @@ export default function CandidateProfilePage({
                         onClick={() =>
                           setExpandedReadme(isReadmeOpen ? null : project.id)
                         }
-                        className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1.5"
+                        className="text-xs font-semibold text-primary hover:underline flex items-center gap-1.5"
                       >
                         <FileCode2 className="h-3.5 w-3.5" />
                         <span>
@@ -713,7 +713,7 @@ export default function CandidateProfilePage({
             <div className="h-8 w-px bg-border" />
             <div className="text-right">
               <div className="text-[11px] text-muted-foreground">المعدل التراكمي</div>
-              <div className="text-sm font-bold font-mono text-emerald-600 dark:text-emerald-400">
+              <div className="text-sm font-bold font-mono text-primary">
                 {candidate.gpa.toFixed(2)} / 4.00
               </div>
             </div>
@@ -764,7 +764,7 @@ export default function CandidateProfilePage({
                       {course.credits}
                     </td>
                     <td className="py-3 px-4 text-center">
-                      <span className="inline-block px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+                      <span className="inline-block px-2.5 py-0.5 rounded-md font-mono font-bold text-xs bg-emerald-50 dark:bg-emerald-950/50 text-primary border border-emerald-300 dark:border-emerald-800">
                         {course.grade}
                       </span>
                     </td>
@@ -772,7 +772,7 @@ export default function CandidateProfilePage({
                       {course.score}%
                     </td>
                     <td className="py-3 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 font-medium">
+                      <span className="inline-flex items-center gap-1 text-[11px] text-primary font-medium">
                         <Check className="h-3 w-3" />
                         موثق
                       </span>
@@ -810,7 +810,7 @@ export default function CandidateProfilePage({
 
             {inviteSent ? (
               <div className="py-8 text-center space-y-3">
-                <div className="h-12 w-12 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center mx-auto">
+                <div className="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <h4 className="text-base font-bold text-foreground">
@@ -849,7 +849,7 @@ export default function CandidateProfilePage({
                       onClick={() => setInterviewType("remote")}
                       className={`p-3 rounded-xl border text-xs font-medium text-center transition-all ${
                         interviewType === "remote"
-                          ? "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 font-bold"
+                          ? "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/30 text-primary font-bold"
                           : "border-border bg-card hover:bg-secondary"
                       }`}
                     >
@@ -860,7 +860,7 @@ export default function CandidateProfilePage({
                       onClick={() => setInterviewType("onsite")}
                       className={`p-3 rounded-xl border text-xs font-medium text-center transition-all ${
                         interviewType === "onsite"
-                          ? "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 font-bold"
+                          ? "border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/30 text-primary font-bold"
                           : "border-border bg-card hover:bg-secondary"
                       }`}
                     >
@@ -880,7 +880,7 @@ export default function CandidateProfilePage({
                       required
                       value={interviewDate}
                       onChange={(e) => setInterviewDate(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                   <div className="space-y-1">
@@ -892,7 +892,7 @@ export default function CandidateProfilePage({
                       required
                       value={interviewTime}
                       onChange={(e) => setInterviewTime(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full h-10 px-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
                 </div>
@@ -907,7 +907,7 @@ export default function CandidateProfilePage({
                     value={inviteNotes}
                     onChange={(e) => setInviteNotes(e.target.value)}
                     placeholder={`مرحباً ${candidate.name}، يسعدنا دعوتك لمقابلة تقنية لمناقشة انضمامك لفريقنا...`}
-                    className="w-full p-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"
+                    className="w-full p-3 rounded-xl border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                   />
                 </div>
 
@@ -937,7 +937,7 @@ export default function CandidateProfilePage({
                     </Button>
                     <Button
                       type="submit"
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold"
                     >
                       إرسال الدعوة الآن
                     </Button>
