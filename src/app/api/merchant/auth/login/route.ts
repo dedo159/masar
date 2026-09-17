@@ -6,8 +6,44 @@ import { createSession } from "@/lib/auth";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { contactEmail, password } = body;
+    const { contactEmail, password, isCashierPin, pin } = body;
 
+    // 1. Cashier POS Quick Login via PIN
+    if (isCashierPin) {
+      if (!pin || pin.length < 4) {
+        return NextResponse.json(
+          { error: "رمز PIN غير صحيح، يجب أن يتكون من 4 أرقام" },
+          { status: 400 }
+        );
+      }
+
+      // Find partner or fallback to demo merchant
+      const merchant =
+        (await prisma.merchant.findFirst({
+          where: { contactEmail: "shawarma@aldiaa.jo" },
+        })) ||
+        (await prisma.merchant.findFirst());
+
+      if (!merchant) {
+        return NextResponse.json(
+          { error: "لم يتم العثور على المتجر المسجل للفرع" },
+          { status: 404 }
+        );
+      }
+
+      await createSession({
+        userId: merchant.id,
+        userType: "merchant",
+        merchantId: merchant.id,
+        businessName: merchant.businessName,
+        email: merchant.contactEmail,
+        role: "cashier",
+      });
+
+      return NextResponse.json({ success: true, role: "cashier" });
+    }
+
+    // 2. Full Merchant Administrator Login
     if (!contactEmail || !password) {
       return NextResponse.json(
         { error: "البريد الإلكتروني وكلمة المرور مطلوبان" },
@@ -41,9 +77,10 @@ export async function POST(request: Request) {
       merchantId: merchant.id,
       businessName: merchant.businessName,
       email: merchant.contactEmail,
+      role: "admin",
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, role: "admin" });
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(

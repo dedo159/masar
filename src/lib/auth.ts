@@ -18,6 +18,7 @@ export interface SessionPayload {
   businessName?: string;
   name?: string;
   email?: string;
+  role?: "admin" | "cashier";
 }
 
 function getJwtSecret(): Uint8Array {

@@ -33,17 +33,25 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
+      const role = localStorage.getItem("masar_merchant_role");
+      if (role === "cashier") {
+        router.replace("/merchant/cashier");
+        return;
+      }
       const email = localStorage.getItem("masar_merchant_email");
       if (email && email.includes("aldiaa")) {
         setMerchantName("مطعم شاورما الضيعة");
       }
     }
-  }, []);
+  }, [router]);
 
   const isDark = resolvedTheme === "dark";
 
   const handleLogout = async () => {
     try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("masar_merchant_role");
+      }
       await fetch("/api/merchant/auth/logout", { method: "POST" });
       router.push("/merchant/login");
       router.refresh();
@@ -54,10 +62,16 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
 
   const navItems = [
     {
+      href: "/merchant/cashier",
+      label: "محطة الكاشير المستقلة",
+      icon: ScanLine,
+      badge: "POS",
+      active: false,
+    },
+    {
       href: "/merchant/dashboard",
-      label: "لوحة الكاشير والاستبدال",
+      label: "لوحة التحكم والعمليات",
       icon: LayoutDashboard,
-      badge: "POS Live",
       active: pathname === "/merchant/dashboard",
     },
     {

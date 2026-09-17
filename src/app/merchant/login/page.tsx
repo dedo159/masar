@@ -75,27 +75,30 @@ export default function MerchantLoginPage() {
         return;
       }
 
-      // Demo Cashier Quick-Access PIN validation
-      // Automatically map branch PIN 1234 (or any 4 digit PIN in demo) to partner session
+      // Cashier Quick-Access PIN validation
       try {
         const res = await fetch("/api/merchant/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contactEmail: "shawarma@aldiaa.jo",
-            password: "password123",
+            isCashierPin: true,
+            pin: fullPin,
           }),
         });
 
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
           setSuccess(true);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("masar_merchant_role", "cashier");
+            localStorage.setItem("masar_merchant_email", "shawarma@aldiaa.jo");
+          }
           setTimeout(() => {
-            router.push("/merchant/dashboard");
+            router.push("/merchant/cashier");
             router.refresh();
           }, 600);
         } else {
-          setError("رمز PIN للفرع غير صحيح، يرجى مراجعة إدارة المتجر");
+          setError(data.error || "رمز PIN للفرع غير صحيح، يرجى مراجعة إدارة المتجر");
         }
       } catch {
         setError("تعذر الاتصال بخادم نقطة البيع");
@@ -121,8 +124,11 @@ export default function MerchantLoginPage() {
 
       if (res.ok && data.success) {
         setSuccess(true);
-        if (typeof window !== "undefined" && rememberDevice) {
-          localStorage.setItem("masar_merchant_email", formData.contactEmail);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("masar_merchant_role", "admin");
+          if (rememberDevice) {
+            localStorage.setItem("masar_merchant_email", formData.contactEmail);
+          }
         }
         setTimeout(() => {
           router.push("/merchant/dashboard");
