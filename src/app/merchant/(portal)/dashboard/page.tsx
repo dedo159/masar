@@ -512,93 +512,115 @@ export default function MerchantDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Fixed / Sticky Top Merchant Header */}
-      <div className="rounded-2xl border border-border bg-card p-5 shadow-xl backdrop-blur-xl">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      {/* 1. Merchant Header & Branch Selector */}
+      <div className="relative z-30 rounded-2xl border border-border bg-card p-4 sm:p-5 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           {/* Store Info & Live POS Indicator */}
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500/20 via-emerald-500/10 to-transparent border border-amber-500/30 flex items-center justify-center text-2xl shadow-inner shrink-0">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-muted border border-border flex items-center justify-center text-2xl shadow-inner shrink-0">
               🍔
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl font-bold text-white tracking-tight">{storeName}</h1>
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <h1 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">{storeName}</h1>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   <span>متصل بنقطة البيع · POS Active</span>
                 </span>
               </div>
 
-              {/* Branch selector / status */}
+              {/* Branch Selector with Safe Backdrop Popover */}
               <div className="relative mt-1">
                 <button
                   type="button"
                   onClick={() => setIsBranchDropdownOpen(!isBranchDropdownOpen)}
-                  className="text-xs text-muted-foreground hover:text-white transition-colors flex items-center gap-1 font-medium cursor-pointer"
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 font-medium cursor-pointer py-0.5 px-1.5 -mx-1.5 rounded-md hover:bg-muted"
                 >
-                  <span>{currentBranch}</span>
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="font-semibold text-foreground/90">{currentBranch}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${isBranchDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {isBranchDropdownOpen && (
-                  <div className="absolute top-6 right-0 z-30 w-72 rounded-xl border border-border bg-background p-1.5 shadow-2xl space-y-1">
-                    {[
-                      "فرع الجامعة الأردنية — مجمّع العلوم والطب",
-                      "فرع جامعة عمان الأهلية — البوابة الرئيسية",
-                      "فرع جامعة العلوم والتكنولوجيا — المجمّع التجاري",
-                    ].map((branch) => (
-                      <button
-                        key={branch}
-                        type="button"
-                        onClick={() => {
-                          setCurrentBranch(branch);
-                          setIsBranchDropdownOpen(false);
-                        }}
-                        className={`w-full text-right px-3 py-2 rounded-lg text-xs transition-colors ${
-                          currentBranch === branch
-                            ? "bg-emerald-500/20 text-emerald-400 font-semibold"
-                            : "text-foreground/80 hover:bg-white/5"
-                        }`}
-                      >
-                        {branch}
-                      </button>
-                    ))}
-                  </div>
+                  <>
+                    {/* Invisible full-screen backdrop to dismiss popover when tapping outside */}
+                    <div
+                      className="fixed inset-0 z-40 bg-black/20 backdrop-blur-xs"
+                      onClick={() => setIsBranchDropdownOpen(false)}
+                    />
+
+                    {/* Floating Popover Menu */}
+                    <div className="absolute top-full right-0 mt-2 z-50 w-full sm:w-80 rounded-xl border border-border bg-card p-2 shadow-2xl space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                      <div className="px-2 py-1 text-[11px] font-semibold text-muted-foreground border-b border-border flex items-center justify-between mb-1">
+                        <span>اختر الفرع المتصل:</span>
+                        <button
+                          type="button"
+                          onClick={() => setIsBranchDropdownOpen(false)}
+                          className="text-muted-foreground hover:text-foreground p-0.5"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      {[
+                        "فرع الجامعة الأردنية — مجمّع العلوم والطب",
+                        "فرع جامعة عمان الأهلية — البوابة الرئيسية",
+                        "فرع جامعة العلوم والتكنولوجيا — المجمّع التجاري",
+                      ].map((branch) => (
+                        <button
+                          key={branch}
+                          type="button"
+                          onClick={() => {
+                            setCurrentBranch(branch);
+                            setIsBranchDropdownOpen(false);
+                          }}
+                          className={`w-full text-right px-3 py-2 rounded-lg text-xs transition-colors flex items-center justify-between cursor-pointer ${
+                            currentBranch === branch
+                              ? "bg-primary/10 text-primary font-bold border border-primary/20"
+                              : "text-foreground/80 hover:bg-muted"
+                          }`}
+                        >
+                          <span>{branch}</span>
+                          {currentBranch === branch && <span className="text-primary text-xs">✓</span>}
+                        </button>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* 3 Core Navigation Tabs */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-background border border-border self-start lg:self-auto overflow-x-auto max-w-full">
+        {/* Clean Student-Style Sub-Tabs Navigation (Properly separated, never overlapping) */}
+        <div className="mt-4 pt-3.5 border-t border-border">
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-muted border border-border overflow-x-auto scrollbar-none max-w-full">
             <button
               type="button"
               onClick={() => setActiveTab("redemption")}
-              className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "redemption"
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <ScanLine className="h-4 w-4" />
-              <span>أداة الاستبدال السريع</span>
-              <span className="px-1.5 py-0.2 rounded bg-black/30 text-[10px] font-mono">
-                ⚡ POS
+              <ScanLine className="h-3.5 w-3.5 text-primary" />
+              <span>أداة الاستبدال</span>
+              <span className="px-1.5 py-0.2 rounded bg-primary/10 text-primary text-[10px] font-mono">
+                POS
               </span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("anti-fraud")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "anti-fraud"
-                  ? "bg-cyan-600 text-white shadow-md shadow-cyan-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <ShieldCheck className="h-4 w-4 text-cyan-400" />
-              <span>مكافحة الاحتيال (Dynamic QR)</span>
-              <span className="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-mono">
+              <ShieldCheck className="h-3.5 w-3.5 text-cyan-600 dark:text-cyan-400" />
+              <span>مكافحة الاحتيال</span>
+              <span className="px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-[10px] font-mono">
                 30s
               </span>
             </button>
@@ -606,15 +628,15 @@ export default function MerchantDashboardPage() {
             <button
               type="button"
               onClick={() => setActiveTab("settlements")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "settlements"
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <DollarSign className="h-4 w-4 text-emerald-400" />
+              <DollarSign className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>التسويات والفواتير</span>
-              <span className="px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">
+              <span className="px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-mono">
                 PDF
               </span>
             </button>
@@ -622,15 +644,15 @@ export default function MerchantDashboardPage() {
             <button
               type="button"
               onClick={() => setActiveTab("campus-drops")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "campus-drops"
-                  ? "bg-amber-600 text-white shadow-md shadow-amber-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <Radio className="h-4 w-4 text-amber-400" />
-              <span>حملات البث للحرم (Drops)</span>
-              <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px] font-mono">
+              <Radio className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+              <span>حملات الحرم (Drops)</span>
+              <span className="px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-mono">
                 Push
               </span>
             </button>
@@ -638,26 +660,26 @@ export default function MerchantDashboardPage() {
             <button
               type="button"
               onClick={() => setActiveTab("deals")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "deals"
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <Tag className="h-4 w-4" />
+              <Tag className="h-3.5 w-3.5 text-primary" />
               <span>مدير العروض ({deals.filter((d) => d.isActive).length})</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab("logs")}
-              className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium transition-all shrink-0 cursor-pointer ${
                 activeTab === "logs"
-                  ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/50"
-                  : "text-muted-foreground hover:text-white"
+                  ? "bg-card text-foreground shadow-xs font-bold border border-border"
+                  : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}
             >
-              <TrendingUp className="h-4 w-4" />
+              <TrendingUp className="h-3.5 w-3.5 text-primary" />
               <span>سجل العمليات</span>
             </button>
           </div>

@@ -173,39 +173,7 @@ export default function MerchantLoginPage() {
       {/* 2. عناصر الهيدر والعلامة التجارية */}
       <header className="relative z-10 w-full max-w-5xl flex items-center justify-between pb-6 sm:pb-8">
         <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="group flex items-center gap-3 transition-opacity hover:opacity-90"
-          >
-            {/* Triangular Geometric Icon Motif */}
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-emerald-900/30 border border-emerald-400/30 transition-transform duration-200 group-hover:scale-105">
-              ▲
-            </div>
-
-            <div className="flex flex-col text-start">
-              <div className="flex items-center gap-2">
-                <span className="text-base font-bold tracking-tight text-white">مسار</span>
-                <span className="text-xs text-muted-foreground font-mono">/ الشركاء</span>
-              </div>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-medium text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>بوابة الشركاء التجاريين • Merchant Portal</span>
-                </span>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        {/* Return to Student Portal Link */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="text-xs font-medium text-foreground/80 hover:text-white transition-all px-3 py-1.5 rounded-lg border border-border bg-white/[0.03] hover:bg-white/[0.08] inline-flex items-center gap-1.5 shadow-sm"
-          >
-            <span>بوابة الطلاب الرئيسية</span>
-            <ArrowRight className="h-3.5 w-3.5 rotate-180 text-emerald-400" />
-          </Link>
+          
         </div>
       </header>
 
