@@ -381,7 +381,7 @@ export default function ATSPipelinePage() {
       {/* =========================================================================
           2. KANBAN BOARD (لوحة كانبان بـ 4 أعمدة رئيسية)
           ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 items-start">
+      <div className="flex xl:grid xl:grid-cols-4 gap-4 items-start overflow-x-auto pb-4 snap-x min-w-0">
         {KANBAN_COLUMNS.map((col) => {
           const columnCandidates = columnsData[col.id as keyof typeof columnsData] || [];
           const isOver = dragOverColumn === col.id;
@@ -392,7 +392,7 @@ export default function ATSPipelinePage() {
               onDragOver={(e) => handleDragOver(e, col.id)}
               onDragLeave={handleDragLeave}
               onDrop={(e) => handleDrop(e, col.id)}
-              className={`rounded-xl border transition-all duration-150 flex flex-col min-h-[500px] ${
+              className={`min-w-[280px] sm:min-w-[320px] xl:min-w-0 flex-1 snap-center rounded-xl border transition-all duration-150 flex flex-col min-h-[520px] ${
                 isOver
                   ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                   : "border-border bg-secondary/20"

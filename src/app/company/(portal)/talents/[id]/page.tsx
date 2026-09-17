@@ -136,7 +136,7 @@ export default function CandidateProfilePage({
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-6xl mx-auto py-8">
+      <div className="space-y-6 w-full py-4">
         <div className="flex items-center gap-3 text-sm text-muted-foreground animate-pulse">
           <div className="h-4 w-24 bg-muted rounded"></div>
         </div>
@@ -178,7 +178,7 @@ export default function CandidateProfilePage({
   const isMedium = candidate.aiAudit.readinessScore >= 75 && !isHigh;
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pb-16">
+    <div className="space-y-8 w-full pb-12">
       {/* Top Breadcrumbs & Back Navigation */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <Link

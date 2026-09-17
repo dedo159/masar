@@ -3,15 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader2, AlertCircle, CheckCircle2, Globe, Building2 } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Globe, Building2, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
+import { useTheme } from "next-themes";
 
 export default function CompanyLoginPage() {
   const router = useRouter();
   const { t, isRtl, language, setLanguage } = useLanguage();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -103,8 +107,19 @@ export default function CompanyLoginPage() {
       className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative"
       dir={isRtl ? "rtl" : "ltr"}
     >
-      {/* Language switcher button in header */}
-      <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
+      {/* Top right actions: Theme & Language switchers */}
+      <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4 flex items-center gap-2">
+        <button
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          type="button"
+          aria-label="تبديل المظهر"
+          title="تبديل المظهر"
+          className="flex items-center justify-center w-9 h-9 rounded-lg border border-border bg-card/80 text-foreground hover:bg-secondary transition-colors cursor-pointer"
+        >
+          <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+        </button>
+
         <button
           onClick={toggleLanguage}
           type="button"
@@ -123,7 +138,7 @@ export default function CompanyLoginPage() {
             <MasarLogo size="lg" priority />
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-2 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 mb-2 rounded-full text-[11px] font-semibold bg-primary/10 text-primary border border-primary/20">
             <Building2 className="h-3.5 w-3.5" />
             <span>
               {language === "en" ? "Company & Recruiter Portal" : "بوابة الشركات وجهات التدريب"}

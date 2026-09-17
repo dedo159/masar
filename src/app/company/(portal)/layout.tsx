@@ -2,9 +2,21 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Briefcase, BarChart3, LogOut, Sparkles, Kanban } from "lucide-react";
-import { useState } from "react";
+import {
+  LayoutDashboard,
+  Briefcase,
+  BarChart3,
+  LogOut,
+  Sparkles,
+  Kanban,
+  Sun,
+  Moon,
+  Building2,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 import { MasarLogo } from "@/components/ui/logo";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export default function CompanyPortalLayout({
@@ -14,7 +26,21 @@ export default function CompanyPortalLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const [loggingOut, setLoggingOut] = useState(false);
+  const [companyName, setCompanyName] = useState<string>("شركة تقنية");
+  const [recruiterName, setRecruiterName] = useState<string>("مسؤول التوظيف");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedCompany = localStorage.getItem("masar_company_name");
+      const storedRecruiter = localStorage.getItem("masar_recruiter_name");
+      if (storedCompany) setCompanyName(storedCompany);
+      if (storedRecruiter) setRecruiterName(storedRecruiter);
+    }
+  }, []);
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -95,8 +121,18 @@ export default function CompanyPortalLayout({
           })}
         </nav>
 
-        {/* Logout Footer */}
-        <div className="p-3 border-t border-border">
+        {/* Recruiter Identity & Logout in Sidebar Footer */}
+        <div className="p-3 border-t border-border space-y-2">
+          <div className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-secondary/40">
+            <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs shrink-0">
+              {companyName.charAt(0) || "ش"}
+            </div>
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="text-xs font-semibold text-foreground truncate">{companyName}</span>
+              <span className="text-[10px] text-muted-foreground truncate">{recruiterName}</span>
+            </div>
+          </div>
+
           <button
             onClick={handleLogout}
             disabled={loggingOut}
@@ -111,11 +147,12 @@ export default function CompanyPortalLayout({
       {/* Main Content Area */}
       <div className="flex-1 md:pr-60 flex flex-col min-w-0 pb-20 md:pb-0">
         {/* Top Header Bar */}
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 transition-colors">
           <div className="flex items-center gap-3 md:hidden">
             <MasarLogo size="xs" />
             <span className="font-bold text-foreground text-sm">بوابة الشركات</span>
           </div>
+
           <div className="hidden md:flex items-center gap-2">
             <span className="text-sm font-semibold text-foreground">
               مسار للأعمال
@@ -125,7 +162,27 @@ export default function CompanyPortalLayout({
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme Switcher */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              aria-label="تبديل المظهر"
+              title="تبديل المظهر"
+              className="h-9 w-9 rounded-lg"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+            </Button>
+
+            {/* Company Badge Pill on Header */}
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-secondary/40 text-foreground text-xs">
+              <Building2 className="h-3.5 w-3.5 text-primary" />
+              <span className="font-semibold text-[11px]">{companyName}</span>
+            </div>
+
+            {/* Mobile Logout Button */}
             <button
               onClick={handleLogout}
               disabled={loggingOut}
