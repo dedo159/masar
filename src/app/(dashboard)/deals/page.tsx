@@ -146,6 +146,7 @@ export default function DealsPage() {
   const [copiedCode, setCopiedCode] = useState(false);
   const [rollingTimer, setRollingTimer] = useState(30);
   const [rollingToken, setRollingToken] = useState("MSR-8829-X");
+  const [tokenSeed, setTokenSeed] = useState(8829);
 
   const categories = [
     { id: "all", label: t.deals.categories.all, matchAr: "الكل", matchEn: "all" },
@@ -157,7 +158,7 @@ export default function DealsPage() {
     { id: "other", label: t.deals.categories.other, matchAr: "أخرى", matchEn: "other" },
   ];
 
-  // Dynamic 30s token refresh loop - runs automatically, renewing once every 30 seconds
+  // Dynamic 30s token refresh loop - runs once every 30 seconds only
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
     if (selectedDeal) {
@@ -168,6 +169,7 @@ export default function DealsPage() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
             const char = chars[Math.floor(Math.random() * chars.length)];
             setRollingToken(`MSR-${num}-${char}`);
+            setTokenSeed(num); // only changes once every 30s
             return 30; // resets for exactly another 30 seconds
           }
           return prev - 1;
@@ -430,7 +432,7 @@ export default function DealsPage() {
                 <div className="relative w-48 h-48 rounded-xl p-2.5 bg-white shadow-md flex items-center justify-center border-2 border-primary/20">
                   <StudentQrSvg
                     payload={`MASAR:STU:202310890:${rollingToken}`}
-                    seed={rollingTimer * 19}
+                    seed={tokenSeed}
                   />
 
                   {/* Anti-screenshot Watermark */}
