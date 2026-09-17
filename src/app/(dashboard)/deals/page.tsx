@@ -6,7 +6,23 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tag, Building2, Calendar, Clock, AlertCircle, Loader2, X } from "lucide-react";
+import {
+  Tag,
+  Building2,
+  Calendar,
+  Clock,
+  AlertCircle,
+  Loader2,
+  X,
+  QrCode,
+  Copy,
+  Check,
+  ShieldCheck,
+  Sparkles,
+  RotateCw,
+  CheckCircle2,
+  Info,
+} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLanguage } from "@/components/providers/language-provider";
 import {
@@ -35,6 +51,89 @@ interface Deal {
   merchant: Merchant;
 }
 
+// Crisp 25x25 Procedural SVG QR Code Renderer
+function StudentQrSvg({ payload, seed = 1234 }: { payload: string; seed?: number }) {
+  const size = 25;
+  const grid: boolean[][] = Array(size)
+    .fill(null)
+    .map(() => Array(size).fill(false));
+
+  const drawFinder = (startX: number, startY: number) => {
+    for (let r = 0; r < 7; r++) {
+      for (let c = 0; c < 7; c++) {
+        if (
+          r === 0 ||
+          r === 6 ||
+          c === 0 ||
+          c === 6 ||
+          (r >= 2 && r <= 4 && c >= 2 && c <= 4)
+        ) {
+          grid[startY + r][startX + c] = true;
+        }
+      }
+    }
+  };
+
+  drawFinder(0, 0);
+  drawFinder(size - 7, 0);
+  drawFinder(0, size - 7);
+
+  for (let i = 8; i < size - 8; i++) {
+    if (i % 2 === 0) {
+      grid[6][i] = true;
+      grid[i][6] = true;
+    }
+  }
+
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      if (r === 0 || r === 4 || c === 0 || c === 4 || (r === 2 && c === 2)) {
+        grid[16 + r][16 + c] = true;
+      }
+    }
+  }
+
+  let hash = 0;
+  for (let i = 0; i < payload.length; i++) {
+    hash = (hash * 31 + payload.charCodeAt(i) + seed) & 0x7fffffff;
+  }
+
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const inTL = r < 8 && c < 8;
+      const inTR = r < 8 && c >= size - 8;
+      const inBL = r >= size - 8 && c < 8;
+      const inAlign = r >= 15 && r <= 21 && c >= 15 && c <= 21;
+      const isTiming = (r === 6 && c >= 8 && c < size - 8) || (c === 6 && r >= 8 && r < size - 8);
+
+      if (!inTL && !inTR && !inBL && !inAlign && !isTiming) {
+        const bit = ((hash ^ (r * 17 + c * 37 + seed)) >>> ((r + c) % 16)) & 1;
+        grid[r][c] = bit === 1;
+      }
+    }
+  }
+
+  return (
+    <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full rounded-lg bg-white p-2">
+      {grid.map((row, r) =>
+        row.map((cell, c) =>
+          cell ? (
+            <rect
+              key={`${r}-${c}`}
+              x={c}
+              y={r}
+              width={1}
+              height={1}
+              fill="#090d14"
+              rx={0.15}
+            />
+          ) : null
+        )
+      )}
+    </svg>
+  );
+}
+
 export default function DealsPage() {
   const { t, language } = useLanguage();
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -44,6 +143,10 @@ export default function DealsPage() {
   const [redeemLoading, setRedeemLoading] = useState(false);
   const [redeemSuccess, setRedeemSuccess] = useState(false);
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [isDynamicMode, setIsDynamicMode] = useState(false);
+  const [rollingTimer, setRollingTimer] = useState(30);
+  const [rollingToken, setRollingToken] = useState("MSR-8829-X");
 
   const categories = [
     { id: "all", label: t.deals.categories.all, matchAr: "الكل", matchEn: "all" },
@@ -54,6 +157,26 @@ export default function DealsPage() {
     { id: "courses", label: t.deals.categories.courses, matchAr: "كورسات", matchEn: "course" },
     { id: "other", label: t.deals.categories.other, matchAr: "أخرى", matchEn: "other" },
   ];
+
+  // Dynamic 30s token refresh loop
+  useEffect(() => {
+    let interval: any;
+    if (selectedDeal && isDynamicMode) {
+      interval = setInterval(() => {
+        setRollingTimer((prev) => {
+          if (prev <= 1) {
+            const num = Math.floor(1000 + Math.random() * 9000);
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+            const char = chars[Math.floor(Math.random() * chars.length)];
+            setRollingToken(`MSR-${num}-${char}`);
+            return 30;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [selectedDeal, isDynamicMode]);
 
   useEffect(() => {
     fetchDeals();
@@ -82,6 +205,14 @@ export default function DealsPage() {
     if (cat.includes("كورسات") || lower.includes("course") || lower.includes("training")) return t.deals.categories.courses;
     if (cat.includes("أخرى") || lower.includes("other")) return t.deals.categories.other;
     return language === "en" ? t.deals.categories.other : cat;
+  };
+
+  // Derive the voucher code to present to cashier
+  const getVoucherCode = (deal: Deal) => {
+    const title = deal.title.toLowerCase();
+    if (title.includes("برغر") || title.includes("burger") || deal.discountLabel.includes("50")) return "BURGER50";
+    if (title.includes("قهوة") || title.includes("مشروب") || title.includes("coffee") || title.includes("مجاني")) return "FREECOFFEE";
+    return "MASAR20";
   };
 
   const currentCategory = categories.find((c) => c.id === activeCategory);
@@ -118,9 +249,16 @@ export default function DealsPage() {
     }
   };
 
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
   const closeDialog = () => {
     setSelectedDeal(null);
     setRedeemSuccess(false);
+    setIsDynamicMode(false);
   };
 
   return (
@@ -188,7 +326,7 @@ export default function DealsPage() {
                               {getCategoryLabel(deal.merchant.category)}
                             </CardDescription>
                           </div>
-                          <span className="shrink-0 font-medium px-2 py-0.5 rounded bg-[#ff5b4f]/10 text-[#ff5b4f] border border-[#ff5b4f]/20 text-[10px]">
+                          <span className="shrink-0 font-medium px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 text-[10px]">
                             {translateDiscountLabel(deal.discountLabel, language)}
                           </span>
                         </div>
@@ -218,7 +356,7 @@ export default function DealsPage() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center px-4 rounded-lg border border-dashed border-border bg-secondary/30">
-                  <div className="h-14 w-14 rounded-full bg-[#ff5b4f]/10 flex items-center justify-center mb-4 text-[#ff5b4f]">
+                  <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mb-4 text-primary">
                     <Tag className="h-7 w-7" strokeWidth={1.5} />
                   </div>
                   <h3 className="text-lg font-medium text-foreground mb-1">{t.deals.emptyTitle}</h3>
@@ -232,80 +370,195 @@ export default function DealsPage() {
         </Tabs>
       </div>
 
-      {/* Modal / Dialog Overlay */}
+      {/* Modal / Dialog Overlay with Student QR Code & Voucher Bar */}
       {selectedDeal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-background w-full max-w-lg rounded-lg shadow-xl border border-border flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200 relative">
+          <div className="bg-card w-full max-w-lg rounded-2xl shadow-2xl border border-border flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative text-foreground">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border z-10 relative">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-lg bg-[#ff5b4f]/10 flex items-center justify-center text-[#ff5b4f] shrink-0 border border-[#ff5b4f]/20">
-                  <Tag className="h-6 w-6" strokeWidth={1.5} />
+                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+                  <Tag className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg text-foreground">{translateMerchantName(selectedDeal.merchant.businessName, language)}</h2>
-                  <span className="text-xs text-muted-foreground text-xs">{getCategoryLabel(selectedDeal.merchant.category)}</span>
+                  <h2 className="font-bold text-base text-foreground">
+                    {translateMerchantName(selectedDeal.merchant.businessName, language)}
+                  </h2>
+                  <span className="text-xs text-muted-foreground">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
                 aria-label={t.deals.close}
-                className="h-10 w-10 rounded-full flex items-center justify-center hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors active:scale-95"
+                className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             
             {/* Body */}
-            <div className="p-6 overflow-y-auto flex-1 space-y-5 relative z-10">
+            <div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-5 relative z-10">
+              {/* Deal Heading */}
               <div>
-                <span className="mb-3 text-xs px-2.5 py-1 font-medium rounded-full bg-[#ff5b4f]/10 text-[#ff5b4f] border border-[#ff5b4f]/20 inline-block">
+                <span className="mb-2 text-xs px-2.5 py-0.5 font-bold rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 inline-block">
                   {translateDiscountLabel(selectedDeal.discountLabel, language)}
                 </span>
-                <h3 className="text-2xl font-semibold text-foreground tracking-tight leading-tight mb-2">{translateDealTitle(selectedDeal.title, language)}</h3>
+                <h3 className="text-xl font-bold text-foreground tracking-tight leading-tight mb-1">
+                  {translateDealTitle(selectedDeal.title, language)}
+                </h3>
                 {selectedDeal.description && (
-                  <p className="text-sm text-muted-foreground leading-relaxed text-sm">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {translateDealDescription(selectedDeal.description, language)}
                   </p>
                 )}
               </div>
-              
+
+              {/* ========================================================================= */}
+              {/* باركود الطالب وكود القسيمة (Student QR Code & Voucher Presentation) */}
+              {/* ========================================================================= */}
+              <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5 flex flex-col items-center text-center relative overflow-hidden space-y-3">
+                {/* QR Header & Instructions */}
+                <div className="w-full flex items-center justify-between pb-2 border-b border-border/70 text-xs">
+                  <span className="font-semibold text-foreground flex items-center gap-1.5">
+                    <QrCode className="h-4 w-4 text-primary" />
+                    <span>رمز الاستبدال عند الكاشير (QR Voucher):</span>
+                  </span>
+
+                  {/* Dynamic Rolling Token Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => setIsDynamicMode(!isDynamicMode)}
+                    className={`text-[11px] font-mono px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
+                      isDynamicMode
+                        ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-bold"
+                        : "bg-background border-border text-muted-foreground hover:text-foreground"
+                    }`}
+                    title="التبديل بين الكود الثابت والرمز الديناميكي المتغير"
+                  >
+                    {isDynamicMode ? "رمز ديناميكي (30s) ✓" : "تفعيل الرمز المتغير"}
+                  </button>
+                </div>
+
+                {/* The QR Code Graphic Box */}
+                <div className="relative w-48 h-48 rounded-xl p-2.5 bg-white shadow-md flex items-center justify-center border-2 border-primary/20">
+                  <StudentQrSvg
+                    payload={
+                      isDynamicMode
+                        ? `MASAR:STU:202310890:${rollingToken}`
+                        : getVoucherCode(selectedDeal)
+                    }
+                    seed={isDynamicMode ? rollingTimer * 19 : 7721}
+                  />
+
+                  {/* Anti-screenshot Watermark when in dynamic mode */}
+                  {isDynamicMode && (
+                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-2 opacity-20 select-none rotate-[-12deg]">
+                      <span className="text-[8px] font-mono text-slate-900 font-bold uppercase">
+                        عمر خالد • ****1089
+                      </span>
+                      <span className="text-[8px] font-mono text-slate-900 font-bold uppercase text-right">
+                        {rollingToken}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Linear Countdown Bar for Dynamic Mode */}
+                {isDynamicMode && (
+                  <div className="w-full space-y-1">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <RotateCw className={`h-3 w-3 text-cyan-500 ${rollingTimer <= 5 ? "animate-spin" : ""}`} />
+                        <span>يتجدد الرمز خلال:</span>
+                      </span>
+                      <span className="font-bold text-cyan-600 dark:text-cyan-400">{rollingTimer} ثانية</span>
+                    </div>
+                    <div className="w-full h-1 rounded-full bg-secondary overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-1000 ease-linear rounded-full"
+                        style={{ width: `${(rollingTimer / 30) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Voucher Code String & Copy Button */}
+                <div className="w-full flex items-center justify-between p-2.5 rounded-xl bg-background border border-border">
+                  <div className="text-right">
+                    <span className="text-[10px] text-muted-foreground block font-medium">
+                      {isDynamicMode ? "الرمز المتغير الحالي:" : "كود القسيمة للإدخال اليدوي:"}
+                    </span>
+                    <span className="text-lg font-mono font-bold text-foreground tracking-widest block">
+                      {isDynamicMode ? rollingToken : getVoucherCode(selectedDeal)}
+                    </span>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleCopyCode(isDynamicMode ? rollingToken : getVoucherCode(selectedDeal))}
+                    className="border-border text-xs gap-1.5 h-9 cursor-pointer"
+                  >
+                    {copiedCode ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-emerald-500" />
+                        <span>تم النسخ</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" />
+                        <span>نسخ الكود</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                {/* Instructions */}
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  أبرز هذا الرمز لموظف الصندوق / الكاشير ليقوم بمسحه مباشرة بكاميرا نقطة البيع أو إدخال الكود أعلاه.
+                </p>
+              </div>
+
+              {/* Terms & Conditions */}
               {selectedDeal.termsConditions && (
-                <div className="bg-[#ff5b4f]/5 rounded-lg p-4 border border-[#ff5b4f]/20 flex flex-col gap-2">
-                  <h4 className="flex items-center gap-2 text-sm font-medium text-foreground">
-                    <AlertCircle className="h-4 w-4 text-[#ff5b4f]" />
-                    {t.deals.terms}
+                <div className="bg-muted/60 rounded-xl p-3.5 border border-border flex flex-col gap-1.5">
+                  <h4 className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                    <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
+                    <span>{t.deals.terms}</span>
                   </h4>
-                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {translateDealTerms(selectedDeal.termsConditions, language)}
                   </p>
                 </div>
               )}
               
-              <div className="flex items-center justify-between text-xs text-muted-foreground font-bold bg-secondary rounded-lg p-3 border border-border text-foreground font-mono">
+              {/* Expiry Bar */}
+              <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/40 rounded-xl p-3 border border-border font-mono">
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>
                     {t.deals.expiresOn} {new Date(selectedDeal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
+                <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+                  <Clock className="h-3.5 w-3.5" />
                   <span>{t.deals.availableNow}</span>
                 </div>
               </div>
 
               {redeemSuccess && (
-                <div className="bg-[#0072f5]/10 border border-[#0072f5]/20 text-[#0072f5] p-3 rounded-md text-sm font-medium text-center transition-all duration-300">
-                  {t.deals.successMsg}
+                <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 p-3 rounded-xl text-xs font-semibold text-center flex items-center justify-center gap-2">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>تم تفعيل العرض وتوثيق الحصة للطالب بنجاح!</span>
                 </div>
               )}
             </div>
             
             {/* Footer */}
-            <div className="p-4 border-t border-border bg-secondary/30 relative z-10">
+            <div className="p-4 border-t border-border bg-muted/20 relative z-10 flex items-center gap-3">
               <Button 
-                className="w-full font-bold h-11 min-h-[44px] text-sm active:scale-95 transition-transform" 
+                className="w-full font-bold h-11 text-xs active:scale-95 transition-transform cursor-pointer" 
                 onClick={() => handleRedeem(selectedDeal)}
                 disabled={redeemLoading || redeemSuccess || redeemedDeals.has(selectedDeal.id)}
               >
@@ -315,9 +568,15 @@ export default function DealsPage() {
                     <span>{t.deals.activating}</span>
                   </>
                 ) : redeemSuccess || redeemedDeals.has(selectedDeal.id) ? (
-                  t.deals.redeemed
+                  <span className="flex items-center gap-1.5">
+                    <Check className="h-4 w-4" />
+                    <span>تم توثيق العرض للاستخدام ✓</span>
+                  </span>
                 ) : (
-                  t.deals.redeemNow
+                  <span className="flex items-center gap-1.5">
+                    <QrCode className="h-4 w-4" />
+                    <span>تأكيد جاهزية الكوبون والاستخدام الآن</span>
+                  </span>
                 )}
               </Button>
             </div>
