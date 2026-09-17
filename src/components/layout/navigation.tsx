@@ -23,19 +23,18 @@ export function BottomNav() {
   const { t } = useLanguage();
 
   const mobileNavItems = [
-    { href: "/", icon: LayoutDashboard, label: t.nav.home },
-
+    { href: "/", icon: LayoutDashboard, label: t.nav.homeShort || t.nav.home },
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
-    { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
-    { href: "/internships", icon: Briefcase, label: t.nav.internships },
-    { href: "/readiness", icon: TrendingUp, label: "التدقيق المهني" },
+    { href: "/announcements", icon: Megaphone, label: t.nav.announcementsShort || t.nav.announcements },
+    { href: "/internships", icon: Briefcase, label: t.nav.internshipsShort || t.nav.internships },
+    { href: "/readiness", icon: TrendingUp, label: t.nav.readinessShort || t.nav.readiness },
     { href: "/deals", icon: Tag, label: t.nav.dealsShort },
     { href: "/profile", icon: User, label: t.nav.profile },
   ];
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-sm md:hidden">
-      <div className="flex items-center justify-around px-2 py-1.5">
+      <div className="grid grid-cols-7 w-full items-center px-1 py-1.5">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -43,15 +42,17 @@ export function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                "flex flex-col items-center gap-0.5 rounded-lg px-3 py-2 transition-all duration-150",
+                "flex flex-col items-center justify-center gap-0.5 rounded-lg py-1.5 px-0.5 min-w-0 transition-all duration-150 text-center",
                 isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
               )}
             >
               <Icon
-                className={cn("h-5 w-5 transition-all duration-150", isActive && "scale-110")}
+                className={cn("h-5 w-5 transition-all duration-150 flex-shrink-0", isActive && "scale-110")}
                 strokeWidth={isActive ? 2 : 1.5}
               />
-              <span className="text-[10px] font-medium">{label}</span>
+              <span className="text-[10px] font-medium truncate w-full block text-center leading-tight">
+                {label}
+              </span>
             </Link>
           );
         })}
@@ -67,11 +68,10 @@ export function Sidebar() {
 
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
-
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
-    { href: "/announcements", icon: Megaphone, label: "الإعلانات" },
+    { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
-    { href: "/readiness", icon: TrendingUp, label: "التدقيق المهني" },
+    { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
     { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/settings", icon: Settings, label: t.nav.settings },
   ];
