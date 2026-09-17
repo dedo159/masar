@@ -144,7 +144,6 @@ export default function DealsPage() {
   const [redeemSuccess, setRedeemSuccess] = useState(false);
   const [redeemedDeals, setRedeemedDeals] = useState<Set<string>>(new Set());
   const [copiedCode, setCopiedCode] = useState(false);
-  const [isDynamicMode, setIsDynamicMode] = useState(false);
   const [rollingTimer, setRollingTimer] = useState(30);
   const [rollingToken, setRollingToken] = useState("MSR-8829-X");
 
@@ -158,10 +157,10 @@ export default function DealsPage() {
     { id: "other", label: t.deals.categories.other, matchAr: "أخرى", matchEn: "other" },
   ];
 
-  // Dynamic 30s token refresh loop
+  // Dynamic 30s token refresh loop - runs automatically, renewing once every 30 seconds
   useEffect(() => {
-    let interval: any;
-    if (selectedDeal && isDynamicMode) {
+    let interval: NodeJS.Timeout | null = null;
+    if (selectedDeal) {
       interval = setInterval(() => {
         setRollingTimer((prev) => {
           if (prev <= 1) {
@@ -169,14 +168,16 @@ export default function DealsPage() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ";
             const char = chars[Math.floor(Math.random() * chars.length)];
             setRollingToken(`MSR-${num}-${char}`);
-            return 30;
+            return 30; // resets for exactly another 30 seconds
           }
           return prev - 1;
         });
       }, 1000);
     }
-    return () => clearInterval(interval);
-  }, [selectedDeal, isDynamicMode]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [selectedDeal]);
 
   useEffect(() => {
     fetchDeals();
@@ -258,7 +259,7 @@ export default function DealsPage() {
   const closeDialog = () => {
     setSelectedDeal(null);
     setRedeemSuccess(false);
-    setIsDynamicMode(false);
+    setRollingTimer(30);
   };
 
   return (
@@ -417,106 +418,110 @@ export default function DealsPage() {
               {/* باركود الطالب وكود القسيمة (Student QR Code & Voucher Presentation) */}
               {/* ========================================================================= */}
               <div className="rounded-2xl border border-border bg-muted/40 p-4 sm:p-5 flex flex-col items-center text-center relative overflow-hidden space-y-3">
-                {/* QR Header & Instructions */}
+                {/* QR Header & Status */}
                 <div className="w-full flex items-center justify-between pb-2 border-b border-border/70 text-xs">
                   <span className="font-semibold text-foreground flex items-center gap-1.5">
                     <QrCode className="h-4 w-4 text-primary" />
-                    <span>رمز الاستبدال عند الكاشير (QR Voucher):</span>
+                    <span>رمز الاستبدال عند الكاشير (Dynamic Rolling QR):</span>
                   </span>
 
-                  {/* Dynamic Rolling Token Toggle */}
-                  <button
-                    type="button"
-                    onClick={() => setIsDynamicMode(!isDynamicMode)}
-                    className={`text-[11px] font-mono px-2 py-0.5 rounded-full border transition-colors cursor-pointer ${
-                      isDynamicMode
-                        ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-600 dark:text-cyan-400 font-bold"
-                        : "bg-background border-border text-muted-foreground hover:text-foreground"
-                    }`}
-                    title="التبديل بين الكود الثابت والرمز الديناميكي المتغير"
-                  >
-                    {isDynamicMode ? "رمز ديناميكي (30s) ✓" : "تفعيل الرمز المتغير"}
-                  </button>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full border bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span>ديناميكي مفعّل (30s)</span>
+                  </span>
                 </div>
 
                 {/* The QR Code Graphic Box */}
                 <div className="relative w-48 h-48 rounded-xl p-2.5 bg-white shadow-md flex items-center justify-center border-2 border-primary/20">
                   <StudentQrSvg
-                    payload={
-                      isDynamicMode
-                        ? `MASAR:STU:202310890:${rollingToken}`
-                        : getVoucherCode(selectedDeal)
-                    }
-                    seed={isDynamicMode ? rollingTimer * 19 : 7721}
+                    payload={`MASAR:STU:202310890:${rollingToken}`}
+                    seed={rollingTimer * 19}
                   />
 
-                  {/* Anti-screenshot Watermark when in dynamic mode */}
-                  {isDynamicMode && (
-                    <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-2 opacity-20 select-none rotate-[-12deg]">
-                      <span className="text-[8px] font-mono text-slate-900 font-bold uppercase">
-                        عمر خالد • ****1089
+                  {/* Anti-screenshot Watermark */}
+                  <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-2 opacity-25 select-none rotate-[-12deg]">
+                    <span className="text-[8px] font-mono text-slate-900 font-bold uppercase">
+                      عمر خالد • ****1089
+                    </span>
+                    <span className="text-[8px] font-mono text-slate-900 font-bold uppercase text-right">
+                      {rollingToken}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Linear Countdown Bar (30s cycle) */}
+                <div className="w-full space-y-1">
+                  <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <RotateCw className={`h-3 w-3 text-cyan-500 ${rollingTimer <= 5 ? "animate-spin" : ""}`} />
+                      <span>يتجدد الرمز تلقائياً خلال:</span>
+                    </span>
+                    <span className="font-bold text-cyan-600 dark:text-cyan-400">{rollingTimer} ثانية</span>
+                  </div>
+                  <div className="w-full h-1 rounded-full bg-secondary overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-1000 ease-linear rounded-full"
+                      style={{ width: `${(rollingTimer / 30) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Voucher Code Strings & Copy Buttons */}
+                <div className="w-full space-y-2">
+                  <div className="w-full flex items-center justify-between p-2.5 rounded-xl bg-background border border-border">
+                    <div className="text-right">
+                      <span className="text-[10px] text-muted-foreground block font-medium">
+                        رمز التحقق المتغير (يتجدد كل 30 ثانية):
                       </span>
-                      <span className="text-[8px] font-mono text-slate-900 font-bold uppercase text-right">
+                      <span className="text-base sm:text-lg font-mono font-bold text-cyan-600 dark:text-cyan-400 tracking-widest block">
                         {rollingToken}
                       </span>
                     </div>
-                  )}
-                </div>
 
-                {/* Linear Countdown Bar for Dynamic Mode */}
-                {isDynamicMode && (
-                  <div className="w-full space-y-1">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <RotateCw className={`h-3 w-3 text-cyan-500 ${rollingTimer <= 5 ? "animate-spin" : ""}`} />
-                        <span>يتجدد الرمز خلال:</span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopyCode(rollingToken)}
+                      className="border-border text-xs gap-1.5 h-8 sm:h-9 cursor-pointer"
+                    >
+                      {copiedCode ? (
+                        <>
+                          <Check className="h-3.5 w-3.5 text-emerald-500" />
+                          <span>تم النسخ</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5" />
+                          <span>نسخ الرمز</span>
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="w-full flex items-center justify-between px-3 py-1.5 rounded-lg bg-background/60 border border-border/60 text-xs">
+                    <div className="text-right">
+                      <span className="text-[10px] text-muted-foreground">كود العرض الثابت:</span>
+                      <span className="font-mono font-semibold text-foreground mr-1.5">
+                        {getVoucherCode(selectedDeal)}
                       </span>
-                      <span className="font-bold text-cyan-600 dark:text-cyan-400">{rollingTimer} ثانية</span>
                     </div>
-                    <div className="w-full h-1 rounded-full bg-secondary overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-1000 ease-linear rounded-full"
-                        style={{ width: `${(rollingTimer / 30) * 100}%` }}
-                      />
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyCode(getVoucherCode(selectedDeal))}
+                      className="text-[11px] text-primary hover:underline font-mono"
+                    >
+                      نسخ الكوبون
+                    </button>
                   </div>
-                )}
-
-                {/* Voucher Code String & Copy Button */}
-                <div className="w-full flex items-center justify-between p-2.5 rounded-xl bg-background border border-border">
-                  <div className="text-right">
-                    <span className="text-[10px] text-muted-foreground block font-medium">
-                      {isDynamicMode ? "الرمز المتغير الحالي:" : "كود القسيمة للإدخال اليدوي:"}
-                    </span>
-                    <span className="text-lg font-mono font-bold text-foreground tracking-widest block">
-                      {isDynamicMode ? rollingToken : getVoucherCode(selectedDeal)}
-                    </span>
-                  </div>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleCopyCode(isDynamicMode ? rollingToken : getVoucherCode(selectedDeal))}
-                    className="border-border text-xs gap-1.5 h-9 cursor-pointer"
-                  >
-                    {copiedCode ? (
-                      <>
-                        <Check className="h-3.5 w-3.5 text-emerald-500" />
-                        <span>تم النسخ</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-3.5 w-3.5" />
-                        <span>نسخ الكود</span>
-                      </>
-                    )}
-                  </Button>
                 </div>
 
                 {/* Instructions */}
                 <p className="text-[11px] text-muted-foreground leading-relaxed">
-                  أبرز هذا الرمز لموظف الصندوق / الكاشير ليقوم بمسحه مباشرة بكاميرا نقطة البيع أو إدخال الكود أعلاه.
+                  أبرز هذا الرمز لموظف الصندوق / الكاشير ليقوم بمسحه مباشرة بكاميرا نقطة البيع أو إدخال الكود أعلاه. يتجدد الرمز مرة واحدة كل 30 ثانية لضمان الأمان ومكافحة الاحتيال.
                 </p>
               </div>
 
