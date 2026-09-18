@@ -75,47 +75,15 @@ interface RedemptionLog {
 }
 
 export default function MerchantDashboardPage() {
-  // Active Tab: "redemption" | "deals" | "logs"
+  // Active Tab: "deals" | "logs" | "anti-fraud" | "settlements" | "campus-drops"
   const [activeTab, setActiveTab] = useState<
-    "redemption" | "deals" | "logs" | "anti-fraud" | "settlements" | "campus-drops"
-  >("redemption");
+    "deals" | "logs" | "anti-fraud" | "settlements" | "campus-drops"
+  >("deals");
 
   // Store & Branch Header State
   const [storeName, setStoreName] = useState("مطعم شاورما الضيعة");
   const [currentBranch, setCurrentBranch] = useState("فرع الجامعة الأردنية — مجمّع العلوم والطب");
   const [isBranchDropdownOpen, setIsBranchDropdownOpen] = useState(false);
-
-  // --- Per-Student Usage Tracking Map (studentId_dealId -> count) ---
-  const [studentDealUsage, setStudentDealUsage] = useState<Record<string, number>>({
-    "202310890_deal-1": 1, // عمر خالد استخدم عرض الشاورما مرة واحدة سابقاً
-    "202210452_deal-2": 2, // سارة أحمد استخدمت عرض BOGO مرتين
-    "202410199_deal-3": 1, // زيد محمود استخدم المشروب المجاني مرة واحدة
-  });
-
-  // --- Tab 1: Instant Redemption Tool State ---
-  const [voucherCode, setVoucherCode] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<{
-    status: "idle" | "success" | "error";
-    studentName?: string;
-    studentId?: string;
-    university?: string;
-    major?: string;
-    dealTitle?: string;
-    originalPrice?: number;
-    discountAmount?: number;
-    finalPrice?: number;
-    trxId?: string;
-    errorMessage?: string;
-    studentUsageCount?: number;
-    studentMaxAllowed?: number;
-    dealCurrentUsage?: number;
-    dealTotalCap?: number;
-    remainingForStudent?: number;
-  }>({ status: "idle" });
-
-  const [scannerOpen, setScannerOpen] = useState(false);
-  const [copiedTrx, setCopiedTrx] = useState(false);
 
   // Shift Stats (Today's statistics)
   const [shiftStats, setShiftStats] = useState({
@@ -285,176 +253,6 @@ export default function MerchantDashboardPage() {
     }
   }, []);
 
-  // --- Handlers: Tab 1 Redemption with Full Usage Cap Logic ---
-  const handleVerifyCode = (codeToVerify?: string) => {
-    const code = (codeToVerify || voucherCode).trim().toUpperCase();
-    if (!code) return;
-
-    setIsVerifying(true);
-    setVerificationResult({ status: "idle" });
-
-    setTimeout(() => {
-      setIsVerifying(false);
-
-      // 1. Explicit Exceeded Limit Test Simulation
-      if (code === "LIMIT_TEST" || code === "MAXED_OUT") {
-        setVerificationResult({
-          status: "error",
-          errorMessage:
-            "⚠️ تم تجاوز الحد الأقصى المسموح: لقد استنفد الطالب (عمر خالد) كامل مرات استخدام هذا الكوبون (3 من أصل 3 مرات سابقة). غير مسموح بتطبيق الخصم مرة رابعة لنفس الطالب!",
-        });
-        return;
-      }
-
-      if (code === "EXPIRED99") {
-        setVerificationResult({
-          status: "error",
-          errorMessage: "عذراً، هذا الكوبون منتهي الصلاحية بتاريخ 15 سبتمبر 2026 وغير صالح للاستخدام.",
-        });
-        return;
-      }
-
-      if (code === "USED44") {
-        setVerificationResult({
-          status: "error",
-          errorMessage: "تم استبدال هذا الكوبون مسبقاً اليوم في تمام الساعة 12:45 م بنفس الفرع (#TRX-8102).",
-        });
-        return;
-      }
-
-      if (code === "INVALID" || code.length < 4) {
-        setVerificationResult({
-          status: "error",
-          errorMessage: "رمز القسيمة غير صحيح أو أن حساب الطالب غير مسجل بنظام الاعتماد الجامعي النشط.",
-        });
-        return;
-      }
-
-      // 2. Identify target deal and student info
-      const studentId = "202310890";
-      const studentName = "عمر خالد السعيد";
-
-      let matchedDealId = "deal-1";
-      if (code.includes("BURGER") || code.includes("50")) matchedDealId = "deal-2";
-      if (code.includes("COFFEE") || code.includes("FREE")) matchedDealId = "deal-3";
-
-      const targetDeal = deals.find((d) => d.id === matchedDealId) || deals[0];
-      const usageKey = `${studentId}_${targetDeal.id}`;
-      const currentStudentUsage = studentDealUsage[usageKey] || 0;
-
-      // 3. Verify student quota limit
-      if (currentStudentUsage >= targetDeal.maxUsesPerStudent) {
-        setVerificationResult({
-          status: "error",
-          errorMessage: `⚠️ تجاوز الحد المسموح: لقد استخدم هذا الطالب هذا الكوبون ${currentStudentUsage} من أصل ${targetDeal.maxUsesPerStudent} مرات مسموحة. تم استنفاد الرصيد المخصص لهذا الحساب.`,
-        });
-        return;
-      }
-
-      // 4. Verify total deal cap
-      if (targetDeal.usedCount >= targetDeal.totalCap) {
-        setVerificationResult({
-          status: "error",
-          errorMessage: `عذراً، وصل هذا العرض إلى الحد الأقصى الإجمالي لعدد مرات الاستخدام المتفق عليها (${targetDeal.totalCap}/${targetDeal.totalCap} كوبون).`,
-        });
-        return;
-      }
-
-      // 5. Successful Redemption Calculation
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const newTrx = `#TRX-${randomNum}`;
-      const newStudentUsage = currentStudentUsage + 1;
-      const remainingForStudent = targetDeal.maxUsesPerStudent - newStudentUsage;
-
-      let orig = 10.0;
-      let disc = 2.0;
-
-      if (targetDeal.discountType === "bogo") {
-        orig = 8.0;
-        disc = 4.0;
-      } else if (targetDeal.discountType === "freebie") {
-        orig = 4.5;
-        disc = 1.5;
-      } else if (targetDeal.discountType === "fixed") {
-        orig = 15.0;
-        disc = 2.5;
-      }
-
-      const result = {
-        status: "success" as const,
-        studentName,
-        studentId,
-        university: "جامعة عمان الأهلية",
-        major: "هندسة البرمجيات • السنة الثالثة",
-        dealTitle: targetDeal.title,
-        originalPrice: orig,
-        discountAmount: disc,
-        finalPrice: Number((orig - disc).toFixed(2)),
-        trxId: newTrx,
-        studentUsageCount: newStudentUsage,
-        studentMaxAllowed: targetDeal.maxUsesPerStudent,
-        dealCurrentUsage: targetDeal.usedCount + 1,
-        dealTotalCap: targetDeal.totalCap,
-        remainingForStudent,
-      };
-
-      setVerificationResult(result);
-
-      // Increment student's usage in state
-      setStudentDealUsage((prev) => ({
-        ...prev,
-        [usageKey]: newStudentUsage,
-      }));
-
-      // Increment total deal used count in state
-      setDeals((prev) =>
-        prev.map((d) =>
-          d.id === targetDeal.id ? { ...d, usedCount: d.usedCount + 1 } : d
-        )
-      );
-
-      // Update shift stats
-      setShiftStats((prev) => ({
-        todayRedemptions: prev.todayRedemptions + 1,
-        shiftSalesVolume: Number((prev.shiftSalesVolume + result.finalPrice).toFixed(2)),
-        studentSavingsTotal: Number((prev.studentSavingsTotal + result.discountAmount).toFixed(2)),
-        newStudentCustomers: currentStudentUsage === 0 ? prev.newStudentCustomers + 1 : prev.newStudentCustomers,
-      }));
-
-      // Add to logs
-      const newLog: RedemptionLog = {
-        id: `log-${Date.now()}`,
-        trxId: newTrx,
-        studentName: result.studentName,
-        studentId: result.studentId,
-        university: result.university,
-        dealTitle: result.dealTitle,
-        discountLabel: targetDeal.discountValue,
-        originalPrice: result.originalPrice,
-        discountAmount: result.discountAmount,
-        finalPrice: result.finalPrice,
-        timestamp: "الآن (لحظي)",
-        status: "verified",
-        usageSequence: `المرة ${newStudentUsage} من ${targetDeal.maxUsesPerStudent}`,
-      };
-
-      setLogs((prev) => [newLog, ...prev]);
-    }, 400);
-  };
-
-  const handleCopyTrx = () => {
-    if (verificationResult.trxId) {
-      navigator.clipboard?.writeText(verificationResult.trxId);
-      setCopiedTrx(true);
-      setTimeout(() => setCopiedTrx(false), 1500);
-    }
-  };
-
-  const handleResetCashier = () => {
-    setVoucherCode("");
-    setVerificationResult({ status: "idle" });
-  };
-
   // --- Handlers: Tab 2 Deals ---
   const handleToggleDealStatus = (id: string) => {
     setDeals((prev) =>
@@ -592,277 +390,52 @@ export default function MerchantDashboardPage() {
       </div>
 
 
-      {/* ========================================================================= */}
-      {/* التبويب 1: أداة التحقق الفوري والاستبدال (Instant Redemption Tool) */}
-      {/* ========================================================================= */}
-      {activeTab === "redemption" && (
-        <div className="space-y-6">
-          {/* Cashier Main Card */}
-          <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />
-
-            <div className="max-w-2xl mx-auto space-y-6">
-              {/* Header Title & Mode Badge */}
-              <div className="text-center space-y-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-xs font-mono">
-                  <ScanLine className="h-3.5 w-3.5" />
-                  <span>محطة الكاشير ونقاط البيع الفورية · QR POS Terminal</span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  مسح رمز الـ QR والتحقق من حساب الطالب
-                </h2>
-                <p className="text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
-                  قم بمسح رمز الـ QR الديناميكي مباشرة من هاتف الطالب عبر كاميرا جهاز نقطة البيع لتوثيق الخصم وخصم المحاولة تلقائياً.
-                </p>
-              </div>
-
-              {/* QR Scanner Big Action Hero Box */}
-              <div className="rounded-2xl border-2 border-dashed border-emerald-500/30 bg-background/50 p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-4">
-                <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-xl shadow-emerald-950/40">
-                  <QrCode className="h-10 w-10 animate-pulse" />
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-bold text-white">
-                    جاهز لمسح باركود الطالب (QR Code)
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    يدعم الكاميرا الأمامية والخلفية لأجهزة الهاتف، التابلت، والماسحات الضوئية.
-                  </p>
-                </div>
-
-                <div className="w-full max-w-md pt-2">
-                  <Button
-                    onClick={() => setScannerOpen(true)}
-                    className="w-full h-14 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:from-emerald-700 text-white font-bold text-base rounded-xl transition-all shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-3 cursor-pointer"
-                  >
-                    <Camera className="h-5 w-5" />
-                    <span>تشغيل كاميرا المسح الفوري</span>
-                  </Button>
-                </div>
-              </div>
-
-              {/* 3. Real-time Feedback Card with Usage Counter Quota */}
-              {verificationResult.status === "success" && (
-                <div className="rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/[0.12] via-[#090d14] to-[#090d14] p-5 sm:p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-4">
-                  <div className="flex items-center justify-between border-b border-border pb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-                        <CheckCircle2 className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-base font-bold text-white">
-                            تم اعتماد الاستخدام بنجاح!
-                          </span>
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-black font-bold text-[10px]">
-                            معتمد ✓
-                          </span>
-                        </div>
-                        <p className="text-xs text-muted-foreground">
-                          تم تسجيل العملية وإصدار الرقم المرجعي الموثق.
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Transaction Reference ID */}
-                    <div className="flex items-center gap-2 bg-background px-3 py-1.5 rounded-xl border border-border font-mono text-xs text-foreground/80">
-                      <span>{verificationResult.trxId}</span>
-                      <button
-                        type="button"
-                        onClick={handleCopyTrx}
-                        className="text-muted-foreground hover:text-white transition-colors"
-                        title="نسخ رقم العملية"
-                      >
-                        {copiedTrx ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Highlight: Usage Count / Limit Monitor */}
-                  <div className="p-4 rounded-xl bg-card border border-emerald-500/30 grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-                    {/* Student Limit Tracker */}
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
-                          <UserCheck className="h-4 w-4 text-emerald-400" />
-                          <span>سجل استخدام الطالب للكود:</span>
-                        </span>
-                        <span className="font-mono font-bold text-emerald-400 text-sm">
-                          المرة {verificationResult.studentUsageCount} من {verificationResult.studentMaxAllowed}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-mono">
-                        <span>الحصة المتبقية للطالب:</span>
-                        <span className="font-bold text-amber-400">
-                          {verificationResult.remainingForStudent && verificationResult.remainingForStudent > 0
-                            ? `${verificationResult.remainingForStudent} مرات متبقية`
-                            : "تم استنفاد كامل الحصة"}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Store Deal Total Cap Tracker */}
-                    <div className="space-y-1.5 sm:border-r sm:border-border sm:pr-4">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-foreground/80 font-semibold flex items-center gap-1.5">
-                          <Hash className="h-4 w-4 text-amber-400" />
-                          <span>إجمالي استهلاك الكود بالفرع:</span>
-                        </span>
-                        <span className="font-mono text-white font-bold">
-                          {verificationResult.dealCurrentUsage} / {verificationResult.dealTotalCap}
-                        </span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-background overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-emerald-500 to-amber-500"
-                          style={{
-                            width: `${Math.min(
-                              100,
-                              Math.round(
-                                ((verificationResult.dealCurrentUsage || 1) /
-                                  (verificationResult.dealTotalCap || 300)) *
-                                  100
-                              )
-                            )}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Student & Deal Details Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-border/60 space-y-1">
-                      <span className="text-muted-foreground">بيانات الطالب المستفيد:</span>
-                      <p className="text-sm font-bold text-white">{verificationResult.studentName}</p>
-                      <p className="text-muted-foreground font-mono text-[11px]">
-                        رقم جامعي: {verificationResult.studentId}
-                      </p>
-                      <p className="text-emerald-400 text-[11px]">{verificationResult.university}</p>
-                    </div>
-
-                    <div className="p-3.5 rounded-xl bg-white/[0.02] border border-border/60 space-y-1">
-                      <span className="text-muted-foreground">تفاصيل الخصم المطبق:</span>
-                      <p className="text-sm font-bold text-amber-400">{verificationResult.dealTitle}</p>
-                      <div className="flex items-center justify-between text-[11px] pt-1 border-t border-border/60 mt-1 font-mono">
-                        <span className="text-muted-foreground">قيمة الفاتورة الأصلية:</span>
-                        <span className="text-foreground/80 line-through">
-                          {verificationResult.originalPrice?.toFixed(2)} د.أ
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] font-mono text-emerald-400 font-bold">
-                        <span>المبلغ الموفر للطالب:</span>
-                        <span>- {verificationResult.discountAmount?.toFixed(2)} د.أ</span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono text-white font-extrabold pt-1 border-t border-border/60">
-                        <span>المبلغ المستحق للدفع:</span>
-                        <span className="text-base text-emerald-400">
-                          {verificationResult.finalPrice?.toFixed(2)} د.أ
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Reset Cashier Action */}
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
-                      <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                      <span>محمية ضد التكرار ومقيدة بسقف عدد مرات الاستخدام</span>
-                    </div>
-
-                    <Button
-                      size="sm"
-                      onClick={handleResetCashier}
-                      className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold h-9 px-4 rounded-lg cursor-pointer flex items-center gap-1.5 shadow-md"
-                    >
-                      <QrCode className="h-3.5 w-3.5" />
-                      <span>مسح QR جديد (العملية التالية)</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Error Feedback Card */}
-              {verificationResult.status === "error" && (
-                <div className="rounded-2xl border-2 border-rose-500/50 bg-rose-500/[0.08] p-5 shadow-2xl animate-in zoom-in-95 duration-200 text-start space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
-                      <AlertCircle className="h-6 w-6" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-sm font-bold text-rose-400">
-                        فحص الكود: تم رفض العملية
-                      </h4>
-                      <p className="text-xs text-foreground/80 leading-relaxed font-sans">
-                        {verificationResult.errorMessage}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end pt-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleResetCashier}
-                      className="text-xs border-border hover:bg-white/10 text-white h-8 cursor-pointer"
-                    >
-                      إعادة المحاولة
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
+      {/* 2. مؤشرات وأداء المتجر والمبيعات الميدانية (Store Performance Overview) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>استبدالات اليوم</span>
+            <ScanLine className="h-4 w-4 text-emerald-400" />
           </div>
-
-          {/* 4. Shift Summary Strip (إحصائيات الوردية الحالية) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>استبدالات الوردية اليوم</span>
-                <ScanLine className="h-4 w-4 text-emerald-400" />
-              </div>
-              <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.todayRedemptions} <span className="text-xs text-muted-foreground font-sans">عملية</span>
-              </p>
-              <p className="text-[11px] text-emerald-400 font-mono">+12 عملية عن نفس التوقيت أمس</p>
-            </div>
-
-            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>مبيعات الطلاب الميدانية</span>
-                <DollarSign className="h-4 w-4 text-amber-400" />
-              </div>
-              <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.shiftSalesVolume.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
-              </p>
-              <p className="text-[11px] text-muted-foreground font-mono">عبر بوابة الدفع السريع والخصومات</p>
-            </div>
-
-            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>إجمالي التوفير للطلبة</span>
-                <Sparkles className="h-4 w-4 text-emerald-400" />
-              </div>
-              <p className="text-2xl font-bold font-mono text-emerald-400">
-                {shiftStats.studentSavingsTotal.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
-              </p>
-              <p className="text-[11px] text-muted-foreground font-mono">حافز زيارة ومبيعات إضافية</p>
-            </div>
-
-            <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>الزبائن الجدد من الطلاب</span>
-                <Users className="h-4 w-4 text-purple-400" />
-              </div>
-              <p className="text-2xl font-bold font-mono text-white">
-                {shiftStats.newStudentCustomers} <span className="text-xs text-muted-foreground font-sans">طالب</span>
-              </p>
-              <p className="text-[11px] text-purple-400 font-mono">أول تجربة شراء عبر مسار</p>
-            </div>
-          </div>
+          <p className="text-2xl font-bold font-mono text-white">
+            {shiftStats.todayRedemptions} <span className="text-xs text-muted-foreground font-sans">عملية</span>
+          </p>
+          <p className="text-[11px] text-emerald-400 font-mono">+12 عملية عن نفس التوقيت أمس</p>
         </div>
-      )}
+
+        <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>مبيعات الطلاب الميدانية</span>
+            <DollarSign className="h-4 w-4 text-amber-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-white">
+            {shiftStats.shiftSalesVolume.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
+          </p>
+          <p className="text-[11px] text-muted-foreground font-mono">عبر بوابة الدفع والخصومات المعتمدة</p>
+        </div>
+
+        <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>إجمالي التوفير للطلبة</span>
+            <Sparkles className="h-4 w-4 text-emerald-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-emerald-400">
+            {shiftStats.studentSavingsTotal.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
+          </p>
+          <p className="text-[11px] text-muted-foreground font-mono">حافز زيارة ومبيعات إضافية</p>
+        </div>
+
+        <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>الزبائن الجدد من الطلاب</span>
+            <Users className="h-4 w-4 text-purple-400" />
+          </div>
+          <p className="text-2xl font-bold font-mono text-white">
+            {shiftStats.newStudentCustomers} <span className="text-xs text-muted-foreground font-sans">طالب</span>
+          </p>
+          <p className="text-[11px] text-purple-400 font-mono">أول تجربة شراء عبر مسار</p>
+        </div>
+      </div>
 
       {/* ========================================================================= */}
       {/* التبويب 2: مدير العروض والخصومات (Deal Management & Builder) */}
@@ -1124,18 +697,7 @@ export default function MerchantDashboardPage() {
         </div>
       )}
 
-      {/* ========================================================================= */}
-      {/* Real Device Camera QR Scanner Modal */}
-      {/* ========================================================================= */}
-      <QrCameraScanner
-        isOpen={scannerOpen}
-        onClose={() => setScannerOpen(false)}
-        onScanSuccess={(code) => {
-          setScannerOpen(false);
-          setVoucherCode(code);
-          handleVerifyCode(code);
-        }}
-      />
+      
 
       {/* ========================================================================= */}
       {/* Deal Builder Modal (إنشاء عرض جديد مع تحديد سقف مرات الاستخدام) */}

@@ -62,13 +62,6 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
 
   const navItems = [
     {
-      href: "/merchant/cashier",
-      label: "محطة الكاشير المستقلة",
-      icon: ScanLine,
-      badge: "POS",
-      active: false,
-    },
-    {
       href: "/merchant/dashboard",
       label: "لوحة التحكم والعمليات",
       icon: LayoutDashboard,
@@ -219,7 +212,7 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
               <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="font-semibold text-foreground">بوابة الشركاء والمتاجر</span>
                 <span>/</span>
-                <span>نظام الكاشير ومكافحة الاحتيال والتسويات</span>
+                <span>إدارة المتجر والعروض والتقارير المالية</span>
               </div>
             </div>
 
@@ -257,7 +250,7 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-md md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-1 select-none shadow-md">
         <div className="grid grid-cols-4 w-full items-center">
           {[
-            { href: "/merchant/dashboard", icon: LayoutDashboard, label: "الكاشير" },
+            { href: "/merchant/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
             { href: "/merchant/anti-fraud", icon: ShieldCheck, label: "مكافحة الاحتيال" },
             { href: "/merchant/settlements", icon: DollarSign, label: "التسويات" },
             { href: "/merchant/campus-drops", icon: Radio, label: "حملات الحرم" },
