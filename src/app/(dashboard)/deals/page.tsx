@@ -291,9 +291,13 @@ export default function DealsPage() {
       
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         <Tabs defaultValue="all" onValueChange={setActiveCategory} className="w-full">
-          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-4 h-auto py-2 px-1 bg-secondary/50 border border-border rounded-lg">
+          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-5 h-auto py-1.5 px-1.5 bg-white/[0.04] border border-white/10 rounded-2xl backdrop-blur-xl">
             {categories.map((cat) => (
-              <TabsTrigger key={cat.id} value={cat.id} className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground font-medium text-muted-foreground">
+              <TabsTrigger
+                key={cat.id}
+                value={cat.id}
+                className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-xl transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2F7BFF]/25 data-[state=active]:to-[#E83D84]/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-[#2F7BFF]/40 data-[state=active]:shadow-[0_0_15px_rgba(47,123,255,0.25)] font-semibold text-white/60 hover:text-white"
+              >
                 {cat.label}
               </TabsTrigger>
             ))}
@@ -304,87 +308,82 @@ export default function DealsPage() {
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <Card key={i} className="vercel-card">
-                        <CardHeader className="pb-3">
-                          <div className="flex justify-between items-start gap-2">
-                            <div className="space-y-2 w-full">
-                              <Skeleton className="h-5 w-3/4 max-w-[200px]" />
-                              <Skeleton className="h-3 w-24" />
-                            </div>
-                            <Skeleton className="h-6 w-16 rounded-md shrink-0" />
+                      <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl space-y-4">
+                        <div className="flex justify-between items-start gap-2">
+                          <div className="space-y-2 w-full">
+                            <Skeleton className="h-5 w-3/4 max-w-[200px] bg-white/10" />
+                            <Skeleton className="h-3 w-24 bg-white/10" />
                           </div>
-                        </CardHeader>
-                        <CardContent className="pb-3 space-y-2.5">
-                          <Skeleton className="h-4 w-full" />
-                          <div className="space-y-1.5 pt-1">
-                            <Skeleton className="h-3 w-full" />
-                            <Skeleton className="h-3 w-4/5" />
-                          </div>
-                          <Skeleton className="h-3 w-32 mt-4" />
-                        </CardContent>
-                        <CardFooter>
-                          <Skeleton className="h-10 min-h-[44px] w-full rounded-md" />
-                        </CardFooter>
-                      </Card>
+                          <Skeleton className="h-6 w-16 rounded-full bg-white/10 shrink-0" />
+                        </div>
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-full bg-white/10" />
+                          <Skeleton className="h-3 w-4/5 bg-white/10" />
+                        </div>
+                        <Skeleton className="h-10 w-full rounded-xl bg-white/10" />
+                      </div>
                     ))}
                 </div>
               ) : filteredDeals.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredDeals.map((deal) => (
-                    <Card 
+                    <div 
                       key={deal.id} 
-                      className="group cursor-pointer vercel-card relative overflow-hidden active:scale-[0.99] transition-transform"
+                      className="group cursor-pointer rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl relative overflow-hidden active:scale-[0.99] transition-all duration-300 hover:border-[#2F7BFF]/40 hover:bg-white/[0.06] flex flex-col justify-between"
                       onClick={() => setSelectedDeal(deal)}
                     >
-                      <CardHeader className="pb-3">
-                        <div className="flex justify-between items-start gap-2">
+                      <div className="absolute top-0 right-0 w-28 h-28 bg-[#2F7BFF]/10 rounded-full blur-2xl pointer-events-none" />
+
+                      <div>
+                        <div className="flex justify-between items-start gap-2 mb-3">
                           <div>
-                            <CardTitle className="text-base font-medium text-foreground line-clamp-1">
+                            <h3 className="text-base font-bold text-white group-hover:text-[#38BDF8] transition-colors line-clamp-1">
                               {translateMerchantName(deal.merchant.businessName, language)}
-                            </CardTitle>
-                            <CardDescription className="flex items-center gap-1 mt-1 text-xs text-muted-foreground text-xs">
-                              <Building2 className="h-3 w-3" />
+                            </h3>
+                            <span className="flex items-center gap-1 mt-0.5 text-xs text-white/50">
+                              <Building2 className="h-3 w-3 text-[#38BDF8]" />
                               {getCategoryLabel(deal.merchant.category)}
-                            </CardDescription>
+                            </span>
                           </div>
-                          <span className="shrink-0 font-medium px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 text-[10px]">
+                          <span className="shrink-0 font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#00D2FF]/20 to-[#2F7BFF]/20 text-[#38BDF8] border border-[#2F7BFF]/40 text-xs shadow-xs">
                             {translateDiscountLabel(deal.discountLabel, language)}
                           </span>
                         </div>
-                      </CardHeader>
-                      <CardContent className="pb-3">
-                        <h4 className="font-bold text-sm mb-1 text-foreground">{translateDealTitle(deal.title, language)}</h4>
-                        <p className="text-xs text-muted-foreground line-clamp-2 text-sm">
+
+                        <h4 className="font-bold text-sm mb-1.5 text-white">{translateDealTitle(deal.title, language)}</h4>
+                        <p className="text-xs text-white/60 line-clamp-2 leading-relaxed">
                           {translateDealDescription(deal.description, language)}
                         </p>
-                        {/* Usage Counter Pill (عدد مرات الاستخدام من أصل المسموح) */}
-                        <div className="mt-3 pt-2.5 border-t border-border/60 flex items-center justify-between text-[11px]">
-                          <span className="text-muted-foreground">مرات الاستخدام:</span>
-                          <span className={`font-mono font-bold px-2 py-0.5 rounded-md ${
+
+                        {/* Usage Counter Pill */}
+                        <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px]">
+                          <span className="text-white/50">مرات الاستخدام المتبقية:</span>
+                          <span className={`font-mono font-bold px-2 py-0.5 rounded-lg text-xs ${
                             getStudentUsedCount(deal.id) >= getDealUsageLimit(deal)
-                              ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
-                              : "bg-primary/10 text-primary border border-primary/20"
+                              ? "bg-rose-500/15 text-rose-300 border border-rose-500/30"
+                              : "bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30"
                           }`}>
                             {getStudentUsedCount(deal.id)} / {getDealUsageLimit(deal)}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-1 mt-2.5 text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-1 mt-2 text-[11px] text-white/40">
                           <Calendar className="h-3 w-3" />
                           <span>
                             {t.deals.expiresOn} {new Date(deal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
                           </span>
                         </div>
-                      </CardContent>
-                      <CardFooter>
+                      </div>
+
+                      <div className="mt-4">
                         <Button 
                           variant="outline" 
-                          className="w-full h-10 min-h-[44px] text-xs font-medium group-hover:bg-primary/5 group-hover:text-primary transition-colors active:scale-95"
+                          className="w-full h-10 min-h-[44px] text-xs font-semibold rounded-xl bg-white/[0.05] border-white/10 text-white group-hover:bg-gradient-to-r group-hover:from-[#2F7BFF] group-hover:to-[#E83D84] group-hover:border-transparent transition-all shadow-sm"
                         >
                           {t.deals.viewDetails}
                         </Button>
-                      </CardFooter>
-                    </Card>
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -405,25 +404,25 @@ export default function DealsPage() {
 
       {/* Modal / Dialog Overlay with Student QR Code & Voucher Bar */}
       {selectedDeal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-card w-full max-w-lg rounded-2xl shadow-2xl border border-border flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative text-foreground">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#070814]/80 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="bg-[#0D0E22] w-full max-w-lg rounded-3xl shadow-2xl border border-white/15 flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative text-white">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border z-10 relative">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/[0.08] z-10 relative">
               <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+                <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#38BDF8] shrink-0 shadow-[0_0_15px_rgba(47,123,255,0.25)]">
                   <Tag className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-base text-foreground">
+                  <h2 className="font-bold text-base text-white tracking-tight">
                     {translateMerchantName(selectedDeal.merchant.businessName, language)}
                   </h2>
-                  <span className="text-xs text-muted-foreground">{getCategoryLabel(selectedDeal.merchant.category)}</span>
+                  <span className="text-xs text-white/50">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
                 aria-label={t.deals.close}
-                className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>

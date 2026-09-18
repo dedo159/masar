@@ -19,41 +19,51 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-foreground">{t.universityportaldashboardpagetsx.text_r1ns}</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+            {t.universityportaldashboardpagetsx.text_r1ns}
+          </h1>
+          <p className="text-xs text-white/50 mt-1">
+            مؤشرات المتابعة الأكاديمية اللحظية وحالة الطلاب
+          </p>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Card 1 */}
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
+        {/* Card 1: Active Students */}
+        <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl flex items-center gap-4 hover:border-[#2F7BFF]/40 transition-all overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#2F7BFF]/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#38BDF8] text-2xl shadow-[0_0_20px_rgba(47,123,255,0.25)]">
             📊
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_g2hr}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{activeStudents}</p>
+            <p className="text-xs font-medium text-white/60">{t.universityportaldashboardpagetsx.text_g2hr}</p>
+            <p className="text-2xl font-bold font-mono text-white mt-0.5">{activeStudents}</p>
           </div>
         </div>
 
-        {/* Card 3 */}
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 text-2xl">
+        {/* Card 2: At-Risk Students */}
+        <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl flex items-center gap-4 hover:border-rose-500/40 transition-all overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-[#E83D84]/20 to-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-300 text-2xl shadow-[0_0_20px_rgba(244,63,94,0.25)]">
             ⚠️
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_1ufv}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{atRiskStudents}</p>
+            <p className="text-xs font-medium text-white/60">{t.universityportaldashboardpagetsx.text_1ufv}</p>
+            <p className="text-2xl font-bold font-mono text-rose-400 mt-0.5">{atRiskStudents}</p>
           </div>
         </div>
 
-        {/* Card 4 */}
-        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-6 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
-          <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 text-2xl">
+        {/* Card 3: Moodle Adoption */}
+        <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl flex items-center gap-4 hover:border-[#38BDF8]/40 transition-all overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#38BDF8]/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-[#2F7BFF]/20 to-[#A855F7]/20 border border-[#A855F7]/30 flex items-center justify-center text-[#C084FC] text-2xl shadow-[0_0_20px_rgba(168,85,247,0.25)]">
             🔗
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t.universityportaldashboardpagetsx.text_kf3n}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-foreground">{moodlePercentage}%</p>
+            <p className="text-xs font-medium text-white/60">{t.universityportaldashboardpagetsx.text_kf3n}</p>
+            <p className="text-2xl font-bold font-mono text-white mt-0.5">{moodlePercentage}%</p>
           </div>
         </div>
       </div>

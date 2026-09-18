@@ -344,94 +344,84 @@ export function ReadinessClient() {
           )}
 
           {result && !loading && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Score Card */}
-              <Card className="vercel-card border-[#0070f3]/20 overflow-hidden relative">
-                <div className="absolute top-0 left-0 w-1 h-full bg-[#0070f3]" />
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">{t.readinessclient.key_52yk5p}</p>
-                      <h2 className="text-3xl font-bold text-foreground flex items-center gap-3">
-                        <span className={getScoreColor(result.readiness_score)}>
-                          {result.readiness_score}%
-                        </span>
-                        <Badge variant="outline" className="bg-background text-foreground font-normal text-sm">
-                          {result.readiness_status}
-                        </Badge>
-                      </h2>
-                    </div>
-                    <div className="text-right w-full md:w-1/2">
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {result.strengths_summary}
-                      </p>
-                    </div>
+              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 shadow-2xl backdrop-blur-2xl overflow-hidden relative group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#2F7BFF]/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                  <div>
+                    <p className="text-xs font-semibold text-white/50 mb-1">{t.readinessclient.key_52yk5p}</p>
+                    <h2 className="text-3xl font-extrabold text-white flex items-center gap-3">
+                      <span className="font-mono bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] bg-clip-text text-transparent">
+                        {result.readiness_score}%
+                      </span>
+                      <span className="bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30 font-semibold text-xs px-3 py-1 rounded-full">
+                        {result.readiness_status}
+                      </span>
+                    </h2>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="text-right w-full md:w-1/2">
+                    <p className="text-xs text-white/70 leading-relaxed">
+                      {result.strengths_summary}
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               {/* Verified Skills */}
-              <Card className="vercel-card border-border/50">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    {t.readinessclient.key_eys6lg}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {result.verified_skills.map((skill: string, i: number) => (
-                      <Badge key={i} variant="secondary" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400  border border-emerald-500/20 hover:bg-emerald-500/20 font-medium">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_eys6lg}</h3>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {result.verified_skills.map((skill: string, i: number) => (
+                    <span key={i} className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-medium shadow-xs">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
               {/* Critical Gaps */}
-              <Card className="vercel-card border-border/50">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-[#ff5b4f]" />
-                    {t.readinessclient.key_75megy}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
+              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertTriangle className="w-4 h-4 text-[#E83D84]" />
+                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_75megy}</h3>
+                </div>
+                <div className="space-y-3">
                   {result.critical_gaps.map((gap: any, i: number) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-lg bg-background border border-border">
+                    <div key={i} className="flex gap-3.5 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
                       <div className="mt-1">
-                        <div className={`w-2 h-2 rounded-full ${gap.priority === 'High' ? 'bg-[#ff5b4f] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-500' : 'bg-blue-400'}`} />
+                        <div className={`w-2 h-2 rounded-full ${gap.priority === 'High' ? 'bg-[#E83D84] shadow-[0_0_8px_#E83D84] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-400' : 'bg-[#38BDF8]'}`} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-foreground">{gap.skill}</h4>
-                        <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
+                        <h4 className="font-semibold text-white text-xs">{gap.skill}</h4>
+                        <p className="text-[11px] text-white/60 mt-0.5 leading-relaxed">
                           {gap.reason}
                         </p>
                       </div>
                     </div>
                   ))}
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
               {/* Actionable Next Step */}
-              <Card className="vercel-card border-border/50 bg-blue-500/100/5">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <ArrowUpRight className="w-4 h-4 text-[#0070f3]" />
-                    {t.readinessclient.key_n3bmys}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="p-4 rounded-lg bg-card border border-blue-500/20 shadow-sm">
-                    <p className="text-foreground font-medium leading-relaxed">
-                      {result.actionable_next_step.recommended_project}
-                    </p>
-                    <div className="mt-4 flex items-center gap-2 text-sm text-[#0070f3] font-semibold bg-blue-500/10 w-fit px-3 py-1 rounded-full">
-                      <TrendingUp className="w-4 h-4" />
-                      {t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}
-                    </div>
+              <div className="rounded-2xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 p-5 shadow-xl backdrop-blur-2xl">
+                <div className="flex items-center gap-2 mb-2">
+                  <ArrowUpRight className="w-4 h-4 text-[#38BDF8]" />
+                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_n3bmys}</h3>
+                </div>
+                <div className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.08]">
+                  <p className="text-white text-xs font-medium leading-relaxed">
+                    {result.actionable_next_step.recommended_project}
+                  </p>
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-[#38BDF8] font-semibold bg-[#2F7BFF]/15 border border-[#2F7BFF]/30 w-fit px-3 py-1 rounded-full">
+                    <TrendingUp className="w-3.5 h-3.5" />
+                    <span>{t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}</span>
                   </div>
-                </CardContent>
-              </Card>
-
+                </div>
+              </div>
             </div>
           )}
         </div>
