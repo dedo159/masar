@@ -16,6 +16,7 @@ import {
   RotateCcw,
   ChevronDown,
   Lock,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -335,6 +336,17 @@ export default function MerchantDashboardPage() {
 
 
       {/* 2. مؤشرات وأداء المتجر والمبيعات الميدانية (Store Performance Overview) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 className="text-sm font-bold text-foreground">مؤشرات المبيعات الميدانية السريعة</h2>
+        <Link
+          href="/merchant/analytics"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/20 text-xs font-bold text-primary hover:bg-primary/20 transition-colors w-fit"
+        >
+          <BarChart3 className="h-3.5 w-3.5" />
+          <span>مركز التقارير والإحصائيات الشاملة ←</span>
+        </Link>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
