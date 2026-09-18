@@ -8,40 +8,16 @@ import {
   Tag,
   TrendingUp,
   CheckCircle2,
-  AlertCircle,
-  QrCode,
   Sparkles,
-  Camera,
-  X,
-  Plus,
   Clock,
   Users,
   DollarSign,
-  Copy,
-  Check,
   Search,
-  Filter,
-  ArrowUpRight,
-  ShieldCheck,
   RotateCcw,
-  SlidersHorizontal,
   ChevronDown,
-  Calendar,
-  Layers,
-  FileText,
-  Printer,
-  ChevronLeft,
-  Hash,
-  UserCheck,
   Lock,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { QrCameraScanner } from "@/components/merchant/qr-camera-scanner";
-import { DynamicRollingQrGuard } from "@/components/merchant/dynamic-rolling-qr-guard";
-import { SettlementInvoicingHub } from "@/components/merchant/settlement-invoicing-hub";
-import { SponsoredCampusDrops } from "@/components/merchant/sponsored-campus-drops";
-import { Radio } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // --- Types ---
 interface Deal {
@@ -266,38 +242,6 @@ export default function MerchantDashboardPage() {
     }
   };
 
-  const handleCreateDeal = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newDealForm.title) return;
-
-    const newDeal: Deal = {
-      id: `deal-${Date.now()}`,
-      title: newDealForm.title,
-      category: newDealForm.category,
-      discountType: newDealForm.discountType,
-      discountValue: newDealForm.discountValue,
-      usedCount: 0,
-      totalCap: Number(newDealForm.totalCap) || 200,
-      maxUsesPerStudent: Number(newDealForm.maxUsesPerStudent) || 1,
-      validUntil: newDealForm.validUntil,
-      isActive: true,
-      terms: `${newDealForm.terms} (الحد الأقصى: ${newDealForm.maxUsesPerStudent} مرات لكل طالب).`,
-    };
-
-    setDeals([newDeal, ...deals]);
-    setIsNewDealModalOpen(false);
-    setNewDealForm({
-      title: "",
-      category: "وجبات",
-      discountType: "percentage",
-      discountValue: "20%",
-      totalCap: 200,
-      maxUsesPerStudent: 2,
-      validUntil: "2026-12-31",
-      terms: "يسري العرض بإبراز تطبيق مسار للطلاب.",
-    });
-  };
-
   const filteredDeals =
     dealFilter === "الكل" ? deals : deals.filter((d) => d.category === dealFilter);
 
@@ -462,14 +406,6 @@ export default function MerchantDashboardPage() {
               ))}
             </div>
 
-            {/* Prominent Floating Add Deal Button */}
-            <Button
-              onClick={() => setIsNewDealModalOpen(true)}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs h-10 px-4 rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-              <span>إنشاء عرض جديد وتحديد سقفه</span>
-            </Button>
           </div>
 
           {/* Deals Grid with Usage Caps & Limits */}
@@ -699,168 +635,7 @@ export default function MerchantDashboardPage() {
 
       
 
-      {/* ========================================================================= */}
-      {/* Deal Builder Modal (إنشاء عرض جديد مع تحديد سقف مرات الاستخدام) */}
-      {/* ========================================================================= */}
-      {isNewDealModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-start">
-            <div className="flex items-center justify-between border-b border-border pb-3">
-              <div className="flex items-center gap-2">
-                <Tag className="h-5 w-5 text-emerald-400" />
-                <h3 className="text-base font-bold text-white">إضافة عرض وترويج طلابي جديد</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsNewDealModalOpen(false)}
-                className="text-muted-foreground hover:text-white cursor-pointer"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateDeal} className="space-y-3.5 text-xs">
-              <div>
-                <label className="text-foreground/80 font-semibold mb-1 block">عنوان العرض</label>
-                <input
-                  required
-                  type="text"
-                  placeholder="مثال: خصم 25% على كافة وجبات الغداء"
-                  value={newDealForm.title}
-                  onChange={(e) => setNewDealForm({ ...newDealForm, title: e.target.value })}
-                  className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block">التصنيف</label>
-                  <select
-                    value={newDealForm.category}
-                    onChange={(e) => setNewDealForm({ ...newDealForm, category: e.target.value })}
-                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="وجبات">🍔 وجبات ومطاعم</option>
-                    <option value="مشروبات">☕ مقاهي ومشروبات</option>
-                    <option value="مكتبات">📚 قرطاسية ومكتبات</option>
-                    <option value="خدمات">💻 خدمات وتقنية</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block">نوع الخصم</label>
-                  <select
-                    value={newDealForm.discountType}
-                    onChange={(e) =>
-                      setNewDealForm({
-                        ...newDealForm,
-                        discountType: e.target.value as any,
-                      })
-                    }
-                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
-                  >
-                    <option value="percentage">نسبة مئوية (Percentage)</option>
-                    <option value="bogo">BOGO (اشتري 1 واحصل على 1)</option>
-                    <option value="freebie">هدية / إضافات مجانية</option>
-                    <option value="fixed">مبلغ مالي ثابت (Fixed)</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block">قيمة الخصم المعلنة</label>
-                  <input
-                    required
-                    type="text"
-                    placeholder="مثال: 20% أو بطاطا مجانية"
-                    value={newDealForm.discountValue}
-                    onChange={(e) => setNewDealForm({ ...newDealForm, discountValue: e.target.value })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block">سقف الكوبونات الإجمالي (Total Cap)</label>
-                  <input
-                    required
-                    type="number"
-                    min={10}
-                    placeholder="مثال: 300"
-                    value={newDealForm.totalCap}
-                    onChange={(e) => setNewDealForm({ ...newDealForm, totalCap: Number(e.target.value) })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
-                  />
-                </div>
-              </div>
-
-              {/* Explicit Field: Max Uses Per Student */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block flex items-center gap-1">
-                    <UserCheck className="h-3.5 w-3.5 text-purple-400" />
-                    <span>الحد الأقصى لكل طالب (Usage Limit)</span>
-                  </label>
-                  <select
-                    value={newDealForm.maxUsesPerStudent}
-                    onChange={(e) =>
-                      setNewDealForm({
-                        ...newDealForm,
-                        maxUsesPerStudent: Number(e.target.value),
-                      })
-                    }
-                    className="w-full h-10 px-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
-                  >
-                    <option value={1}>مرة واحدة فقط (1x - الأكثر أماناً)</option>
-                    <option value={2}>مرتان لكل طالب (2x)</option>
-                    <option value={3}>3 مرات لكل طالب (3x)</option>
-                    <option value={5}>5 مرات لكل طالب (5x)</option>
-                    <option value={999}>غير محدود (Unlimited)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-foreground/80 font-semibold mb-1 block">تاريخ الانتهاء</label>
-                  <input
-                    required
-                    type="date"
-                    value={newDealForm.validUntil}
-                    onChange={(e) => setNewDealForm({ ...newDealForm, validUntil: e.target.value })}
-                    className="w-full h-10 px-3.5 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 font-mono"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-foreground/80 font-semibold mb-1 block">الشروط والأحكام</label>
-                <textarea
-                  rows={2}
-                  value={newDealForm.terms}
-                  onChange={(e) => setNewDealForm({ ...newDealForm, terms: e.target.value })}
-                  className="w-full p-3 rounded-xl border border-border bg-background text-white focus:outline-none focus:border-emerald-500 text-xs"
-                />
-              </div>
-
-              <div className="pt-3 flex items-center justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsNewDealModalOpen(false)}
-                  className="border-border text-white hover:bg-white/10 h-10 text-xs cursor-pointer"
-                >
-                  إلغاء
-                </Button>
-                <Button
-                  type="submit"
-                  className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10 text-xs px-5 rounded-xl cursor-pointer"
-                >
-                  نشر العرض وتفعيله فورياً
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
