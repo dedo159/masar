@@ -12,14 +12,11 @@ import {
   Zap,
   Users,
   DollarSign,
-  Smartphone,
   CheckCircle2,
   AlertCircle,
   Bell,
-  Sparkles,
   Layers,
   ChevronDown,
-  Navigation,
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -314,12 +311,8 @@ export function SponsoredCampusDrops() {
         </div>
       </div>
 
-      {/* Grid: Right (Launcher Form 7 Cols), Left (Smartphone Lockscreen Preview 5 Cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* ========================================================================= */}
-        {/* 1. Flash Drop Launcher Form (7 Cols) */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-7 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl space-y-5">
+      {/* Flash Drop Launcher Form */}
+      <div className="max-w-4xl mx-auto rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-2xl space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4 text-amber-400" />
@@ -658,100 +651,8 @@ export function SponsoredCampusDrops() {
               </div>
             )}
           </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* 2. Real-Time Smartphone Lockscreen Push Preview (5 Cols) */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-5 rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xl flex flex-col items-center">
-          <div className="w-full flex items-center justify-between pb-3 border-b border-border mb-5">
-            <div className="flex items-center gap-2">
-              <Smartphone className="h-4 w-4 text-amber-400" />
-              <span className="text-xs font-bold text-white tracking-wide">
-                محاكي إشعار شاشة القفل (Mobile Push Preview)
-              </span>
-            </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              Real-Time View
-            </span>
-          </div>
-
-          {/* Smartphone Hardware Shell */}
-          <div className="w-full max-w-[300px] h-[520px] rounded-[40px] p-3 bg-gradient-to-b from-slate-800 to-slate-900 border-4 border-slate-700 shadow-2xl relative flex flex-col justify-between overflow-hidden">
-            {/* Camera Pill (Dynamic Island) */}
-            <div className="w-24 h-4 bg-black rounded-full mx-auto mb-2 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-slate-800 mr-2" />
-            </div>
-
-            {/* Lockscreen Clock */}
-            <div className="text-center mt-6 space-y-1">
-              <span className="text-[11px] font-medium text-foreground/80 block">
-                الخميس، 18 أيلول
-              </span>
-              <span className="text-5xl font-extrabold text-white font-mono tracking-tight block">
-                12:44
-              </span>
-            </div>
-
-            {/* Simulated Push Notification Banner */}
-            <div className="my-auto w-full rounded-2xl bg-black/70 backdrop-blur-xl border border-border p-3.5 shadow-2xl text-right space-y-2 transform hover:scale-[1.02] transition-transform">
-              {/* Push Header */}
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-4 h-4 rounded-md bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-[9px] text-white font-bold">
-                    ▲
-                  </div>
-                  <span className="font-bold text-white">مسار · شريك الحرم</span>
-                </div>
-                <span className="font-mono text-muted-foreground">الآن</span>
-              </div>
-
-              {/* Push Body */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300">
-                  <Sparkles className="h-3 w-3 shrink-0 text-amber-400" />
-                  <span className="line-clamp-1">{dealTitle || "عرض حصري في الحرم!"}</span>
-                </div>
-                <p className="text-[11px] text-foreground/80 line-clamp-2 leading-relaxed">
-                  {dealDescription || "خصم حصري موجه للطلبة في هذا النطاق."}
-                </p>
-              </div>
-
-              {/* Branch Tag & Validity Badge */}
-              <div className="pt-1.5 border-t border-border flex items-center justify-between text-[10px]">
-                <span className="text-muted-foreground flex items-center gap-1 truncate max-w-[170px]">
-                  <Store className="h-3 w-3 text-amber-400 shrink-0" />
-                  <span className="truncate">
-                    {selectedBranches.length === 1
-                      ? selectedBranches[0].name
-                      : selectedBranches.length === storeBranches.length
-                      ? "متاح في كافة الفروع"
-                      : `متاح في ${selectedBranches.length} فروع مشمولة`}
-                  </span>
-                </span>
-                <span className="font-mono text-emerald-400 font-semibold shrink-0 text-[9px]">
-                  {durationInfo.isValid ? durationInfo.text : "ساري"}
-                </span>
-              </div>
-            </div>
-
-            {/* Lockscreen Bottom Buttons */}
-            <div className="w-full flex items-center justify-between px-4 pb-2">
-              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-border flex items-center justify-center text-xs text-white">
-                🔦
-              </div>
-              <div className="w-16 h-1 bg-white/40 rounded-full mx-auto" />
-              <div className="w-9 h-9 rounded-full bg-black/50 backdrop-blur border border-border flex items-center justify-center text-xs text-white">
-                📷
-              </div>
-            </div>
-          </div>
-
-          <span className="text-[11px] text-muted-foreground mt-3 text-center">
-            تحديث حي ومباشر للمعاينة بالتزامن مع كتابة محتوى الإشعار واختيار الفروع.
-          </span>
-        </div>
       </div>
     </div>
   );
 }
+
