@@ -5,6 +5,7 @@ import {
   Radio,
   Send,
   MapPin,
+  Store,
   Clock,
   Zap,
   Users,
@@ -22,49 +23,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface GeoZone {
+interface StoreBranch {
   id: string;
   name: string;
-  subtext: string;
+  location: string;
   studentCount: number;
-  icon: string;
 }
 
-const geoZones: GeoZone[] = [
+const storeBranches: StoreBranch[] = [
   {
-    id: "it-eng",
-    name: "مجمع كليات الهندسة والـ IT",
-    subtext: "حرم الجامعة الأردنية / اليرموك — مبنى الخوارزمي والمختبرات",
-    studentCount: 2890,
-    icon: "💻",
+    id: "branch-ju",
+    name: "فرع الجامعة الأردنية — مجمّع العلوم والطب",
+    location: "عمان — الجبيهة",
+    studentCount: 3850,
   },
   {
-    id: "north-campus",
-    name: "حرم الجامعة الشمالي",
-    subtext: "مدرجات اللغات، كلية الآداب، والساحة المركزية",
-    studentCount: 1450,
-    icon: "🏛️",
+    id: "branch-aau",
+    name: "فرع جامعة عمان الأهلية — البوابة الرئيسية",
+    location: "عمان / السلط",
+    studentCount: 2100,
   },
   {
-    id: "medical-gate",
-    name: "البوابة الرئيسية ومجمع الكليات الطبية",
-    subtext: "كليات الطب وطب الأسنان ومستشفى الجامعة",
-    studentCount: 1820,
-    icon: "🩺",
+    id: "branch-just",
+    name: "فرع جامعة العلوم والتكنولوجيا (JUST) — المجمّع التجاري",
+    location: "إربد — الرمثا",
+    studentCount: 2750,
   },
   {
-    id: "dorms-belt",
-    name: "سكنات الطلاب ومحيط شارع الجامعة",
-    subtext: "السكنات الداخلية ومطاعم البوابة الشمالية",
-    studentCount: 3200,
-    icon: "🏢",
+    id: "branch-yu",
+    name: "فرع جامعة اليرموك — شارع الجامعة",
+    location: "إربد — قصبة إربد",
+    studentCount: 2400,
   },
   {
-    id: "all-campus",
-    name: "كامل الحرم الجامعي والمحيط الجغرافي",
-    subtext: "بث شامل لجميع الطلبة النشطين حالياً في المنصة",
-    studentCount: 9360,
-    icon: "📡",
+    id: "branch-bau",
+    name: "فرع جامعة البلقاء التطبيقية — البوابة الرئيسية",
+    location: "السلط — المركز",
+    studentCount: 1650,
   },
 ];
 
@@ -78,7 +73,11 @@ const validityOptions = [
 export function SponsoredCampusDrops() {
   const [dealTitle, setDealTitle] = useState("وجبة شاورما سوبر + مشروب بـ 1.75 د.أ فقط لطلاب الـ IT!");
   const [dealDescription, setDealDescription] = useState("خصم حصري ومباشر خلال استراحة الغداء. اطلب الآن من فرع الجامعة بإبراز تطبيق مسار.");
-  const [selectedZoneId, setSelectedZoneId] = useState("it-eng");
+  // Multi-branch selection state
+  const [selectedBranchIds, setSelectedBranchIds] = useState<string[]>([
+    "branch-ju",
+    "branch-aau",
+  ]);
   const [selectedValidityId, setSelectedValidityId] = useState("lunch-2h");
 
   // Pricing and Balance
@@ -90,15 +89,40 @@ export function SponsoredCampusDrops() {
   const [broadcastSuccess, setBroadcastSuccess] = useState<{
     dropId: string;
     sentCount: number;
-    zoneName: string;
+    branchesCount: number;
+    branchesSummary: string;
     timestamp: string;
   } | null>(null);
 
-  const activeZone = geoZones.find((z) => z.id === selectedZoneId) || geoZones[0];
+  const selectedBranches = storeBranches.filter((b) => selectedBranchIds.includes(b.id));
+  const totalTargetedStudents = selectedBranches.reduce((sum, b) => sum + b.studentCount, 0);
   const activeValidity = validityOptions.find((v) => v.id === selectedValidityId) || validityOptions[0];
+
+  const toggleBranch = (id: string) => {
+    setSelectedBranchIds((prev) => {
+      if (prev.includes(id)) {
+        if (prev.length === 1) return prev; // Keep at least one branch selected
+        return prev.filter((bId) => bId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
+
+  const handleSelectAllBranches = () => {
+    if (selectedBranchIds.length === storeBranches.length) {
+      setSelectedBranchIds([storeBranches[0].id]);
+    } else {
+      setSelectedBranchIds(storeBranches.map((b) => b.id));
+    }
+  };
 
   const handleLaunchDrop = () => {
     if (!dealTitle.trim()) return;
+    if (selectedBranchIds.length === 0) {
+      alert("يرجى اختيار فرع واحد على الأقل مشمول بالعرض.");
+      return;
+    }
     if (merchantBalance < dropFee) {
       alert("رصيد حملات البث غير كافٍ. يرجى شحن الرصيد للمتابعة.");
       return;
@@ -113,8 +137,12 @@ export function SponsoredCampusDrops() {
       const newDropId = `DROP-${Math.floor(1000 + Math.random() * 9000)}`;
       setBroadcastSuccess({
         dropId: newDropId,
-        sentCount: activeZone.studentCount,
-        zoneName: activeZone.name,
+        sentCount: totalTargetedStudents,
+        branchesCount: selectedBranches.length,
+        branchesSummary:
+          selectedBranches.length === storeBranches.length
+            ? "كافة الفروع المتاحة (5 فروع)"
+            : selectedBranches.map((b) => b.name.split("—")[0].trim()).join("، "),
         timestamp: "الآن",
       });
 
@@ -156,11 +184,11 @@ export function SponsoredCampusDrops() {
                   حملات الإشعارات والتنبيهات الموجهة للحرم (Sponsored Campus Drops)
                 </h2>
                 <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-400">
-                  Campus Geo-Push
+                  Multi-Branch Push
                 </span>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                بث إشعارات فورية (Push Notifications) لشاشات قفل هواتف الطلبة المتواجدين داخل الحرم بدقة جغرافية متناهية.
+                بث إشعارات فورية (Push Notifications) لشاشات قفل هواتف الطلبة في محيط الفروع المشمولة بالعرض.
               </p>
             </div>
           </div>
@@ -227,45 +255,64 @@ export function SponsoredCampusDrops() {
               />
             </div>
 
-            {/* Geo-fencing Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-foreground/80 flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-rose-400" />
-                  <span>الاستهداف الجغرافي للحرم (Geo-fencing Selector):</span>
-                </span>
-                <span className="text-[10px] font-mono text-emerald-400">
-                  {activeZone.studentCount.toLocaleString()} طالب متواجد حالياً
-                </span>
-              </label>
+            {/* Included Branches Multi-Selector */}
+            <div className="space-y-2.5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                <label className="text-xs font-semibold text-foreground/90 flex items-center gap-1.5">
+                  <Store className="h-4 w-4 text-amber-500" />
+                  <span>الفروع المشمولة بالعرض (يمكنك اختيار أكثر من فرع):</span>
+                </label>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono text-emerald-500 dark:text-emerald-400 font-bold">
+                    {totalTargetedStudents.toLocaleString()} طالب مستهدف
+                  </span>
+                  <span className="text-muted-foreground text-xs">•</span>
+                  <button
+                    type="button"
+                    onClick={handleSelectAllBranches}
+                    className="text-[11px] text-amber-500 hover:text-amber-400 font-medium underline cursor-pointer"
+                  >
+                    {selectedBranchIds.length === storeBranches.length
+                      ? "إلغاء تحديد الكل"
+                      : "تحديد كافة الفروع"}
+                  </button>
+                </div>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {geoZones.map((zone) => {
-                  const isSelected = zone.id === selectedZoneId;
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {storeBranches.map((branch) => {
+                  const isSelected = selectedBranchIds.includes(branch.id);
                   return (
                     <button
-                      key={zone.id}
+                      key={branch.id}
                       type="button"
-                      onClick={() => setSelectedZoneId(zone.id)}
-                      className={`p-3 rounded-xl border text-right transition-all cursor-pointer ${
+                      onClick={() => toggleBranch(branch.id)}
+                      className={`p-3 rounded-xl border text-right transition-all cursor-pointer flex items-start gap-3 ${
                         isSelected
-                          ? "bg-amber-500/10 border-amber-500/40 shadow-lg shadow-amber-950/20"
-                          : "bg-background border-border/60 hover:border-border text-muted-foreground"
+                          ? "bg-amber-500/10 border-amber-500/50 shadow-md shadow-amber-950/20"
+                          : "bg-background border-border/70 hover:border-border text-muted-foreground hover:text-foreground"
                       }`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="text-base">{zone.icon}</span>
-                          <span className={`text-xs font-bold ${isSelected ? "text-white" : "text-foreground/80"}`}>
-                            {zone.name}
-                          </span>
-                        </div>
-                        {isSelected && <Check className="h-3.5 w-3.5 text-amber-400" />}
+                      {/* Styled Multi-select Checkbox Box */}
+                      <div
+                        className={`w-5 h-5 rounded-md mt-0.5 flex items-center justify-center border transition-colors shrink-0 ${
+                          isSelected
+                            ? "bg-amber-500 border-amber-500 text-black"
+                            : "border-muted-foreground/40 bg-card"
+                        }`}
+                      >
+                        {isSelected && <Check className="h-3.5 w-3.5 stroke-[3]" />}
                       </div>
-                      <p className="text-[10px] text-muted-foreground mt-1 line-clamp-1">{zone.subtext}</p>
-                      <div className="mt-2 flex items-center gap-1 text-[10px] font-mono text-emerald-400">
-                        <Users className="h-3 w-3" />
-                        <span>{zone.studentCount.toLocaleString()} طالب نشط</span>
+
+                      <div className="space-y-0.5 min-w-0 flex-1">
+                        <span className={`text-xs font-bold block truncate ${isSelected ? "text-foreground" : "text-foreground/80"}`}>
+                          {branch.name}
+                        </span>
+                        <p className="text-[10px] text-muted-foreground">{branch.location}</p>
+                        <div className="mt-1 flex items-center gap-1 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">
+                          <Users className="h-3 w-3" />
+                          <span>{branch.studentCount.toLocaleString()} طالب في محيط الفرع</span>
+                        </div>
                       </div>
                     </button>
                   );
@@ -315,7 +362,7 @@ export function SponsoredCampusDrops() {
                   <span className="text-[10px] text-muted-foreground">/ للبث الواحد</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-0.5">
-                  يصل الإشعار إلى <strong className="text-white font-mono">{activeZone.studentCount.toLocaleString()}</strong> طالب مستهدف في النطاق.
+                  يصل الإشعار إلى <strong className="text-white font-mono">{totalTargetedStudents.toLocaleString()}</strong> طالب مستهدف عبر <strong className="text-white font-mono">{selectedBranches.length}</strong> فروع مشمولة.
                 </p>
               </div>
 
@@ -357,8 +404,8 @@ export function SponsoredCampusDrops() {
                     <span className="font-bold font-mono text-white">{broadcastSuccess.sentCount.toLocaleString()} طالب</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[10px]">النطاق الجغرافي:</span>
-                    <span className="font-bold text-white">{broadcastSuccess.zoneName}</span>
+                    <span className="text-muted-foreground block text-[10px]">الفروع المشمولة:</span>
+                    <span className="font-bold text-white">{broadcastSuccess.branchesSummary}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block text-[10px]">سرعة التسليم:</span>
@@ -427,11 +474,17 @@ export function SponsoredCampusDrops() {
                 </p>
               </div>
 
-              {/* Geo-tag & Validity Badge */}
+              {/* Branch Tag & Validity Badge */}
               <div className="pt-1.5 border-t border-border flex items-center justify-between text-[10px]">
-                <span className="text-muted-foreground flex items-center gap-1 truncate max-w-[150px]">
-                  <MapPin className="h-3 w-3 text-rose-400 shrink-0" />
-                  <span className="truncate">{activeZone.name}</span>
+                <span className="text-muted-foreground flex items-center gap-1 truncate max-w-[170px]">
+                  <Store className="h-3 w-3 text-amber-400 shrink-0" />
+                  <span className="truncate">
+                    {selectedBranches.length === 1
+                      ? selectedBranches[0].name
+                      : selectedBranches.length === storeBranches.length
+                      ? "متاح في كافة الفروع"
+                      : `متاح في ${selectedBranches.length} فروع مشمولة`}
+                  </span>
                 </span>
                 <span className="font-mono text-emerald-400 font-semibold shrink-0">
                   ساري الآن
@@ -452,7 +505,7 @@ export function SponsoredCampusDrops() {
           </div>
 
           <span className="text-[11px] text-muted-foreground mt-3 text-center">
-            تحديث حي ومباشر للمعاينة بالتزامن مع كتابة محتوى الإشعار واختيار الموقع.
+            تحديث حي ومباشر للمعاينة بالتزامن مع كتابة محتوى الإشعار واختيار الفروع.
           </span>
         </div>
       </div>
