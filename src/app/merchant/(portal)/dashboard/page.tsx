@@ -17,6 +17,9 @@ import {
   ChevronDown,
   Lock,
   BarChart3,
+  LayoutDashboard,
+  Radio,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -334,6 +337,47 @@ export default function MerchantDashboardPage() {
         </div>
       </div>
 
+      {/* Quick Navigation Tabs inside Dashboard */}
+      <div className="flex items-center gap-1.5 p-1.5 rounded-xl bg-muted/70 border border-border overflow-x-auto scrollbar-none">
+        <Link
+          href="/merchant/dashboard"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-card text-foreground shadow-xs border border-border/80 whitespace-nowrap cursor-pointer"
+        >
+          <LayoutDashboard className="h-3.5 w-3.5 text-primary" />
+          <span>الرئيسية والعمليات</span>
+        </Link>
+        <Link
+          href="/merchant/analytics"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 whitespace-nowrap cursor-pointer hover:bg-amber-500/20 transition-colors"
+        >
+          <BarChart3 className="h-3.5 w-3.5 text-amber-500" />
+          <span>التقارير والإحصائيات الشاملة</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/30">
+            جديد
+          </span>
+        </Link>
+        <Link
+          href="/merchant/settlements"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-card/50 whitespace-nowrap cursor-pointer"
+        >
+          <DollarSign className="h-3.5 w-3.5 text-emerald-500" />
+          <span>مركز التسويات والفواتير</span>
+        </Link>
+        <Link
+          href="/merchant/campus-drops"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-card/50 whitespace-nowrap cursor-pointer"
+        >
+          <Radio className="h-3.5 w-3.5 text-purple-500" />
+          <span>حملات البث للحرم (Drops)</span>
+        </Link>
+        <Link
+          href="/merchant/settings"
+          className="flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-card/50 whitespace-nowrap cursor-pointer"
+        >
+          <Settings className="h-3.5 w-3.5 text-slate-400" />
+          <span>إعدادات المتجر والكاشير</span>
+        </Link>
+      </div>
 
       {/* 2. مؤشرات وأداء المتجر والمبيعات الميدانية (Store Performance Overview) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

@@ -263,12 +263,13 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
 
       {/* Mobile Bottom Navigation — Matching Student Site BottomNav */}
       <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-md md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-1 select-none shadow-md">
-        <div className="grid grid-cols-5 w-full items-center">
+        <div className="grid grid-cols-6 w-full items-center">
           {[
             { href: "/merchant/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
-            { href: "/merchant/anti-fraud", icon: ShieldCheck, label: "مكافحة الاحتيال" },
+            { href: "/merchant/analytics", icon: BarChart3, label: "التقارير" },
             { href: "/merchant/settlements", icon: DollarSign, label: "التسويات" },
-            { href: "/merchant/campus-drops", icon: Radio, label: "حملات الحرم" },
+            { href: "/merchant/campus-drops", icon: Radio, label: "الحملات" },
+            { href: "/merchant/anti-fraud", icon: ShieldCheck, label: "الاحتيال" },
             { href: "/merchant/settings", icon: Settings, label: "الإعدادات" },
           ].map(({ href, icon: Icon, label }) => {
             const isActive = pathname === href;
