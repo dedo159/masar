@@ -20,6 +20,7 @@ import {
   Store,
   RotateCcw,
   Search,
+  KeyRound,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,7 @@ export default function CashierPosPage() {
 
   // Store & Branch Header State
   const [storeName, setStoreName] = useState("مطعم شاورما الضيعة");
+  const [cashierName, setCashierName] = useState("كاشير 1 (الرئيسي)");
   const [currentBranch, setCurrentBranch] = useState(
     "فرع الجامعة الأردنية — مجمّع العلوم والطب"
   );
@@ -200,6 +202,14 @@ export default function CashierPosPage() {
       }
       if (email.includes("aldiaa")) {
         setStoreName("مطعم شاورما الضيعة");
+      }
+      const storedCashierName = localStorage.getItem("masar_cashier_name");
+      if (storedCashierName) {
+        setCashierName(storedCashierName);
+      }
+      const storedBranch = localStorage.getItem("masar_cashier_branch");
+      if (storedBranch) {
+        setCurrentBranch(storedBranch);
       }
     }
   }, [router]);
@@ -423,6 +433,12 @@ export default function CashierPosPage() {
 
           {/* Branch & Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+            {/* Cashier Identity Badge */}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs font-bold text-amber-700 dark:text-amber-400">
+              <KeyRound className="h-3.5 w-3.5 shrink-0" />
+              <span className="max-w-[150px] truncate">{cashierName}</span>
+            </div>
+
             {/* Branch Selector Popover */}
             <div className="relative">
               <button

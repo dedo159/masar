@@ -75,6 +75,51 @@ export default function MerchantLoginPage() {
         return;
       }
 
+      // 1. Check registered cashiers from settings/localStorage
+      let cashierName = "كاشير 1 (الرئيسي)";
+      let cashierBranch = "فرع الجامعة الأردنية — مجمّع العلوم والطب";
+      let isCashierActive = true;
+      let isFound = false;
+
+      if (typeof window !== "undefined") {
+        const savedCashiers = localStorage.getItem("masar_cashiers");
+        if (savedCashiers) {
+          try {
+            const list = JSON.parse(savedCashiers);
+            const match = list.find((c: { pin: string; name: string; branchName: string; active: boolean }) => c.pin === fullPin);
+            if (match) {
+              isFound = true;
+              cashierName = match.name;
+              cashierBranch = match.branchName;
+              isCashierActive = match.active;
+            }
+          } catch {}
+        }
+      }
+
+      // Default fallback PINs if not in localStorage
+      if (!isFound) {
+        if (fullPin === "1234") {
+          isFound = true;
+          cashierName = "كاشير 1 (الرئيسي — مجمّع العلوم والطب)";
+          cashierBranch = "فرع الجامعة الأردنية — مجمّع العلوم والطب";
+        } else if (fullPin === "5821") {
+          isFound = true;
+          cashierName = "كاشير صالة الطلبة (عمان الأهلية)";
+          cashierBranch = "فرع جامعة عمان الأهلية — مجمع الخدمات";
+        } else if (fullPin === "9043") {
+          isFound = true;
+          cashierName = "كاشير نقطة بيع إربد (JUST)";
+          cashierBranch = "فرع جامعة العلوم والتكنولوجيا (JUST) — المجمّع التجاري";
+        }
+      }
+
+      if (isFound && !isCashierActive) {
+        setError("⚠️ حساب هذا الكاشير معطل حالياً من قِبل إدارة المتجر");
+        setLoading(false);
+        return;
+      }
+
       // Cashier Quick-Access PIN validation
       try {
         const res = await fetch("/api/merchant/auth/login", {
@@ -92,6 +137,9 @@ export default function MerchantLoginPage() {
           if (typeof window !== "undefined") {
             localStorage.setItem("masar_merchant_role", "cashier");
             localStorage.setItem("masar_merchant_email", "shawarma@aldiaa.jo");
+            localStorage.setItem("masar_cashier_name", cashierName);
+            localStorage.setItem("masar_cashier_branch", cashierBranch);
+            localStorage.setItem("masar_cashier_pin", fullPin);
           }
           setTimeout(() => {
             router.push("/merchant/cashier");
