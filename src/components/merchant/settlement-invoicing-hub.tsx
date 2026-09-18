@@ -137,10 +137,10 @@ export function SettlementInvoicingHub() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">
+                <h2 className="text-lg font-bold text-foreground tracking-tight">
                   مركز التسويات المالية والفواتير (Settlement & Invoicing Hub)
                 </h2>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-400">
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono text-emerald-500 dark:text-emerald-400">
                   Bi-weekly Automated
                 </span>
               </div>
@@ -168,7 +168,7 @@ export function SettlementInvoicingHub() {
           </div>
           <div className="mt-3">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl lg:text-3xl font-bold font-mono text-white">
+              <span className="text-2xl lg:text-3xl font-bold font-mono text-foreground">
                 {totalGross.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
               <span className="text-xs text-muted-foreground font-medium">د.أ</span>
@@ -238,7 +238,7 @@ export function SettlementInvoicingHub() {
           </div>
           <div className="mt-3">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl lg:text-3xl font-bold font-mono text-white">
+              <span className="text-2xl lg:text-3xl font-bold font-mono text-foreground">
                 {totalOrders}
               </span>
               <span className="text-xs text-muted-foreground font-medium">طلب طلابي</span>
@@ -257,8 +257,8 @@ export function SettlementInvoicingHub() {
         {/* Table Top Controls */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
           <div>
-            <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
-              <FileText className="h-4 w-4 text-emerald-400" />
+            <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
+              <FileText className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
               <span>جدول كشوفات الحساب والفواتير الضريبية (Tax Invoices)</span>
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -274,7 +274,7 @@ export function SettlementInvoicingHub() {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 filterStatus === "all"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/40"
-                  : "text-muted-foreground hover:text-white"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               الكل ({invoices.length})
@@ -285,7 +285,7 @@ export function SettlementInvoicingHub() {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 filterStatus === "due"
                   ? "bg-amber-600 text-white shadow-md shadow-amber-950/40"
-                  : "text-muted-foreground hover:text-white"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               مستحقة ({invoices.filter((i) => i.status === "due").length})
@@ -296,7 +296,7 @@ export function SettlementInvoicingHub() {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                 filterStatus === "paid"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-950/40"
-                  : "text-muted-foreground hover:text-white"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               مدفوعة ({invoices.filter((i) => i.status === "paid").length})
@@ -319,10 +319,10 @@ export function SettlementInvoicingHub() {
                 <th className="py-3 px-3 text-center">الإجراء</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-border/60">
               {filteredInvoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-white/[0.02] transition-colors">
-                  <td className="py-3 px-3 font-mono font-bold text-white">
+                <tr key={inv.id} className="hover:bg-muted/40 transition-colors">
+                  <td className="py-3 px-3 font-mono font-bold text-foreground">
                     {inv.id}
                   </td>
                   <td className="py-3 px-3 text-foreground/80">
@@ -334,7 +334,7 @@ export function SettlementInvoicingHub() {
                   <td className="py-3 px-3 font-mono text-foreground/80">
                     {inv.ordersCount} طلب
                   </td>
-                  <td className="py-3 px-3 font-mono font-bold text-white">
+                  <td className="py-3 px-3 font-mono font-bold text-foreground">
                     {inv.grossVolume.toFixed(2)} د.أ
                   </td>
                   <td className="py-3 px-3 font-mono font-bold text-amber-400">
@@ -384,8 +384,8 @@ export function SettlementInvoicingHub() {
             {/* Modal Header Bar */}
             <div className="p-4 border-b border-border flex items-center justify-between bg-background">
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-emerald-400" />
-                <span className="text-xs font-bold text-white">
+                <FileText className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+                <span className="text-xs font-bold text-foreground">
                   معاينة الفاتورة الضريبية الرسمية ({selectedInvoice.id})
                 </span>
               </div>
@@ -403,7 +403,7 @@ export function SettlementInvoicingHub() {
                 <button
                   type="button"
                   onClick={() => setIsInvoiceModalOpen(false)}
-                  className="p-1 rounded-lg hover:bg-white/10 text-muted-foreground hover:text-white"
+                  className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -416,8 +416,8 @@ export function SettlementInvoicingHub() {
               <div className="flex items-start justify-between pb-6 border-b border-border">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-white">منصة مسار الأكاديمية والتجارية</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span className="text-lg font-bold text-foreground">منصة مسار الأكاديمية والتجارية</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20">
                       فاتورة ضريبية رسمية
                     </span>
                   </div>
@@ -425,7 +425,7 @@ export function SettlementInvoicingHub() {
                     شركة مسار لتكنولوجيا التعليم والحلول الرقمية ذ.م.م
                   </p>
                   <p className="text-[11px] font-mono text-muted-foreground">
-                    الرقم الضريبي: <span className="text-white font-bold">30048192-JO</span>
+                    الرقم الضريبي: <span className="text-foreground font-bold">30048192-JO</span>
                   </p>
                   <p className="text-[11px] text-muted-foreground">
                     شارع مكة، عمّان — المملكة الأردنية الهاشمية
@@ -434,9 +434,9 @@ export function SettlementInvoicingHub() {
 
                 <div className="text-left font-mono">
                   <span className="text-xs text-muted-foreground block">رقم الفاتورة:</span>
-                  <span className="text-base font-bold text-emerald-400 block">{selectedInvoice.id}</span>
+                  <span className="text-base font-bold text-emerald-500 dark:text-emerald-400 block">{selectedInvoice.id}</span>
                   <span className="text-[10px] text-muted-foreground block mt-1">تاريخ الإصدار:</span>
-                  <span className="text-xs text-white block">{selectedInvoice.startDate}</span>
+                  <span className="text-xs text-foreground block">{selectedInvoice.startDate}</span>
                 </div>
               </div>
 
@@ -444,15 +444,15 @@ export function SettlementInvoicingHub() {
               <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-background border border-border/60 text-xs">
                 <div>
                   <span className="text-[10px] text-muted-foreground block">الجهة التجارية (العميل):</span>
-                  <span className="font-bold text-white text-sm">مطعم شاورما الضيعة</span>
+                  <span className="font-bold text-foreground text-sm">مطعم شاورما الضيعة</span>
                   <span className="text-[11px] text-muted-foreground block mt-0.5">فرع الجامعة الأردنية</span>
                   <span className="text-[11px] font-mono text-muted-foreground">الرقم الضريبي للمتجر: 19827361</span>
                 </div>
                 <div className="text-left font-mono">
                   <span className="text-[10px] text-muted-foreground block">فترة التسوية:</span>
-                  <span className="text-xs text-white block">{selectedInvoice.period}</span>
+                  <span className="text-xs text-foreground block">{selectedInvoice.period}</span>
                   <span className="text-[10px] text-muted-foreground block mt-1">حالة السداد:</span>
-                  <span className={`text-xs font-bold block ${selectedInvoice.status === "paid" ? "text-emerald-400" : "text-amber-400"}`}>
+                  <span className={`text-xs font-bold block ${selectedInvoice.status === "paid" ? "text-emerald-500 dark:text-emerald-400" : "text-amber-500 dark:text-amber-400"}`}>
                     {selectedInvoice.status === "paid" ? "تم التحويل بنجاح" : "مستحقة التحويل البنكي"}
                   </span>
                 </div>
@@ -469,26 +469,26 @@ export function SettlementInvoicingHub() {
                       <th className="py-2 text-left">المبلغ الإجمالي</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-border/60">
                     <tr>
                       <td className="py-3">
-                        <span className="font-semibold text-white block">مبيعات كوبونات وعروض الطلبة المعتمدة</span>
+                        <span className="font-semibold text-foreground block">مبيعات كوبونات وعروض الطلبة المعتمدة</span>
                         <span className="text-[10px] text-muted-foreground">إجمالي الحركات المحققة عبر ماسح مسار في الفرع</span>
                       </td>
                       <td className="py-3 text-center font-mono">{selectedInvoice.ordersCount} طلب</td>
                       <td className="py-3 font-mono">-</td>
-                      <td className="py-3 text-left font-mono font-bold text-white">
+                      <td className="py-3 text-left font-mono font-bold text-foreground">
                         {selectedInvoice.grossVolume.toFixed(2)} د.أ
                       </td>
                     </tr>
                     <tr>
                       <td className="py-3">
-                        <span className="font-semibold text-amber-300 block">عمولة منصة مسار (5%)</span>
+                        <span className="font-semibold text-amber-500 dark:text-amber-300 block">عمولة منصة مسار (5%)</span>
                         <span className="text-[10px] text-muted-foreground">رسوم التسويق الترويجي والربط الإلكتروني للطلاب</span>
                       </td>
                       <td className="py-3 text-center font-mono">1</td>
                       <td className="py-3 font-mono">5.0%</td>
-                      <td className="py-3 text-left font-mono font-bold text-amber-400">
+                      <td className="py-3 text-left font-mono font-bold text-amber-500 dark:text-amber-400">
                         -{selectedInvoice.commissionAmount.toFixed(2)} د.أ
                       </td>
                     </tr>
@@ -505,7 +505,7 @@ export function SettlementInvoicingHub() {
                   </tbody>
                   <tfoot>
                     <tr className="border-t border-border font-bold">
-                      <td colSpan={3} className="pt-4 text-white text-sm">صافي مستحقات التاجر المحولة (Net Payout):</td>
+                      <td colSpan={3} className="pt-4 text-foreground text-sm">صافي مستحقات التاجر المحولة (Net Payout):</td>
                       <td className="pt-4 text-left font-mono text-emerald-400 text-base">
                         {selectedInvoice.netPayout.toFixed(2)} د.أ
                       </td>

@@ -95,7 +95,7 @@ const { t, isRtl, language } = useLanguage();
               </div>
 
               <p className="text-sm font-medium text-foreground/80 mt-1">
-                {displayMajor} آ· {t.profile.academicYear} {student.year || 3}
+                {displayMajor} · {t.profile.academicYear} {student.year || 3}
               </p>
 
               <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-xs text-muted-foreground">

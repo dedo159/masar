@@ -229,7 +229,7 @@ export default function MerchantLoginPage() {
         <Link href="/" className="flex items-center gap-3 group">
           <MasarLogo size="sm" priority />
           <div className="flex flex-col">
-            <span className="text-xs font-bold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+            <span className="text-xs font-bold tracking-tight text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
               مسار للشركاء والمتاجر
             </span>
             <span className="text-[10px] text-muted-foreground">بوابة نقاط البيع والعروض</span>
@@ -237,7 +237,7 @@ export default function MerchantLoginPage() {
         </Link>
         <Link
           href="/login"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-background/50 hover:bg-white/[0.04] text-xs text-muted-foreground hover:text-foreground transition-all"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-background/50 hover:bg-muted/40 text-xs text-muted-foreground hover:text-foreground transition-all"
         >
           <span>بوابة الطالب</span>
           <ChevronLeft className="h-3.5 w-3.5 rotate-180" />
@@ -252,15 +252,15 @@ export default function MerchantLoginPage() {
 
           {/* Quick Demo Helper Bar */}
           <div className="flex items-center justify-between mb-5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-white/[0.03] text-[10px] font-mono text-muted-foreground">
-              <Store className="h-3 w-3 text-amber-400" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-border bg-muted/40 text-[10px] font-mono text-muted-foreground">
+              <Store className="h-3 w-3 text-amber-500" />
               <span>نظام نقاط البيع والخصومات</span>
             </span>
 
             <button
               type="button"
               onClick={authMode === "credentials" ? fillDemoAccount : fillDemoPin}
-              className="text-[11px] text-amber-400 hover:text-amber-300 transition-colors inline-flex items-center gap-1 font-medium hover:underline cursor-pointer"
+              className="text-[11px] text-amber-500 hover:text-amber-600 dark:text-amber-400 dark:hover:text-amber-300 transition-colors inline-flex items-center gap-1 font-medium hover:underline cursor-pointer"
               title="تعبئة بيانات تجريبية سريعة"
             >
               <Sparkles className="h-3 w-3" />
@@ -269,7 +269,7 @@ export default function MerchantLoginPage() {
           </div>
 
           {/* Mode Tabs: Full Merchant vs Cashier POS */}
-          <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-background border border-border/60 mb-6 text-xs">
+          <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-muted/40 border border-border/60 mb-6 text-xs">
             <button
               type="button"
               onClick={() => {
@@ -278,11 +278,11 @@ export default function MerchantLoginPage() {
               }}
               className={`py-2 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
                 authMode === "credentials"
-                  ? "bg-card text-white shadow-sm border border-border"
+                  ? "bg-card text-foreground shadow-sm border border-border font-bold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <Lock className="h-3.5 w-3.5 text-emerald-400" />
+              <Lock className="h-3.5 w-3.5 text-emerald-500" />
               <span>حساب التاجر الكامل</span>
             </button>
 
@@ -294,18 +294,18 @@ export default function MerchantLoginPage() {
               }}
               className={`py-2 px-3 rounded-lg font-medium transition-all flex items-center justify-center gap-1.5 ${
                 authMode === "pin"
-                  ? "bg-card text-white shadow-sm border border-border"
+                  ? "bg-card text-foreground shadow-sm border border-border font-bold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <ScanLine className="h-3.5 w-3.5 text-amber-400" />
+              <ScanLine className="h-3.5 w-3.5 text-amber-500" />
               <span>نقطة البيع (POS PIN)</span>
             </button>
           </div>
 
           {/* Heading */}
           <div className="space-y-1.5 text-start mb-6">
-            <h1 className="text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
               {authMode === "credentials" ? "تسجيل الدخول للمتجر" : "الدخول السريع للكاشير"}
             </h1>
             <p className="text-xs text-muted-foreground leading-relaxed">
@@ -317,15 +317,15 @@ export default function MerchantLoginPage() {
 
           {/* 5. معالجة التنبيهات والأخطاء */}
           {error && (
-            <div className="mb-5 border border-rose-500/30 bg-rose-500/10 text-rose-400 text-xs p-3 rounded-xl flex items-start gap-2.5 animate-in fade-in duration-200">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-400" />
+            <div className="mb-5 border border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs p-3 rounded-xl flex items-start gap-2.5 animate-in fade-in duration-200">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-rose-500" />
               <div className="leading-relaxed">{error}</div>
             </div>
           )}
 
           {success && (
-            <div className="mb-5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs p-3 rounded-xl flex items-center gap-2.5 animate-in fade-in duration-200">
-              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            <div className="mb-5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs p-3 rounded-xl flex items-center gap-2.5 animate-in fade-in duration-200">
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
               <span>تم تسجيل الدخول بنجاح! جاري التوجيه إلى البوابة...</span>
             </div>
           )}
@@ -337,7 +337,7 @@ export default function MerchantLoginPage() {
                 {/* Email Field */}
                 <div className="space-y-1.5 text-start">
                   <label className="text-xs font-medium text-foreground/80 flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-emerald-400" />
+                    <Mail className="h-3.5 w-3.5 text-emerald-500" />
                     <span>البريد الإلكتروني للفرع / النشاط التجاري</span>
                   </label>
                   <div className="relative">
@@ -345,7 +345,7 @@ export default function MerchantLoginPage() {
                       required
                       type="email"
                       placeholder="store@example.jo"
-                      className="w-full h-11 px-3.5 py-2 rounded-xl border border-border bg-background/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                      className="w-full h-11 px-3.5 py-2 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                       value={formData.contactEmail}
                       onChange={(e) =>
                         setFormData({ ...formData, contactEmail: e.target.value })
@@ -358,7 +358,7 @@ export default function MerchantLoginPage() {
                 <div className="space-y-1.5 text-start">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-medium text-foreground/80 flex items-center gap-1.5">
-                      <Lock className="h-3.5 w-3.5 text-emerald-400" />
+                      <Lock className="h-3.5 w-3.5 text-emerald-500" />
                       <span>كلمة المرور</span>
                     </label>
                     <Link
@@ -367,7 +367,7 @@ export default function MerchantLoginPage() {
                         e.preventDefault();
                         alert("يرجى التواصل مع الدعم الفني أو البريد المسجل لإعادة ضبط كلمة المرور: support@masar.jo");
                       }}
-                      className="text-[11px] text-muted-foreground hover:text-emerald-400 transition-colors"
+                      className="text-[11px] text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                     >
                       نسيت كلمة المرور؟
                     </Link>
@@ -377,7 +377,7 @@ export default function MerchantLoginPage() {
                       required
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••••••"
-                      className="w-full h-11 px-3.5 py-2 pl-10 rounded-xl border border-border bg-background/80 text-white placeholder-slate-500 text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+                      className="w-full h-11 px-3.5 py-2 pl-10 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground text-xs font-mono focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
                       value={formData.password}
                       onChange={(e) =>
                         setFormData({ ...formData, password: e.target.value })
@@ -486,7 +486,7 @@ export default function MerchantLoginPage() {
                   <QrCode className="h-4 w-4" />
                 </div>
                 <div className="text-start">
-                  <p className="text-xs font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                  <p className="text-xs font-semibold text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                     {authMode === "credentials"
                       ? "تسجيل دخول سريع لنقاط البيع عبر رمز PIN للفرع"
                       : "العودة لتسجيل الدخول ببيانات الحساب الكاملة"}

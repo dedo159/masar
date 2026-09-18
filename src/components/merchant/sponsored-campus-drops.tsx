@@ -285,10 +285,10 @@ export function SponsoredCampusDrops() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-tight">
+                <h2 className="text-lg font-bold text-foreground tracking-tight">
                   حملات الإشعارات والتنبيهات الموجهة للحرم (Sponsored Campus Drops)
                 </h2>
-                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-400">
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-500 dark:text-amber-400">
                   Multi-Branch Push
                 </span>
               </div>
@@ -301,10 +301,10 @@ export function SponsoredCampusDrops() {
           <div className="flex items-center gap-3">
             {/* Merchant Drops Credit */}
             <div className="px-3.5 py-2 rounded-xl bg-background border border-border text-xs flex items-center gap-2">
-              <Zap className="h-4 w-4 text-amber-400" />
+              <Zap className="h-4 w-4 text-amber-500" />
               <div>
                 <span className="text-[10px] text-muted-foreground block">رصيد البث المتاح:</span>
-                <span className="font-mono font-bold text-white">{merchantBalance.toFixed(2)} د.أ</span>
+                <span className="font-mono font-bold text-foreground">{merchantBalance.toFixed(2)} د.أ</span>
               </div>
             </div>
           </div>
@@ -315,12 +315,12 @@ export function SponsoredCampusDrops() {
       <div className="max-w-4xl mx-auto rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-2xl space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-border">
             <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-amber-400" />
-              <span className="text-xs font-bold text-white tracking-wide">
+              <Zap className="h-4 w-4 text-amber-500" />
+              <span className="text-xs font-bold text-foreground tracking-wide">
                 أداة إنشاء وإطلاق العرض الفوري (Flash Drop Launcher)
               </span>
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 dark:text-amber-400 border border-amber-500/20">
               Live Composer
             </span>
           </div>
@@ -338,7 +338,7 @@ export function SponsoredCampusDrops() {
                 value={dealTitle}
                 onChange={(e) => setDealTitle(e.target.value)}
                 placeholder="مثال: خصم 50% على البرغر خلال استراحة الغداء!"
-                className="bg-background border-border text-white text-xs h-11 rounded-xl focus:border-amber-500 focus:ring-amber-500/20"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground text-xs h-11 rounded-xl focus:border-amber-500 focus:ring-amber-500/20"
               />
             </div>
 
@@ -352,7 +352,7 @@ export function SponsoredCampusDrops() {
                 onChange={(e) => setDealDescription(e.target.value)}
                 rows={2}
                 placeholder="تفاصيل العرض والشروط السريعة..."
-                className="w-full rounded-xl bg-background border border-border p-3 text-xs text-white focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
+                className="w-full rounded-xl bg-background border border-border p-3 text-xs text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:ring-1 focus:ring-amber-500/20 outline-none resize-none"
               />
             </div>
 
@@ -598,7 +598,7 @@ export function SponsoredCampusDrops() {
                   <span className="text-[10px] text-muted-foreground">/ للبث الواحد</span>
                 </div>
                 <p className="text-[11px] text-muted-foreground mt-0.5">
-                  يصل الإشعار إلى <strong className="text-white font-mono">{totalTargetedStudents.toLocaleString()}</strong> طالب مستهدف عبر <strong className="text-white font-mono">{selectedBranches.length}</strong> فروع مشمولة.
+                  يصل الإشعار إلى <strong className="text-foreground font-mono">{totalTargetedStudents.toLocaleString()}</strong> طالب مستهدف عبر <strong className="text-foreground font-mono">{selectedBranches.length}</strong> فروع مشمولة.
                 </p>
               </div>
 
@@ -637,11 +637,11 @@ export function SponsoredCampusDrops() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] text-foreground/80">
                   <div>
                     <span className="text-muted-foreground block text-[10px]">الطلاب المستلمون:</span>
-                    <span className="font-bold font-mono text-white">{broadcastSuccess.sentCount.toLocaleString()} طالب</span>
+                    <span className="font-bold font-mono text-foreground">{broadcastSuccess.sentCount.toLocaleString()} طالب</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block text-[10px]">الفروع المشمولة:</span>
-                    <span className="font-bold text-white">{broadcastSuccess.branchesSummary}</span>
+                    <span className="font-bold text-foreground">{broadcastSuccess.branchesSummary}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block text-[10px]">فترة الصلاحية:</span>

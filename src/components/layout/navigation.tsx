@@ -36,7 +36,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.08] bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-2 select-none shadow-2xl">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-2 select-none shadow-lg dark:shadow-2xl">
       <div className="grid grid-cols-5 w-full max-w-md mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -46,7 +46,7 @@ export function BottomNav() {
               href={href}
               className={cn(
                 "relative flex flex-col items-center justify-center gap-1 py-1 px-1 transition-all duration-200 text-center group",
-                isActive ? "text-white font-bold" : "text-white/45 hover:text-white/80"
+                isActive ? "text-[#2F7BFF] dark:text-white font-bold" : "text-muted-foreground dark:text-white/45 hover:text-foreground dark:hover:text-white/80"
               )}
             >
               {/* Neon Pink/Blue Top Indicator on Active */}
@@ -58,21 +58,21 @@ export function BottomNav() {
                 className={cn(
                   "p-1.5 rounded-xl transition-all duration-200 flex items-center justify-center",
                   isActive
-                    ? "bg-gradient-to-tr from-[#2F7BFF]/20 to-[#E83D84]/20 text-[#38BDF8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
-                    : "group-hover:bg-white/[0.04]"
+                    ? "bg-gradient-to-tr from-[#2F7BFF]/20 to-[#E83D84]/20 text-[#2F7BFF] dark:text-[#38BDF8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
+                    : "group-hover:bg-muted dark:group-hover:bg-white/[0.04]"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-5 w-5 transition-transform duration-200",
-                    isActive && "scale-110 text-white"
+                    isActive && "scale-110 text-[#2F7BFF] dark:text-white"
                   )}
                   strokeWidth={isActive ? 2.4 : 1.8}
                 />
               </div>
               <span className={cn(
-                "text-[10px] tracking-tight truncate w-full block text-center leading-none",
-                isActive ? "text-white font-bold" : "text-white/50"
+                "text-[10px] tracking-tight truncate w-full block text-center leading-none font-medium",
+                isActive ? "text-[#2F7BFF] dark:text-white font-bold" : "text-muted-foreground dark:text-white/50"
               )}>
                 {label}
               </span>

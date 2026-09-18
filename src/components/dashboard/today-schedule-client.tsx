@@ -30,11 +30,11 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30 p-2 rounded-xl shadow-sm">
+          <div className="bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30 p-2 rounded-xl shadow-sm">
              <CalendarDays className="h-4 w-4" strokeWidth={2.2} />
           </div>
-          <h2 className="text-sm font-bold text-white tracking-wide">{t.dashboard.todayClasses}</h2>
-          <span className="text-[10px] text-white/50 bg-white/[0.04] px-2.5 py-1 rounded-full border border-white/[0.08] hidden sm:inline-block font-mono">
+          <h2 className="text-sm font-bold text-foreground tracking-wide">{t.dashboard.todayClasses}</h2>
+          <span className="text-[10px] text-muted-foreground bg-muted/60 dark:bg-white/[0.04] px-2.5 py-1 rounded-full border border-border/80 dark:border-white/[0.08] hidden sm:inline-block font-mono">
             {t.dashboard.timeZoneNotice}
           </span>
         </div>
@@ -48,14 +48,14 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
 
       {/* Empty State */}
       {!hasClasses ? (
-        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.01] backdrop-blur-xl text-center shadow-xl">
-          <div className="h-12 w-12 rounded-xl bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30 flex items-center justify-center mb-3 shadow-md">
+        <div className="flex flex-col items-center justify-center py-10 px-4 rounded-2xl border border-border/80 dark:border-white/[0.08] bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.05] dark:to-white/[0.01] backdrop-blur-xl text-center shadow-sm dark:shadow-xl">
+          <div className="h-12 w-12 rounded-xl bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30 flex items-center justify-center mb-3 shadow-md">
             <CalendarDays className="h-6 w-6" strokeWidth={2} />
           </div>
-          <p className="text-sm font-bold text-white">
+          <p className="text-sm font-bold text-foreground">
             {language === "en" ? "Semester Ended · No Classes Today 🎉" : "انتهى الفصل الدراسي · لا توجد محاضرات اليوم 🎉"}
           </p>
-          <p className="text-xs text-white/50 mt-1 max-w-sm mb-4 font-medium leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-1 max-w-sm mb-4 font-medium leading-relaxed">
             {language === "en"
               ? "All courses for this semester have concluded. Best wishes on your final exams and break!"
               : "انتهت كافة محاضرات هذا الفصل الدراسي. نتمنى لك التوفيق في الامتحانات النهائية وإجازة سعيدة!"}

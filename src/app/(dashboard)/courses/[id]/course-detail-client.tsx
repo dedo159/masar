@@ -60,7 +60,7 @@ function EmptyStateCard({
 }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 rounded-lg border border-dashed border-border bg-card text-center transition-colors">
-      <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-4 shadow-lg text-foreground">
+      <div className="h-14 w-14 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center mb-4 shadow-lg">
         <Icon className="h-6 w-6 fill-white/20" strokeWidth={2} />
       </div>
       <p className="text-base font-bold text-foreground">{title}</p>
@@ -213,9 +213,9 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                     >
                       <div className="h-10 w-10 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center flex-shrink-0 shadow-md">
                         {isLab ? (
-                          <FlaskConical className="h-4 w-4 text-foreground fill-white/20" strokeWidth={2} />
+                          <FlaskConical className="h-4 w-4 fill-white/20" strokeWidth={2} />
                         ) : (
-                          <BookOpen className="h-4 w-4 text-foreground fill-white/20" strokeWidth={2} />
+                          <BookOpen className="h-4 w-4 fill-white/20" strokeWidth={2} />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -349,7 +349,7 @@ export function CourseDetailClient({ course }: CourseDetailClientProps) {
                       className="group flex items-start gap-4 rounded-lg border border-border bg-card p-4 transition-all hover:border-border/50 hover:bg-white/[0.02]"
                     >
                       <div className="h-10 w-10 rounded-lg bg-[#0a72ef] text-white flex items-center justify-center flex-shrink-0 shadow-md">
-                        <FileIconCmp className="h-4 w-4 text-foreground fill-white/20" strokeWidth={2} />
+                        <FileIconCmp className="h-4 w-4 fill-white/20" strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-foreground truncate transition-colors group-hover:text-[#0070f3]">

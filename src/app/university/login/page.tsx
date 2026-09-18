@@ -60,25 +60,25 @@ export default function UniversityLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">البريد الإلكتروني</label>
+            <label className="block text-sm font-medium text-foreground/80 mb-1">البريد الإلكتروني</label>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-foreground outline-none transition-all"
+              className="w-full px-4 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 bg-background text-foreground placeholder:text-muted-foreground outline-none transition-all text-sm"
               placeholder="name@university.edu"
               dir="ltr"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">كلمة المرور</label>
+            <label className="block text-sm font-medium text-foreground/80 mb-1">كلمة المرور</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-foreground outline-none transition-all"
+              className="w-full px-4 py-2.5 border border-border rounded-lg focus:ring-2 focus:ring-blue-500 bg-background text-foreground placeholder:text-muted-foreground outline-none transition-all text-sm"
               placeholder="••••••••"
               dir="ltr"
             />
@@ -86,7 +86,7 @@ export default function UniversityLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2.5 bg-blue-700 hover:bg-blue-800 text-foreground rounded-lg font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed mt-2"
+            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all shadow-md cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed mt-2 text-sm"
           >
             {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </button>
