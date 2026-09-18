@@ -18,6 +18,7 @@ import {
   Moon,
   Sparkles,
   Settings,
+  BarChart3,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { MasarLogo } from "@/components/ui/logo";
@@ -88,6 +89,13 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       icon: Radio,
       badge: "Push",
       active: pathname === "/merchant/campus-drops",
+    },
+    {
+      href: "/merchant/analytics",
+      label: "التقارير والإحصائيات الشاملة",
+      icon: BarChart3,
+      badge: "Live",
+      active: pathname === "/merchant/analytics",
     },
     {
       href: "/merchant/settings",
