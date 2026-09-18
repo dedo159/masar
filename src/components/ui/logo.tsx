@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface MasarLogoProps {
   className?: string;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "full" | "icon" | "color";
+  variant?: "full" | "icon" | "color" | "white";
   priority?: boolean;
 }
 
@@ -31,7 +31,7 @@ const iconSizeMap = {
 export function MasarLogo({
   className,
   size = "sm",
-  variant = "full",
+  variant = "color",
   priority = false,
 }: MasarLogoProps) {
   const { resolvedTheme } = useTheme();
@@ -58,11 +58,11 @@ export function MasarLogo({
     );
   }
 
-  if (variant === "color") {
+  if (variant === "white") {
     return (
       <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
         <Image
-          src="/masar-logo-color.png"
+          src="/masar-logo-white.png"
           alt="مسار — MASAR"
           width={180}
           height={115}
@@ -73,10 +73,25 @@ export function MasarLogo({
     );
   }
 
+  if (variant === "color") {
+    return (
+      <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
+        <Image
+          src="/masar-logo-color.png"
+          alt="مسار — MASAR"
+          width={180}
+          height={115}
+          priority={priority}
+          className={cn("object-contain drop-shadow-sm", sizeMap[size])}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
       <Image
-        src={isDark ? "/masar-logo-white.png" : "/masar-logo-black.png"}
+        src={isDark ? "/masar-logo-color.png" : "/masar-logo-black.png"}
         alt="مسار — MASAR"
         width={180}
         height={115}

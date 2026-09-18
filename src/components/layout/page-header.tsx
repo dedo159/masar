@@ -46,7 +46,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
         <div className="flex items-center gap-2.5">
           {(title === "مسار" || title === "Masar" || displayTitle === t.common.appName) && (
             <div className="md:hidden flex items-center">
-              <MasarLogo size="sm" priority />
+              <MasarLogo variant="icon" size="sm" priority />
             </div>
           )}
           <div>

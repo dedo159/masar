@@ -122,10 +122,10 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       {/* Desktop Sidebar — Matching Masar Student Site Sidebar */}
       <aside className="hidden md:flex w-60 flex-col bg-card border-l border-border fixed top-0 bottom-0 right-0 z-40">
         {/* Brand Header with MasarLogo */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
-          <MasarLogo size="sm" priority />
+        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+          <MasarLogo variant="icon" size="sm" priority />
           <div className="flex flex-col">
-            <span className="text-base font-semibold tracking-tight text-foreground">مسار</span>
+            <span className="text-base font-bold tracking-tight masar-gradient-text">مسار</span>
             <span className="text-[11px] text-muted-foreground font-medium">بوابة الشركاء والمتاجر</span>
           </div>
         </div>
@@ -220,8 +220,8 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
             {/* Mobile Brand / Logo */}
             <div className="flex items-center gap-2.5">
               <div className="md:hidden flex items-center gap-2">
-                <MasarLogo size="sm" priority />
-                <span className="text-sm font-bold text-foreground">مسار للشركاء</span>
+                <MasarLogo variant="icon" size="xs" priority />
+                <span className="text-sm font-bold tracking-tight masar-gradient-text">مسار للشركاء</span>
               </div>
 
               <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">

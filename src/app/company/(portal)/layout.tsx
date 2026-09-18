@@ -88,10 +88,10 @@ export default function CompanyPortalLayout({
       {/* Desktop Sidebar — Matching Masar Core App Sidebar */}
       <aside className="hidden md:flex w-60 flex-col bg-card border-l border-border fixed top-0 bottom-0 right-0 z-40">
         {/* Brand Header with MasarLogo */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
-          <MasarLogo size="sm" priority />
+        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+          <MasarLogo variant="icon" size="sm" priority />
           <div className="flex flex-col">
-            <span className="text-base font-semibold tracking-tight text-foreground">مسار</span>
+            <span className="text-base font-bold tracking-tight masar-gradient-text">مسار</span>
             <span className="text-[11px] text-muted-foreground font-medium">بوابة الشركات والتوظيف</span>
           </div>
         </div>
@@ -148,9 +148,9 @@ export default function CompanyPortalLayout({
       <div className="flex-1 md:pr-60 flex flex-col min-w-0 pb-20 md:pb-0">
         {/* Top Header Bar */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 transition-colors">
-          <div className="flex items-center gap-3 md:hidden">
-            <MasarLogo size="xs" />
-            <span className="font-bold text-foreground text-sm">بوابة الشركات</span>
+          <div className="flex items-center gap-2 md:hidden">
+            <MasarLogo variant="icon" size="xs" />
+            <span className="font-bold text-sm tracking-tight masar-gradient-text">مسار للأعمال</span>
           </div>
 
           <div className="hidden md:flex items-center gap-2">

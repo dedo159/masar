@@ -123,9 +123,9 @@ export function Sidebar() {
       "hidden md:flex flex-col fixed top-0 h-full w-60 bg-card z-40 transition-all duration-150",
       isRtl ? "right-0 border-l border-border" : "left-0 border-r border-border"
     )}>
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-border">
-        <MasarLogo size="sm" priority />
-        <span className="text-base font-medium tracking-tight">{t.common.appName}</span>
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
+        <MasarLogo variant="icon" size="sm" priority />
+        <span className="text-lg font-bold tracking-tight masar-gradient-text">{t.common.appName}</span>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5">

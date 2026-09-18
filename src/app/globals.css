@@ -31,67 +31,67 @@
 }
 
 :root {
-  /* Vercel Light Theme */
-  --background: #fafafa;
-  --foreground: #171717;
+  /* Masar Official Light Theme */
+  --background: #f8fafc;
+  --foreground: #0d0e22;
   
   --card: #ffffff;
-  --card-foreground: #171717;
+  --card-foreground: #0d0e22;
   
   --popover: #ffffff;
-  --popover-foreground: #171717;
+  --popover-foreground: #0d0e22;
   
-  --primary: #171717;
+  --primary: #2f7bff;
   --primary-foreground: #ffffff;
   
-  --secondary: #fafafa;
-  --secondary-foreground: #171717;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0d0e22;
   
-  --muted: #fafafa;
-  --muted-foreground: #666666;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
   
-  --accent: #fafafa;
-  --accent-foreground: #171717;
+  --accent: #e83d84;
+  --accent-foreground: #ffffff;
   
-  --destructive: #ff5b4f;
+  --destructive: #ff4757;
   --destructive-foreground: #ffffff;
   
-  --border: #eaeaea;
-  --input: #eaeaea;
-  --ring: #0070f3;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #2f7bff;
   
-  --radius: 6px;
+  --radius: 12px;
 }
 
 .dark {
-  /* Vercel Dark Theme */
-  --background: #000000;
-  --foreground: #ededed;
+  /* Masar Official Visual Identity — Dark Theme (#0D0E22) */
+  --background: #0d0e22;
+  --foreground: #f8fafc;
   
-  --card: #000000;
-  --card-foreground: #ededed;
+  --card: #131530;
+  --card-foreground: #f8fafc;
   
-  --popover: #000000;
-  --popover-foreground: #ededed;
+  --popover: #131530;
+  --popover-foreground: #f8fafc;
   
-  --primary: #ededed;
-  --primary-foreground: #000000;
+  --primary: #2f7bff;
+  --primary-foreground: #ffffff;
   
-  --secondary: #111111;
-  --secondary-foreground: #ededed;
+  --secondary: #1a1e42;
+  --secondary-foreground: #f8fafc;
   
-  --muted: #111111;
-  --muted-foreground: #888888;
+  --muted: #171a38;
+  --muted-foreground: #8e95b3;
   
-  --accent: #111111;
-  --accent-foreground: #ededed;
+  --accent: #e83d84;
+  --accent-foreground: #ffffff;
   
-  --destructive: #ff5b4f;
+  --destructive: #ff4757;
   --destructive-foreground: #ffffff;
   
-  --border: #333333;
-  --input: #333333;
-  --ring: #0070f3;
+  --border: #21254d;
+  --input: #21254d;
+  --ring: #2f7bff;
 }
 
 @layer base {
@@ -104,31 +104,43 @@
 }
 
 @layer utilities {
+  .masar-gradient {
+    background: linear-gradient(135deg, #2f7bff 0%, #8b5cf6 50%, #e83d84 100%);
+  }
+
+  .masar-gradient-hover:hover {
+    background: linear-gradient(135deg, #256be6 0%, #7c3aed 50%, #d82e75 100%);
+  }
+
+  .masar-gradient-text {
+    background: linear-gradient(135deg, #2f7bff 0%, #a855f7 50%, #e83d84 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .masar-glow {
+    box-shadow: 0 0 25px -4px rgba(47, 123, 255, 0.35);
+  }
+
+  .masar-glow-pink {
+    box-shadow: 0 0 25px -4px rgba(232, 61, 132, 0.35);
+  }
+
+  .masar-card {
+    background: #131530;
+    border: 1px solid #21254d;
+    border-radius: 1rem;
+  }
+
   .vercel-card {
-    @apply bg-card border border-border rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)];
+    @apply bg-card border border-border rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)];
   }
   
   .vercel-button-primary {
-    @apply bg-[#171717] dark:bg-white text-white dark:text-black font-medium border border-transparent rounded-md transition-colors hover:bg-[#383838] dark:hover:bg-[#e0e0e0];
+    @apply bg-primary text-white font-medium border border-transparent rounded-lg transition-colors hover:bg-primary/90;
   }
 
   .vercel-button-secondary {
-    @apply bg-white dark:bg-black text-[#666666] dark:text-[#888888] font-medium border border-[#eaeaea] dark:border-[#333333] rounded-md transition-colors hover:border-black dark:hover:border-white hover:text-black dark:hover:text-white;
-  }
-  
-  .vercel-button-develop {
-    @apply bg-[#0a72ef] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#0070f3];
-  }
-  
-  .vercel-button-ship {
-    @apply bg-[#ff5b4f] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#e04337];
-  }
-
-  .vercel-button-preview {
-    @apply bg-[#de1d8d] text-white font-medium border border-transparent rounded-md transition-colors hover:bg-[#c21477];
-  }
-
-  .vercel-link {
-    @apply text-[#0072f5] hover:underline decoration-1 underline-offset-4;
+    @apply bg-card text-foreground font-medium border border-border rounded-lg transition-colors hover:bg-secondary;
   }
 }
