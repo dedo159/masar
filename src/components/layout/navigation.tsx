@@ -12,6 +12,9 @@ import {
   Tag,
   TrendingUp,
   Megaphone,
+  Store,
+  GraduationCap,
+  Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
@@ -144,7 +147,40 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="px-3 py-4 border-t border-border">
+      {/* Masar Portals Ecosystem Switcher */}
+      <div className="px-3 py-3 border-t border-border/80 space-y-1.5">
+        <div className="px-1 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+          بوابات منظومة مسار
+        </div>
+        <div className="grid grid-cols-3 gap-1">
+          <Link
+            href="/merchant/login"
+            className="flex flex-col items-center justify-center p-1.5 rounded-lg border border-border/60 hover:border-amber-500/40 hover:bg-amber-500/5 text-[10px] text-muted-foreground hover:text-foreground transition-all text-center group"
+            title="بوابة الشركاء ونقاط البيع"
+          >
+            <Store className="h-3.5 w-3.5 text-amber-500 group-hover:scale-110 transition-transform mb-0.5" />
+            <span className="truncate w-full">المتجر</span>
+          </Link>
+          <Link
+            href="/university/login"
+            className="flex flex-col items-center justify-center p-1.5 rounded-lg border border-border/60 hover:border-blue-500/40 hover:bg-blue-500/5 text-[10px] text-muted-foreground hover:text-foreground transition-all text-center group"
+            title="بوابة الجامعة الأكاديمية"
+          >
+            <GraduationCap className="h-3.5 w-3.5 text-blue-500 group-hover:scale-110 transition-transform mb-0.5" />
+            <span className="truncate w-full">الجامعة</span>
+          </Link>
+          <Link
+            href="/company/login"
+            className="flex flex-col items-center justify-center p-1.5 rounded-lg border border-border/60 hover:border-emerald-500/40 hover:bg-emerald-500/5 text-[10px] text-muted-foreground hover:text-foreground transition-all text-center group"
+            title="بوابة الشركات والتوظيف"
+          >
+            <Building2 className="h-3.5 w-3.5 text-emerald-500 group-hover:scale-110 transition-transform mb-0.5" />
+            <span className="truncate w-full">الشركات</span>
+          </Link>
+        </div>
+      </div>
+
+      <div className="px-3 py-3 border-t border-border">
         <Link
           href="/profile"
           className={cn(

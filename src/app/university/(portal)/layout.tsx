@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, AlertTriangle, Briefcase, BarChart3, LogOut } from "lucide-react";
 import { useState } from "react";
+import { MasarLogo } from "@/components/ui/logo";
 
 export default function UniversityPortalLayout({
   children,
@@ -54,13 +55,11 @@ export default function UniversityPortalLayout({
     <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100" dir="rtl">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="p-6 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800">
-          <div className="h-10 w-10 rounded-lg bg-blue-600 text-foreground flex items-center justify-center text-xl shadow-md shadow-blue-600/20">
-            🏫
-          </div>
+        <div className="p-5 flex items-center gap-3 border-b border-slate-100 dark:border-slate-800">
+          <MasarLogo size="sm" priority />
           <div>
-            <h1 className="text-base font-bold text-blue-700 dark:text-blue-400">بوابة الجامعة</h1>
-            <p className="text-[11px] text-muted-foreground">نظام المتابعة الأكاديمية</p>
+            <h1 className="text-sm font-bold text-blue-700 dark:text-blue-400">بوابة الجامعة</h1>
+            <p className="text-[10px] text-muted-foreground">نظام المتابعة الأكاديمية</p>
           </div>
         </div>
 
@@ -101,7 +100,7 @@ export default function UniversityPortalLayout({
       <main className="flex-1 flex flex-col min-w-0 pb-20 md:pb-0">
         <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-30">
           <div className="flex items-center gap-3 md:hidden">
-            <span className="text-xl">🏫</span>
+            <MasarLogo size="xs" />
             <span className="font-bold text-blue-700 dark:text-blue-400 text-sm">بوابة الجامعة</span>
           </div>
           <div className="hidden md:block">

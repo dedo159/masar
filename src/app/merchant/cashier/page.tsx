@@ -26,6 +26,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { MasarLogo } from "@/components/ui/logo";
 import { QrCameraScanner } from "@/components/merchant/qr-camera-scanner";
+import { playPosSuccessSound, playPosErrorSound } from "@/lib/pos-audio";
 
 // --- Types ---
 interface Deal {
@@ -241,6 +242,7 @@ export default function CashierPosPage() {
       setIsVerifying(false);
 
       if (code === "LIMIT_TEST" || code === "MAXED_OUT") {
+        playPosErrorSound();
         setVerificationResult({
           status: "error",
           errorMessage:
@@ -250,6 +252,7 @@ export default function CashierPosPage() {
       }
 
       if (code === "EXPIRED99") {
+        playPosErrorSound();
         setVerificationResult({
           status: "error",
           errorMessage:
@@ -259,6 +262,7 @@ export default function CashierPosPage() {
       }
 
       if (code === "USED44") {
+        playPosErrorSound();
         setVerificationResult({
           status: "error",
           errorMessage:
@@ -268,6 +272,7 @@ export default function CashierPosPage() {
       }
 
       if (code === "INVALID" || code.length < 4) {
+        playPosErrorSound();
         setVerificationResult({
           status: "error",
           errorMessage:
@@ -345,6 +350,7 @@ export default function CashierPosPage() {
       };
 
       setVerificationResult(result);
+      playPosSuccessSound();
 
       // Increment student's usage in state
       setStudentDealUsage((prev) => ({

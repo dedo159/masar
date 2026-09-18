@@ -21,6 +21,7 @@ import {
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { MasarLogo } from "@/components/ui/logo";
 
 export default function MerchantRegisterPage() {
   const router = useRouter();
@@ -97,9 +98,7 @@ export default function MerchantRegisterPage() {
             href="/"
             className="group flex items-center gap-2.5 transition-opacity hover:opacity-80"
           >
-            <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center font-bold text-xs shadow-sm transition-transform duration-200 group-hover:scale-105">
-              ▲
-            </div>
+            <MasarLogo size="sm" priority />
             <div className="flex flex-col text-start">
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-bold tracking-tight text-foreground">مسار</span>

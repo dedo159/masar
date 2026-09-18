@@ -21,6 +21,7 @@ import {
   QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MasarLogo } from "@/components/ui/logo";
 
 export default function MerchantLoginPage() {
   const router = useRouter();
@@ -225,9 +226,22 @@ export default function MerchantLoginPage() {
 
       {/* 2. عناصر الهيدر والعلامة التجارية */}
       <header className="relative z-10 w-full max-w-5xl flex items-center justify-between pb-6 sm:pb-8">
-        <div className="flex items-center gap-3">
-          
-        </div>
+        <Link href="/" className="flex items-center gap-3 group">
+          <MasarLogo size="sm" priority />
+          <div className="flex flex-col">
+            <span className="text-xs font-bold tracking-tight text-white group-hover:text-emerald-400 transition-colors">
+              مسار للشركاء والمتاجر
+            </span>
+            <span className="text-[10px] text-muted-foreground">بوابة نقاط البيع والعروض</span>
+          </div>
+        </Link>
+        <Link
+          href="/login"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-background/50 hover:bg-white/[0.04] text-xs text-muted-foreground hover:text-foreground transition-all"
+        >
+          <span>بوابة الطالب</span>
+          <ChevronLeft className="h-3.5 w-3.5 rotate-180" />
+        </Link>
       </header>
 
       {/* 3. بطاقة ونموذج تسجيل الدخول (Login Form Card) */}
