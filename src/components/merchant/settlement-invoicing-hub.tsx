@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   DollarSign,
   TrendingUp,
-  CreditCard,
   FileText,
   Download,
   CheckCircle2,
@@ -149,13 +148,6 @@ export function SettlementInvoicingHub() {
                 تتبع مبيعات الطلبة، اقتطاع عمولة المنصة (5%)، وتصدير الفواتير الضريبية المعتمدة بصيغة PDF.
               </p>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-background border border-border text-foreground/80 flex items-center gap-2">
-              <CreditCard className="h-3.5 w-3.5 text-emerald-400" />
-              <span>التحويل البنكي المعتمد: IBAN ****7719</span>
-            </span>
           </div>
         </div>
       </div>
