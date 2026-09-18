@@ -3,6 +3,8 @@
 import { useState } from "react";
 import {
   Radio,
+  Calendar,
+  CalendarClock,
   Send,
   MapPin,
   Store,
@@ -63,12 +65,7 @@ const storeBranches: StoreBranch[] = [
   },
 ];
 
-const validityOptions = [
-  { id: "lunch-2h", label: "ساعتان (استراحة الظهيرة 12:00 م - 2:00 م)", sub: "الأكثر تفاعلاً للوجبات السريعة" },
-  { id: "afternoon-3h", label: "3 ساعات حتى نهاية الدوام المسائي", sub: "مناسب للمقاهي والوجبات الخفيفة" },
-  { id: "first-50", label: "حتى نفاد أول 50 وجبة / قسيمة", sub: "خلق دافع استعجال فوري (Urgency)" },
-  { id: "full-day", label: "كامل اليوم حتى منتصف الليل", sub: "عروض السكنات والمذاكرة المسائية" },
-];
+
 
 export function SponsoredCampusDrops() {
   const [dealTitle, setDealTitle] = useState("وجبة شاورما سوبر + مشروب بـ 1.75 د.أ فقط لطلاب الـ IT!");
@@ -78,7 +75,27 @@ export function SponsoredCampusDrops() {
     "branch-ju",
     "branch-aau",
   ]);
-  const [selectedValidityId, setSelectedValidityId] = useState("lunch-2h");
+
+  // Start and End Date & Time State with intuitive defaults
+  const getInitialDates = () => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    const currentTimeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+    // Default end time: +3 hours
+    const end = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+    const endDayStr = `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}`;
+    const endTimeStr = `${pad(end.getHours())}:${pad(end.getMinutes())}`;
+
+    return { todayStr, currentTimeStr, endDayStr, endTimeStr };
+  };
+
+  const initial = getInitialDates();
+  const [startDate, setStartDate] = useState(initial.todayStr);
+  const [startTime, setStartTime] = useState(initial.currentTimeStr);
+  const [endDate, setEndDate] = useState(initial.endDayStr);
+  const [endTime, setEndTime] = useState(initial.endTimeStr);
 
   // Pricing and Balance
   const [merchantBalance, setMerchantBalance] = useState(75.0);
@@ -91,12 +108,98 @@ export function SponsoredCampusDrops() {
     sentCount: number;
     branchesCount: number;
     branchesSummary: string;
+    scheduleSummary: string;
     timestamp: string;
   } | null>(null);
 
   const selectedBranches = storeBranches.filter((b) => selectedBranchIds.includes(b.id));
   const totalTargetedStudents = selectedBranches.reduce((sum, b) => sum + b.studentCount, 0);
-  const activeValidity = validityOptions.find((v) => v.id === selectedValidityId) || validityOptions[0];
+
+  // Duration & Validation Calculation
+  const calculateDuration = () => {
+    try {
+      const start = new Date(`${startDate}T${startTime}`);
+      const end = new Date(`${endDate}T${endTime}`);
+      const diffMs = end.getTime() - start.getTime();
+
+      if (isNaN(diffMs) || diffMs <= 0) {
+        return { isValid: false, text: "توقيت النهاية يجب أن يكون بعد توقيت البداية" };
+      }
+
+      const totalMinutes = Math.floor(diffMs / (1000 * 60));
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      const days = Math.floor(hours / 24);
+
+      if (days >= 1) {
+        const remHours = hours % 24;
+        return {
+          isValid: true,
+          text: remHours > 0 ? `${days} يوم و ${remHours} ساعة` : `${days} يوم/أيام`,
+        };
+      }
+
+      if (hours > 0) {
+        return {
+          isValid: true,
+          text: minutes > 0 ? `${hours} ساعة و ${minutes} دقيقة` : `${hours} ساعات`,
+        };
+      }
+
+      return { isValid: true, text: `${minutes} دقيقة` };
+    } catch {
+      return { isValid: false, text: "توقيت غير محدد بدقة" };
+    }
+  };
+
+  const durationInfo = calculateDuration();
+
+  // Quick Preset Handlers for Start Date & Time
+  const setStartNow = () => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setStartDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
+    setStartTime(`${pad(now.getHours())}:${pad(now.getMinutes())}`);
+  };
+
+  const setStartLunch = () => {
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setStartDate(`${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`);
+    setStartTime("12:00");
+  };
+
+  const setStartTomorrowMorning = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setStartDate(`${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())}`);
+    setStartTime("09:00");
+  };
+
+  // Quick Preset Handlers for End Date & Time
+  const addHoursToEnd = (hours: number) => {
+    const base = new Date(`${startDate}T${startTime}`);
+    const validBase = isNaN(base.getTime()) ? new Date() : base;
+    const target = new Date(validBase.getTime() + hours * 60 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setEndDate(`${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`);
+    setEndTime(`${pad(target.getHours())}:${pad(target.getMinutes())}`);
+  };
+
+  const setEndMidnight = () => {
+    setEndDate(startDate);
+    setEndTime("23:59");
+  };
+
+  const addDaysToEnd = (days: number) => {
+    const base = new Date(`${startDate}T${startTime}`);
+    const validBase = isNaN(base.getTime()) ? new Date() : base;
+    const target = new Date(validBase.getTime() + days * 24 * 60 * 60 * 1000);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    setEndDate(`${target.getFullYear()}-${pad(target.getMonth() + 1)}-${pad(target.getDate())}`);
+    setEndTime(`${pad(target.getHours())}:${pad(target.getMinutes())}`);
+  };
 
   const toggleBranch = (id: string) => {
     setSelectedBranchIds((prev) => {
@@ -123,6 +226,10 @@ export function SponsoredCampusDrops() {
       alert("يرجى اختيار فرع واحد على الأقل مشمول بالعرض.");
       return;
     }
+    if (!durationInfo.isValid) {
+      alert("يرجى ضبط توقيت بداية ونهاية العرض بشكل صحيح (النهاية بعد البداية).");
+      return;
+    }
     if (merchantBalance < dropFee) {
       alert("رصيد حملات البث غير كافٍ. يرجى شحن الرصيد للمتابعة.");
       return;
@@ -143,6 +250,7 @@ export function SponsoredCampusDrops() {
           selectedBranches.length === storeBranches.length
             ? "كافة الفروع المتاحة (5 فروع)"
             : selectedBranches.map((b) => b.name.split("—")[0].trim()).join("، "),
+        scheduleSummary: `من ${startDate} (${startTime}) حتى ${endDate} (${endTime}) — مدة ${durationInfo.text}`,
         timestamp: "الآن",
       });
 
@@ -320,37 +428,172 @@ export function SponsoredCampusDrops() {
               </div>
             </div>
 
-            {/* Validity Window Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-foreground/80 flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-amber-400" />
-                <span>نافذة الصلاحية الزمنية للعرض:</span>
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {validityOptions.map((opt) => {
-                  const isSelected = opt.id === selectedValidityId;
-                  return (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      onClick={() => setSelectedValidityId(opt.id)}
-                      className={`p-2.5 rounded-xl border text-right transition-all cursor-pointer ${
-                        isSelected
-                          ? "bg-amber-500/10 border-amber-500/40 text-white"
-                          : "bg-background border-border/60 hover:border-border text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className={`text-xs font-semibold ${isSelected ? "text-amber-300" : "text-foreground/80"}`}>
-                          {opt.label}
-                        </span>
-                        {isSelected && <Check className="h-3.5 w-3.5 text-amber-400" />}
-                      </div>
-                      <span className="text-[10px] text-muted-foreground block mt-0.5">{opt.sub}</span>
-                    </button>
-                  );
-                })}
+            {/* ========================================================================= */}
+            {/* خانة بداية ونهاية العرض مع التاريخ والوقت والأزرار السريعة */}
+            {/* ========================================================================= */}
+            <div className="space-y-3.5 p-4 rounded-2xl border border-border bg-muted/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-amber-500" />
+                  <span className="text-xs font-bold text-foreground">
+                    توقيت سريان العرض (تاريخ ووقت البداية والنهاية):
+                  </span>
+                </div>
+
+                {/* Duration Badge Indicator */}
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className={`text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
+                      durationInfo.isValid
+                        ? "bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border-emerald-500/20"
+                        : "bg-rose-500/10 text-rose-500 dark:text-rose-400 border-rose-500/20"
+                    }`}
+                  >
+                    {durationInfo.isValid ? `⏱️ المدة: ${durationInfo.text}` : "⚠️ تحقق من التوقيت"}
+                  </span>
+                </div>
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* 1. بداية العرض (Start Date & Time) */}
+                <div className="p-3.5 rounded-xl border border-border bg-card space-y-2.5 text-right">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>بداية العرض:</span>
+                    </label>
+                    <span className="text-[10px] text-muted-foreground font-mono">Start Time</span>
+                  </div>
+
+                  {/* Date & Time Inputs */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground block">التاريخ 📅</span>
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="w-full h-10 px-2.5 text-xs font-mono rounded-lg border border-border bg-background text-foreground focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground block">الوقت ⏰</span>
+                      <input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        className="w-full h-10 px-2.5 text-xs font-mono rounded-lg border border-border bg-background text-foreground focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Presets for Start */}
+                  <div className="pt-1 border-t border-border/60 flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] text-muted-foreground ml-1">اختصار:</span>
+                    <button
+                      type="button"
+                      onClick={setStartNow}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      ⚡ الآن فوراً
+                    </button>
+                    <button
+                      type="button"
+                      onClick={setStartLunch}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      🍽️ الغداء (12:00 م)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={setStartTomorrowMorning}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      ☀️ غداً (09:00 ص)
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. نهاية العرض (End Date & Time) */}
+                <div className="p-3.5 rounded-xl border border-border bg-card space-y-2.5 text-right">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-rose-500" />
+                      <span>نهاية العرض:</span>
+                    </label>
+                    <span className="text-[10px] text-muted-foreground font-mono">End Time</span>
+                  </div>
+
+                  {/* Date & Time Inputs */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground block">التاريخ 📅</span>
+                      <input
+                        type="date"
+                        value={endDate}
+                        min={startDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="w-full h-10 px-2.5 text-xs font-mono rounded-lg border border-border bg-background text-foreground focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] text-muted-foreground block">الوقت ⏰</span>
+                      <input
+                        type="time"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                        className="w-full h-10 px-2.5 text-xs font-mono rounded-lg border border-border bg-background text-foreground focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Presets for End (Duration adders) */}
+                  <div className="pt-1 border-t border-border/60 flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] text-muted-foreground ml-1">إضافة مدة:</span>
+                    <button
+                      type="button"
+                      onClick={() => addHoursToEnd(2)}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      + ساعتان
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addHoursToEnd(4)}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      + 4 ساعات
+                    </button>
+                    <button
+                      type="button"
+                      onClick={setEndMidnight}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      🌙 منتصف الليل
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addDaysToEnd(3)}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      + 3 أيام
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => addDaysToEnd(7)}
+                      className="text-[10px] px-2 py-0.5 rounded-md bg-muted hover:bg-amber-500/10 hover:text-amber-500 border border-border/70 transition-colors cursor-pointer"
+                    >
+                      + أسبوع
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {!durationInfo.isValid && (
+                <p className="text-[11px] text-rose-500 dark:text-rose-400 font-medium">
+                  {durationInfo.text}
+                </p>
+              )}
             </div>
 
             {/* Campaign Pricing & Instant Launch Button */}
@@ -369,7 +612,7 @@ export function SponsoredCampusDrops() {
               <Button
                 type="button"
                 onClick={handleLaunchDrop}
-                disabled={isBroadcasting || !dealTitle.trim()}
+                disabled={isBroadcasting || !dealTitle.trim() || !durationInfo.isValid || selectedBranchIds.length === 0}
                 className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs h-11 px-6 rounded-xl shadow-lg shadow-amber-950/40 cursor-pointer disabled:opacity-50 gap-2"
               >
                 {isBroadcasting ? (
@@ -408,8 +651,8 @@ export function SponsoredCampusDrops() {
                     <span className="font-bold text-white">{broadcastSuccess.branchesSummary}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[10px]">سرعة التسليم:</span>
-                    <span className="font-mono text-emerald-400">99.4% خلال 1.2s</span>
+                    <span className="text-muted-foreground block text-[10px]">فترة الصلاحية:</span>
+                    <span className="font-mono text-emerald-400">{broadcastSuccess.scheduleSummary}</span>
                   </div>
                 </div>
               </div>
@@ -486,8 +729,8 @@ export function SponsoredCampusDrops() {
                       : `متاح في ${selectedBranches.length} فروع مشمولة`}
                   </span>
                 </span>
-                <span className="font-mono text-emerald-400 font-semibold shrink-0">
-                  ساري الآن
+                <span className="font-mono text-emerald-400 font-semibold shrink-0 text-[9px]">
+                  {durationInfo.isValid ? durationInfo.text : "ساري"}
                 </span>
               </div>
             </div>
