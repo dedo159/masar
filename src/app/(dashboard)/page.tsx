@@ -1,4 +1,8 @@
 import { PageHeader } from "@/components/layout/page-header";
+import { StudentIdCard } from "@/components/dashboard/student-id-card";
+import { ItCareerPathCard } from "@/components/dashboard/it-career-path-card";
+import { ActiveTicketCard } from "@/components/dashboard/active-ticket-card";
+import { ActionMatchesCard } from "@/components/dashboard/action-matches-card";
 import { QuickStatsSection } from "@/components/dashboard/quick-stats";
 import { TodayScheduleSection } from "@/components/dashboard/today-schedule";
 import { UrgentDeadlinesSection } from "@/components/dashboard/urgent-deadlines";
@@ -24,22 +28,30 @@ export default async function HomePage() {
         subtitle={today}
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
-        <LatestAnnouncementWidget />
+      <div className="max-w-6xl mx-auto px-3.5 py-4 md:px-6 md:py-6 space-y-6">
+        {/* 1. Hero: Student ID & Progress Card (Direct from Official 3D Mockup) */}
+        <StudentIdCard />
 
-        {/* 1. Quick Stats (KPIs) */}
-        <QuickStatsSection />
-
-        {/* 2. Main Dashboard Grid (Balanced 2-Column on Desktop) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Lecture Schedule */}
-          <div className="lg:col-span-7 space-y-6">
+        {/* 2. Central Dual Column: IT Career Path & Active Rolling QR Ticket */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          {/* Left Column: IT Career Path (Node Graph & GitHub Activity) */}
+          <div className="lg:col-span-6 flex flex-col gap-5">
+            <ItCareerPathCard />
             <TodayScheduleSection />
           </div>
-          {/* Urgent Homework & Deadlines */}
-          <div className="lg:col-span-5 space-y-6">
+
+          {/* Right Column: Active Ticket Pass & Action Matches */}
+          <div className="lg:col-span-6 flex flex-col gap-5">
+            <ActiveTicketCard />
+            <ActionMatchesCard />
             <UrgentDeadlinesSection />
           </div>
+        </div>
+
+        {/* 3. Campus Announcements & Quick Stats */}
+        <div className="space-y-5 pt-2">
+          <LatestAnnouncementWidget />
+          <QuickStatsSection />
         </div>
       </div>
     </>

@@ -15,6 +15,7 @@ import {
   Store,
   GraduationCap,
   Building2,
+  QrCode,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
@@ -23,21 +24,20 @@ import { translateStudentName, translateMajor, getStudentInitials } from "@/lib/
 
 export function BottomNav() {
   const pathname = usePathname();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const isAr = language === "ar";
 
   const mobileNavItems = [
-    { href: "/", icon: LayoutDashboard, label: t.nav.homeShort || t.nav.home },
-    { href: "/courses", icon: BookOpen, label: t.nav.courses },
-    { href: "/announcements", icon: Megaphone, label: t.nav.announcementsShort || t.nav.announcements },
-    { href: "/internships", icon: Briefcase, label: t.nav.internshipsShort || t.nav.internships },
-    { href: "/readiness", icon: TrendingUp, label: t.nav.readinessShort || t.nav.readiness },
-    { href: "/deals", icon: Tag, label: t.nav.dealsShort },
-    { href: "/profile", icon: User, label: t.nav.profileShort || t.nav.profile },
+    { href: "/", icon: LayoutDashboard, label: isAr ? "الرئيسية" : "Home" },
+    { href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" },
+    { href: "/deals", icon: QrCode, label: isAr ? "التذكرة" : "Ticket" },
+    { href: "/internships", icon: Briefcase, label: isAr ? "التدريب" : "Career" },
+    { href: "/profile", icon: User, label: isAr ? "حسابي" : "Profile" },
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border bg-background/95 backdrop-blur-md md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-0.5 select-none shadow-md">
-      <div className="grid grid-cols-7 w-full max-w-full items-center">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.08] bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-2 select-none shadow-2xl">
+      <div className="grid grid-cols-5 w-full max-w-md mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -45,22 +45,35 @@ export function BottomNav() {
               key={href}
               href={href}
               className={cn(
-                "flex flex-col items-center justify-center gap-0.5 rounded-lg py-1 px-0.5 min-w-0 transition-all duration-150 text-center group",
-                isActive ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
+                "relative flex flex-col items-center justify-center gap-1 py-1 px-1 transition-all duration-200 text-center group",
+                isActive ? "text-white font-bold" : "text-white/45 hover:text-white/80"
               )}
             >
+              {/* Neon Pink/Blue Top Indicator on Active */}
+              {isActive && (
+                <span className="absolute -top-1.5 h-[2.5px] w-8 rounded-full bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] shadow-[0_0_10px_#E83D84] animate-in fade-in zoom-in-50 duration-200" />
+              )}
+
               <div
                 className={cn(
-                  "p-1 rounded-md transition-all duration-150 flex items-center justify-center",
-                  isActive ? "bg-primary/10 text-primary" : "group-hover:bg-muted"
+                  "p-1.5 rounded-xl transition-all duration-200 flex items-center justify-center",
+                  isActive
+                    ? "bg-gradient-to-tr from-[#2F7BFF]/20 to-[#E83D84]/20 text-[#38BDF8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
+                    : "group-hover:bg-white/[0.04]"
                 )}
               >
                 <Icon
-                  className={cn("h-4.5 w-4.5 transition-transform duration-150 flex-shrink-0", isActive && "scale-105")}
-                  strokeWidth={isActive ? 2.2 : 1.7}
+                  className={cn(
+                    "h-5 w-5 transition-transform duration-200",
+                    isActive && "scale-110 text-white"
+                  )}
+                  strokeWidth={isActive ? 2.4 : 1.8}
                 />
               </div>
-              <span className="text-[9.5px] sm:text-[10px] font-medium tracking-tight truncate w-full block text-center leading-none mt-0.5">
+              <span className={cn(
+                "text-[10px] tracking-tight truncate w-full block text-center leading-none",
+                isActive ? "text-white font-bold" : "text-white/50"
+              )}>
                 {label}
               </span>
             </Link>

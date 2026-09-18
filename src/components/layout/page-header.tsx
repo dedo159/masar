@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Moon, Sun, Globe } from "lucide-react";
+import { Moon, Sun, Globe, Menu, Search } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
@@ -41,16 +41,41 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   const displayTitle = titleMap[title] || title;
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-md transition-colors duration-300">
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2.5">
-          {(title === "مسار" || title === "Masar" || displayTitle === t.common.appName) && (
-            <div className="md:hidden flex items-center">
-              <MasarLogo variant="icon" size="sm" priority />
-            </div>
-          )}
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl transition-all duration-300">
+      {/* Mobile Top Bar (Exact Match with Official 3D Mockup) */}
+      <div className="flex md:hidden items-center justify-between px-4 py-2.5">
+        {/* Left: Menu Hamburger */}
+        <Link
+          href="/settings"
+          className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-white/5 active:scale-95 transition-all"
+          aria-label="القائمة"
+        >
+          <Menu className="h-5 w-5" />
+        </Link>
+
+        {/* Center: Masar Full Logo */}
+        <Link href="/" className="flex items-center justify-center">
+          <MasarLogo size="sm" priority />
+        </Link>
+
+        {/* Right: Search & Notifications */}
+        <div className="flex items-center gap-0.5">
+          <Link
+            href="/courses"
+            className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-white/5 active:scale-95 transition-all"
+            aria-label="بحث"
+          >
+            <Search className="h-4 w-4" />
+          </Link>
+          <NotificationsDropdown />
+        </div>
+      </div>
+
+      {/* Desktop Top Bar */}
+      <div className="hidden md:flex items-center justify-between px-6 py-3.5">
+        <div className="flex items-center gap-3">
           <div>
-            <h1 className="text-base font-medium">{displayTitle}</h1>
+            <h1 className="text-base font-bold tracking-tight text-foreground">{displayTitle}</h1>
             {subtitle && (
               <p className="text-xs text-muted-foreground mt-0.5" suppressHydrationWarning>
                 {subtitle === "date" 
@@ -68,7 +93,8 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1">
+
+        <div className="flex items-center gap-1.5">
           {action}
 
           {/* Language Switcher */}
@@ -76,7 +102,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             variant="ghost"
             size="sm"
             onClick={toggleLanguage}
-            className="h-11 md:h-9 px-3 text-xs font-medium gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all active:scale-95"
+            className="h-9 px-3 text-xs font-medium gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all active:scale-95"
             aria-label={t.header.toggleLang}
             title={t.header.toggleLang}
           >
@@ -91,14 +117,17 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
             onClick={() => setTheme(isDark ? "light" : "dark")}
             aria-label={t.header.toggleTheme}
             title={t.header.toggleTheme}
+            className="h-9 w-9 rounded-lg"
           >
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
           </Button>
+
           <NotificationsDropdown />
+
           <Link
             href="/profile"
-            className="flex items-center justify-center h-10 w-10 md:h-9 md:w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-medium border border-border mx-1"
+            className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-medium border border-border mx-1"
             title={t.header.userAccount}
             aria-label={t.header.userAccount}
             suppressHydrationWarning
