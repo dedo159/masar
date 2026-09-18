@@ -30,14 +30,14 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
 
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         {enrolledCourses.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl text-center">
-            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-2xl border border-border/80 dark:border-white/10 bg-card/60 dark:bg-white/[0.03] backdrop-blur-xl text-center">
+            <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
               <BookOpen className="h-6 w-6" strokeWidth={2} />
             </div>
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-foreground">
               {language === "en" ? "Semester Completed 🎉" : "انتهى الفصل الدراسي الحالي 🎉"}
             </h3>
-            <p className="text-xs text-white/50 mt-1.5 max-w-md leading-relaxed">
+            <p className="text-xs text-muted-foreground mt-1.5 max-w-md leading-relaxed">
               {language === "en"
                 ? "Current semester courses have been archived. Best of luck on your final exams and enjoy your break! New semester courses will appear upon enrollment."
                 : "تمت أرشفة مواد الفصل الحالي مع انطلاق الامتحانات النهائية. نتمنى لك التوفيق وإجازة سعيدة! ستظهر مواد الفصل الجديد فور تسجيلها وبدء دوامها."}
@@ -64,7 +64,7 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                 <Link
                   key={course.id}
                   href={`/courses/${course.id}`}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#2F7BFF]/40 hover:bg-white/[0.06] overflow-hidden"
+                  className="group relative flex flex-col justify-between rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-[#2F7BFF]/40 overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-28 h-28 bg-[#2F7BFF]/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -81,35 +81,35 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                           <BookOpen className="h-5 w-5 fill-white/20" strokeWidth={1.75} />
                         </div>
                         <div className="min-w-0">
-                          <h3 className="text-sm font-bold text-white group-hover:text-[#38BDF8] truncate transition-colors">
+                          <h3 className="text-sm font-bold text-foreground group-hover:text-[#2F7BFF] dark:group-hover:text-[#38BDF8] truncate transition-colors">
                             {courseDisplayName}
                           </h3>
-                          <p className="text-xs text-white/50 mt-1 truncate font-medium">
+                          <p className="text-xs text-muted-foreground mt-1 truncate font-medium">
                             {course.code} · {course.credits || 3} {t.courses.credits}
                           </p>
                         </div>
                       </div>
 
                       {gradePercent !== undefined ? (
-                        <span className="text-sm font-extrabold font-mono tabular-nums text-white bg-white/[0.06] border border-white/10 px-2.5 py-1 rounded-xl flex-shrink-0">
+                        <span className="text-sm font-extrabold font-mono tabular-nums text-foreground bg-muted/60 dark:bg-white/[0.06] border border-border dark:border-white/10 px-2.5 py-1 rounded-xl flex-shrink-0">
                           {gradePercent}
-                          <span className="text-[10px] text-white/40 ml-0.5">/ 100</span>
+                          <span className="text-[10px] text-muted-foreground ml-0.5">/ 100</span>
                         </span>
                       ) : (
-                        <div className="h-8 w-8 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                          <ChevronIcon className="h-4 w-4 text-white/60 group-hover:text-white" />
+                        <div className="h-8 w-8 rounded-full bg-muted/50 dark:bg-white/[0.05] border border-border dark:border-white/10 flex items-center justify-center group-hover:bg-muted dark:group-hover:bg-white/10 transition-colors">
+                          <ChevronIcon className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
                         </div>
                       )}
                     </div>
 
                     {/* Middle info */}
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-4 text-[11px] text-white/70 font-medium">
-                      <span className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.08] px-2.5 py-1 rounded-lg">
-                        <User className="h-3.5 w-3.5 text-[#38BDF8]" />
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-4 text-[11px] text-muted-foreground font-medium">
+                      <span className="flex items-center gap-1.5 bg-muted/40 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08] px-2.5 py-1 rounded-lg">
+                        <User className="h-3.5 w-3.5 text-[#2F7BFF] dark:text-[#38BDF8]" />
                         <span className="truncate max-w-[140px]">{instructorName}</span>
                       </span>
                       {course.room && (
-                        <span className="flex items-center gap-1.5 bg-white/[0.04] border border-white/[0.08] px-2.5 py-1 rounded-lg">
+                        <span className="flex items-center gap-1.5 bg-muted/40 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08] px-2.5 py-1 rounded-lg">
                           <MapPin className="h-3.5 w-3.5 text-[#E83D84]" />
                           <span>{translateRoom(course.room, language)}</span>
                         </span>
@@ -118,17 +118,17 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
                   </div>
 
                   {/* Bottom: Quick badges */}
-                  <div className="relative z-10 flex items-center justify-between pt-3.5 mt-4 border-t border-white/[0.08] text-[11px] font-medium">
-                    <span className="text-white/40">{semesterName}</span>
+                  <div className="relative z-10 flex items-center justify-between pt-3.5 mt-4 border-t border-border/60 dark:border-white/[0.08] text-[11px] font-medium">
+                    <span className="text-muted-foreground">{semesterName}</span>
                     <div className="flex items-center gap-2">
                       {pendingAssignments > 0 ? (
-                        <div className="flex items-center gap-1.5 text-rose-300 bg-rose-500/15 border border-rose-500/30 px-2.5 py-1 rounded-full shadow-sm font-bold">
+                        <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-300 bg-rose-500/10 dark:bg-rose-500/15 border border-rose-500/20 dark:border-rose-500/30 px-2.5 py-1 rounded-full shadow-sm font-bold">
                           <Clock className="h-3 w-3" />
                           <span>{pendingAssignments} {t.courses.pendingTasks}</span>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1.5 text-white/60 bg-white/[0.04] border border-white/[0.08] px-2.5 py-1 rounded-full">
-                          <FileText className="h-3 w-3 text-[#38BDF8]" />
+                        <div className="flex items-center gap-1.5 text-muted-foreground bg-muted/40 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08] px-2.5 py-1 rounded-full">
+                          <FileText className="h-3 w-3 text-[#2F7BFF] dark:text-[#38BDF8]" />
                           <span>{course.assignments?.length || 0} {t.dashboard.assignmentTypes.assignment}</span>
                         </div>
                       )}

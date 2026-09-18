@@ -82,10 +82,10 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                 key={idx}
                 href={"/courses/" + cls.courseId}
                 className={cn(
-                  "flex items-start gap-4 rounded-2xl border bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-4 min-h-[56px] backdrop-blur-xl shadow-xl transition-all duration-300 ease-out group relative overflow-hidden",
+                  "flex items-start gap-4 rounded-2xl border bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] p-4 min-h-[56px] backdrop-blur-xl shadow-sm dark:shadow-xl transition-all duration-300 ease-out group relative overflow-hidden",
                   isOngoing
                     ? "border-[#2F7BFF]/60 shadow-[0_0_25px_rgba(47,123,255,0.25)]"
-                    : "border-white/[0.08] hover:border-white/20 active:scale-[0.99]"
+                    : "border-border/80 dark:border-white/[0.08] hover:border-[#2F7BFF]/40 active:scale-[0.99]"
                 )}
               >
                 {/* Subtle Glow for Ongoing */}
@@ -96,16 +96,16 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                 <div className="flex-1 min-w-0 relative z-10">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="text-sm font-bold leading-tight text-white truncate group-hover:text-[#38BDF8] transition-colors">
+                      <p className="text-sm font-bold leading-tight text-foreground truncate group-hover:text-[#2F7BFF] dark:group-hover:text-[#38BDF8] transition-colors">
                         {displayName}
                       </p>
-                      <p className="text-xs text-white/50 mt-1 truncate font-medium">
+                      <p className="text-xs text-muted-foreground mt-1 truncate font-medium">
                         {cls.courseCode} • {instructorName}
                       </p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <div className="flex items-center justify-end gap-1.5 text-white font-bold tabular-nums">
-                        <Clock className="h-3.5 w-3.5 text-white/40" />
+                      <div className="flex items-center justify-end gap-1.5 text-foreground font-bold tabular-nums">
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                         <span className="text-sm">{formatTime(cls.startTime)}</span>
                       </div>
                       {isOngoing ? (
@@ -117,21 +117,21 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
                           <span>{language === "en" ? "Live Now" : "جارية الآن"}</span>
                         </div>
                       ) : (
-                        <div className="text-xs text-white/40 mt-1 tabular-nums font-mono font-semibold">
+                        <div className="text-xs text-muted-foreground mt-1 tabular-nums font-mono font-semibold">
                           {formatTime(cls.endTime)}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3 mt-3.5 pt-2 border-t border-white/[0.04]">
-                    <div className="flex items-center gap-1.5 text-[10px] h-6 px-2.5 rounded-lg bg-white/[0.06] text-white/80 font-bold border border-white/[0.06]">
-                      <TypeIcon className="h-3 w-3 text-[#38BDF8]" />
+                  <div className="flex items-center gap-3 mt-3.5 pt-2 border-t border-border/60 dark:border-white/[0.04]">
+                    <div className="flex items-center gap-1.5 text-[10px] h-6 px-2.5 rounded-lg bg-muted/70 dark:bg-white/[0.06] text-foreground/80 dark:text-white/80 font-bold border border-border/60 dark:border-white/[0.06]">
+                      <TypeIcon className="h-3 w-3 text-[#2F7BFF] dark:text-[#38BDF8]" />
                       <span>{typeLabel}</span>
                     </div>
                     
-                    <div className="flex items-center gap-1.5 text-[11px] text-white/50 font-medium">
-                      <MapPin className="h-3.5 w-3.5 text-white/40" />
+                    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
+                      <MapPin className="h-3.5 w-3.5 text-muted-foreground/80" />
                       <span className="truncate max-w-[140px] sm:max-w-[200px]">
                         {translateRoom(cls.room, language)}
                       </span>

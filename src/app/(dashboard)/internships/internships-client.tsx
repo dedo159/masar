@@ -64,7 +64,7 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
               return (
                 <div
                   key={internship.id}
-                  className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl flex flex-col justify-between gap-4 group hover:border-[#2F7BFF]/40 transition-all duration-300 relative overflow-hidden"
+                  className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl flex flex-col justify-between gap-4 group hover:border-[#2F7BFF]/40 transition-all duration-300 relative overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-[#2F7BFF]/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -72,13 +72,13 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                   <div className="relative z-10">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3 min-w-0">
-                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#38BDF8] flex-shrink-0 font-bold text-sm shadow-[0_0_15px_rgba(47,123,255,0.25)]">
+                        <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#2F7BFF] dark:text-[#38BDF8] flex-shrink-0 font-bold text-sm shadow-[0_0_15px_rgba(47,123,255,0.25)]">
                           <Building2 className="h-5 w-5" strokeWidth={1.75} />
                         </div>
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-white/50 truncate">
+                            <span className="text-xs font-medium text-muted-foreground truncate">
                               {translateInternshipCompany(internship.company, language)}
                             </span>
                             {internship.isNew && (
@@ -88,29 +88,29 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
                               </span>
                             )}
                           </div>
-                          <h3 className="text-sm font-bold text-white group-hover:text-[#38BDF8] mt-1 truncate transition-colors">
+                          <h3 className="text-sm font-bold text-foreground group-hover:text-[#2F7BFF] dark:group-hover:text-[#38BDF8] mt-1 truncate transition-colors">
                             {translateInternshipTitle(internship.title, language)}
                           </h3>
                         </div>
                       </div>
 
-                      <span className="flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-white/80">
+                      <span className="flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full bg-muted/60 dark:bg-white/[0.06] border border-border dark:border-white/10 text-foreground dark:text-white/80">
                         {typeText}
                       </span>
                     </div>
 
                     {/* Metadata chips */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3.5 text-xs text-white/60">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3.5 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1.5">
-                        <MapPin className="h-3.5 w-3.5 text-[#38BDF8]" />
+                        <MapPin className="h-3.5 w-3.5 text-[#2F7BFF] dark:text-[#38BDF8]" />
                         <span>{translateInternshipLocation(internship.location, language)}</span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5 text-white/40" />
+                        <Clock className="h-3.5 w-3.5 text-muted-foreground" />
                         <span>{translateInternshipDuration(internship.duration, language)}</span>
                       </span>
                       {internship.deadline && (
-                        <span className="flex items-center gap-1.5 text-rose-300 font-semibold bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20">
+                        <span className="flex items-center gap-1.5 text-rose-600 dark:text-rose-300 font-semibold bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/20">
                           <Calendar className="h-3.5 w-3.5" />
                           <span>{t.internships.deadline}: {internship.deadline}</span>
                         </span>
@@ -119,11 +119,11 @@ export function InternshipsClient({ internships, appliedInternshipIds }: Interns
 
                     {/* Skills/Tags */}
                     {internship.tags && internship.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-white/[0.08]">
+                      <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-border/60 dark:border-white/[0.08]">
                         {internship.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-white/[0.04] border border-white/[0.08] text-white/70"
+                            className="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-semibold bg-muted/40 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08] text-muted-foreground"
                           >
                             {tag}
                           </span>

@@ -291,12 +291,12 @@ export default function DealsPage() {
       
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         <Tabs defaultValue="all" onValueChange={setActiveCategory} className="w-full">
-          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-5 h-auto py-1.5 px-1.5 bg-white/[0.04] border border-white/10 rounded-2xl backdrop-blur-xl">
+          <TabsList className="w-full flex overflow-x-auto justify-start no-scrollbar mb-5 h-auto py-1.5 px-1.5 bg-muted/40 dark:bg-white/[0.04] border border-border/80 dark:border-white/10 rounded-2xl backdrop-blur-xl">
             {categories.map((cat) => (
               <TabsTrigger
                 key={cat.id}
                 value={cat.id}
-                className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-xl transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2F7BFF]/25 data-[state=active]:to-[#E83D84]/20 data-[state=active]:text-white data-[state=active]:border data-[state=active]:border-[#2F7BFF]/40 data-[state=active]:shadow-[0_0_15px_rgba(47,123,255,0.25)] font-semibold text-white/60 hover:text-white"
+                className="text-xs sm:text-sm whitespace-nowrap px-4 py-2 rounded-xl transition-all data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#2F7BFF]/20 data-[state=active]:to-[#E83D84]/15 data-[state=active]:text-foreground data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2F7BFF]/40 data-[state=active]:shadow-sm dark:data-[state=active]:shadow-[0_0_15px_rgba(47,123,255,0.25)] font-semibold text-muted-foreground hover:text-foreground"
               >
                 {cat.label}
               </TabsTrigger>
@@ -308,19 +308,19 @@ export default function DealsPage() {
               {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {[1, 2, 3, 4, 5, 6].map((i) => (
-                      <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl space-y-4">
+                      <div key={i} className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/60 dark:bg-white/[0.04] p-5 backdrop-blur-xl space-y-4">
                         <div className="flex justify-between items-start gap-2">
                           <div className="space-y-2 w-full">
-                            <Skeleton className="h-5 w-3/4 max-w-[200px] bg-white/10" />
-                            <Skeleton className="h-3 w-24 bg-white/10" />
+                            <Skeleton className="h-5 w-3/4 max-w-[200px] bg-muted dark:bg-white/10" />
+                            <Skeleton className="h-3 w-24 bg-muted dark:bg-white/10" />
                           </div>
-                          <Skeleton className="h-6 w-16 rounded-full bg-white/10 shrink-0" />
+                          <Skeleton className="h-6 w-16 rounded-full bg-muted dark:bg-white/10 shrink-0" />
                         </div>
                         <div className="space-y-2">
-                          <Skeleton className="h-4 w-full bg-white/10" />
-                          <Skeleton className="h-3 w-4/5 bg-white/10" />
+                          <Skeleton className="h-4 w-full bg-muted dark:bg-white/10" />
+                          <Skeleton className="h-3 w-4/5 bg-muted dark:bg-white/10" />
                         </div>
-                        <Skeleton className="h-10 w-full rounded-xl bg-white/10" />
+                        <Skeleton className="h-10 w-full rounded-xl bg-muted dark:bg-white/10" />
                       </div>
                     ))}
                 </div>
@@ -329,7 +329,7 @@ export default function DealsPage() {
                   {filteredDeals.map((deal) => (
                     <div 
                       key={deal.id} 
-                      className="group cursor-pointer rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl relative overflow-hidden active:scale-[0.99] transition-all duration-300 hover:border-[#2F7BFF]/40 hover:bg-white/[0.06] flex flex-col justify-between"
+                      className="group cursor-pointer rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl relative overflow-hidden active:scale-[0.99] transition-all duration-300 hover:border-[#2F7BFF]/40 flex flex-col justify-between"
                       onClick={() => setSelectedDeal(deal)}
                     >
                       <div className="absolute top-0 right-0 w-28 h-28 bg-[#2F7BFF]/10 rounded-full blur-2xl pointer-events-none" />
@@ -337,37 +337,37 @@ export default function DealsPage() {
                       <div>
                         <div className="flex justify-between items-start gap-2 mb-3">
                           <div>
-                            <h3 className="text-base font-bold text-white group-hover:text-[#38BDF8] transition-colors line-clamp-1">
+                            <h3 className="text-base font-bold text-foreground group-hover:text-[#2F7BFF] dark:group-hover:text-[#38BDF8] transition-colors line-clamp-1">
                               {translateMerchantName(deal.merchant.businessName, language)}
                             </h3>
-                            <span className="flex items-center gap-1 mt-0.5 text-xs text-white/50">
-                              <Building2 className="h-3 w-3 text-[#38BDF8]" />
+                            <span className="flex items-center gap-1 mt-0.5 text-xs text-muted-foreground">
+                              <Building2 className="h-3 w-3 text-[#2F7BFF] dark:text-[#38BDF8]" />
                               {getCategoryLabel(deal.merchant.category)}
                             </span>
                           </div>
-                          <span className="shrink-0 font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#00D2FF]/20 to-[#2F7BFF]/20 text-[#38BDF8] border border-[#2F7BFF]/40 text-xs shadow-xs">
+                          <span className="shrink-0 font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#00D2FF]/20 to-[#2F7BFF]/20 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/40 text-xs shadow-xs">
                             {translateDiscountLabel(deal.discountLabel, language)}
                           </span>
                         </div>
 
-                        <h4 className="font-bold text-sm mb-1.5 text-white">{translateDealTitle(deal.title, language)}</h4>
-                        <p className="text-xs text-white/60 line-clamp-2 leading-relaxed">
+                        <h4 className="font-bold text-sm mb-1.5 text-foreground">{translateDealTitle(deal.title, language)}</h4>
+                        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                           {translateDealDescription(deal.description, language)}
                         </p>
 
                         {/* Usage Counter Pill */}
-                        <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px]">
-                          <span className="text-white/50">مرات الاستخدام المتبقية:</span>
+                        <div className="mt-4 pt-3 border-t border-border/60 dark:border-white/[0.08] flex items-center justify-between text-[11px]">
+                          <span className="text-muted-foreground">مرات الاستخدام المتبقية:</span>
                           <span className={`font-mono font-bold px-2 py-0.5 rounded-lg text-xs ${
                             getStudentUsedCount(deal.id) >= getDealUsageLimit(deal)
-                              ? "bg-rose-500/15 text-rose-300 border border-rose-500/30"
-                              : "bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30"
+                              ? "bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-500/30"
+                              : "bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30"
                           }`}>
                             {getStudentUsedCount(deal.id)} / {getDealUsageLimit(deal)}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-1 mt-2 text-[11px] text-white/40">
+                        <div className="flex items-center gap-1 mt-2 text-[11px] text-muted-foreground">
                           <Calendar className="h-3 w-3" />
                           <span>
                             {t.deals.expiresOn} {new Date(deal.validUntil).toLocaleDateString(language === "en" ? "en-US" : "ar-JO")}
@@ -378,7 +378,7 @@ export default function DealsPage() {
                       <div className="mt-4">
                         <Button 
                           variant="outline" 
-                          className="w-full h-10 min-h-[44px] text-xs font-semibold rounded-xl bg-white/[0.05] border-white/10 text-white group-hover:bg-gradient-to-r group-hover:from-[#2F7BFF] group-hover:to-[#E83D84] group-hover:border-transparent transition-all shadow-sm"
+                          className="w-full h-10 min-h-[44px] text-xs font-semibold rounded-xl bg-muted/50 dark:bg-white/[0.05] border border-border dark:border-white/10 text-foreground group-hover:bg-gradient-to-r group-hover:from-[#2F7BFF] group-hover:to-[#E83D84] group-hover:text-white group-hover:border-transparent transition-all shadow-sm"
                         >
                           {t.deals.viewDetails}
                         </Button>
@@ -404,25 +404,25 @@ export default function DealsPage() {
 
       {/* Modal / Dialog Overlay with Student QR Code & Voucher Bar */}
       {selectedDeal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#070814]/80 backdrop-blur-xl animate-in fade-in duration-200">
-          <div className="bg-[#0D0E22] w-full max-w-lg rounded-3xl shadow-2xl border border-white/15 flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-[#070814]/80 backdrop-blur-xl animate-in fade-in duration-200">
+          <div className="bg-card dark:bg-[#0D0E22] w-full max-w-lg rounded-3xl shadow-2xl border border-border dark:border-white/15 flex flex-col max-h-[92vh] overflow-hidden animate-in zoom-in-95 duration-200 relative text-foreground">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/[0.08] z-10 relative">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border/60 dark:border-white/[0.08] z-10 relative">
               <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#38BDF8] shrink-0 shadow-[0_0_15px_rgba(47,123,255,0.25)]">
+                <div className="h-11 w-11 rounded-2xl bg-gradient-to-tr from-[#00D2FF]/20 to-[#2F7BFF]/20 border border-[#2F7BFF]/30 flex items-center justify-center text-[#2F7BFF] dark:text-[#38BDF8] shrink-0 shadow-[0_0_15px_rgba(47,123,255,0.25)]">
                   <Tag className="h-5 w-5" />
                 </div>
                 <div>
-                  <h2 className="font-bold text-base text-white tracking-tight">
+                  <h2 className="font-bold text-base text-foreground tracking-tight">
                     {translateMerchantName(selectedDeal.merchant.businessName, language)}
                   </h2>
-                  <span className="text-xs text-white/50">{getCategoryLabel(selectedDeal.merchant.category)}</span>
+                  <span className="text-xs text-muted-foreground">{getCategoryLabel(selectedDeal.merchant.category)}</span>
                 </div>
               </div>
               <button 
                 onClick={closeDialog}
                 aria-label={t.deals.close}
-                className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
+                className="h-9 w-9 rounded-full flex items-center justify-center hover:bg-muted dark:hover:bg-white/10 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>

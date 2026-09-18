@@ -346,22 +346,22 @@ export function ReadinessClient() {
           {result && !loading && (
             <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Score Card */}
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-6 shadow-2xl backdrop-blur-2xl overflow-hidden relative group">
+              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-6 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden relative group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#2F7BFF]/15 rounded-full blur-3xl pointer-events-none" />
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                   <div>
-                    <p className="text-xs font-semibold text-white/50 mb-1">{t.readinessclient.key_52yk5p}</p>
-                    <h2 className="text-3xl font-extrabold text-white flex items-center gap-3">
+                    <p className="text-xs font-semibold text-muted-foreground mb-1">{t.readinessclient.key_52yk5p}</p>
+                    <h2 className="text-3xl font-extrabold text-foreground flex items-center gap-3">
                       <span className="font-mono bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] bg-clip-text text-transparent">
                         {result.readiness_score}%
                       </span>
-                      <span className="bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30 font-semibold text-xs px-3 py-1 rounded-full">
+                      <span className="bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30 font-semibold text-xs px-3 py-1 rounded-full">
                         {result.readiness_status}
                       </span>
                     </h2>
                   </div>
                   <div className="text-right w-full md:w-1/2">
-                    <p className="text-xs text-white/70 leading-relaxed">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
                       {result.strengths_summary}
                     </p>
                   </div>
@@ -369,14 +369,14 @@ export function ReadinessClient() {
               </div>
 
               {/* Verified Skills */}
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl">
+              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
                 <div className="flex items-center gap-2 mb-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_eys6lg}</h3>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_eys6lg}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {result.verified_skills.map((skill: string, i: number) => (
-                    <span key={i} className="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs px-3 py-1 rounded-full font-medium shadow-xs">
+                    <span key={i} className="bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 dark:border-emerald-500/30 text-xs px-3 py-1 rounded-full font-medium shadow-xs">
                       {skill}
                     </span>
                   ))}
@@ -384,20 +384,20 @@ export function ReadinessClient() {
               </div>
 
               {/* Critical Gaps */}
-              <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-5 shadow-xl backdrop-blur-2xl">
+              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
                 <div className="flex items-center gap-2 mb-3">
                   <AlertTriangle className="w-4 h-4 text-[#E83D84]" />
-                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_75megy}</h3>
+                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_75megy}</h3>
                 </div>
                 <div className="space-y-3">
                   {result.critical_gaps.map((gap: any, i: number) => (
-                    <div key={i} className="flex gap-3.5 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                    <div key={i} className="flex gap-3.5 p-3.5 rounded-xl bg-muted/40 dark:bg-white/[0.03] border border-border/60 dark:border-white/[0.06]">
                       <div className="mt-1">
                         <div className={`w-2 h-2 rounded-full ${gap.priority === 'High' ? 'bg-[#E83D84] shadow-[0_0_8px_#E83D84] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-400' : 'bg-[#38BDF8]'}`} />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-xs">{gap.skill}</h4>
-                        <p className="text-[11px] text-white/60 mt-0.5 leading-relaxed">
+                        <h4 className="font-semibold text-foreground text-xs">{gap.skill}</h4>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
                           {gap.reason}
                         </p>
                       </div>
@@ -407,16 +407,16 @@ export function ReadinessClient() {
               </div>
 
               {/* Actionable Next Step */}
-              <div className="rounded-2xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 p-5 shadow-xl backdrop-blur-2xl">
+              <div className="rounded-2xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
                 <div className="flex items-center gap-2 mb-2">
-                  <ArrowUpRight className="w-4 h-4 text-[#38BDF8]" />
-                  <h3 className="text-sm font-bold text-white">{t.readinessclient.key_n3bmys}</h3>
+                  <ArrowUpRight className="w-4 h-4 text-[#2F7BFF] dark:text-[#38BDF8]" />
+                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_n3bmys}</h3>
                 </div>
-                <div className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.08]">
-                  <p className="text-white text-xs font-medium leading-relaxed">
+                <div className="p-4 rounded-xl bg-card/90 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08]">
+                  <p className="text-foreground text-xs font-medium leading-relaxed">
                     {result.actionable_next_step.recommended_project}
                   </p>
-                  <div className="mt-3 flex items-center gap-1.5 text-xs text-[#38BDF8] font-semibold bg-[#2F7BFF]/15 border border-[#2F7BFF]/30 w-fit px-3 py-1 rounded-full">
+                  <div className="mt-3 flex items-center gap-1.5 text-xs text-[#2F7BFF] dark:text-[#38BDF8] font-semibold bg-[#2F7BFF]/10 dark:bg-[#2F7BFF]/15 border border-[#2F7BFF]/30 w-fit px-3 py-1 rounded-full">
                     <TrendingUp className="w-3.5 h-3.5" />
                     <span>{t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}</span>
                   </div>

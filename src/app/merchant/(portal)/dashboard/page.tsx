@@ -395,20 +395,20 @@ export default function MerchantDashboardPage() {
         <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>استبدالات اليوم</span>
-            <ScanLine className="h-4 w-4 text-emerald-400" />
+            <ScanLine className="h-4 w-4 text-emerald-500" />
           </div>
-          <p className="text-2xl font-bold font-mono text-white">
+          <p className="text-2xl font-bold font-mono text-foreground">
             {shiftStats.todayRedemptions} <span className="text-xs text-muted-foreground font-sans">عملية</span>
           </p>
-          <p className="text-[11px] text-emerald-400 font-mono">+12 عملية عن نفس التوقيت أمس</p>
+          <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">+12 عملية عن نفس التوقيت أمس</p>
         </div>
 
         <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>مبيعات الطلاب الميدانية</span>
-            <DollarSign className="h-4 w-4 text-amber-400" />
+            <DollarSign className="h-4 w-4 text-amber-500" />
           </div>
-          <p className="text-2xl font-bold font-mono text-white">
+          <p className="text-2xl font-bold font-mono text-foreground">
             {shiftStats.shiftSalesVolume.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
           </p>
           <p className="text-[11px] text-muted-foreground font-mono">عبر بوابة الدفع والخصومات المعتمدة</p>
@@ -417,9 +417,9 @@ export default function MerchantDashboardPage() {
         <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>إجمالي التوفير للطلبة</span>
-            <Sparkles className="h-4 w-4 text-emerald-400" />
+            <Sparkles className="h-4 w-4 text-emerald-500" />
           </div>
-          <p className="text-2xl font-bold font-mono text-emerald-400">
+          <p className="text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400">
             {shiftStats.studentSavingsTotal.toFixed(2)} <span className="text-xs text-muted-foreground font-sans">د.أ</span>
           </p>
           <p className="text-[11px] text-muted-foreground font-mono">حافز زيارة ومبيعات إضافية</p>
@@ -428,12 +428,12 @@ export default function MerchantDashboardPage() {
         <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>الزبائن الجدد من الطلاب</span>
-            <Users className="h-4 w-4 text-purple-400" />
+            <Users className="h-4 w-4 text-purple-500" />
           </div>
-          <p className="text-2xl font-bold font-mono text-white">
+          <p className="text-2xl font-bold font-mono text-foreground">
             {shiftStats.newStudentCustomers} <span className="text-xs text-muted-foreground font-sans">طالب</span>
           </p>
-          <p className="text-[11px] text-purple-400 font-mono">أول تجربة شراء عبر مسار</p>
+          <p className="text-[11px] text-purple-600 dark:text-purple-400 font-mono">أول تجربة شراء عبر مسار</p>
         </div>
       </div>
 
@@ -454,7 +454,7 @@ export default function MerchantDashboardPage() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                     dealFilter === category
                       ? "bg-emerald-600 text-white"
-                      : "bg-background text-muted-foreground hover:text-white border border-border/60"
+                      : "bg-background text-muted-foreground hover:text-foreground border border-border/60"
                   }`}
                 >
                   {category}
@@ -475,14 +475,14 @@ export default function MerchantDashboardPage() {
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between flex-wrap gap-2">
-                      <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-[11px]">
+                      <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 dark:text-amber-400 font-mono text-[11px]">
                         {deal.category}
                       </span>
 
                       <div className="flex items-center gap-2">
                         {/* Max per student badge */}
-                        <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[10px] font-mono flex items-center gap-1">
-                          <Lock className="h-3 w-3 text-purple-400" />
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20 text-[10px] font-mono flex items-center gap-1">
+                          <Lock className="h-3 w-3 text-purple-500 dark:text-purple-400" />
                           <span>
                             {deal.maxUsesPerStudent >= 99
                               ? "غير محدود للطالب"
@@ -493,19 +493,19 @@ export default function MerchantDashboardPage() {
                         <span
                           className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
                             deal.isActive
-                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                              : "bg-slate-800 text-muted-foreground border border-border/60"
+                              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                              : "bg-muted text-muted-foreground border border-border/60"
                           }`}
                         >
                           {deal.isActive ? "نشط · Active" : "متوقف مؤقتاً"}
                         </span>
-                        <span className="text-sm font-extrabold text-white font-mono bg-white/5 px-2 py-0.5 rounded-lg">
+                        <span className="text-sm font-extrabold text-foreground font-mono bg-muted/60 dark:bg-white/5 px-2 py-0.5 rounded-lg border border-border/50">
                           {deal.discountValue}
                         </span>
                       </div>
                     </div>
 
-                    <h3 className="text-base font-bold text-white leading-snug">{deal.title}</h3>
+                    <h3 className="text-base font-bold text-foreground leading-snug">{deal.title}</h3>
                     <p className="text-xs text-muted-foreground leading-relaxed">{deal.terms}</p>
                   </div>
 
@@ -513,7 +513,7 @@ export default function MerchantDashboardPage() {
                   <div className="space-y-2 pt-3 border-t border-border">
                     <div className="flex items-center justify-between text-xs font-mono">
                       <span className="text-muted-foreground">سقف استهلاك الكوبونات الإجمالي:</span>
-                      <span className="text-white font-semibold">
+                      <span className="text-foreground font-semibold">
                         {deal.usedCount} من أصل {deal.totalCap} كوبون ({usagePercent}%)
                       </span>
                     </div>
@@ -570,49 +570,49 @@ export default function MerchantDashboardPage() {
             <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>إجمالي مبيعات طلبة مسار</span>
-                <DollarSign className="h-4 w-4 text-emerald-400" />
+                <DollarSign className="h-4 w-4 text-emerald-500" />
               </div>
-              <p className="text-2xl font-bold font-mono text-white">
+              <p className="text-2xl font-bold font-mono text-foreground">
                 2,480.00 <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
-              <p className="text-[11px] text-emerald-400 font-mono">+24% نمو هذا الشهر</p>
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">+24% نمو هذا الشهر</p>
             </div>
 
             <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>ساعة الذروة الطلابية</span>
-                <Clock className="h-4 w-4 text-purple-400" />
+                <Clock className="h-4 w-4 text-purple-500" />
               </div>
-              <p className="text-2xl font-bold font-mono text-white">01:00 م - 03:30 م</p>
+              <p className="text-2xl font-bold font-mono text-foreground">01:00 م - 03:30 م</p>
               <p className="text-[11px] text-muted-foreground font-mono">بين المحاضرات وفترات الغداء</p>
             </div>
 
             <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>معدل عودة الطلاب (Retention)</span>
-                <RotateCcw className="h-4 w-4 text-amber-400" />
+                <RotateCcw className="h-4 w-4 text-amber-500" />
               </div>
-              <p className="text-2xl font-bold font-mono text-amber-400">68%</p>
+              <p className="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400">68%</p>
               <p className="text-[11px] text-muted-foreground font-mono">يعودون للشراء خلال 14 يوماً</p>
             </div>
 
             <div className="p-5 rounded-2xl border border-border bg-card space-y-1">
               <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>متوسط التوفير لكل فاتورة</span>
-                <Sparkles className="h-4 w-4 text-emerald-400" />
+                <Sparkles className="h-4 w-4 text-emerald-500" />
               </div>
-              <p className="text-2xl font-bold font-mono text-white">
+              <p className="text-2xl font-bold font-mono text-foreground">
                 2.15 <span className="text-xs text-muted-foreground font-sans">د.أ</span>
               </p>
-              <p className="text-[11px] text-emerald-400 font-mono">معدل خصم مثالي يحقق الربحية</p>
+              <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono">معدل خصم مثالي يحقق الربحية</p>
             </div>
           </div>
 
           {/* Granular Logs Table with Usage Sequence */}
-          <div className="rounded-2xl border border-border bg-card p-6 shadow-xl space-y-4">
+          <div className="rounded-2xl border border-border bg-card p-6 shadow-sm dark:shadow-xl space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-base font-bold text-white">سجل استبدالات الكوبونات المباشر</h3>
+                <h3 className="text-base font-bold text-foreground">سجل استبدالات الكوبونات المباشر</h3>
                 <p className="text-xs text-muted-foreground">
                   رصد دقيق لكافة العمليات بالدقائق وعدد مرات استخدام كل طالب لمنع الاحتيال وضبط المحاسبة.
                 </p>
@@ -626,7 +626,7 @@ export default function MerchantDashboardPage() {
                   placeholder="بحث باسم الطالب أو رقم #TRX..."
                   value={logSearchQuery}
                   onChange={(e) => setLogSearchQuery(e.target.value)}
-                  className="w-full h-10 pr-9 pl-4 text-xs font-mono rounded-xl border border-border bg-background text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                  className="w-full h-10 pr-9 pl-4 text-xs font-mono rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -645,37 +645,37 @@ export default function MerchantDashboardPage() {
                     <th className="py-3 px-4 text-center">الحالة</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-border/60 dark:divide-white/5">
                   {filteredLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
+                    <tr key={log.id} className="hover:bg-muted/30 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="py-3.5 px-4 font-mono font-bold text-emerald-600 dark:text-emerald-400">
                         {log.trxId}
                       </td>
                       <td className="py-3.5 px-4 text-muted-foreground font-mono">{log.timestamp}</td>
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-white">{log.studentName}</div>
+                        <div className="font-semibold text-foreground">{log.studentName}</div>
                         <div className="text-[11px] text-muted-foreground font-mono">
                           {log.studentId} • {log.university}
                         </div>
                       </td>
                       <td className="py-3.5 px-4">
-                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono text-[11px]">
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-mono text-[11px]">
                           {log.discountLabel}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 font-mono">
-                        <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-300 border border-purple-500/20 text-[10px]">
+                        <span className="px-2 py-0.5 rounded-md bg-purple-500/10 text-purple-600 dark:text-purple-300 border border-purple-500/20 text-[10px]">
                           {log.usageSequence}
                         </span>
                       </td>
                       <td className="py-3.5 px-4 font-mono">
-                        <div className="text-white font-bold">{log.finalPrice.toFixed(2)} د.أ</div>
-                        <div className="text-[11px] text-emerald-400">
+                        <div className="text-foreground font-bold">{log.finalPrice.toFixed(2)} د.أ</div>
+                        <div className="text-[11px] text-emerald-600 dark:text-emerald-400">
                           وفر: {log.discountAmount.toFixed(2)} د.أ
                         </div>
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono text-[10px]">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-mono text-[10px]">
                           <CheckCircle2 className="h-3 w-3" />
                           <span>معتمد</span>
                         </span>

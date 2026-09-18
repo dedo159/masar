@@ -141,16 +141,16 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
                 className={cn(
                   "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200",
                   item.active
-                    ? "bg-gradient-to-r from-[#2F7BFF]/25 to-[#E83D84]/15 text-white border border-[#2F7BFF]/40 shadow-[0_0_20px_rgba(47,123,255,0.2)]"
-                    : "text-white/60 hover:text-white hover:bg-white/[0.05]"
+                    ? "bg-gradient-to-r from-[#2F7BFF]/20 to-[#E83D84]/15 text-foreground font-bold border border-[#2F7BFF]/30 dark:border-[#2F7BFF]/40 shadow-sm dark:shadow-[0_0_20px_rgba(47,123,255,0.2)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50 dark:hover:bg-white/[0.05]"
                 )}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className={cn("h-4 w-4", item.active ? "text-[#38BDF8]" : "text-white/60")} />
+                  <Icon className={cn("h-4 w-4", item.active ? "text-[#2F7BFF] dark:text-[#38BDF8]" : "text-muted-foreground")} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#2F7BFF]/15 text-[#38BDF8] border border-[#2F7BFF]/30 font-bold">
+                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30 font-bold">
                     {item.badge}
                   </span>
                 )}
@@ -161,21 +161,21 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
 
         {/* Store & Branch Info Badge at Bottom of Sidebar */}
         <div className="p-3 border-t border-border space-y-2.5">
-          <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-xs">
+          <div className="p-2.5 rounded-xl bg-muted/40 dark:bg-white/[0.04] border border-border dark:border-white/[0.08] text-xs">
             <div className="flex items-center gap-2">
-              <Store className="h-4 w-4 text-amber-400 shrink-0" />
+              <Store className="h-4 w-4 text-amber-500 shrink-0" />
               <div className="min-w-0 flex-1">
-                <span className="font-bold text-white truncate block text-xs">
+                <span className="font-bold text-foreground truncate block text-xs">
                   {merchantName}
                 </span>
-                <span className="text-[10px] text-white/50 truncate block mt-0.5">
+                <span className="text-[10px] text-muted-foreground truncate block mt-0.5">
                   {currentBranch}
                 </span>
               </div>
             </div>
 
-            <div className="mt-2 pt-2 border-t border-white/[0.06] flex items-center justify-between text-[10px] font-mono">
-              <span className="flex items-center gap-1.5 text-emerald-400">
+            <div className="mt-2 pt-2 border-t border-border/60 dark:border-white/[0.06] flex items-center justify-between text-[10px] font-mono">
+              <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -191,17 +191,17 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
               <button
                 type="button"
                 onClick={() => setTheme(isDark ? "light" : "dark")}
-                className="p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors flex items-center gap-1.5 text-xs font-medium cursor-pointer border border-white/10"
+                className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors flex items-center gap-1.5 text-xs font-medium cursor-pointer border border-border dark:border-white/10"
                 title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
               >
-                {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-400" />}
+                {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
                 <span className="text-[11px]">{isDark ? "نهاري" : "ليلي"}</span>
               </button>
             )}
 
             <button
               onClick={handleLogout}
-              className="p-2 rounded-xl text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium border border-rose-500/20"
+              className="p-2 rounded-xl text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer flex items-center gap-1.5 text-xs font-medium border border-rose-500/20"
               title="تسجيل الخروج"
             >
               <LogOut className="h-4 w-4" />
@@ -223,9 +223,9 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
                 <span className="text-sm font-bold tracking-tight masar-gradient-text">مسار للشركاء</span>
               </div>
 
-              <div className="hidden md:flex items-center gap-2 text-xs text-white/50">
+              <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="h-2 w-2 rounded-full bg-[#00D2FF] animate-pulse" />
-                <span className="font-semibold text-white">بوابة الشركاء والمتاجر</span>
+                <span className="font-semibold text-foreground">بوابة الشركاء والمتاجر</span>
                 <span>/</span>
                 <span>إدارة المتجر والعروض والتقارير المالية</span>
               </div>
@@ -233,8 +233,8 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
 
             {/* Top Right Quick Controls */}
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs font-medium text-white">
-                <Store className="h-3.5 w-3.5 text-amber-400" />
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-muted/30 dark:bg-white/[0.04] border border-border dark:border-white/10 text-xs font-medium text-foreground">
+                <Store className="h-3.5 w-3.5 text-amber-500" />
                 <span>{merchantName}</span>
               </div>
 
@@ -242,10 +242,10 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
                 <button
                   type="button"
                   onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer flex items-center gap-1.5 text-xs border border-white/10"
+                  className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors cursor-pointer flex items-center gap-1.5 text-xs border border-border dark:border-white/10"
                   title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
                 >
-                  {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-400" />}
+                  {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
                   <span className="hidden sm:inline text-[11px]">{isDark ? "نهاري" : "ليلي"}</span>
                 </button>
               )}
@@ -262,7 +262,7 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-white/[0.08] bg-[#0B0C1E]/95 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-1 select-none shadow-2xl">
+      <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border dark:border-white/[0.08] bg-card/95 dark:bg-[#0B0C1E]/95 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),6px)] pt-1 px-1 select-none shadow-2xl">
         <div className="grid grid-cols-6 w-full items-center">
           {[
             { href: "/merchant/dashboard", icon: LayoutDashboard, label: "الرئيسية" },
@@ -279,7 +279,7 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
                 href={href}
                 className={cn(
                   "flex flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 px-0.5 min-w-0 transition-all text-center relative",
-                  isActive ? "text-white font-bold" : "text-white/50 hover:text-white"
+                  isActive ? "text-foreground font-bold" : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {isActive && (

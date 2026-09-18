@@ -62,32 +62,32 @@ export function QuickStatsClient({
           key={href + label}
           href={href}
           className={cn(
-            "group relative flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-gradient-to-b from-white/[0.06] to-white/[0.01] p-4 sm:p-5 min-h-[128px] backdrop-blur-xl shadow-xl overflow-hidden",
+            "group relative flex flex-col justify-between rounded-2xl border border-border/80 dark:border-white/[0.08] bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.06] dark:to-white/[0.01] p-4 sm:p-5 min-h-[128px] backdrop-blur-xl shadow-sm dark:shadow-xl overflow-hidden",
             "transition-all duration-300 ease-out",
             "hover:border-[#2F7BFF]/50 hover:shadow-[0_0_25px_rgba(47,123,255,0.18)] hover:-translate-y-0.5 active:scale-[0.99]"
           )}
         >
           {/* Subtle top hairline highlight */}
-          <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-[#2F7BFF]/60 transition-colors" />
+          <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-slate-200 dark:via-white/20 to-transparent group-hover:via-[#2F7BFF]/60 transition-colors" />
 
           <div className="flex items-center justify-between">
             <div className={cn("h-10 w-10 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-sm", iconStyle)}>
               <Icon className="h-5 w-5" strokeWidth={2.2} />
             </div>
-            <div className="h-7 w-7 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-[#2F7BFF]/20 group-hover:text-[#38BDF8] transition-all">
-              <ArrowUpRight className="h-3.5 w-3.5 text-white/50 group-hover:text-[#38BDF8] transition-colors" />
+            <div className="h-7 w-7 rounded-full bg-muted/80 dark:bg-white/[0.06] flex items-center justify-center group-hover:bg-[#2F7BFF]/20 transition-all">
+              <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-[#2F7BFF] dark:group-hover:text-[#38BDF8] transition-colors" />
             </div>
           </div>
           <div className="mt-3.5">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl sm:text-3xl font-black tracking-tight text-white tabular-nums leading-none">
+              <span className="text-2xl sm:text-3xl font-black tracking-tight text-foreground tabular-nums leading-none">
                 {value}
               </span>
-              <span className="text-xs font-semibold text-white/60">
+              <span className="text-xs font-semibold text-muted-foreground">
                 {unit}
               </span>
             </div>
-            <p className="text-xs sm:text-sm font-medium text-white/70 mt-1.5 truncate">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground mt-1.5 truncate">
               {label}
             </p>
           </div>

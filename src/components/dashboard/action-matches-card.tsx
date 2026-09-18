@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { Calendar, Briefcase, ArrowUpRight, Sparkles } from "lucide-react";
@@ -11,17 +11,17 @@ export function ActionMatchesCard() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
       {/* Recommended Events */}
-      <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-4 shadow-xl backdrop-blur-2xl overflow-hidden flex flex-col justify-between">
+      <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 shadow-sm dark:shadow-xl backdrop-blur-2xl overflow-hidden flex flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#38BDF8] flex items-center gap-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-sky-600 dark:text-[#38BDF8] flex items-center gap-1 font-semibold">
               <Calendar className="h-3 w-3" />
               <span>{isAr ? "فعاليات مقترحة" : "Campus Events"}</span>
             </span>
-            <h4 className="text-sm font-bold text-white tracking-tight">
+            <h4 className="text-sm font-bold text-foreground tracking-tight">
               {isAr ? "هاكاثون الذكاء الاصطناعي 2026" : "Recommended Events"}
             </h4>
-            <p className="text-[11px] text-white/50 line-clamp-1">
+            <p className="text-[11px] text-muted-foreground line-clamp-1">
               {isAr ? "كلية الملك عبد الله الثاني لتكنولوجيا المعلومات" : "KASIT Hackathon • 3 days left"}
             </p>
           </div>
@@ -37,17 +37,17 @@ export function ActionMatchesCard() {
       </div>
 
       {/* Job/Internship Matches */}
-      <div className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-4 shadow-xl backdrop-blur-2xl overflow-hidden flex flex-col justify-between">
+      <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 shadow-sm dark:shadow-xl backdrop-blur-2xl overflow-hidden flex flex-col justify-between">
         <div className="flex items-start justify-between mb-3">
           <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#E83D84] flex items-center gap-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-pink-600 dark:text-[#E83D84] flex items-center gap-1 font-semibold">
               <Briefcase className="h-3 w-3" />
               <span>{isAr ? "مطابقة تدريب" : "Job Matches"}</span>
             </span>
-            <h4 className="text-sm font-bold text-white tracking-tight">
+            <h4 className="text-sm font-bold text-foreground tracking-tight">
               {isAr ? "فرص التدريب المتوافقة (92%)" : "Job/Internship Matches"}
             </h4>
-            <p className="text-[11px] text-white/50 line-clamp-1">
+            <p className="text-[11px] text-muted-foreground line-clamp-1">
               {isAr ? "مطور برمجيات Fullstack متدرب • عمان" : "Frontend / React Intern • Amman"}
             </p>
           </div>
