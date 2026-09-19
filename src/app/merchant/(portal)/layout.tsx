@@ -122,12 +122,9 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       {/* Desktop Sidebar — Matching Masar Student Site Sidebar */}
       <aside className="hidden md:flex w-60 flex-col bg-card border-l border-border fixed top-0 bottom-0 right-0 z-40">
         {/* Brand Header with MasarLogo */}
-        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
-          <MasarLogo variant="icon" size="sm" priority />
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight masar-gradient-text">مسار</span>
-            <span className="text-[11px] text-muted-foreground font-medium">بوابة الشركاء والمتاجر</span>
-          </div>
+        <div className="flex flex-col items-center justify-center py-4 px-4 border-b border-border text-center">
+          <MasarLogo size="sm" priority />
+          <span className="text-[10px] text-muted-foreground font-semibold mt-1.5">بوابة الشركاء والمتاجر</span>
         </div>
 
         {/* Navigation Items */}
@@ -214,15 +211,14 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:pr-60 min-h-screen">
         {/* Top Header Bar */}
-        <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-8 py-3 transition-colors">
+        <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-8 py-3 transition-colors relative">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            {/* Mobile Brand / Logo */}
-            <div className="flex items-center gap-2.5">
-              <div className="md:hidden flex items-center gap-2">
-                <MasarLogo variant="icon" size="xs" priority />
-                <span className="text-sm font-bold tracking-tight masar-gradient-text">مسار للشركاء</span>
-              </div>
+            {/* Mobile Brand / Logo - Centered */}
+            <div className="md:hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+              <MasarLogo size="sm" priority className="pointer-events-auto" />
+            </div>
 
+            <div className="flex items-center gap-2.5">
               <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
                 <span className="h-2 w-2 rounded-full bg-[#00D2FF] animate-pulse" />
                 <span className="font-semibold text-foreground">بوابة الشركاء والمتاجر</span>

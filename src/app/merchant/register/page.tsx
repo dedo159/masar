@@ -131,7 +131,10 @@ export default function MerchantRegisterPage() {
       </header>
 
       {/* Center Auth Card */}
-      <main className="relative z-10 w-full max-w-[460px] my-auto">
+      <main className="relative z-10 w-full max-w-[460px] my-auto space-y-4">
+        <div className="text-center flex justify-center">
+          <MasarLogo size="lg" priority />
+        </div>
         <div className="relative rounded-2xl border border-border/80 bg-card/75 dark:bg-[#070707]/85 backdrop-blur-2xl p-6 sm:p-8 shadow-2xl overflow-hidden transition-all duration-300">
           <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-foreground/25 to-transparent" />
 

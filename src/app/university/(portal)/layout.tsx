@@ -55,12 +55,9 @@ export default function UniversityPortalLayout({
     <div className="flex min-h-screen bg-background text-foreground" dir="rtl">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col bg-card/95 dark:bg-[#0B0C1E]/95 border-l border-border dark:border-white/[0.08] backdrop-blur-2xl shadow-sm dark:shadow-2xl relative z-40">
-        <div className="p-5 flex items-center gap-3 border-b border-border dark:border-white/[0.08]">
-          <MasarLogo variant="icon" size="sm" priority />
-          <div>
-            <h1 className="text-sm font-bold masar-gradient-text tracking-tight">مسار الأكاديمي</h1>
-            <p className="text-[10px] text-muted-foreground font-medium">بوابة موظفي ومسؤولي الجامعة</p>
-          </div>
+        <div className="p-4 flex flex-col items-center justify-center text-center border-b border-border dark:border-white/[0.08]">
+          <MasarLogo size="sm" priority />
+          <span className="text-[10px] font-semibold text-muted-foreground mt-1.5">بوابة موظفي ومسؤولي الجامعة</span>
         </div>
 
         <nav className="flex-1 px-3.5 py-4 space-y-1.5">
@@ -98,10 +95,9 @@ export default function UniversityPortalLayout({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 pb-20 md:pb-0">
-        <header className="h-16 bg-card/80 dark:bg-[#0B0C1E]/80 backdrop-blur-xl border-b border-border dark:border-white/[0.08] flex items-center justify-between px-6 sticky top-0 z-30">
-          <div className="flex items-center gap-2.5 md:hidden">
-            <MasarLogo variant="icon" size="xs" />
-            <span className="font-bold masar-gradient-text text-sm">مسار الأكاديمي</span>
+        <header className="h-16 bg-card/80 dark:bg-[#0B0C1E]/80 backdrop-blur-xl border-b border-border dark:border-white/[0.08] relative flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30">
+          <div className="md:hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+            <MasarLogo size="sm" priority className="pointer-events-auto" />
           </div>
           <div className="hidden md:flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#00D2FF] animate-pulse" />

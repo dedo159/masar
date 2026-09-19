@@ -245,7 +245,10 @@ export default function MerchantLoginPage() {
       </header>
 
       {/* 3. بطاقة ونموذج تسجيل الدخول (Login Form Card) */}
-      <main className="relative z-10 w-full max-w-[440px] my-auto">
+      <main className="relative z-10 w-full max-w-[440px] my-auto space-y-4">
+        <div className="text-center flex justify-center">
+          <MasarLogo size="lg" priority />
+        </div>
         <div className="relative rounded-2xl border border-border bg-card shadow-2xl backdrop-blur-xl p-6 sm:p-8 overflow-hidden">
           {/* Top glowing hairline border on card */}
           <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent" />

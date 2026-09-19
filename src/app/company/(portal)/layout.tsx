@@ -88,12 +88,9 @@ export default function CompanyPortalLayout({
       {/* Desktop Sidebar — Matching Masar Core App Sidebar */}
       <aside className="hidden md:flex w-60 flex-col bg-card border-l border-border fixed top-0 bottom-0 right-0 z-40">
         {/* Brand Header with MasarLogo */}
-        <div className="flex items-center gap-2.5 px-5 py-4 border-b border-border">
-          <MasarLogo variant="icon" size="sm" priority />
-          <div className="flex flex-col">
-            <span className="text-base font-bold tracking-tight masar-gradient-text">مسار</span>
-            <span className="text-[11px] text-muted-foreground font-medium">بوابة الشركات والتوظيف</span>
-          </div>
+        <div className="flex flex-col items-center justify-center py-4 px-4 border-b border-border text-center">
+          <MasarLogo size="sm" priority />
+          <span className="text-[10px] text-muted-foreground font-semibold mt-1.5">بوابة الشركات والتوظيف</span>
         </div>
 
         {/* Navigation Items */}
@@ -147,10 +144,9 @@ export default function CompanyPortalLayout({
       {/* Main Content Area */}
       <div className="flex-1 md:pr-60 flex flex-col min-w-0 pb-20 md:pb-0">
         {/* Top Header Bar */}
-        <header className="h-16 bg-card/80 backdrop-blur-xl border-b border-border flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 transition-colors">
-          <div className="flex items-center gap-2 md:hidden">
-            <MasarLogo variant="icon" size="xs" />
-            <span className="font-bold text-sm tracking-tight masar-gradient-text">مسار للأعمال</span>
+        <header className="h-16 bg-card/80 backdrop-blur-xl border-b border-border relative flex items-center justify-between px-4 sm:px-6 sticky top-0 z-30 transition-colors">
+          <div className="md:hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+            <MasarLogo size="sm" priority className="pointer-events-auto" />
           </div>
 
           <div className="hidden md:flex items-center gap-2">

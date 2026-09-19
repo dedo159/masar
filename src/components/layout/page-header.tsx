@@ -43,26 +43,28 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl transition-all duration-300">
       {/* Mobile Top Bar (Exact Match with Official 3D Mockup) */}
-      <div className="flex md:hidden items-center justify-between px-4 py-2.5">
+      <div className="relative flex md:hidden items-center justify-between px-4 py-2.5 min-h-[56px]">
         {/* Left: Menu Hamburger */}
         <Link
           href="/settings"
-          className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-white/5 active:scale-95 transition-all"
+          className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all z-10"
           aria-label="القائمة"
         >
           <Menu className="h-5 w-5" />
         </Link>
 
-        {/* Center: Masar Full Logo */}
-        <Link href="/" className="flex items-center justify-center">
-          <MasarLogo size="sm" priority />
-        </Link>
+        {/* Center: Masar Full Logo (Centered in the middle of the screen) */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <Link href="/" className="pointer-events-auto flex items-center justify-center hover:opacity-90 transition-opacity">
+            <MasarLogo size="sm" priority />
+          </Link>
+        </div>
 
         {/* Right: Search & Notifications */}
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 z-10">
           <Link
             href="/courses"
-            className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-white/5 active:scale-95 transition-all"
+            className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all"
             aria-label="بحث"
           >
             <Search className="h-4 w-4" />
@@ -72,7 +74,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
       </div>
 
       {/* Desktop Top Bar */}
-      <div className="hidden md:flex items-center justify-between px-6 py-3.5">
+      <div className="hidden md:flex items-center justify-between px-6 py-3.5 relative min-h-[60px]">
         <div className="flex items-center gap-3">
           <div>
             <h1 className="text-base font-bold tracking-tight text-foreground">{displayTitle}</h1>
@@ -92,6 +94,13 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
               </p>
             )}
           </div>
+        </div>
+
+        {/* Center: Prominent Masar Full Logo */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex items-center justify-center">
+          <Link href="/" className="flex items-center justify-center hover:opacity-90 transition-opacity">
+            <MasarLogo size="sm" priority />
+          </Link>
         </div>
 
         <div className="flex items-center gap-1.5">

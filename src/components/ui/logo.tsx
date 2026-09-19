@@ -13,19 +13,19 @@ interface MasarLogoProps {
 }
 
 const sizeMap = {
-  xs: "w-6 h-auto",
-  sm: "w-8 h-auto",
-  md: "w-12 h-auto",
-  lg: "w-16 h-auto",
-  xl: "w-24 h-auto",
+  xs: "w-20 sm:w-24 h-auto",
+  sm: "w-28 sm:w-36 h-auto",
+  md: "w-36 sm:w-48 h-auto",
+  lg: "w-48 sm:w-60 h-auto",
+  xl: "w-64 sm:w-80 h-auto",
 };
 
 const iconSizeMap = {
-  xs: "w-6 h-6",
-  sm: "w-8 h-8",
-  md: "w-11 h-11",
-  lg: "w-14 h-14",
-  xl: "w-20 h-20",
+  xs: "w-7 h-7",
+  sm: "w-10 h-10",
+  md: "w-14 h-14",
+  lg: "w-18 h-18",
+  xl: "w-24 h-24",
 };
 
 export function MasarLogo({
@@ -49,8 +49,8 @@ export function MasarLogo({
         <Image
           src="/masar-icon.png"
           alt="مسار — MASAR"
-          width={80}
-          height={80}
+          width={198}
+          height={179}
           priority={priority}
           className={cn("object-contain drop-shadow-md", iconSizeMap[size])}
         />
@@ -64,23 +64,8 @@ export function MasarLogo({
         <Image
           src="/masar-logo-white.png"
           alt="مسار — MASAR"
-          width={180}
-          height={115}
-          priority={priority}
-          className={cn("object-contain", sizeMap[size])}
-        />
-      </div>
-    );
-  }
-
-  if (variant === "color") {
-    return (
-      <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
-        <Image
-          src="/masar-logo-color.png"
-          alt="مسار — MASAR"
-          width={180}
-          height={115}
+          width={248}
+          height={98}
           priority={priority}
           className={cn("object-contain drop-shadow-sm", sizeMap[size])}
         />
@@ -88,15 +73,18 @@ export function MasarLogo({
     );
   }
 
+  // Dual-mode high contrast full logo (dark text in light mode, glowing text in dark mode)
+  const logoSrc = isDark ? "/masar-logo-color.png" : "/masar-logo-light.png";
+
   return (
     <div className={cn("relative inline-flex items-center justify-center select-none flex-shrink-0", className)}>
       <Image
-        src={isDark ? "/masar-logo-color.png" : "/masar-logo-black.png"}
+        src={logoSrc}
         alt="مسار — MASAR"
-        width={180}
-        height={115}
+        width={455}
+        height={179}
         priority={priority}
-        className={cn("object-contain", sizeMap[size])}
+        className={cn("object-contain drop-shadow-sm transition-opacity duration-200", sizeMap[size])}
       />
     </div>
   );
