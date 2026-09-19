@@ -17,6 +17,13 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
   const studentIdNumber = student?.studentId || "202410890";
   const studentMajor = student?.major || (isAr ? "علم الحاسوب" : "Computer Science");
 
+  // Read faculty from localStorage
+  const facultyName = typeof window !== "undefined"
+    ? (isAr
+        ? localStorage.getItem("masar_user_faculty_name")
+        : localStorage.getItem("masar_user_faculty_name_en"))
+    : null;
+
   return (
     <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 sm:p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden group">
       {/* Top Hairline Glowing Gradient Border */}
@@ -67,7 +74,7 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
               {isAr ? `الرقم الجامعي: ${studentIdNumber}` : `Student ID: ${studentIdNumber}`}
             </p>
             <p className="text-[11px] text-muted-foreground/80 truncate">
-              {studentMajor} • {isAr ? "جامعة عمان الأهلية" : "Al-Ahliyya Amman University"}
+              {studentMajor}{facultyName ? ` • ${facultyName}` : ""} • {isAr ? "جامعة عمان الأهلية" : "Al-Ahliyya Amman University"}
             </p>
           </div>
         </div>

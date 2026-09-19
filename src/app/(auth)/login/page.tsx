@@ -8,20 +8,92 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
-import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { startRegistration, startAuthentication } from "@simplewebauthn/browser";
 
 const universities = [
   { id: "aau", nameAr: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University", moodleUrl: "https://vclass.ammanu.edu.jo" },
 ];
 
+export const faculties = [
+  { 
+    id: "it", 
+    nameAr: "كلية تكنولوجيا المعلومات", 
+    nameEn: "Faculty of Information Technology",
+    majors: ["علم الحاسوب", "هندسة البرمجيات", "الأمن السيبراني", "الذكاء الاصطناعي", "علم البيانات", "نظم المعلومات الحاسوبية"] 
+  },
+  { 
+    id: "business", 
+    nameAr: "كلية الأعمال", 
+    nameEn: "Faculty of Business",
+    majors: ["إدارة الأعمال", "المحاسبة", "العلوم المالية والمصرفية", "التسويق الرقمي", "نظم المعلومات الإدارية (MIS)"] 
+  },
+  { 
+    id: "engineering", 
+    nameAr: "كلية الهندسة", 
+    nameEn: "Faculty of Engineering",
+    majors: ["هندسة الحاسوب", "هندسة الاتصالات والإلكترونيات", "الهندسة المدنية", "الهندسة الكهربائية", "الهندسة الميكانيكية"] 
+  },
+  { 
+    id: "pharmacy", 
+    nameAr: "كلية الصيدلة", 
+    nameEn: "Faculty of Pharmacy",
+    majors: ["دكتور صيدلة", "الصيدلة"] 
+  },
+  { 
+    id: "nursing", 
+    nameAr: "كلية التمريض", 
+    nameEn: "Faculty of Nursing",
+    majors: ["التمريض"] 
+  },
+  { 
+    id: "allied_medical", 
+    nameAr: "كلية العلوم الطبية المساندة", 
+    nameEn: "Faculty of Allied Medical Sciences",
+    majors: ["التحاليل الطبية", "البصريات", "العلاج الطبيعي", "السمع والنطق"] 
+  },
+  { 
+    id: "architecture_design", 
+    nameAr: "كلية العمارة والتصميم", 
+    nameEn: "Faculty of Architecture & Design",
+    majors: ["هندسة العمارة", "التصميم الجرافيكي", "التصميم الداخلي", "الوسائط المتعددة (Multimedia)"] 
+  },
+  { 
+    id: "law", 
+    nameAr: "كلية الحقوق", 
+    nameEn: "Faculty of Law",
+    majors: ["القانون"] 
+  },
+  { 
+    id: "arts_sciences", 
+    nameAr: "كلية الآداب والعلوم", 
+    nameEn: "Faculty of Arts & Sciences",
+    majors: ["اللغة الإنجليزية والترجمة", "الفيزياء التطبيقية", "الرياضيات"] 
+  },
+  { 
+    id: "educational_sciences", 
+    nameAr: "كلية العلوم التربوية", 
+    nameEn: "Faculty of Educational Sciences",
+    majors: ["التربية الخاصة", "التربية الرياضية"] 
+  },
+  { 
+    id: "dentistry", 
+    nameAr: "كلية طب الأسنان", 
+    nameEn: "Faculty of Dentistry",
+    majors: ["جراحة الفم والأسنان"] 
+  },
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const { t, isRtl, language, setLanguage } = useLanguage();
   const [selectedUniv, setSelectedUniv] = useState("aau");
+  const [selectedFaculty, setSelectedFaculty] = useState("it");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [major, setMajor] = useState("");
+  const [major, setMajor] = useState("علم الحاسوب");
+  const [isCustomMajor, setIsCustomMajor] = useState(false);
+  const [customMajor, setCustomMajor] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [biometricLoading, setBiometricLoading] = useState(false);
@@ -102,8 +174,16 @@ export default function LoginPage() {
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
         localStorage.setItem("masar_user_name", verifyData.student?.name || "");
+        localStorage.setItem("masar_user_faculty", selectedFaculty);
+        const facObj = faculties.find((f) => f.id === selectedFaculty);
+        if (facObj) {
+          localStorage.setItem("masar_user_faculty_name", facObj.nameAr);
+          localStorage.setItem("masar_user_faculty_name_en", facObj.nameEn);
+        }
         if (verifyData.student?.major) {
           localStorage.setItem("masar_user_major", verifyData.student.major);
+        } else if (major.trim()) {
+          localStorage.setItem("masar_user_major", major.trim());
         }
       }
 
@@ -120,7 +200,7 @@ export default function LoginPage() {
       setError(t.auth.biometricLoginFailed);
       setBiometricLoading(false);
     }
-  }, [router, t]);
+  }, [router, t, selectedFaculty, major]);
 
   // --- Biometric Registration (after successful login) ---
   const handleBiometricSetup = async () => {
@@ -196,6 +276,7 @@ export default function LoginPage() {
 
     const univ = universities.find((u) => u.id === selectedUniv);
     const moodleUrl = univ?.moodleUrl || "https://vclass.ammanu.edu.jo";
+    const activeMajor = isCustomMajor ? (customMajor.trim() || major) : major;
 
     setLoading(true);
     try {
@@ -222,12 +303,18 @@ export default function LoginPage() {
         if (typeof window !== "undefined") {
           localStorage.setItem("masar_logged_in", "true");
           localStorage.setItem("masar_user_name", authData.student?.name || username);
+          localStorage.setItem("masar_user_faculty", selectedFaculty);
+          const facObj = faculties.find((f) => f.id === selectedFaculty);
+          if (facObj) {
+            localStorage.setItem("masar_user_faculty_name", facObj.nameAr);
+            localStorage.setItem("masar_user_faculty_name_en", facObj.nameEn);
+          }
           if (authData.student?.major) {
             localStorage.setItem("masar_user_major", authData.student.major);
+          } else if (activeMajor.trim()) {
+            localStorage.setItem("masar_user_major", activeMajor.trim());
           }
         }
-
-
 
         setTimeout(() => {
           router.push("/");
@@ -244,7 +331,7 @@ export default function LoginPage() {
           moodleUrl,
           username: username.trim(),
           password,
-          major: major.trim(),
+          major: activeMajor.trim(),
         }),
       });
 
@@ -265,9 +352,15 @@ export default function LoginPage() {
 
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
-        localStorage.setItem("masar_user_name", data.student?.name || username);
-        if (major.trim()) {
-          localStorage.setItem("masar_user_major", major.trim());
+        localStorage.setItem("masar_user_name", data.studentName || username);
+        localStorage.setItem("masar_user_faculty", selectedFaculty);
+        const facObj = faculties.find((f) => f.id === selectedFaculty);
+        if (facObj) {
+          localStorage.setItem("masar_user_faculty_name", facObj.nameAr);
+          localStorage.setItem("masar_user_faculty_name_en", facObj.nameEn);
+        }
+        if (activeMajor.trim()) {
+          localStorage.setItem("masar_user_major", activeMajor.trim());
         }
       }
 
@@ -354,9 +447,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative" dir={isRtl ? "rtl" : "ltr"}>
-      {/* Theme & Language switcher in header */}
+      {/* Theme switcher in header */}
       <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
-        <ThemeLanguageToggle size="sm" />
+        <ThemeToggle />
       </div>
 
       <div className="w-full max-w-sm space-y-6">
@@ -414,6 +507,36 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* Faculty / College selection */}
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-foreground">
+              {language === "en" ? "Faculty / College" : "الكلية"}
+            </label>
+            <div className="relative">
+              <select
+                value={selectedFaculty}
+                onChange={(e) => {
+                  const fid = e.target.value;
+                  setSelectedFaculty(fid);
+                  const fac = faculties.find((f) => f.id === fid);
+                  if (fac && fac.majors.length > 0) {
+                    setMajor(fac.majors[0]);
+                    setIsCustomMajor(false);
+                    setCustomMajor("");
+                  }
+                }}
+                disabled={loading}
+                className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
+              >
+                {faculties.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {language === "en" ? f.nameEn : f.nameAr}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* Username / Student ID */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
@@ -448,7 +571,7 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Major (Optional) */}
+          {/* Major / Specialization */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="block text-xs font-semibold text-foreground">
@@ -456,14 +579,35 @@ export default function LoginPage() {
               </label>
               <span className="text-[10px] text-muted-foreground">{language === "en" ? "Optional" : "اختياري"}</span>
             </div>
-            <Input
-              type="text"
-              value={major}
-              onChange={(e) => setMajor(e.target.value)}
+            <select
+              value={isCustomMajor ? "__custom__" : major}
+              onChange={(e) => {
+                if (e.target.value === "__custom__") {
+                  setIsCustomMajor(true);
+                } else {
+                  setIsCustomMajor(false);
+                  setMajor(e.target.value);
+                  setCustomMajor("");
+                }
+              }}
               disabled={loading}
-              placeholder={language === "en" ? "e.g. Software Engineering, CS" : "مثال: هندسة البرمجيات، علم الحاسوب"}
-              className="min-h-[44px]"
-            />
+              className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
+            >
+              {(faculties.find((f) => f.id === selectedFaculty)?.majors || []).map((m) => (
+                <option key={m} value={m}>{m}</option>
+              ))}
+              <option value="__custom__">{language === "en" ? "Other (type manually)" : "أخرى (أدخل يدوياً)"}</option>
+            </select>
+            {isCustomMajor && (
+              <Input
+                type="text"
+                value={customMajor}
+                onChange={(e) => setCustomMajor(e.target.value)}
+                disabled={loading}
+                placeholder={language === "en" ? "Enter your major..." : "أدخل تخصصك..."}
+                className="min-h-[44px] mt-1.5"
+              />
+            )}
           </div>
 
           {/* Submit Button */}
