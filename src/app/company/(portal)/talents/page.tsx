@@ -75,10 +75,9 @@ export default function TalentSearchPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [minReadiness, setMinReadiness] = useState<number>(0);
-  const [minGpa, setMinGpa] = useState<number>(2.0);
   const [selectedStandings, setSelectedStandings] = useState<string[]>([]);
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState<"readiness" | "gpa" | "credits" | "name">("readiness");
+  const [sortBy, setSortBy] = useState<"readiness" | "name">("readiness");
 
   // Bookmarking & Preview Modal States
   const [bookmarkedIds, setBookmarkedIds] = useState<string[]>([]);
@@ -148,7 +147,6 @@ export default function TalentSearchPage() {
     setSearchQuery("");
     setSelectedSkills([]);
     setMinReadiness(0);
-    setMinGpa(2.0);
     setSelectedStandings([]);
     setSelectedWorkTypes([]);
     setShowBookmarksOnly(false);
@@ -158,7 +156,6 @@ export default function TalentSearchPage() {
     searchQuery.trim().length > 0 ||
     selectedSkills.length > 0 ||
     minReadiness > 0 ||
-    minGpa > 2.0 ||
     selectedStandings.length > 0 ||
     selectedWorkTypes.length > 0 ||
     showBookmarksOnly;
@@ -190,19 +187,14 @@ export default function TalentSearchPage() {
           return false;
         }
 
-        // 4. GPA filter
-        if (candidate.gpa < minGpa) {
-          return false;
-        }
-
-        // 5. Academic Standing filter
+        // 4. Academic Standing filter
         if (selectedStandings.length > 0) {
           if (!selectedStandings.includes(candidate.academicStanding)) {
             return false;
           }
         }
 
-        // 6. Work Types filter
+        // 5. Work Types filter
         if (selectedWorkTypes.length > 0) {
           const hasMatchingType = selectedWorkTypes.some((wt) =>
             candidate.workTypes.includes(wt as any)
@@ -210,7 +202,7 @@ export default function TalentSearchPage() {
           if (!hasMatchingType) return false;
         }
 
-        // 7. Verified Skills filter (Must have all selected skills)
+        // 6. Verified Skills filter (Must have all selected skills)
         if (selectedSkills.length > 0) {
           const hasAllSkills = selectedSkills.every((reqSkill) =>
             candidate.verifiedSkills.some(
@@ -224,8 +216,6 @@ export default function TalentSearchPage() {
       })
       .sort((a, b) => {
         if (sortBy === "readiness") return b.readinessScore - a.readinessScore;
-        if (sortBy === "gpa") return b.gpa - a.gpa;
-        if (sortBy === "credits") return b.completedCredits - a.completedCredits;
         if (sortBy === "name") return a.name.localeCompare(b.name, "ar");
         return 0;
       });
@@ -234,7 +224,6 @@ export default function TalentSearchPage() {
     searchQuery,
     selectedSkills,
     minReadiness,
-    minGpa,
     selectedStandings,
     selectedWorkTypes,
     showBookmarksOnly,
@@ -287,7 +276,7 @@ export default function TalentSearchPage() {
               className="md:hidden min-h-[40px] px-3 rounded-lg border border-border bg-card text-xs font-semibold inline-flex items-center gap-2 cursor-pointer"
             >
               <SlidersHorizontal className="h-4 w-4 text-primary" />
-              <span>الفلاتر ({selectedSkills.length + (minReadiness > 0 ? 1 : 0) + (minGpa > 2.0 ? 1 : 0)})</span>
+              <span>الفلاتر ({selectedSkills.length + (minReadiness > 0 ? 1 : 0) + selectedStandings.length + selectedWorkTypes.length})</span>
             </button>
           </div>
         </div>
@@ -369,43 +358,15 @@ export default function TalentSearchPage() {
               </div>
             </div>
 
-            {/* Filter 2: GPA Slider */}
-            <div className="space-y-2 pt-2 border-t border-border">
-              <div className="flex items-center justify-between text-xs font-semibold text-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Award className="h-3.5 w-3.5 text-blue-600" />
-                  <span>الحد الأدنى للمعدل التراكمي:</span>
-                </span>
-                <span className="font-mono text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded text-[11px]">
-                  {minGpa > 2.0 ? `${minGpa.toFixed(2)}+` : "الكل (2.00)"}
-                </span>
-              </div>
-              <input
-                type="range"
-                min="2.00"
-                max="3.90"
-                step="0.05"
-                value={minGpa}
-                onChange={(e) => setMinGpa(Number(e.target.value))}
-                className="w-full accent-blue-600 cursor-pointer h-1.5 bg-secondary rounded-lg"
-              />
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                <span>2.00</span>
-                <span>2.75 (جيد)</span>
-                <span>3.50 (امتياز)</span>
-                <span>4.00</span>
-              </div>
-            </div>
-
-            {/* Filter 3: Academic Standing (حالة الطالب الأكاديمية) */}
+            {/* Filter 2: Academic Standing (حالة الطالب الأكاديمية) */}
             <div className="space-y-2 pt-2 border-t border-border">
               <label className="block text-xs font-semibold text-foreground">
-                حالة الطالب الأكاديمية والساعات:
+                حالة الطالب الأكاديمية:
               </label>
               <div className="space-y-1.5">
                 {[
-                  { id: "internship_ready", label: "جاهز للتدريب (90+ ساعة)", icon: Briefcase },
-                  { id: "fresh_graduate", label: "خريج جديد (120+ ساعة)", icon: GraduationCap },
+                  { id: "internship_ready", label: "جاهز للتدريب الميداني", icon: Briefcase },
+                  { id: "fresh_graduate", label: "خريج جديد", icon: GraduationCap },
                   { id: "third_year", label: "طالب سنة ثالثة", icon: UserCheck },
                 ].map((item) => {
                   const checked = selectedStandings.includes(item.id);
@@ -547,8 +508,6 @@ export default function TalentSearchPage() {
                   className="min-h-[42px] px-3 rounded-lg border border-border bg-background text-xs font-semibold text-foreground focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer"
                 >
                   <option value="readiness">الأعلى جاهزية لسوق العمل</option>
-                  <option value="gpa">الأعلى معدلاً تراكمياً</option>
-                  <option value="credits">الأقرب للتخرج (الساعات)</option>
                   <option value="name">أبجدياً بالاسم</option>
                 </select>
               </div>
@@ -583,17 +542,6 @@ export default function TalentSearchPage() {
                     onClick={() => setMinReadiness(0)}
                   >
                     <span>جاهزية: +{minReadiness}%</span>
-                    <X className="h-3 w-3" />
-                  </Badge>
-                )}
-
-                {minGpa > 2.0 && (
-                  <Badge
-                    variant="outline"
-                    className="text-[10px] gap-1 text-blue-600 border-blue-500/30 cursor-pointer"
-                    onClick={() => setMinGpa(2.0)}
-                  >
-                    <span>معدل: +{minGpa.toFixed(2)}</span>
                     <X className="h-3 w-3" />
                   </Badge>
                 )}
@@ -731,11 +679,6 @@ export default function TalentSearchPage() {
                     {/* Metrics Row: Readiness Score Pill + Academic Badges */}
                     <div className="flex items-center justify-between gap-2 pt-1 border-t border-border/60">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        {/* GPA badge */}
-                        <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-secondary text-foreground border border-border/80">
-                          ⭐ {candidate.gpa.toFixed(2)}
-                        </span>
-
                         {/* Credits / Standing badge */}
                         <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-secondary/80 text-muted-foreground border border-border/60">
                           {candidate.standingLabel}
@@ -903,15 +846,15 @@ export default function TalentSearchPage() {
                 </span>
               </div>
               <div className="p-3 rounded-xl border border-border bg-secondary/30 text-center">
-                <span className="text-[10px] text-muted-foreground block">المعدل التراكمي</span>
-                <span className="text-lg font-extrabold font-mono text-blue-600 dark:text-blue-400">
-                  {previewCandidate.gpa.toFixed(2)}
+                <span className="text-[10px] text-muted-foreground block">الحالة الأكاديمية</span>
+                <span className="text-xs font-bold text-foreground truncate block mt-1">
+                  {previewCandidate.standingLabel}
                 </span>
               </div>
               <div className="p-3 rounded-xl border border-border bg-secondary/30 text-center">
-                <span className="text-[10px] text-muted-foreground block">الساعات المنجزة</span>
+                <span className="text-[10px] text-muted-foreground block">المهارات المعتمدة</span>
                 <span className="text-lg font-extrabold font-mono text-foreground">
-                  {previewCandidate.completedCredits} / {previewCandidate.totalCredits}
+                  {previewCandidate.verifiedSkills.length} مهارات
                 </span>
               </div>
             </div>

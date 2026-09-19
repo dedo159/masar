@@ -64,10 +64,10 @@ export async function GET() {
       let standingLabel = "سنة ثانية";
       if (credits >= 120) {
         standing = "fresh_graduate";
-        standingLabel = "خريج جديد (120+ ساعة)";
+        standingLabel = "خريج جديد";
       } else if (credits >= 90) {
         standing = "internship_ready";
-        standingLabel = "جاهز للتدريب (90+ ساعة)";
+        standingLabel = "جاهز للتدريب";
       } else if (credits >= 60) {
         standing = "third_year";
         standingLabel = "طالب سنة ثالثة";
@@ -122,7 +122,7 @@ export async function GET() {
         completedCredits: 104,
         totalCredits: 136,
         academicStanding: "internship_ready",
-        standingLabel: "جاهز للتدريب (90+ ساعة)",
+        standingLabel: "جاهز للتدريب",
         workTypes: ["internship", "full_time"],
         readinessScore: 94,
         verifiedSkills: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Redux", "Jest", "GraphQL"],
@@ -148,7 +148,7 @@ export async function GET() {
         completedCredits: 118,
         totalCredits: 132,
         academicStanding: "internship_ready",
-        standingLabel: "جاهز للتدريب (90+ ساعة)",
+        standingLabel: "جاهز للتدريب",
         workTypes: ["internship", "full_time"],
         readinessScore: 91,
         verifiedSkills: ["Go", "Docker", "PostgreSQL", "Kubernetes", "gRPC", "Redis", "Kafka", "Linux"],
@@ -173,7 +173,7 @@ export async function GET() {
         completedCredits: 128,
         totalCredits: 132,
         academicStanding: "fresh_graduate",
-        standingLabel: "خريج جديد (120+ ساعة)",
+        standingLabel: "خريج جديد",
         workTypes: ["full_time"],
         readinessScore: 96,
         verifiedSkills: ["Flutter", "Dart", "Firebase", "REST API", "State Management (Bloc)", "SQLite", "UI/UX"],
@@ -184,7 +184,7 @@ export async function GET() {
         highlights: [
           "تطوير تطبيق لإدارة الميزانية الشخصية حاصل على أكثر من 5,000 مستخدم نشط",
           "استخدام معماريات Clean Architecture و Bloc Pattern للتحكم بالحالة",
-          "معدل تراكمي 3.91 مع مرتبة الشرف الأولى"
+          "مرتبة الشرف الأولى في التفوق الأكاديمي"
         ],
         auditSummary: "جاهزية توظيف فورية: ملف أعمال مكتمل على متاجر التطبيقات ومستوى هندسي رصين.",
         featured: true,
@@ -199,7 +199,7 @@ export async function GET() {
         completedCredits: 92,
         totalCredits: 132,
         academicStanding: "internship_ready",
-        standingLabel: "جاهز للتدريب (90+ ساعة)",
+        standingLabel: "جاهز للتدريب",
         workTypes: ["internship", "part_time"],
         readinessScore: 86,
         verifiedSkills: ["Docker", "Kubernetes", "AWS", "Terraform", "CI/CD", "Linux", "Bash", "Python"],
@@ -245,7 +245,7 @@ export async function GET() {
         completedCredits: 96,
         totalCredits: 160,
         academicStanding: "internship_ready",
-        standingLabel: "جاهز للتدريب (90+ ساعة)",
+        standingLabel: "جاهز للتدريب",
         workTypes: ["internship"],
         readinessScore: 78,
         verifiedSkills: ["Java", "Spring Boot", "SQL", "Hibernate", "PostgreSQL", "Docker", "REST API"],
@@ -268,7 +268,7 @@ export async function GET() {
         completedCredits: 122,
         totalCredits: 132,
         academicStanding: "fresh_graduate",
-        standingLabel: "خريج جديد (120+ ساعة)",
+        standingLabel: "خريج جديد",
         workTypes: ["full_time", "internship"],
         readinessScore: 89,
         verifiedSkills: ["Figma", "React", "TypeScript", "Tailwind CSS", "Design Systems", "HTML5/CSS3"],

@@ -588,7 +588,7 @@ export default function ATSPipelinePage() {
                 <div>
                   <h4 className="text-sm font-bold text-foreground">{quickPreviewCandidate.name}</h4>
                   <p className="text-muted-foreground">{quickPreviewCandidate.major} · {quickPreviewCandidate.university}</p>
-                  <p className="text-[11px] font-semibold text-primary mt-0.5">المعدل التراكمي: {quickPreviewCandidate.gpa.toFixed(2)} / 4.00</p>
+                  <p className="text-[11px] font-semibold text-primary mt-0.5">جاهزية سوق العمل: {quickPreviewCandidate.readinessScore}%</p>
                 </div>
               </div>
 

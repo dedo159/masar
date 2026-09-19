@@ -265,10 +265,6 @@ export default function CandidateProfilePage({
                   <Building2 className="h-3.5 w-3.5 text-muted-foreground" />
                   {candidate.university}
                 </span>
-                <span>•</span>
-                <span className="flex items-center gap-1 font-semibold text-foreground">
-                  المعدل: {candidate.gpa.toFixed(2)} / 4.00
-                </span>
               </div>
             </div>
           </div>
@@ -703,20 +699,11 @@ export default function CandidateProfilePage({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="text-right">
-              <div className="text-[11px] text-muted-foreground">الساعات المنجزة</div>
-              <div className="text-sm font-bold font-mono text-foreground">
-                {candidate.completedCredits} / {candidate.totalCredits} ساعة
-              </div>
-            </div>
-            <div className="h-8 w-px bg-border" />
-            <div className="text-right">
-              <div className="text-[11px] text-muted-foreground">المعدل التراكمي</div>
-              <div className="text-sm font-bold font-mono text-primary">
-                {candidate.gpa.toFixed(2)} / 4.00
-              </div>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+              <CheckCircle2 className="h-3.5 w-3.5" />
+              <span>معتمد أكاديمياً</span>
+            </span>
           </div>
         </div>
 

@@ -18,8 +18,8 @@ export function CoursesClient({ enrolledCourses, totalCredits }: CoursesClientPr
   const ChevronIcon = isRtl ? ChevronLeft : ChevronRight;
 
   const subtitleText = language === "en"
-    ? `${enrolledCourses.length} enrolled courses · ${totalCredits} credit hours`
-    : `${enrolledCourses.length} مواد مسجلة · ${totalCredits} ساعة معتمدة`;
+    ? `${enrolledCourses.length} enrolled courses`
+    : `${enrolledCourses.length} مواد دراسية مسجلة`;
 
   return (
     <>

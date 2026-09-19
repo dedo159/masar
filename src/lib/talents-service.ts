@@ -96,7 +96,7 @@ export const BENCHMARK_CANDIDATES: DetailedTalentCandidate[] = [
     completedCredits: 104,
     totalCredits: 136,
     academicStanding: "internship_ready",
-    standingLabel: "جاهز للتدريب (90+ ساعة)",
+    standingLabel: "جاهز للتدريب",
     workTypes: ["internship", "full_time"],
     verifiedSkills: ["React", "TypeScript", "Next.js", "Tailwind CSS", "Redux Toolkit", "Jest", "GraphQL"],
     githubUrl: "https://github.com/layan-rawashdeh",
@@ -249,7 +249,7 @@ Accessible, headless-inspired UI component primitives designed for modern Arabic
     completedCredits: 118,
     totalCredits: 132,
     academicStanding: "internship_ready",
-    standingLabel: "جاهز للتدريب (90+ ساعة)",
+    standingLabel: "جاهز للتدريب",
     workTypes: ["internship", "full_time"],
     verifiedSkills: ["Go", "Docker", "PostgreSQL", "Kubernetes", "gRPC", "Redis", "Kafka", "Linux"],
     githubUrl: "https://github.com/hamza-naeemat",
@@ -375,7 +375,7 @@ Concurrent in-memory key-value cache implementation supporting TTL expiration an
         }
       ],
       deanHonorRoll: true,
-      academicStandingNote: "معدل 3.65 مع تصنيف ضمن أعلى 5% من طلبة دفعة علوم الحاسوب بجامعة JUST."
+      academicStandingNote: "تصنيف متقدم ضمن أعلى 5% من طلبة دفعة علوم الحاسوب بجامعة JUST."
     }
   },
   {
@@ -388,7 +388,7 @@ Concurrent in-memory key-value cache implementation supporting TTL expiration an
     completedCredits: 128,
     totalCredits: 132,
     academicStanding: "fresh_graduate",
-    standingLabel: "خريج جديد (120+ ساعة)",
+    standingLabel: "خريج جديد",
     workTypes: ["full_time"],
     verifiedSkills: ["Flutter", "Dart", "Firebase", "REST API", "State Management (Bloc)", "SQLite", "UI/UX"],
     githubUrl: "https://github.com/farah-kurdi",
@@ -554,10 +554,10 @@ export async function getTalentCandidateById(id: string): Promise<DetailedTalent
       let standingLabel = "طالب سنة ثانية";
       if (credits >= 120) {
         standing = "fresh_graduate";
-        standingLabel = "خريج جديد (120+ ساعة)";
+        standingLabel = "خريج جديد";
       } else if (credits >= 90) {
         standing = "internship_ready";
-        standingLabel = "جاهز للتدريب (90+ ساعة)";
+        standingLabel = "جاهز للتدريب";
       } else if (credits >= 60) {
         standing = "third_year";
         standingLabel = "طالب سنة ثالثة";

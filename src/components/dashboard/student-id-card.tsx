@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, CheckCircle2, Award, QrCode, Sparkles, BookOpen } from "lucide-react";
+import { ChevronLeft, CheckCircle2, QrCode } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import type { Student } from "@/lib/types";
 
@@ -16,10 +16,6 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
   const studentName = student?.name || (isAr ? "طالب مسار" : "Masar Student");
   const studentIdNumber = student?.studentId || "202410890";
   const studentMajor = student?.major || (isAr ? "علم الحاسوب" : "Computer Science");
-  const totalCredits = student?.totalCredits || 132;
-  const completedCredits = student?.completedCredits || 78;
-  const progressPercent = Math.min(100, Math.max(0, Math.round((completedCredits / totalCredits) * 100)));
-  const gpa = student?.gpa ? Number(student.gpa).toFixed(2) : "3.45";
 
   return (
     <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 sm:p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden group">
@@ -32,7 +28,7 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-xs sm:text-sm font-semibold tracking-wide text-foreground">
-            {isAr ? "الهوية الأكاديمية والتقدم الجامعي" : "Academic Identity & Progress"}
+            {isAr ? "الهوية الأكاديمية والبطاقة الجامعية" : "Academic Identity & Student Pass"}
           </span>
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#2F7BFF]/10 dark:bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/20 dark:border-[#2F7BFF]/30">
             {isAr ? "طالب منتظم" : "Active Student"}
@@ -48,7 +44,7 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
       </div>
 
       {/* Profile & Info Grid */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* Left: Avatar + Details */}
         <div className="flex items-center gap-3.5 min-w-0">
           <div className="relative flex-shrink-0">
@@ -76,64 +72,30 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
           </div>
         </div>
 
-        {/* Right: Quick KPI Badges */}
+        {/* Right: Quick Pass / Status Actions */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <div className="rounded-xl border border-border/80 dark:border-white/10 bg-muted/50 dark:bg-white/[0.04] px-3 py-2 text-center">
+          <div className="rounded-xl border border-border/80 dark:border-white/10 bg-muted/50 dark:bg-white/[0.04] px-3.5 py-2 text-start">
             <span className="text-[10px] text-muted-foreground block font-medium">
-              {isAr ? "المعدل التراكمي" : "GPA"}
+              {isAr ? "حالة القيد الأكاديمي" : "Academic Status"}
             </span>
-            <span className="text-sm font-bold font-mono text-[#2F7BFF] dark:text-[#38BDF8]">
-              {gpa}
-            </span>
-          </div>
-
-          <div className="rounded-xl border border-border/80 dark:border-white/10 bg-muted/50 dark:bg-white/[0.04] px-3 py-2 text-center">
-            <span className="text-[10px] text-muted-foreground block font-medium">
-              {isAr ? "الساعات المنجزة" : "Credits"}
-            </span>
-            <span className="text-sm font-bold font-mono text-[#E83D84]">
-              {completedCredits}/{totalCredits}
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 mt-0.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              {isAr ? "منتظم ومسجل" : "Enrolled & Active"}
             </span>
           </div>
 
           <Link
             href="/deals"
-            className="rounded-xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 hover:from-[#2F7BFF]/20 hover:to-[#E83D84]/20 px-3 py-2 flex flex-col items-center justify-center transition-all group/btn"
+            className="rounded-xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 hover:from-[#2F7BFF]/20 hover:to-[#E83D84]/20 px-3.5 py-2 flex flex-col items-center justify-center transition-all group/btn shadow-sm"
           >
             <div className="flex items-center gap-1 text-[10px] text-[#2F7BFF] dark:text-[#38BDF8] font-semibold">
-              <QrCode className="h-3 w-3" />
-              <span>{isAr ? "بطاقة الخصم" : "Student Pass"}</span>
+              <QrCode className="h-3.5 w-3.5" />
+              <span>{isAr ? "بطاقة الخصم الجامعية" : "Student Pass"}</span>
             </div>
-            <span className="text-[10px] text-foreground/70 dark:text-white/70 font-mono">
-              {isAr ? "نشطة ⚡" : "Active ⚡"}
+            <span className="text-[10px] text-foreground/70 dark:text-white/70 font-mono mt-0.5">
+              {isAr ? "نشطة ومفعلة ⚡" : "Active ⚡"}
             </span>
           </Link>
-        </div>
-      </div>
-
-      {/* Degree Graduation Progress Bar */}
-      <div className="space-y-2 pt-2 border-t border-border/70 dark:border-white/[0.06]">
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 text-foreground/80 dark:text-white/70 font-medium">
-            <BookOpen className="h-3.5 w-3.5 text-[#2F7BFF] dark:text-[#38BDF8]" />
-            <span>{isAr ? "التقدم نحو التخرج وإنهاء الخطة الدراسية" : "Degree Completion Progress"}</span>
-          </div>
-          <span className="font-mono text-xs font-bold bg-gradient-to-r from-[#00D2FF] to-[#E83D84] bg-clip-text text-transparent">
-            {progressPercent}%
-          </span>
-        </div>
-
-        {/* Neon Gradient Progress Bar */}
-        <div className="relative h-2 w-full rounded-full bg-slate-200 dark:bg-white/[0.08] overflow-hidden p-[0.5px]">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] shadow-[0_0_12px_rgba(232,61,132,0.5)] transition-all duration-1000"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
-
-        <div className="flex justify-between items-center text-[10px] text-muted-foreground dark:text-white/40 font-mono pt-0.5">
-          <span>{isAr ? `أنجزت ${completedCredits} ساعة` : `${completedCredits} credits completed`}</span>
-          <span>{isAr ? `متبقي ${Math.max(0, totalCredits - completedCredits)} ساعة` : `${Math.max(0, totalCredits - completedCredits)} credits left`}</span>
         </div>
       </div>
     </div>

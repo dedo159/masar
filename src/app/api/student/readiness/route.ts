@@ -255,7 +255,7 @@ function generateDynamicFallback(body: any) {
   }
 
   const primaryLang = String(github_languages).split(",")[0]?.trim() || "التقنيات المذكورة";
-  const strengthsSummary = `يمتلك الطالب خلفية واعدة بمعدل تراكمي ${parsedGpa.toFixed(2)} ورصيد ${repos} مستودعاً برمجياً. برهن في مشاريع ${primaryLang} على استيعاب المبادئ التقنية، مما يشكل قاعدة داعمة للتخصص كـ ${target_role}.`;
+  const strengthsSummary = `يمتلك الطالب خلفية برمجية واعدة برصيد ${repos} مستودعاً برمجياً. برهن في مشاريع ${primaryLang} على استيعاب المبادئ التقنية، مما يشكل قاعدة داعمة للتخصص كـ ${target_role}.`;
 
   const actionableProject = blueprint.projectIdea({
     langs: github_languages,
@@ -324,15 +324,13 @@ export async function POST(req: Request) {
 
     const userPrompt = `تحليل جاهزية لسوق العمل:
 - المسمى المستهدف: ${target_role || "Software Engineer"}
-- المقررات المنجزة: ${completed_courses_list || "هياكل بيانات، خوارزميات، قواعد بيانات"}
-- المعدل التراكمي: ${gpa || 3.0} من 4.00
-- الساعات المعتمدة المقطوعة: ${completed_credit_hours || 90} من أصل ${total_credit_hours || 132}
+- المقررات الأساسية المعتمدة: ${completed_courses_list || "هياكل بيانات، خوارزميات، قواعد بيانات"}
 - لغات وتقنيات GitHub: ${resolvedLanguages || "غير محدد"}
 - عدد المستودعات العامة: ${resolvedReposCount || 0}
 - ملخص المشاريع المنجزة: ${resolvedTopProjects || "مشاريع جامعية وتطبيقات مبسطة"}
 - المهارات المصرح بها: ${resolvedSkills || "برمجة وحل مشكلات"}
 
-قم بإجراء تقييم دقيق ومتفرد لهذه المدخلات تحديداً وأخرج كائن JSON صالح باللغة العربية حصراً.`;
+قم بإجراء تقييم دقيق ومتفرد لهذه المدخلات تحديداً وأخرج كائن JSON صالح باللغة العربية حصراً بدون ذكر أي معدلات أو ساعات.`;
 
     let text = "";
 
