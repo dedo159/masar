@@ -67,7 +67,7 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
               {isAr ? `الرقم الجامعي: ${studentIdNumber}` : `Student ID: ${studentIdNumber}`}
             </p>
             <p className="text-[11px] text-muted-foreground/80 truncate">
-              {studentMajor} • {isAr ? "الجامعة الأردنية" : "University of Jordan"}
+              {studentMajor} • {isAr ? "جامعة عمان الأهلية" : "Al-Ahliyya Amman University"}
             </p>
           </div>
         </div>

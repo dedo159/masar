@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
-import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useLanguage } from "@/components/providers/language-provider";
 import { translateStudentName, translateMajor, getStudentInitials } from "@/lib/translations/content";
 
@@ -30,15 +30,16 @@ export function BottomNav() {
 
   const mobileNavItems = [
     { href: "/", icon: LayoutDashboard, label: isAr ? "الرئيسية" : "Home" },
-    { href: "/courses", icon: BookOpen, label: isAr ? "المواد المسجلة" : "Courses" },
-    { href: "/deals", icon: Tag, label: isAr ? "العروض والخصومات" : "Deals" },
+    { href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" },
+    { href: "/courses", icon: BookOpen, label: isAr ? "المواد" : "Courses" },
+    { href: "/deals", icon: Tag, label: isAr ? "العروض" : "Deals" },
     { href: "/internships", icon: Briefcase, label: isAr ? "التدريب" : "Career" },
     { href: "/profile", icon: User, label: isAr ? "حسابي" : "Profile" },
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-2 select-none shadow-lg dark:shadow-2xl">
-      <div className="grid grid-cols-5 w-full max-w-md mx-auto items-center">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-lg dark:shadow-2xl">
+      <div className="grid grid-cols-6 w-full max-w-lg mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -92,10 +93,10 @@ export function Sidebar() {
 
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
+    { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
-    { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
     { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
     { href: "/settings", icon: Settings, label: t.nav.settings },
   ];
@@ -195,10 +196,10 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Quick Theme & Language Toggle */}
+      {/* Quick Theme Toggle */}
       <div className="px-3 py-2 border-t border-border flex items-center justify-between">
-        <span className="text-[11px] text-muted-foreground font-medium">المظهر واللغة</span>
-        <ThemeLanguageToggle size="sm" />
+        <span className="text-[11px] text-muted-foreground font-medium">المظهر</span>
+        <ThemeToggle />
       </div>
 
       <div className="px-3 py-3 border-t border-border">

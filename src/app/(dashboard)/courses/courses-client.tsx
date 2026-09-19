@@ -20,9 +20,9 @@ export function CoursesClient({ enrolledCourses, allRegisteredCourses = [], tota
   const ChevronIcon = isRtl ? ChevronLeft : ChevronRight;
 
   const displayList = enrolledCourses.length > 0 ? enrolledCourses : allRegisteredCourses;
-  const subtitleText = enrolledCourses.length > 0
-    ? (isAr ? `${enrolledCourses.length} مواد دراسية نشطة حالياً` : `${enrolledCourses.length} active courses`)
-    : (isAr ? `${allRegisteredCourses.length} مواد مسجلة في سجلك الأكاديمي` : `${allRegisteredCourses.length} registered courses in your academic record`);
+  const subtitleText = isAr
+    ? `${displayList.length} مواد دراسية مسجلة`
+    : `${displayList.length} registered courses`;
 
   return (
     <>
@@ -32,25 +32,28 @@ export function CoursesClient({ enrolledCourses, allRegisteredCourses = [], tota
       />
 
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
-        {/* Semester Completed Banner when active enrolled courses is 0 */}
-        {enrolledCourses.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-10 px-4 rounded-2xl border border-border/80 dark:border-white/10 bg-card/60 dark:bg-white/[0.03] backdrop-blur-xl text-center shadow-sm">
+        {/* When 0 courses (completely cleared/zeroed out) */}
+        {displayList.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 px-4 rounded-2xl border border-border/80 dark:border-white/10 bg-card/60 dark:bg-white/[0.03] backdrop-blur-xl text-center shadow-sm">
             <div className="h-14 w-14 rounded-2xl bg-emerald-500/15 text-emerald-500 dark:text-emerald-400 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
               <CheckCircle2 className="h-7 w-7" strokeWidth={2} />
             </div>
             <h3 className="text-base font-bold text-foreground">
-              {isAr ? "انتهى الفصل الدراسي الحالي 🎉" : "Semester Completed 🎉"}
+              {isAr ? "انتهى الفصل الدراسي وتم تصفير المواد 🎉" : "Semester Ended & Courses Cleared 🎉"}
             </h3>
             <p className="text-xs text-muted-foreground mt-1.5 max-w-md leading-relaxed font-medium">
               {isAr
-                ? "تمت أرشفة مواد الفصل الحالي وتصفير المهام بنجاح مع انطلاق العطلة. نتمنى لك التوفيق وإجازة سعيدة! يمكنك أدناه استعراض كافة المواد المسجلة ومحتوياتها."
-                : "Current semester courses and assignments have concluded. Best of luck and enjoy your break! You can browse your full record of registered courses below."}
+                ? "لا توجد أي مواد مسجلة حالياً. تم تصفير مواد الفصل والمهام بنجاح. ستظهر المواد الجديدة فور بدء التسجيل للفصل القادم."
+                : "No registered courses currently. All courses and assignments have been cleared. New courses will appear upon enrollment."}
             </p>
+            <Link
+              href="/"
+              className="mt-5 inline-flex h-10 min-h-[40px] items-center justify-center px-6 rounded-xl bg-gradient-to-r from-[#2F7BFF] to-[#E83D84] text-white text-xs font-bold hover:opacity-95 shadow-md transition-all"
+            >
+              {isAr ? "العودة للرئيسية" : "Back to Home"}
+            </Link>
           </div>
-        )}
-
-        {/* Registered Courses Record Section */}
-        {displayList.length > 0 && (
+        ) : (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">

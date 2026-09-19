@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
 import { MasarLogo } from "@/components/ui/logo";
-import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { useLanguage } from "@/components/providers/language-provider";
 import { getStudentInitials } from "@/lib/translations/content";
 
@@ -41,10 +41,8 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl transition-all duration-300">
       {/* Mobile Top Bar */}
       <div className="relative flex md:hidden items-center justify-between px-3 py-2 min-h-[56px]">
-        {/* Left: Quick Theme & Lang Toggle (Balanced placement without overlapping logo) */}
-        <div className="flex items-center gap-1 z-10">
-          <ThemeLanguageToggle size="sm" />
-        </div>
+        {/* Left: Spacer to keep logo perfectly centered */}
+        <div className="w-16 flex items-center" />
 
         {/* Center: Masar Full Logo (Centered with safe margins so buttons never overlap) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none px-20">
@@ -53,8 +51,9 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           </Link>
         </div>
 
-        {/* Right: Notifications Dropdown */}
-        <div className="flex items-center gap-1.5 z-10">
+        {/* Right: Theme Toggle & Notifications Bell (Side-by-side, matching button style) */}
+        <div className="flex items-center gap-1 z-10">
+          <ThemeToggle />
           <NotificationsDropdown />
         </div>
       </div>
@@ -89,11 +88,11 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {action}
 
-          {/* Quick Theme & Language Toggle Pill with generous room */}
-          <ThemeLanguageToggle size="lg" />
+          {/* Theme Toggle matching Notifications Bell button style */}
+          <ThemeToggle />
 
           <NotificationsDropdown />
 
