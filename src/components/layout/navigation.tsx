@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 import { useLanguage } from "@/components/providers/language-provider";
 import { translateStudentName, translateMajor, getStudentInitials } from "@/lib/translations/content";
 
@@ -192,6 +193,12 @@ export function Sidebar() {
             <span className="truncate w-full">الشركات</span>
           </Link>
         </div>
+      </div>
+
+      {/* Quick Theme & Language Toggle */}
+      <div className="px-3 py-2 border-t border-border flex items-center justify-between">
+        <span className="text-[11px] text-muted-foreground font-medium">المظهر واللغة</span>
+        <ThemeLanguageToggle size="sm" />
       </div>
 
       <div className="px-3 py-3 border-t border-border">

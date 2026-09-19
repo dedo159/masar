@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 import { cn } from "@/lib/utils";
 
 export default function MerchantPortalLayout({ children }: { children: ReactNode }) {
@@ -182,19 +183,9 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
             </div>
           </div>
 
-          {/* Quick Bottom Actions: Theme Switcher, Logout */}
-          <div className="flex items-center justify-between gap-1">
-            {mounted && (
-              <button
-                type="button"
-                onClick={() => setTheme(isDark ? "light" : "dark")}
-                className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors flex items-center gap-1.5 text-xs font-medium cursor-pointer border border-border dark:border-white/10"
-                title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
-              >
-                {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
-                <span className="text-[11px]">{isDark ? "نهاري" : "ليلي"}</span>
-              </button>
-            )}
+          {/* Quick Bottom Actions: Theme & Language Switcher, Logout */}
+          <div className="flex items-center justify-between gap-1 pt-1">
+            <ThemeLanguageToggle size="sm" />
 
             <button
               onClick={handleLogout}
@@ -228,23 +219,14 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
             </div>
 
             {/* Top Right Quick Controls */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 z-10">
               <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-muted/30 dark:bg-white/[0.04] border border-border dark:border-white/10 text-xs font-medium text-foreground">
                 <Store className="h-3.5 w-3.5 text-amber-500" />
                 <span>{merchantName}</span>
               </div>
 
-              {mounted && (
-                <button
-                  type="button"
-                  onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted dark:hover:bg-white/[0.06] transition-colors cursor-pointer flex items-center gap-1.5 text-xs border border-border dark:border-white/10"
-                  title={isDark ? "التحويل للوضع النهاري" : "التحويل للوضع الليلي"}
-                >
-                  {isDark ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
-                  <span className="hidden sm:inline text-[11px]">{isDark ? "نهاري" : "ليلي"}</span>
-                </button>
-              )}
+              {/* Quick Theme & Language Toggle */}
+              <ThemeLanguageToggle size="sm" />
             </div>
           </div>
         </header>

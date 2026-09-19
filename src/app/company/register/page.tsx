@@ -8,13 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
-import { useTheme } from "next-themes";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 
 export default function CompanyRegisterPage() {
   const router = useRouter();
-  const { t, isRtl, language, setLanguage } = useLanguage();
-  const { resolvedTheme, setTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
+  const { t, isRtl, language } = useLanguage();
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -27,10 +25,6 @@ export default function CompanyRegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const toggleLanguage = () => {
-    setLanguage(language === "ar" ? "en" : "ar");
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -102,28 +96,9 @@ export default function CompanyRegisterPage() {
       className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative"
       dir={isRtl ? "rtl" : "ltr"}
     >
-      {/* Top actions: Theme & Language switchers */}
-      <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4 flex items-center gap-2">
-        <button
-          onClick={() => setTheme(isDark ? "light" : "dark")}
-          type="button"
-          aria-label="تبديل المظهر"
-          title="تبديل المظهر"
-          className="flex items-center justify-center w-9 h-9 rounded-lg border border-border bg-card/80 text-foreground hover:bg-secondary transition-colors cursor-pointer"
-        >
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
-        </button>
-
-        <button
-          onClick={toggleLanguage}
-          type="button"
-          aria-label={t.header.toggleLang}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card/80 text-xs font-semibold hover:bg-secondary transition-colors cursor-pointer"
-        >
-          <Globe className="h-3.5 w-3.5" />
-          <span>{language === "ar" ? "English" : "العربية"}</span>
-        </button>
+      {/* Top actions: Theme & Language switcher */}
+      <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
+        <ThemeLanguageToggle size="sm" />
       </div>
 
       <div className="w-full max-w-lg space-y-6">

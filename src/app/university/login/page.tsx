@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 
 export default function UniversityLoginPage() {
   const [email, setEmail] = useState("");
@@ -44,7 +45,11 @@ export default function UniversityLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4" dir="rtl">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-4 relative" dir="rtl">
+      {/* Top action: Theme & Language switcher */}
+      <div className="absolute top-4 left-4">
+        <ThemeLanguageToggle size="sm" />
+      </div>
       <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-8 shadow-sm">
         <div className="text-center mb-8 flex flex-col items-center">
           <MasarLogo size="lg" priority className="mb-4" />

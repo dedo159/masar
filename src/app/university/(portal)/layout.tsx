@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, AlertTriangle, Briefcase, BarChart3, LogOut } from "lucide-react";
 import { useState } from "react";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 
 export default function UniversityPortalLayout({
   children,
@@ -81,7 +82,11 @@ export default function UniversityPortalLayout({
           })}
         </nav>
 
-        <div className="p-4 border-t border-border dark:border-white/[0.08]">
+        <div className="p-4 border-t border-border dark:border-white/[0.08] space-y-2">
+          <div className="flex items-center justify-between pb-1">
+            <span className="text-[11px] text-muted-foreground font-medium">المظهر واللغة</span>
+            <ThemeLanguageToggle size="sm" />
+          </div>
           <button
             onClick={handleLogout}
             disabled={loggingOut}
@@ -105,13 +110,19 @@ export default function UniversityPortalLayout({
               مسار الأكاديمي — لوحة إدارة المتابعة والجاهزية الجامعية
             </h2>
           </div>
-          <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="md:hidden px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-lg hover:bg-rose-500/25"
-          >
-            خروج
-          </button>
+
+          <div className="flex items-center gap-2 z-10">
+            {/* Quick Theme & Language Switcher */}
+            <ThemeLanguageToggle size="sm" />
+
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="md:hidden px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-lg hover:bg-rose-500/25"
+            >
+              خروج
+            </button>
+          </div>
         </header>
 
         <div className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto overflow-auto">

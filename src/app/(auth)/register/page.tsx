@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 
 const universities = [
   { id: "aau", nameAr: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University", moodleUrl: "https://vclass.ammanu.edu.jo" },
@@ -103,17 +104,9 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background text-foreground relative" dir={isRtl ? "rtl" : "ltr"}>
-      {/* Language switcher button in header */}
+      {/* Theme & Language switcher in header */}
       <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4">
-        <button
-          onClick={toggleLanguage}
-          type="button"
-          aria-label={t.header.toggleLang}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-card/80 text-xs font-semibold hover:bg-secondary transition-colors"
-        >
-          <Globe className="h-3.5 w-3.5" />
-          <span>{language === "ar" ? "English" : "العربية"}</span>
-        </button>
+        <ThemeLanguageToggle size="sm" />
       </div>
 
       <div className="w-full max-w-sm space-y-6">

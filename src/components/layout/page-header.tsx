@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 import { useLanguage } from "@/components/providers/language-provider";
 import { getStudentInitials } from "@/lib/translations/content";
 
@@ -43,15 +44,18 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl transition-all duration-300">
       {/* Mobile Top Bar (Exact Match with Official 3D Mockup) */}
-      <div className="relative flex md:hidden items-center justify-between px-4 py-2.5 min-h-[56px]">
-        {/* Left: Menu Hamburger */}
-        <Link
-          href="/settings"
-          className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all z-10"
-          aria-label="القائمة"
-        >
-          <Menu className="h-5 w-5" />
-        </Link>
+      <div className="relative flex md:hidden items-center justify-between px-3 py-2 min-h-[56px]">
+        {/* Left: Menu Hamburger + Quick Theme & Lang Toggle */}
+        <div className="flex items-center gap-1.5 z-10">
+          <Link
+            href="/settings"
+            className="p-1.5 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all"
+            aria-label="القائمة"
+          >
+            <Menu className="h-5 w-5" />
+          </Link>
+          <ThemeLanguageToggle size="sm" />
+        </div>
 
         {/* Center: Masar Full Logo (Centered in the middle of the screen) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -103,34 +107,11 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {action}
 
-          {/* Language Switcher */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleLanguage}
-            className="h-9 px-3 text-xs font-medium gap-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all active:scale-95"
-            aria-label={t.header.toggleLang}
-            title={t.header.toggleLang}
-          >
-            <Globe className="h-3.5 w-3.5" />
-            <span>{language === "ar" ? "EN" : "عربي"}</span>
-          </Button>
-
-          {/* Theme Switcher */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            aria-label={t.header.toggleTheme}
-            title={t.header.toggleTheme}
-            className="h-9 w-9 rounded-lg"
-          >
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
-          </Button>
+          {/* Quick Theme & Language Toggle Pill */}
+          <ThemeLanguageToggle size="md" />
 
           <NotificationsDropdown />
 

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 
 export default function MerchantLoginPage() {
   const router = useRouter();
@@ -235,13 +236,16 @@ export default function MerchantLoginPage() {
             <span className="text-[10px] text-muted-foreground">بوابة نقاط البيع والعروض</span>
           </div>
         </Link>
-        <Link
-          href="/login"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-background/50 hover:bg-muted/40 text-xs text-muted-foreground hover:text-foreground transition-all"
-        >
-          <span>بوابة الطالب</span>
-          <ChevronLeft className="h-3.5 w-3.5 rotate-180" />
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeLanguageToggle size="sm" />
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-background/50 hover:bg-muted/40 text-xs text-muted-foreground hover:text-foreground transition-all"
+          >
+            <span>بوابة الطالب</span>
+            <ChevronLeft className="h-3.5 w-3.5 rotate-180" />
+          </Link>
+        </div>
       </header>
 
       {/* 3. بطاقة ونموذج تسجيل الدخول (Login Form Card) */}

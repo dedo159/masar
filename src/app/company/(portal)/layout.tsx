@@ -16,6 +16,7 @@ import {
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { MasarLogo } from "@/components/ui/logo";
+import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -130,6 +131,11 @@ export default function CompanyPortalLayout({
             </div>
           </div>
 
+          <div className="pt-2 border-t border-border flex items-center justify-between">
+            <span className="text-[11px] text-muted-foreground">المظهر واللغة</span>
+            <ThemeLanguageToggle size="sm" />
+          </div>
+
           <button
             onClick={handleLogout}
             disabled={loggingOut}
@@ -159,19 +165,9 @@ export default function CompanyPortalLayout({
             </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Theme Switcher */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(isDark ? "light" : "dark")}
-              aria-label="تبديل المظهر"
-              title="تبديل المظهر"
-              className="h-9 w-9 rounded-xl border border-border dark:border-white/10 hover:bg-muted dark:hover:bg-white/[0.06]"
-            >
-              <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
-            </Button>
+          <div className="flex items-center gap-2 sm:gap-3 z-10">
+            {/* Quick Theme & Language Switcher */}
+            <ThemeLanguageToggle size="sm" />
 
             {/* Company Badge Pill on Header */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full border border-border dark:border-white/10 bg-muted/30 dark:bg-white/[0.04] text-foreground text-xs">
