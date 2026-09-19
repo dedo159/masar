@@ -49,33 +49,15 @@ interface ProfileClientProps {
   initials: string;
 }
 
-import { useState, useEffect } from "react";
-
 export function ProfileClient({ student, skillsList, initials }: ProfileClientProps) {
-  const { t, isRtl, language } = useLanguage();
+const { t, isRtl, language } = useLanguage();
   const enrolledCourses = student.enrollments.map((e) => e.course);
   const Chevron = isRtl ? ChevronLeft : ChevronRight;
 
-  const [storedFaculty, setStoredFaculty] = useState<string | null>(null);
-  const [storedMajor, setStoredMajor] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const fName = language === "ar" 
-        ? localStorage.getItem("masar_user_faculty_name")
-        : localStorage.getItem("masar_user_faculty_name_en");
-      const mName = localStorage.getItem("masar_user_major");
-      if (fName) setStoredFaculty(fName);
-      if (mName) setStoredMajor(mName);
-    }
-  }, [language]);
-
   const displayName = translateStudentName(student.name, language);
-  const rawMajor = storedMajor || student.major;
-  const displayMajor = translateMajor(rawMajor, language);
+  const displayMajor = translateMajor(student.major, language);
   const displayUniversity = translateUniversityName(student.university, language) || t.profile.defaultUniversity;
   const displayInitials = getStudentInitials(student.name, language) || initials;
-  const facultyText = storedFaculty ? ` • ${storedFaculty}` : "";
 
   return (
     <>
@@ -113,7 +95,7 @@ export function ProfileClient({ student, skillsList, initials }: ProfileClientPr
               </div>
 
               <p className="text-sm font-medium text-foreground/80 mt-1">
-                {displayMajor}{facultyText} · {t.profile.academicYear} {student.year || 3}
+                {displayMajor} · {t.profile.academicYear} {student.year || 3}
               </p>
 
               <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 mt-3 text-xs text-muted-foreground">

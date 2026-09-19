@@ -634,11 +634,7 @@ export default function SettingsPage() {
               if (typeof window !== "undefined") {
                 localStorage.removeItem("masar_logged_in");
                 localStorage.removeItem("masar_user_name");
-                localStorage.removeItem("masar_user_major");
-                localStorage.removeItem("masar_user_faculty");
-                localStorage.removeItem("masar_user_faculty_name");
-                localStorage.removeItem("masar_user_faculty_name_en");
-                document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                localStorage.removeItem("masar_user_major"); document.cookie = "masar_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
               }
               window.location.href = "/api/student/auth/logout?t=" + Date.now();
             }}

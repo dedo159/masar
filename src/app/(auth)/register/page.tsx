@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { MasarLogo } from "@/components/ui/logo";
 import { useLanguage } from "@/components/providers/language-provider";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { faculties } from "@/app/(auth)/login/page";
 
 const universities = [
   { id: "aau", nameAr: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University", moodleUrl: "https://vclass.ammanu.edu.jo" },
@@ -19,14 +18,11 @@ export default function RegisterPage() {
   const router = useRouter();
   const { t, isRtl, language, setLanguage } = useLanguage();
   const [selectedUniv, setSelectedUniv] = useState("aau");
-  const [selectedFaculty, setSelectedFaculty] = useState("it");
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [major, setMajor] = useState("علم الحاسوب");
-  const [isCustomMajor, setIsCustomMajor] = useState(false);
-  const [customMajor, setCustomMajor] = useState("");
+  const [major, setMajor] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -58,8 +54,6 @@ export default function RegisterPage() {
       return;
     }
 
-    const activeMajor = isCustomMajor ? (customMajor.trim() || major) : major;
-
     setLoading(true);
     try {
       const res = await fetch("/api/student/auth/register", {
@@ -71,7 +65,7 @@ export default function RegisterPage() {
           email: email.trim() || undefined,
           password,
           universityCode: selectedUniv,
-          major: activeMajor.trim() || undefined,
+          major: major.trim() || undefined,
         }),
       });
 
@@ -93,16 +87,8 @@ export default function RegisterPage() {
       if (typeof window !== "undefined") {
         localStorage.setItem("masar_logged_in", "true");
         localStorage.setItem("masar_user_name", data.student?.name || name);
-        localStorage.setItem("masar_user_faculty", selectedFaculty);
-        const facObj = faculties.find((f) => f.id === selectedFaculty);
-        if (facObj) {
-          localStorage.setItem("masar_user_faculty_name", facObj.nameAr);
-          localStorage.setItem("masar_user_faculty_name_en", facObj.nameEn);
-        }
         if (data.student?.major) {
           localStorage.setItem("masar_user_major", data.student.major);
-        } else if (activeMajor.trim()) {
-          localStorage.setItem("masar_user_major", activeMajor.trim());
         }
       }
 
@@ -211,83 +197,6 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          {/* Faculty selection */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-foreground">
-              {language === "en" ? "Faculty / College" : "الكلية"}
-            </label>
-            <div className="relative">
-              <select
-                value={selectedFaculty}
-                onChange={(e) => {
-                  const newFac = e.target.value;
-                  setSelectedFaculty(newFac);
-                  const facObj = faculties.find((f) => f.id === newFac);
-                  if (facObj && facObj.majors.length > 0) {
-                    setMajor(facObj.majors[0]);
-                    setIsCustomMajor(false);
-                    setCustomMajor("");
-                  }
-                }}
-                disabled={loading}
-                className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
-              >
-                {faculties.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {language === "en" ? f.nameEn : f.nameAr}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Major */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold text-foreground">
-                {language === "en" ? "Major" : "التخصص"}
-              </label>
-              <span className="text-[10px] text-muted-foreground">{language === "en" ? "Select or enter" : "اختر أو حدد"}</span>
-            </div>
-            <div className="relative">
-              <select
-                value={isCustomMajor ? "other" : major}
-                onChange={(e) => {
-                  if (e.target.value === "other") {
-                    setIsCustomMajor(true);
-                  } else {
-                    setIsCustomMajor(false);
-                    setMajor(e.target.value);
-                  }
-                }}
-                disabled={loading}
-                className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
-              >
-                {faculties.find((f) => f.id === selectedFaculty)?.majors.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-                <option value="other">
-                  {language === "en" ? "Other (type manually)..." : "تخصص آخر (كتابة يدوية)..."}
-                </option>
-              </select>
-            </div>
-            {isCustomMajor && (
-              <Input
-                type="text"
-                value={customMajor}
-                onChange={(e) => {
-                  setCustomMajor(e.target.value);
-                }}
-                disabled={loading}
-                placeholder={language === "en" ? "Enter your major name" : "اكتب اسم التخصص"}
-                className="min-h-[44px] mt-1.5"
-                autoFocus
-              />
-            )}
-          </div>
-
           {/* Password */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
@@ -302,6 +211,24 @@ export default function RegisterPage() {
               className="min-h-[44px] font-mono"
               dir="ltr"
               error={Boolean(error && !isPasswordValid)}
+            />
+          </div>
+
+          {/* Major (Optional) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-foreground">
+                {t.auth.majorPlaceholder}
+              </label>
+              <span className="text-[10px] text-muted-foreground">{language === "en" ? "Optional" : "اختياري"}</span>
+            </div>
+            <Input
+              type="text"
+              value={major}
+              onChange={(e) => setMajor(e.target.value)}
+              disabled={loading}
+              placeholder={language === "en" ? "e.g. Software Engineering, CS" : "مثال: هندسة البرمجيات، علم الحاسوب"}
+              className="min-h-[44px]"
             />
           </div>
 
