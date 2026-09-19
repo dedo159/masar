@@ -30,8 +30,8 @@ export function BottomNav() {
 
   const mobileNavItems = [
     { href: "/", icon: LayoutDashboard, label: isAr ? "الرئيسية" : "Home" },
-    { href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" },
-    { href: "/deals", icon: QrCode, label: isAr ? "التذكرة" : "Ticket" },
+    { href: "/courses", icon: BookOpen, label: isAr ? "المواد المسجلة" : "Courses" },
+    { href: "/deals", icon: Tag, label: isAr ? "العروض والخصومات" : "Deals" },
     { href: "/internships", icon: Briefcase, label: isAr ? "التدريب" : "Career" },
     { href: "/profile", icon: User, label: isAr ? "حسابي" : "Profile" },
   ];
@@ -93,10 +93,10 @@ export function Sidebar() {
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
-    { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
+    { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
-    { href: "/deals", icon: Tag, label: t.nav.deals },
+    { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
     { href: "/settings", icon: Settings, label: t.nav.settings },
   ];
 

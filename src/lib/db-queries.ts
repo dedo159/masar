@@ -93,6 +93,69 @@ export const getStudentProfile = cache(async (
 // ----------------------------------------------------
 // 2. المواد المسجلة (Courses)
 // ----------------------------------------------------
+function mapEnrollmentRecordToCourse(e: any, resolvedId: string): Course {
+  let schedule = [];
+  try {
+    schedule = JSON.parse(e.course.schedule);
+  } catch {
+    schedule = [];
+  }
+
+  const assignments: Assignment[] = (e.course.assignments || []).map((a: any) => {
+    const sub = a.submissions?.[0];
+    return {
+      id: a.id,
+      courseId: a.courseId,
+      title: a.title,
+      description: a.description || undefined,
+      dueDate: a.dueDate,
+      dueTime: a.dueTime,
+      status: (sub?.status || a.type) as Assignment["status"],
+      grade: sub?.grade !== null && sub?.grade !== undefined ? sub.grade : undefined,
+      maxGrade: a.maxGrade,
+      type: a.type as Assignment["type"],
+    };
+  });
+
+  const files: CourseFile[] = (e.course.files || []).map((f: any) => ({
+    id: f.id,
+    name: f.name,
+    type: f.type as CourseFile["type"],
+    url: f.url,
+    uploadedAt: f.uploadedAt,
+    week: f.week !== null && f.week !== undefined ? f.week : undefined,
+  }));
+
+  const grade: CourseGrade | undefined =
+    e.midtermGrade !== null || e.totalGrade !== null || e.assignmentsGrade !== null || e.finalGrade !== null
+      ? {
+          midterm: e.midtermGrade !== null && e.midtermGrade !== undefined ? e.midtermGrade : undefined,
+          final: e.finalGrade !== null && e.finalGrade !== undefined ? e.finalGrade : undefined,
+          assignments: e.assignmentsGrade !== null && e.assignmentsGrade !== undefined ? e.assignmentsGrade : undefined,
+          participation: e.participationGrade !== null && e.participationGrade !== undefined ? e.participationGrade : undefined,
+          total: e.totalGrade !== null && e.totalGrade !== undefined ? e.totalGrade : undefined,
+          letter: e.letterGrade || undefined,
+        }
+      : undefined;
+
+  return {
+    id: e.course.id,
+    code: e.course.code,
+    nameAr: e.course.nameAr,
+    nameEn: e.course.nameEn || translateCourseName(e.course.code, e.course.nameAr, null, "en"),
+    credits: e.course.credits,
+    instructor: e.course.instructor,
+    room: e.course.room,
+    color: e.course.color,
+    semester: e.course.semester,
+    status: e.status as Course["status"],
+    schedule,
+    grade,
+    assignments,
+    files,
+  };
+}
+
 export const getEnrolledCourses = cache(async (
   studentId?: string
 ): Promise<Course[]> => {
@@ -104,83 +167,54 @@ export const getEnrolledCourses = cache(async (
         status: "enrolled",
       },
       include: {
-      course: {
-        include: {
-          assignments: {
-            include: {
-              submissions: {
-                where: { studentId: resolvedId },
+        course: {
+          include: {
+            assignments: {
+              include: {
+                submissions: {
+                  where: { studentId: resolvedId },
+                },
               },
             },
+            files: true,
           },
-          files: true,
         },
       },
-    },
-  });
-
-  return enrollments.map((e) => {
-    let schedule = [];
-    try {
-      schedule = JSON.parse(e.course.schedule);
-    } catch {
-      schedule = [];
-    }
-
-    const assignments: Assignment[] = e.course.assignments.map((a) => {
-      const sub = a.submissions[0];
-      return {
-        id: a.id,
-        courseId: a.courseId,
-        title: a.title,
-        description: a.description || undefined,
-        dueDate: a.dueDate,
-        dueTime: a.dueTime,
-        status: (sub?.status || a.type) as Assignment["status"],
-        grade: sub?.grade !== null && sub?.grade !== undefined ? sub.grade : undefined,
-        maxGrade: a.maxGrade,
-        type: a.type as Assignment["type"],
-      };
     });
 
-    const files: CourseFile[] = e.course.files.map((f) => ({
-      id: f.id,
-      name: f.name,
-      type: f.type as CourseFile["type"],
-      url: f.url,
-      uploadedAt: f.uploadedAt,
-      week: f.week !== null && f.week !== undefined ? f.week : undefined,
-    }));
+    return enrollments.map((e) => mapEnrollmentRecordToCourse(e, resolvedId));
+  } catch {
+    return [];
+  }
+});
 
-    const grade: CourseGrade | undefined =
-      e.midtermGrade !== null || e.totalGrade !== null || e.assignmentsGrade !== null || e.finalGrade !== null
-        ? {
-            midterm: e.midtermGrade !== null && e.midtermGrade !== undefined ? e.midtermGrade : undefined,
-            final: e.finalGrade !== null && e.finalGrade !== undefined ? e.finalGrade : undefined,
-            assignments: e.assignmentsGrade !== null && e.assignmentsGrade !== undefined ? e.assignmentsGrade : undefined,
-            participation: e.participationGrade !== null && e.participationGrade !== undefined ? e.participationGrade : undefined,
-            total: e.totalGrade !== null && e.totalGrade !== undefined ? e.totalGrade : undefined,
-            letter: e.letterGrade || undefined,
-          }
-        : undefined;
+export const getAllRegisteredCourses = cache(async (
+  studentId?: string
+): Promise<Course[]> => {
+  const resolvedId = await resolveCurrentStudentId(studentId);
+  try {
+    const enrollments = await prisma.enrollment.findMany({
+      where: { 
+        studentId: resolvedId,
+      },
+      include: {
+        course: {
+          include: {
+            assignments: {
+              include: {
+                submissions: {
+                  where: { studentId: resolvedId },
+                },
+              },
+            },
+            files: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
 
-    return {
-      id: e.course.id,
-      code: e.course.code,
-      nameAr: e.course.nameAr,
-      nameEn: e.course.nameEn || translateCourseName(e.course.code, e.course.nameAr, null, "en"),
-      credits: e.course.credits,
-      instructor: e.course.instructor,
-      room: e.course.room,
-      color: e.course.color,
-      semester: e.course.semester,
-      status: e.status as Course["status"],
-      schedule,
-      grade,
-      assignments,
-      files,
-    };
-  });
+    return enrollments.map((e) => mapEnrollmentRecordToCourse(e, resolvedId));
   } catch {
     return [];
   }

@@ -153,7 +153,7 @@ export const translations = {
       homeShort: "الرئيسية",
       growth: "نموي الأكاديمي",
       growthShort: "النمو",
-      courses: "المواد",
+      courses: "المواد المسجلة",
       internships: "تدريب",
       internshipsShort: "تدريب",
       deals: "العروض والخصومات",
@@ -205,13 +205,13 @@ export const translations = {
       until: "حتى",
       atHour: "الساعة",
       stats: {
-        enrolledCourses: "المساقات المسجلة",
+        enrolledCourses: "المواد المسجلة",
         coursesUnit: "مواد",
         todayDue: "تسليمات اليوم",
         tasksUnit: "مهمات",
         internships: "فرص التدريب",
         internshipsUnit: "فرصة",
-        deals: "العروض الطلابية",
+        deals: "العروض والخصومات",
         dealsUnit: "خصم",
       },
       degreeProgress: {
@@ -238,7 +238,7 @@ export const translations = {
       },
     },
     courses: {
-      title: "المواد الدراسية",
+      title: "المواد المسجلة",
       subtitle: "مواد مسجلة · ساعة معتمدة",
       emptyTitle: "لا توجد مواد مسجلة حالياً",
       emptyDesc: "لم يتم رصد أي مقررات دراسية مسجلة لهذا الفصل حتى الآن. تأكد من مزامنة بوابتك الجامعية أو راجع جدولك.",
@@ -326,7 +326,7 @@ export const translations = {
       confirmed: "معتمد",
     },
     deals: {
-      title: "العروض والخصومات الطلابية",
+      title: "العروض والخصومات",
       subtitle: "خصومات وعروض حصرية لطلاب الجامعات",
       categories: {
         all: "الكل",
@@ -650,10 +650,10 @@ export const translations = {
       homeShort: "Home",
       growth: "Academic Growth",
       growthShort: "Growth",
-      courses: "Courses",
+      courses: "Registered Courses",
       internships: "Internships",
       internshipsShort: "Jobs",
-      deals: "Student Deals",
+      deals: "Deals & Discounts",
       dealsShort: "Deals",
       profile: "Profile",
       profileShort: "Account",
@@ -702,13 +702,13 @@ export const translations = {
       until: "until",
       atHour: "at",
       stats: {
-        enrolledCourses: "Enrolled Courses",
+        enrolledCourses: "Registered Courses",
         coursesUnit: "Courses",
         todayDue: "Due Today",
         tasksUnit: "Tasks",
         internships: "Internships",
         internshipsUnit: "Offers",
-        deals: "Student Deals",
+        deals: "Deals & Discounts",
         dealsUnit: "Deals",
       },
       degreeProgress: {
@@ -735,7 +735,7 @@ export const translations = {
       },
     },
     courses: {
-      title: "Academic Courses",
+      title: "Registered Courses",
       subtitle: "enrolled courses · credit hours",
       emptyTitle: "No courses enrolled currently",
       emptyDesc: "No registered courses found for this semester yet. Make sure to sync your university portal or check your schedule.",
@@ -823,7 +823,7 @@ export const translations = {
       confirmed: "Verified",
     },
     deals: {
-      title: "Student Deals & Discounts",
+      title: "Deals & Discounts",
       subtitle: "Exclusive discounts & perks for university students",
       categories: {
         all: "All",

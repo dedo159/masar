@@ -1,20 +1,23 @@
-import { getEnrolledCourses } from "@/lib/db-queries";
+import { getEnrolledCourses, getAllRegisteredCourses } from "@/lib/db-queries";
 import { CoursesClient } from "./courses-client";
 
 export const dynamic = 'force-dynamic';
 
 export default async function CoursesPage() {
-  let enrolledCourses = [];
-  try {
-    const courses = await getEnrolledCourses();
-    enrolledCourses = courses.filter((c) => c.status === "enrolled");
-  } catch (error) {
-    console.error("CoursesPage data fetch error:", error);
-    throw error;
-  }
+  const [enrolledCourses, allRegisteredCourses] = await Promise.all([
+    getEnrolledCourses().catch(() => []),
+    getAllRegisteredCourses().catch(() => []),
+  ]);
 
-  const totalCredits = enrolledCourses.reduce((sum, c) => sum + (c.credits || 3), 0);
+  const activeCredits = enrolledCourses.reduce((sum, c) => sum + (c.credits || 3), 0);
+  const totalRegisteredCredits = allRegisteredCourses.reduce((sum, c) => sum + (c.credits || 3), 0);
 
-  return <CoursesClient enrolledCourses={enrolledCourses} totalCredits={totalCredits} />;
+  return (
+    <CoursesClient
+      enrolledCourses={enrolledCourses}
+      allRegisteredCourses={allRegisteredCourses}
+      totalCredits={activeCredits > 0 ? activeCredits : totalRegisteredCredits}
+    />
+  );
 }
 
