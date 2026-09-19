@@ -124,7 +124,8 @@ const { t, isRtl, language } = useLanguage();
           initialPortfolio={student.portfolio || ""}
         />
 
-        {/* Moodle Integration Card */}
+        {/* Moodle Integration Card - IT faculty only */}
+        {(typeof window !== "undefined" && localStorage.getItem("masar_user_faculty") === "it") && (
         <div className="rounded-lg border border-border bg-card p-5 space-y-3 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -163,6 +164,7 @@ const { t, isRtl, language } = useLanguage();
             </div>
           </div>
         </div>
+        )}
 
         {/* Certificates Section */}
         <CertificatesSection certificates={student.certificates || []} />

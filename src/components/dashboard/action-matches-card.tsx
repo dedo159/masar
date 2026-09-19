@@ -1,12 +1,44 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Briefcase, ArrowUpRight, Sparkles } from "lucide-react";
+import { Calendar, Briefcase, ArrowUpRight } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
+
+const facultyEvents: Record<string, { titleAr: string; titleEn: string; subtitleAr: string; subtitleEn: string }> = {
+  it: { titleAr: "هاكاثون الذكاء الاصطناعي 2026", titleEn: "AI Hackathon 2026", subtitleAr: "كلية تكنولوجيا المعلومات", subtitleEn: "Faculty of IT • 3 days left" },
+  business: { titleAr: "مسابقة ريادة الأعمال 2026", titleEn: "Business Case Competition 2026", subtitleAr: "كلية الأعمال", subtitleEn: "Faculty of Business • 5 days left" },
+  engineering: { titleAr: "معرض المشاريع الهندسية", titleEn: "Engineering Projects Expo", subtitleAr: "كلية الهندسة", subtitleEn: "Faculty of Engineering • 1 week left" },
+  pharmacy: { titleAr: "ورشة الصيدلة السريرية", titleEn: "Clinical Pharmacy Workshop", subtitleAr: "كلية الصيدلة", subtitleEn: "Faculty of Pharmacy • 4 days left" },
+  nursing: { titleAr: "ندوة التمريض المتقدم", titleEn: "Advanced Nursing Seminar", subtitleAr: "كلية التمريض", subtitleEn: "Faculty of Nursing • 3 days left" },
+  allied_medical: { titleAr: "مؤتمر العلوم الطبية المساندة", titleEn: "Allied Medical Sciences Conference", subtitleAr: "كلية العلوم الطبية المساندة", subtitleEn: "Faculty of Allied Medical Sciences" },
+  architecture_design: { titleAr: "معرض التصميم السنوي", titleEn: "Annual Design Exhibition", subtitleAr: "كلية العمارة والتصميم", subtitleEn: "Faculty of Architecture & Design" },
+  law: { titleAr: "محكمة صورية — القانون الدولي", titleEn: "Moot Court — International Law", subtitleAr: "كلية الحقوق", subtitleEn: "Faculty of Law • 2 days left" },
+  arts_sciences: { titleAr: "ندوة الأدب والترجمة", titleEn: "Literature & Translation Seminar", subtitleAr: "كلية الآداب والعلوم", subtitleEn: "Faculty of Arts & Sciences" },
+  educational_sciences: { titleAr: "ورشة التربية الخاصة", titleEn: "Special Education Workshop", subtitleAr: "كلية العلوم التربوية", subtitleEn: "Faculty of Educational Sciences" },
+  dentistry: { titleAr: "يوم صحة الفم والأسنان", titleEn: "Oral Health Awareness Day", subtitleAr: "كلية طب الأسنان", subtitleEn: "Faculty of Dentistry" },
+};
+
+const facultyInternships: Record<string, { titleAr: string; titleEn: string }> = {
+  it: { titleAr: "مطور برمجيات Fullstack متدرب • عمان", titleEn: "Frontend / React Intern • Amman" },
+  business: { titleAr: "متدرب تسويق رقمي • عمان", titleEn: "Digital Marketing Intern • Amman" },
+  engineering: { titleAr: "متدرب هندسة مدنية • عمان", titleEn: "Civil Engineering Intern • Amman" },
+  pharmacy: { titleAr: "متدرب صيدلة سريرية • عمان", titleEn: "Clinical Pharmacy Intern • Amman" },
+  nursing: { titleAr: "متدرب تمريض — مستشفى • عمان", titleEn: "Hospital Nursing Intern • Amman" },
+  allied_medical: { titleAr: "متدرب مختبرات طبية • عمان", titleEn: "Medical Lab Intern • Amman" },
+  architecture_design: { titleAr: "متدرب تصميم جرافيكي • عمان", titleEn: "Graphic Design Intern • Amman" },
+  law: { titleAr: "متدرب قانوني — مكتب محاماة • عمان", titleEn: "Legal Intern • Law Firm • Amman" },
+  arts_sciences: { titleAr: "مترجم متدرب • عمان", titleEn: "Translation Intern • Amman" },
+  educational_sciences: { titleAr: "معلم متدرب • عمان", titleEn: "Teaching Intern • Amman" },
+  dentistry: { titleAr: "متدرب طب أسنان — عيادة • عمان", titleEn: "Dental Clinic Intern • Amman" },
+};
 
 export function ActionMatchesCard() {
   const { language } = useLanguage();
   const isAr = language === "ar";
+  const faculty = typeof window !== "undefined" ? localStorage.getItem("masar_user_faculty") || "it" : "it";
+
+  const event = facultyEvents[faculty] || facultyEvents.it;
+  const internship = facultyInternships[faculty] || facultyInternships.it;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -19,10 +51,10 @@ export function ActionMatchesCard() {
               <span>{isAr ? "فعاليات مقترحة" : "Campus Events"}</span>
             </span>
             <h4 className="text-sm font-bold text-foreground tracking-tight">
-              {isAr ? "هاكاثون الذكاء الاصطناعي 2026" : "Recommended Events"}
+              {isAr ? event.titleAr : event.titleEn}
             </h4>
             <p className="text-[11px] text-muted-foreground line-clamp-1">
-              {isAr ? "كلية الملك عبد الله الثاني لتكنولوجيا المعلومات" : "KASIT Hackathon • 3 days left"}
+              {isAr ? event.subtitleAr : event.subtitleEn}
             </p>
           </div>
         </div>
@@ -48,7 +80,7 @@ export function ActionMatchesCard() {
               {isAr ? "فرص التدريب المتوافقة (92%)" : "Job/Internship Matches"}
             </h4>
             <p className="text-[11px] text-muted-foreground line-clamp-1">
-              {isAr ? "مطور برمجيات Fullstack متدرب • عمان" : "Frontend / React Intern • Amman"}
+              {isAr ? internship.titleAr : internship.titleEn}
             </p>
           </div>
         </div>

@@ -314,7 +314,9 @@ export default function SettingsPage() {
       />
 
       <div className="max-w-4xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-4">
-        {/* Moodle Sync Integration */}
+        {/* Moodle Sync Integration - IT faculty only */}
+        {(typeof window !== "undefined" && localStorage.getItem("masar_user_faculty") === "it") && (
+        <>
         <SectionLabel>{t.settings.moodleSection}</SectionLabel>
         <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-3 shadow-sm transition-all">
           <div className="flex items-start justify-between gap-3">
@@ -366,6 +368,8 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+        </>
+        )}
 
         {/* Appearance & Theme (3 options) */}
         <SectionLabel>{t.settings.appearanceSection}</SectionLabel>

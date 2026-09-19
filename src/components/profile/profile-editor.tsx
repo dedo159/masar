@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, X, Check, Globe, GitBranch, Save, Sparkles } from "lucide-react";
+import { Plus, X, Check, Globe, GitBranch, Link2, Save, Sparkles } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 
 interface ProfileEditorProps {
@@ -12,7 +12,7 @@ interface ProfileEditorProps {
   initialPortfolio?: string;
 }
 
-const AVAILABLE_SKILLS = [
+const IT_SKILLS = [
   "JavaScript", "TypeScript", "Python", "Java", "C++", "C#", "Ruby", "PHP", 
   "Swift", "Kotlin", "Go", "Rust", "React", "Angular", "Vue.js", "Next.js", 
   "Node.js", "Express", "Django", "Spring Boot", "ASP.NET Core", "SQL", 
@@ -23,18 +23,45 @@ const AVAILABLE_SKILLS = [
   "Flutter", "React Native"
 ].sort();
 
+const GENERAL_SKILLS = [
+  "Microsoft Office", "Excel", "PowerPoint", "Word", "Google Workspace",
+  "Communication", "Leadership", "Teamwork", "Problem Solving", "Critical Thinking",
+  "Time Management", "Project Management", "Research", "Writing", "Presentation",
+  "Public Speaking", "Negotiation", "Data Analysis", "Statistics", "Report Writing",
+  "Arabic", "English", "French", "Spanish"
+].sort();
+
+const FACULTY_SKILLS: Record<string, string[]> = {
+  it: IT_SKILLS,
+  engineering: [...IT_SKILLS.filter(s => ["Python", "C++", "SQL", "Git", "Linux", "Docker", "AWS", "Azure", "Google Cloud"].includes(s)), "MATLAB", "AutoCAD", "SolidWorks", "Simulink", "LabVIEW", "CAD/CAM", ...GENERAL_SKILLS].sort(),
+  business: ["Accounting", "Finance", "Marketing", "HR Management", "Supply Chain", "Business Analytics", "SAP", "ERP", "CRM", "Salesforce", "QuickBooks", "Financial Modeling", "Budgeting", "Risk Management", "Strategic Planning", ...GENERAL_SKILLS].sort(),
+  pharmacy: ["Clinical Pharmacy", "Pharmacology", "Drug Interactions", "Pharmaceutical Chemistry", "Patient Counseling", "GMP", "Drug Safety", "Clinical Trials", "Regulatory Affairs", ...GENERAL_SKILLS].sort(),
+  nursing: ["Patient Care", "Clinical Assessment", "Emergency Care", "Pediatric Nursing", "Surgical Nursing", "Mental Health", "Health Education", "CPR/BLS", "Electronic Health Records", ...GENERAL_SKILLS].sort(),
+  allied_medical: ["Lab Diagnostics", "Medical Imaging", "Physical Therapy", "Audiology", "Optometry", "Rehabilitation", "Clinical Research", "Infection Control", ...GENERAL_SKILLS].sort(),
+  architecture_design: ["AutoCAD", "Revit", "SketchUp", "3ds Max", "Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign", "Figma", "Interior Design", "Urban Planning", "Sustainable Design", "BIM", ...GENERAL_SKILLS].sort(),
+  law: ["Legal Research", "Contract Drafting", "Litigation", "Arbitration", "Constitutional Law", "Criminal Law", "International Law", "Human Rights Law", "Legal Writing", "Mediation", ...GENERAL_SKILLS].sort(),
+  arts_sciences: ["Translation", "Linguistics", "Literary Analysis", "Academic Writing", "Content Creation", "Editing", "Applied Physics", "Mathematics", "Statistical Analysis", ...GENERAL_SKILLS].sort(),
+  educational_sciences: ["Curriculum Design", "Special Education", "Educational Psychology", "Classroom Management", "E-Learning", "Assessment Design", "Child Development", "Physical Education", ...GENERAL_SKILLS].sort(),
+  dentistry: ["Oral Surgery", "Prosthodontics", "Orthodontics", "Periodontics", "Dental Imaging", "Patient Management", "Clinical Skills", "Dental Materials", ...GENERAL_SKILLS].sort(),
+};
+
 export function ProfileEditor({
   initialSkills = [],
   initialGithub = "",
   initialPortfolio = "",
 }: ProfileEditorProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isAr = language === "ar";
   const [skills, setSkills] = useState<string[]>(initialSkills);
   const [newSkill, setNewSkill] = useState("");
   const [github, setGithub] = useState(initialGithub || "");
   const [portfolio, setPortfolio] = useState(initialPortfolio || "");
   const [isSaving, setIsSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  const faculty = typeof window !== "undefined" ? localStorage.getItem("masar_user_faculty") || "it" : "it";
+  const isIT = faculty === "it";
+  const AVAILABLE_SKILLS = FACULTY_SKILLS[faculty] || GENERAL_SKILLS;
 
   const handleAddSkill = () => {
     const trimmed = newSkill.trim();
@@ -121,7 +148,7 @@ export function ProfileEditor({
             onChange={(e) => setNewSkill(e.target.value)}
             className="flex flex-1 h-11 min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <option value="" disabled>اختر مهارة تقنية...</option>
+            <option value="" disabled>{isAr ? (isIT ? "اختر مهارة تقنية..." : "اختر مهارة...") : "Choose a skill..."}</option>
             {AVAILABLE_SKILLS.filter(s => !skills.includes(s)).map(skill => (
               <option key={skill} value={skill}>{skill}</option>
             ))}
@@ -145,18 +172,34 @@ export function ProfileEditor({
         </label>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="space-y-1.5">
-            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-              <GitBranch className="h-3.5 w-3.5" />
-              {t.profile.githubLabel}
-            </span>
-            <Input value={github}
-              onChange={(e) => setGithub(e.target.value)}
-              placeholder="github.com/username"
-              className="min-h-[44px] font-mono text-xs"
-              dir="ltr"
-            />
-          </div>
+          {/* GitHub - only for IT faculty; LinkedIn for others */}
+          {isIT ? (
+            <div className="space-y-1.5">
+              <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                <GitBranch className="h-3.5 w-3.5" />
+                {t.profile.githubLabel}
+              </span>
+              <Input value={github}
+                onChange={(e) => setGithub(e.target.value)}
+                placeholder="github.com/username"
+                className="min-h-[44px] font-mono text-xs"
+                dir="ltr"
+              />
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                <Link2 className="h-3.5 w-3.5" />
+                LinkedIn
+              </span>
+              <Input value={github}
+                onChange={(e) => setGithub(e.target.value)}
+                placeholder="linkedin.com/in/username"
+                className="min-h-[44px] font-mono text-xs"
+                dir="ltr"
+              />
+            </div>
+          )}
 
           <div className="space-y-1.5">
             <span className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -165,7 +208,7 @@ export function ProfileEditor({
             </span>
             <Input value={portfolio}
               onChange={(e) => setPortfolio(e.target.value)}
-              placeholder="https://myportfolio.dev"
+              placeholder={isIT ? "https://myportfolio.dev" : "https://myportfolio.com"}
               className="min-h-[44px] font-mono text-xs"
               dir="ltr"
             />
@@ -188,4 +231,3 @@ export function ProfileEditor({
     </div>
   );
 }
-

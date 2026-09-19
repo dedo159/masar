@@ -27,10 +27,12 @@ export function BottomNav() {
   const pathname = usePathname();
   const { language, t } = useLanguage();
   const isAr = language === "ar";
+  const faculty = typeof window !== "undefined" ? localStorage.getItem("masar_user_faculty") : null;
+  const isIT = faculty === "it";
 
   const mobileNavItems = [
     { href: "/", icon: LayoutDashboard, label: isAr ? "الرئيسية" : "Home" },
-    { href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" },
+    ...(isIT ? [{ href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" }] : []),
     { href: "/courses", icon: BookOpen, label: isAr ? "المواد" : "Courses" },
     { href: "/deals", icon: Tag, label: isAr ? "العروض" : "Deals" },
     { href: "/internships", icon: Briefcase, label: isAr ? "التدريب" : "Career" },
@@ -39,7 +41,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-lg dark:shadow-2xl">
-      <div className="grid grid-cols-6 w-full max-w-lg mx-auto items-center">
+      <div className={cn("grid w-full max-w-lg mx-auto items-center", isIT ? "grid-cols-6" : "grid-cols-5")}>
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -90,10 +92,12 @@ export function Sidebar() {
   const pathname = usePathname();
   const { t, isRtl, language } = useLanguage();
   const [student, setStudent] = useState<{ name: string; major: string } | null>(null);
+  const faculty = typeof window !== "undefined" ? localStorage.getItem("masar_user_faculty") : null;
+  const isIT = faculty === "it";
 
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
-    { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
+    ...(isIT ? [{ href: "/readiness", icon: TrendingUp, label: t.nav.readiness }] : []),
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/deals", icon: Tag, label: t.nav.deals },
     { href: "/internships", icon: Briefcase, label: t.nav.internships },
