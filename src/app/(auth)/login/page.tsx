@@ -483,8 +483,6 @@ export default function LoginPage() {
             </div>
           )}
 
-
-
           {/* University selection */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
@@ -497,7 +495,7 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
               >
-                <option value="">{language === "en" ? "Select your Jordanian university..." : "اختر الجامعة الأردنية التابع لها..."}</option>
+                <option value="">{language === "en" ? "Select your university..." : "اختر جامعتك..."}</option>
                 {universities.map((u) => (
                   <option key={u.id} value={u.id}>
                     {language === "en" ? u.nameEn : u.nameAr}
@@ -507,7 +505,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Faculty / College selection */}
+          {/* Faculty selection */}
           <div className="space-y-1.5">
             <label className="block text-xs font-semibold text-foreground">
               {language === "en" ? "Faculty / College" : "الكلية"}
@@ -516,11 +514,11 @@ export default function LoginPage() {
               <select
                 value={selectedFaculty}
                 onChange={(e) => {
-                  const fid = e.target.value;
-                  setSelectedFaculty(fid);
-                  const fac = faculties.find((f) => f.id === fid);
-                  if (fac && fac.majors.length > 0) {
-                    setMajor(fac.majors[0]);
+                  const newFac = e.target.value;
+                  setSelectedFaculty(newFac);
+                  const facObj = faculties.find((f) => f.id === newFac);
+                  if (facObj && facObj.majors.length > 0) {
+                    setMajor(facObj.majors[0]);
                     setIsCustomMajor(false);
                     setCustomMajor("");
                   }
@@ -535,6 +533,53 @@ export default function LoginPage() {
                 ))}
               </select>
             </div>
+          </div>
+
+          {/* Major */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-foreground">
+                {language === "en" ? "Major" : "التخصص"}
+              </label>
+              <span className="text-[10px] text-muted-foreground">{language === "en" ? "Select or enter" : "اختر أو حدد"}</span>
+            </div>
+            <div className="relative">
+              <select
+                value={isCustomMajor ? "other" : major}
+                onChange={(e) => {
+                  if (e.target.value === "other") {
+                    setIsCustomMajor(true);
+                  } else {
+                    setIsCustomMajor(false);
+                    setMajor(e.target.value);
+                  }
+                }}
+                disabled={loading}
+                className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
+              >
+                {faculties.find((f) => f.id === selectedFaculty)?.majors.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+                <option value="other">
+                  {language === "en" ? "Other (type manually)..." : "تخصص آخر (كتابة يدوية)..."}
+                </option>
+              </select>
+            </div>
+            {isCustomMajor && (
+              <Input
+                type="text"
+                value={customMajor}
+                onChange={(e) => {
+                  setCustomMajor(e.target.value);
+                }}
+                disabled={loading}
+                placeholder={language === "en" ? "Enter your major name" : "اكتب اسم التخصص"}
+                className="min-h-[44px] mt-1.5"
+                autoFocus
+              />
+            )}
           </div>
 
           {/* Username / Student ID */}
@@ -569,45 +614,6 @@ export default function LoginPage() {
               dir="ltr"
               error={Boolean(error && !isPasswordValid)}
             />
-          </div>
-
-          {/* Major / Specialization */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <label className="block text-xs font-semibold text-foreground">
-                {t.auth.majorPlaceholder}
-              </label>
-              <span className="text-[10px] text-muted-foreground">{language === "en" ? "Optional" : "اختياري"}</span>
-            </div>
-            <select
-              value={isCustomMajor ? "__custom__" : major}
-              onChange={(e) => {
-                if (e.target.value === "__custom__") {
-                  setIsCustomMajor(true);
-                } else {
-                  setIsCustomMajor(false);
-                  setMajor(e.target.value);
-                  setCustomMajor("");
-                }
-              }}
-              disabled={loading}
-              className="w-full min-h-[44px] rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring text-foreground cursor-pointer"
-            >
-              {(faculties.find((f) => f.id === selectedFaculty)?.majors || []).map((m) => (
-                <option key={m} value={m}>{m}</option>
-              ))}
-              <option value="__custom__">{language === "en" ? "Other (type manually)" : "أخرى (أدخل يدوياً)"}</option>
-            </select>
-            {isCustomMajor && (
-              <Input
-                type="text"
-                value={customMajor}
-                onChange={(e) => setCustomMajor(e.target.value)}
-                disabled={loading}
-                placeholder={language === "en" ? "Enter your major..." : "أدخل تخصصك..."}
-                className="min-h-[44px] mt-1.5"
-              />
-            )}
           </div>
 
           {/* Submit Button */}

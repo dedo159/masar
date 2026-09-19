@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, CheckCircle2, QrCode } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -13,16 +14,27 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
   const { language, isRtl } = useLanguage();
   const isAr = language === "ar";
 
-  const studentName = student?.name || (isAr ? "طالب مسار" : "Masar Student");
+  const defaultName = student?.name || (isAr ? "طالب مسار" : "Masar Student");
   const studentIdNumber = student?.studentId || "202410890";
-  const studentMajor = student?.major || (isAr ? "علم الحاسوب" : "Computer Science");
+  const defaultMajor = student?.major || (isAr ? "علم الحاسوب" : "Computer Science");
 
-  // Read faculty from localStorage
-  const facultyName = typeof window !== "undefined"
-    ? (isAr
+  const [displayName, setDisplayName] = useState(defaultName);
+  const [displayMajor, setDisplayMajor] = useState(defaultMajor);
+  const [displayFaculty, setDisplayFaculty] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedName = localStorage.getItem("masar_user_name");
+      const storedMajor = localStorage.getItem("masar_user_major");
+      const storedFaculty = isAr
         ? localStorage.getItem("masar_user_faculty_name")
-        : localStorage.getItem("masar_user_faculty_name_en"))
-    : null;
+        : localStorage.getItem("masar_user_faculty_name_en");
+
+      if (storedName) setDisplayName(storedName);
+      if (storedMajor) setDisplayMajor(storedMajor);
+      if (storedFaculty) setDisplayFaculty(storedFaculty);
+    }
+  }, [isAr, student]);
 
   return (
     <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 sm:p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden group">
@@ -59,7 +71,7 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
             <div className="relative h-13 w-13 rounded-full overflow-hidden border-2 border-white dark:border-white/30 bg-slate-100 dark:bg-[#141630]">
               <img
                 src={student?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"}
-                alt={studentName}
+                alt={displayName}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -67,14 +79,14 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
 
           <div className="min-w-0">
             <h3 className="text-base font-bold text-foreground tracking-tight truncate flex items-center gap-1.5">
-              <span>{studentName}</span>
+              <span>{displayName}</span>
               <CheckCircle2 className="h-3.5 w-3.5 text-[#2F7BFF] dark:text-[#38BDF8] shrink-0" />
             </h3>
             <p className="text-xs font-mono text-muted-foreground truncate mt-0.5">
               {isAr ? `الرقم الجامعي: ${studentIdNumber}` : `Student ID: ${studentIdNumber}`}
             </p>
             <p className="text-[11px] text-muted-foreground/80 truncate">
-              {studentMajor}{facultyName ? ` • ${facultyName}` : ""} • {isAr ? "جامعة عمان الأهلية" : "Al-Ahliyya Amman University"}
+              {displayMajor} {displayFaculty ? `• ${displayFaculty}` : ""} • {isAr ? "جامعة عمان الأهلية" : "Al-Ahliyya Amman University"}
             </p>
           </div>
         </div>
