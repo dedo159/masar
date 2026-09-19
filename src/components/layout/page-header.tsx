@@ -1,9 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Moon, Sun, Globe, Menu, Search } from "lucide-react";
-import { useTheme } from "next-themes";
-import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
 import { MasarLogo } from "@/components/ui/logo";
 import { ThemeLanguageToggle } from "@/components/ui/theme-language-toggle";
@@ -17,9 +15,7 @@ interface PageHeaderProps {
 }
 
 export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
-  const { resolvedTheme, setTheme } = useTheme();
-  const { language, toggleLanguage, t } = useLanguage();
-  const isDark = resolvedTheme === "dark";
+  const { language, t } = useLanguage();
 
   // Dynamic title mapping
   const titleMap: Record<string, string> = {
@@ -45,16 +41,15 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
     <header className="sticky top-0 z-30 border-b border-border/60 bg-background/80 backdrop-blur-xl transition-all duration-300">
       {/* Mobile Top Bar (Exact Match with Official 3D Mockup) */}
       <div className="relative flex md:hidden items-center justify-between px-3 py-2 min-h-[56px]">
-        {/* Left: Menu Hamburger + Quick Theme & Lang Toggle */}
-        <div className="flex items-center gap-1.5 z-10">
+        {/* Left: Menu Hamburger */}
+        <div className="flex items-center gap-1 z-10">
           <Link
             href="/settings"
-            className="p-1.5 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all"
+            className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all"
             aria-label="القائمة"
           >
             <Menu className="h-5 w-5" />
           </Link>
-          <ThemeLanguageToggle size="sm" />
         </div>
 
         {/* Center: Masar Full Logo (Centered in the middle of the screen) */}
@@ -64,15 +59,9 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           </Link>
         </div>
 
-        {/* Right: Search & Notifications */}
-        <div className="flex items-center gap-0.5 z-10">
-          <Link
-            href="/courses"
-            className="p-2 rounded-xl text-foreground/80 hover:text-foreground hover:bg-muted active:scale-95 transition-all"
-            aria-label="بحث"
-          >
-            <Search className="h-4 w-4" />
-          </Link>
+        {/* Right: Quick Theme & Lang Toggle + Notifications */}
+        <div className="flex items-center gap-1.5 z-10">
+          <ThemeLanguageToggle size="sm" />
           <NotificationsDropdown />
         </div>
       </div>
@@ -107,17 +96,17 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {action}
 
-          {/* Quick Theme & Language Toggle Pill */}
-          <ThemeLanguageToggle size="md" />
+          {/* Quick Theme & Language Toggle Pill with generous room */}
+          <ThemeLanguageToggle size="lg" />
 
           <NotificationsDropdown />
 
           <Link
             href="/profile"
-            className="flex items-center justify-center h-9 w-9 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-medium border border-border mx-1"
+            className="flex items-center justify-center h-10 w-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:shadow-sm transition-all active:scale-95 text-xs font-semibold border border-border mx-0.5"
             title={t.header.userAccount}
             aria-label={t.header.userAccount}
             suppressHydrationWarning

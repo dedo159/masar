@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 interface ThemeLanguageToggleProps {
   className?: string;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
   variant?: "pill" | "separated" | "floating";
   showLabels?: boolean;
 }
@@ -88,8 +88,8 @@ export function ThemeLanguageToggle({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-full border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-0.5 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-[#2F7BFF]/40",
-        size === "sm" ? "h-8" : "h-9",
+        "inline-flex items-center rounded-full border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-1 shadow-xs backdrop-blur-xl transition-all duration-200 hover:border-[#2F7BFF]/40",
+        size === "sm" ? "h-8" : size === "lg" ? "h-11 px-1.5" : "h-9 px-1",
         className
       )}
     >
@@ -101,15 +101,29 @@ export function ThemeLanguageToggle({
         aria-label="تبديل اللغة"
         className={cn(
           "inline-flex items-center gap-1.5 rounded-full font-semibold transition-all duration-150 active:scale-95 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted/70 dark:hover:bg-white/[0.06]",
-          size === "sm" ? "px-2 text-[11px] h-7" : "px-2.5 text-xs h-8"
+          size === "sm" ? "px-2 text-[11px] h-6" : size === "lg" ? "px-3.5 text-sm h-9 gap-2" : "px-2.5 text-xs h-7"
         )}
       >
-        <Globe className={cn("text-[#2F7BFF] dark:text-[#38BDF8] shrink-0", size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5")} />
-        {showLabels && <span className="font-mono tracking-tight font-bold">{language === "ar" ? "EN" : "عربي"}</span>}
+        <Globe
+          className={cn(
+            "text-[#2F7BFF] dark:text-[#38BDF8] shrink-0",
+            size === "sm" ? "h-3 w-3" : size === "lg" ? "h-4 w-4" : "h-3.5 w-3.5"
+          )}
+        />
+        {showLabels && (
+          <span className={cn("font-mono tracking-tight font-bold", size === "lg" ? "text-xs" : "text-[11px]")}>
+            {language === "ar" ? "EN" : "عربي"}
+          </span>
+        )}
       </button>
 
       {/* Subtle Hairline Divider */}
-      <span className="h-3.5 w-px bg-border/80 dark:bg-white/10 mx-0.5" />
+      <span
+        className={cn(
+          "w-px bg-border/80 dark:bg-white/10 mx-0.5",
+          size === "lg" ? "h-4.5" : "h-3.5"
+        )}
+      />
 
       {/* Theme Toggle Button */}
       <button
@@ -119,13 +133,23 @@ export function ThemeLanguageToggle({
         aria-label="تبديل المظهر"
         className={cn(
           "inline-flex items-center justify-center rounded-full transition-all duration-150 active:scale-95 cursor-pointer text-muted-foreground hover:text-foreground hover:bg-muted/70 dark:hover:bg-white/[0.06]",
-          size === "sm" ? "h-7 w-7" : "h-8 w-8"
+          size === "sm" ? "h-6 w-6" : size === "lg" ? "h-9 w-9" : "h-7 w-7"
         )}
       >
         {isDark ? (
-          <Sun className={cn("text-amber-400 transition-transform duration-200 rotate-0 hover:rotate-45", size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4")} />
+          <Sun
+            className={cn(
+              "text-amber-400 transition-transform duration-200 rotate-0 hover:rotate-45",
+              size === "sm" ? "h-3 w-3" : size === "lg" ? "h-4.5 w-4.5" : "h-3.5 w-3.5"
+            )}
+          />
         ) : (
-          <Moon className={cn("text-[#2F7BFF] transition-transform duration-200 rotate-0 hover:-rotate-12", size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4")} />
+          <Moon
+            className={cn(
+              "text-[#2F7BFF] transition-transform duration-200 rotate-0 hover:-rotate-12",
+              size === "sm" ? "h-3 w-3" : size === "lg" ? "h-4.5 w-4.5" : "h-3.5 w-3.5"
+            )}
+          />
         )}
       </button>
     </div>
