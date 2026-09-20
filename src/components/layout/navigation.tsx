@@ -16,6 +16,7 @@ import {
   GraduationCap,
   Building2,
   QrCode,
+  Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MasarLogo } from "@/components/ui/logo";
@@ -88,10 +89,12 @@ export function BottomNav() {
 export function Sidebar() {
   const pathname = usePathname();
   const { t, isRtl, language } = useLanguage();
+  const isAr = language === "ar";
   const [student, setStudent] = useState<{ name: string; major: string } | null>(null);
 
   const desktopNavItems = [
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
+    { href: "/schedule", icon: Calendar, label: isAr ? "الجدول الدراسي" : "Schedule" },
     { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
     { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
