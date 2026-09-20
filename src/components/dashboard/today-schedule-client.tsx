@@ -39,7 +39,14 @@ export function TodayScheduleClient({ todayClasses }: TodayScheduleClientProps) 
           </span>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/schedule"
+            className="text-xs font-bold text-[#2F7BFF] dark:text-[#38BDF8] hover:underline flex items-center gap-1"
+          >
+            <span>{isRtl ? "الجدول الكامل" : "Full Schedule"}</span>
+            <ArrowIcon className="h-3 w-3" />
+          </Link>
           <span className="text-xs font-mono font-bold bg-gradient-to-r from-[#2F7BFF] to-[#8B5CF6] text-white px-3 py-1 rounded-full shadow-md">
             {todayClasses.length} {todayClasses.length === 1 ? t.dashboard.singleClass : t.dashboard.classesCount}
           </span>

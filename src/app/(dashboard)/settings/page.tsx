@@ -24,6 +24,7 @@ import {
   Smartphone,
   Send,
   AlertCircle,
+  Video,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/providers/language-provider";
@@ -145,7 +146,28 @@ export default function SettingsPage() {
       .then(r => r.json())
       .then(d => { if (d.id) setStudentId(d.id); })
       .catch(() => {});
+
+    // Fetch Microsoft Teams connection status
+    fetch("/api/student/teams/status")
+      .then(r => r.json())
+      .then(d => setTeamsStatus(d))
+      .catch(() => setTeamsStatus({ connected: false }));
   }, [t]);
+
+  const [teamsStatus, setTeamsStatus] = useState<{ connected: boolean; email?: string; displayName?: string } | null>(null);
+  const [isDisconnectingTeams, setIsDisconnectingTeams] = useState(false);
+
+  const handleDisconnectTeams = async () => {
+    setIsDisconnectingTeams(true);
+    try {
+      await fetch("/api/student/teams/disconnect", { method: "POST" });
+      setTeamsStatus({ connected: false });
+    } catch (e) {
+      console.error("Disconnect Teams error:", e);
+    } finally {
+      setIsDisconnectingTeams(false);
+    }
+  };
 
   const displayName = translateStudentName(studentName, language);
   const displayMeta = translateMajor(studentMeta, language);
@@ -483,6 +505,56 @@ export default function SettingsPage() {
                   }}
                 >
                   {t.settings.linkBtn}
+                </Button>
+              )
+            }
+          />
+
+          {/* Microsoft Teams Integration */}
+          <SettingRow
+            icon={Video}
+            label={language === "ar" ? "تقويم Microsoft Teams" : "Microsoft Teams Calendar"}
+            description={
+              teamsStatus?.connected
+                ? (language === "ar"
+                    ? `متصل (${teamsStatus.email || "حساب الطالب"}) — مزامنة المواعيد وروابط الاجتماعات تلقائياً`
+                    : `Connected (${teamsStatus.email || "Student Account"}) — syncing lecture times & links`)
+                : (language === "ar"
+                    ? "مزامنة المحاضرات وروابط الاجتماعات المباشرة (نطاق الطالب فقط: تقويم شخصي)"
+                    : "Sync lecture times & direct join links (student calendar scope)")
+            }
+            chevron={Chevron}
+            control={
+              teamsStatus?.connected ? (
+                <div className="flex items-center gap-2">
+                  <Badge variant="success" className="gap-1 font-semibold text-xs">
+                    <CheckCircle2 className="h-3 w-3" />
+                    {language === "ar" ? "مُتصل" : "Connected"}
+                  </Badge>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isDisconnectingTeams}
+                    className="min-h-[44px] text-xs px-3 active:scale-95 transition-transform cursor-pointer text-destructive hover:bg-destructive/10"
+                    onClick={handleDisconnectTeams}
+                  >
+                    {isDisconnectingTeams ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      language === "ar" ? "إلغاء الربط" : "Disconnect"
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="min-h-[44px] text-xs px-4 bg-[#505AC9] hover:bg-[#434baf] text-white active:scale-95 transition-transform cursor-pointer"
+                  onClick={() => {
+                    window.location.href = "/api/auth/microsoft";
+                  }}
+                >
+                  {language === "ar" ? "ربط Teams" : "Connect Teams"}
                 </Button>
               )
             }
