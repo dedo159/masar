@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 
 export interface OutreachMessage {
   id: string;
@@ -81,8 +82,14 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json({ error: "يجب تسجيل الدخول لإرسال الرسائل" }, { status: 401 });
+    }
+
     const body = await request.json();
-    const { candidateId, text, sender = "recruiter" } = body;
+    const { candidateId, text, sender: requestedSender } = body;
+    const sender = session.userType === "recruiter" ? "recruiter" : (requestedSender || "candidate");
 
     if (!candidateId || !text) {
       return NextResponse.json({ error: "المرشح ونص الرسالة مطلوبان" }, { status: 400 });
