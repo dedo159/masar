@@ -9,45 +9,8 @@ export interface OutreachMessage {
   read: boolean;
 }
 
-// In-memory message store with initial mock messages
-const MESSAGES_STORE: Record<string, OutreachMessage[]> = {
-  "cand-deyaa": [
-    {
-      id: "m-1",
-      candidateId: "cand-deyaa",
-      sender: "recruiter",
-      text: "مرحباً ضياء، اطلعنا على ملفك البرمجي ومشاريعك على منصة مسار، مشروع مسار ونظام الـ Passkeys مثير للإعجاب جداً.",
-      timestamp: "10:30 AM",
-      read: true,
-    },
-    {
-      id: "m-2",
-      candidateId: "cand-deyaa",
-      sender: "candidate",
-      text: "أهلاً بكم! شكراً جزيلاً، يسعدني مناقشة انضمامي لفريق التدريب والمساهمة في بيئة العمل لديكم.",
-      timestamp: "10:45 AM",
-      read: true,
-    },
-  ],
-  "cand-001": [
-    {
-      id: "m-3",
-      candidateId: "cand-001",
-      sender: "recruiter",
-      text: "مرحباً ليان، تم ترشيحك للمقابلة التقنية غداً في تمام الساعة 11:00 صباحاً عبر الرابط المرفق.",
-      timestamp: "أمس",
-      read: true,
-    },
-    {
-      id: "m-4",
-      candidateId: "cand-001",
-      sender: "candidate",
-      text: "تم الاستلام وتأكيد الموعد، شكراً لكم.",
-      timestamp: "أمس",
-      read: true,
-    },
-  ],
-};
+// In-memory message store
+const MESSAGES_STORE: Record<string, OutreachMessage[]> = {};
 
 export async function GET(request: Request) {
   try {

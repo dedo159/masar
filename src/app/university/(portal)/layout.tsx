@@ -45,11 +45,6 @@ export default function UniversityPortalLayout({
       label: "الطلاب المعرضون للخطر",
       icon: AlertTriangle,
     },
-    {
-      href: "/university/internships",
-      label: "فرص التدريب",
-      icon: Briefcase,
-    },
   ];
 
   return (

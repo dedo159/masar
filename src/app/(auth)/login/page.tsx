@@ -199,7 +199,44 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      // 1. First attempt to log into Masar Student Account
+      // 1. Primary: Direct Moodle Authentication & Live Data Import (ID, Picture, Courses, Assignments, Grades)
+      const res = await fetch("/api/moodle-test/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          moodleUrl,
+          username: username.trim(),
+          password,
+          major: major.trim(),
+        }),
+      });
+
+      let data: Record<string, any> = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
+
+      if (res.ok && data.success) {
+        setSuccess(t.auth.loginSuccess);
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("masar_logged_in", "true");
+          localStorage.setItem("masar_user_name", data.studentName || data.student?.name || username);
+          if (data.student?.major || major.trim()) {
+            localStorage.setItem("masar_user_major", data.student?.major || major.trim());
+          }
+        }
+
+        setTimeout(() => {
+          router.push("/");
+          router.refresh();
+        }, 1000);
+        return;
+      }
+
+      // 2. Fallback: If Moodle network error, try offline Masar Student Account
       const authRes = await fetch("/api/student/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -227,8 +264,6 @@ export default function LoginPage() {
           }
         }
 
-
-
         setTimeout(() => {
           router.push("/");
           router.refresh();
@@ -236,47 +271,8 @@ export default function LoginPage() {
         return;
       }
 
-      // 2. If student account not found directly, try connecting Moodle credentials
-      const res = await fetch("/api/moodle-test/connect", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          moodleUrl,
-          username: username.trim(),
-          password,
-          major: major.trim(),
-        }),
-      });
-
-      let data: Record<string, any> = {};
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-
-      if (!res.ok || !data.success) {
-        setError(data.error || authData.error || t.auth.loginFailed);
-        setLoading(false);
-        return;
-      }
-
-      setSuccess(t.auth.loginSuccess);
-
-      if (typeof window !== "undefined") {
-        localStorage.setItem("masar_logged_in", "true");
-        localStorage.setItem("masar_user_name", data.studentName || data.student?.name || username);
-        if (major.trim()) {
-          localStorage.setItem("masar_user_major", major.trim());
-        }
-      }
-
-
-
-      setTimeout(() => {
-        router.push("/");
-        router.refresh();
-      }, 1000);
+      setError(data.error || authData.error || t.auth.loginFailed);
+      setLoading(false);
     } catch {
       setError(t.auth.networkError);
       setLoading(false);

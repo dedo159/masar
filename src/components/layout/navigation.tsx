@@ -32,14 +32,13 @@ export function BottomNav() {
     { href: "/", icon: LayoutDashboard, label: isAr ? "الرئيسية" : "Home" },
     { href: "/readiness", icon: TrendingUp, label: isAr ? "المسار" : "Path" },
     { href: "/courses", icon: BookOpen, label: isAr ? "المواد" : "Courses" },
-    { href: "/deals", icon: Tag, label: isAr ? "العروض" : "Deals" },
-    { href: "/internships", icon: Briefcase, label: isAr ? "التدريب" : "Career" },
+    { href: "/announcements", icon: Megaphone, label: isAr ? "الإعلانات" : "News" },
     { href: "/profile", icon: User, label: isAr ? "حسابي" : "Profile" },
   ];
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-lg dark:shadow-2xl">
-      <div className="grid grid-cols-6 w-full max-w-lg mx-auto items-center">
+      <div className="grid grid-cols-5 w-full max-w-lg mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
           return (
@@ -95,8 +94,6 @@ export function Sidebar() {
     { href: "/", icon: LayoutDashboard, label: t.nav.home },
     { href: "/readiness", icon: TrendingUp, label: t.nav.readiness },
     { href: "/courses", icon: BookOpen, label: t.nav.courses },
-    { href: "/deals", icon: Tag, label: t.nav.deals },
-    { href: "/internships", icon: Briefcase, label: t.nav.internships },
     { href: "/announcements", icon: Megaphone, label: t.nav.announcements },
     { href: "/settings", icon: Settings, label: t.nav.settings },
   ];

@@ -74,19 +74,7 @@ export const getStudentProfile = cache(async (
       skills: parsedSkills,
     };
   } catch {
-    return {
-      id: resolvedId,
-      name: "طالب مسار",
-      studentId: "202510377",
-      email: "student@masar.edu.jo",
-      universityId: "aau",
-      major: "علم الحاسوب",
-      year: 3,
-      gpa: 3.45,
-      totalCredits: 132,
-      completedCredits: 78,
-      skills: ["React", "TypeScript", "Next.js"],
-    };
+    return null;
   }
 });
 

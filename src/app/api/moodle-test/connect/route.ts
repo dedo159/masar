@@ -139,16 +139,29 @@ export async function POST(request: Request) {
     }
 
     if (!student) {
-      student = await prisma.student.findFirst({
+      let university = await prisma.university.findFirst({
+        where: { code: "aau" },
+      });
+      if (!university) {
+        university = await prisma.university.create({
+          data: {
+            code: "aau",
+            name: "جامعة عمان الأهلية",
+            nameEn: "Al-Ahliyya Amman University",
+          },
+        });
+      }
+      student = await prisma.student.create({
+        data: {
+          studentId: username.trim(),
+          name: siteInfoSummary?.fullname || username.trim(),
+          email: `${username.trim()}@ammanu.edu.jo`,
+          major: (major && typeof major === "string" && major.trim()) ? major.trim() : "هندسة البرمجيات",
+          year: 3,
+          universityId: university.id,
+        },
         select: { id: true },
       });
-    }
-
-    if (!student) {
-      return NextResponse.json(
-        { success: false, error: "لم يتم العثور على سجل الطالب في قاعدة البيانات." },
-        { status: 404 }
-      );
     }
 
     // حفظ التخصص فوراً في قاعدة البيانات إذا تم إدخاله
@@ -159,6 +172,18 @@ export async function POST(request: Request) {
           major: major.trim(),
         },
       });
+    }
+
+    // حفظ كلمة المرور المشفرة للطالب لتسجيل الدخول السلس لاحقاً
+    try {
+      const { hashPassword } = await import("@/lib/password");
+      const passwordHash = await hashPassword(password);
+      await prisma.student.update({
+        where: { id: student.id },
+        data: { passwordHash },
+      });
+    } catch {
+      // Non-blocking
     }
 
     await prisma.moodleConnection.upsert({

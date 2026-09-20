@@ -1,42 +1,33 @@
-import { getEnrolledCourses, getInternships } from "@/lib/db-queries";
-import { prisma } from "@/lib/prisma";
+import { getEnrolledCourses } from "@/lib/db-queries";
 import { QuickStatsClient } from "./quick-stats-client";
 
 export async function QuickStatsSection() {
-  const [courses, internships, dealsCount] = await Promise.all([
-    getEnrolledCourses().catch(() => []),
-    getInternships().catch(() => []),
-    prisma.merchantDeal.count({
-      where: {
-        isActive: true,
-        validUntil: { gte: new Date() },
-      },
-    }).catch(() => 0),
-  ]);
+  const courses = await getEnrolledCourses().catch(() => []);
 
   const now = new Date();
   const todayDateString = now.toDateString();
   const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
-  const todayDueAssignmentsCount = courses
-    .flatMap((c) => c.assignments || [])
-    .filter((a) => {
-      if (a.status === "submitted" || a.status === "graded") return false;
-      if (!a.dueDate) return false;
-      if (a.dueDate.startsWith(todayStr)) return true;
-      try {
-        return new Date(a.dueDate).toDateString() === todayDateString;
-      } catch {
-        return false;
-      }
-    }).length;
+  const allAssignments = courses.flatMap((c) => c.assignments || []);
+  const todayDueAssignmentsCount = allAssignments.filter((a) => {
+    if (a.status === "submitted" || a.status === "graded") return false;
+    if (!a.dueDate) return false;
+    if (a.dueDate.startsWith(todayStr)) return true;
+    try {
+      return new Date(a.dueDate).toDateString() === todayDateString;
+    } catch {
+      return false;
+    }
+  }).length;
+
+  const totalCredits = courses.reduce((sum, c) => sum + (c.credits || 3), 0);
 
   return (
     <QuickStatsClient
       coursesCount={courses.length}
       todayDueCount={todayDueAssignmentsCount}
-      internshipsCount={internships.length}
-      dealsCount={dealsCount}
+      totalAssignmentsCount={allAssignments.length}
+      totalCredits={totalCredits}
     />
   );
 }

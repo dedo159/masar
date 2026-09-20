@@ -14,8 +14,8 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
   const isAr = language === "ar";
 
   const studentName = student?.name || (isAr ? "طالب مسار" : "Masar Student");
-  const studentIdNumber = student?.studentId || "202410890";
-  const studentMajor = student?.major || (isAr ? "علم الحاسوب" : "Computer Science");
+  const studentIdNumber = student?.studentId || "";
+  const studentMajor = student?.major || "";
 
   return (
     <div className="relative rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-4 sm:p-5 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden group">
@@ -49,12 +49,18 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
         <div className="flex items-center gap-3.5 min-w-0">
           <div className="relative flex-shrink-0">
             <div className="absolute -inset-0.5 rounded-full bg-gradient-to-tr from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] opacity-80 blur-[2px]" />
-            <div className="relative h-13 w-13 rounded-full overflow-hidden border-2 border-white dark:border-white/30 bg-slate-100 dark:bg-[#141630]">
-              <img
-                src={student?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80"}
-                alt={studentName}
-                className="h-full w-full object-cover"
-              />
+            <div className="relative h-13 w-13 rounded-full overflow-hidden border-2 border-white dark:border-white/30 bg-gradient-to-br from-[#2F7BFF]/20 to-[#E83D84]/20 flex items-center justify-center">
+              {student?.avatar ? (
+                <img
+                  src={student.avatar}
+                  alt={studentName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-base font-bold text-foreground">
+                  {studentName ? studentName.charAt(0) : "ط"}
+                </span>
+              )}
             </div>
           </div>
 
@@ -85,15 +91,15 @@ export function StudentIdCard({ student }: StudentIdCardProps) {
           </div>
 
           <Link
-            href="/deals"
+            href="/profile"
             className="rounded-xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 hover:from-[#2F7BFF]/20 hover:to-[#E83D84]/20 px-3.5 py-2 flex flex-col items-center justify-center transition-all group/btn shadow-sm"
           >
             <div className="flex items-center gap-1 text-[10px] text-[#2F7BFF] dark:text-[#38BDF8] font-semibold">
               <QrCode className="h-3.5 w-3.5" />
-              <span>{isAr ? "بطاقة الخصم الجامعية" : "Student Pass"}</span>
+              <span>{isAr ? "البطاقة الجامعية" : "Student Pass"}</span>
             </div>
             <span className="text-[10px] text-foreground/70 dark:text-white/70 font-mono mt-0.5">
-              {isAr ? "نشطة ومفعلة ⚡" : "Active ⚡"}
+              {isAr ? "معتمدة رسمياً ⚡" : "Verified ⚡"}
             </span>
           </Link>
         </div>

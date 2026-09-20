@@ -105,12 +105,6 @@ export default function MerchantPortalLayout({ children }: { children: ReactNode
       active: pathname === "/merchant/settings",
     },
     {
-      href: "/merchant/dashboard?tab=deals",
-      label: "مدير العروض والخصومات",
-      icon: Tag,
-      active: false,
-    },
-    {
       href: "/merchant/dashboard?tab=logs",
       label: "سجل العمليات والتقارير",
       icon: TrendingUp,

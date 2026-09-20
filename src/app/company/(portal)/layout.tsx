@@ -77,11 +77,6 @@ export default function CompanyPortalLayout({
       label: "التحليلات ومؤشرات التوظيف",
       icon: BarChart3,
     },
-    {
-      href: "/company/internships",
-      label: "فرص التدريب",
-      icon: Briefcase,
-    },
   ];
 
   return (

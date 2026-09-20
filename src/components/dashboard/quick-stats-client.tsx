@@ -1,24 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Briefcase, Clock, Tag, ArrowUpRight } from "lucide-react";
+import { BookOpen, Clock, GraduationCap, CheckSquare, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/components/providers/language-provider";
 
 interface QuickStatsClientProps {
   coursesCount: number;
   todayDueCount: number;
-  internshipsCount: number;
-  dealsCount: number;
+  totalAssignmentsCount: number;
+  totalCredits: number;
 }
 
 export function QuickStatsClient({
   coursesCount,
   todayDueCount,
-  internshipsCount,
-  dealsCount,
+  totalAssignmentsCount,
+  totalCredits,
 }: QuickStatsClientProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const isAr = language === "ar";
 
   const stats = [
     {
@@ -38,20 +39,20 @@ export function QuickStatsClient({
       href: "/courses",
     },
     {
-      label: t.dashboard.stats.internships,
-      value: internshipsCount,
-      unit: t.dashboard.stats.internshipsUnit,
-      icon: Briefcase,
-      iconStyle: "bg-primary/10 text-primary border-primary/20",
-      href: "/internships",
+      label: isAr ? "الواجبات والاختبارات" : "Tasks & Exams",
+      value: totalAssignmentsCount,
+      unit: isAr ? "تكليف" : "Items",
+      icon: CheckSquare,
+      iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      href: "/courses",
     },
     {
-      label: t.dashboard.stats.deals,
-      value: dealsCount,
-      unit: t.dashboard.stats.dealsUnit,
-      icon: Tag,
-      iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-      href: "/deals",
+      label: isAr ? "الساعات المسجلة" : "Enrolled Credits",
+      value: totalCredits,
+      unit: isAr ? "ساعة" : "Credits",
+      icon: GraduationCap,
+      iconStyle: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+      href: "/courses",
     },
   ];
 

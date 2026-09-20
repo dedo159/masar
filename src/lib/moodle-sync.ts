@@ -61,40 +61,54 @@ export async function syncMoodleDataForStudent(
   const finalMajor = (preferredMajor && preferredMajor.trim()) ? preferredMajor.trim() : normalizedStudent.major;
 
   // 4. تحديث بيانات الطالب في قاعدة البيانات
-  const student = await prisma.student.upsert({
-    where: { id: studentId },
-    create: {
-      id: studentId,
-      studentId: normalizedStudent.academicId,
-      name: normalizedStudent.fullName,
-      email: `${normalizedStudent.academicId}@ammanu.edu.jo`,
-      major: finalMajor,
-      year: normalizedStudent.academicYear,
-      gpa: normalizedStudent.gpa,
-      totalCredits: normalizedStudent.totalCreditsRequired,
-      completedCredits: normalizedStudent.completedCredits,
-      avatar: normalizedStudent.avatarUrl,
-      universityId: university.id,
-      skills: JSON.stringify([
-        "Moodle",
-        "العلاقات العامة",
-        "المهارات الحياتية",
-        "البحث العلمي",
-      ]),
-    },
-    update: {
-      studentId: normalizedStudent.academicId,
-      name: normalizedStudent.fullName,
-      email: normalizedStudent.academicId + '@ammanu.edu.jo',
-      major: finalMajor,
-      year: normalizedStudent.academicYear,
-      gpa: normalizedStudent.gpa,
-      totalCredits: normalizedStudent.totalCreditsRequired,
-      completedCredits: normalizedStudent.completedCredits,
-      avatar: normalizedStudent.avatarUrl,
-      universityId: university.id,
+  let student = await prisma.student.findFirst({
+    where: {
+      OR: [
+        { id: studentId },
+        { studentId: normalizedStudent.academicId },
+      ],
     },
   });
+
+  if (student) {
+    student = await prisma.student.update({
+      where: { id: student.id },
+      data: {
+        studentId: normalizedStudent.academicId,
+        name: normalizedStudent.fullName,
+        email: `${normalizedStudent.academicId}@ammanu.edu.jo`,
+        major: finalMajor,
+        year: normalizedStudent.academicYear,
+        gpa: normalizedStudent.gpa,
+        totalCredits: normalizedStudent.totalCreditsRequired,
+        completedCredits: normalizedStudent.completedCredits,
+        avatar: normalizedStudent.avatarUrl,
+        universityId: university.id,
+      },
+    });
+  } else {
+    student = await prisma.student.create({
+      data: {
+        id: studentId,
+        studentId: normalizedStudent.academicId,
+        name: normalizedStudent.fullName,
+        email: `${normalizedStudent.academicId}@ammanu.edu.jo`,
+        major: finalMajor,
+        year: normalizedStudent.academicYear,
+        gpa: normalizedStudent.gpa,
+        totalCredits: normalizedStudent.totalCreditsRequired,
+        completedCredits: normalizedStudent.completedCredits,
+        avatar: normalizedStudent.avatarUrl,
+        universityId: university.id,
+        skills: JSON.stringify([
+          "Moodle",
+          "العلاقات العامة",
+          "المهارات الحياتية",
+          "البحث العلمي",
+        ]),
+      },
+    });
+  }
 
   const colors = ["#8B5CF6", "#F59E0B", "#0070f3", "#06B6D4", "#6366F1"];
   const courseMoodleIds: number[] = [];
