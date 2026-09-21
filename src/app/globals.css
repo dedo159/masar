@@ -143,4 +143,49 @@
   .vercel-button-secondary {
     @apply bg-card text-foreground font-medium border border-border rounded-lg transition-colors hover:bg-secondary;
   }
+
+  /* =================================================== */
+  /* Apple iCloud (macOS Sequoia / iOS 18) Design System */
+  /* =================================================== */
+  .apple-fluid-bg {
+    background: 
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(20, 126, 251, 0.45), transparent 70%),
+      radial-gradient(ellipse 60% 50% at 90% 20%, rgba(0, 102, 204, 0.4), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 10% 70%, rgba(13, 110, 253, 0.35), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 85%, rgba(0, 78, 162, 0.45), transparent 70%),
+      linear-gradient(135deg, #07132c 0%, #08214d 30%, #004ea2 65%, #003366 100%);
+    background-attachment: fixed;
+  }
+
+  .apple-glass-card {
+    background: rgba(20, 26, 43, 0.72);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .apple-glass-card:hover {
+    box-shadow: 0 32px 72px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .apple-inner-card {
+    background: rgba(12, 17, 30, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+  }
+
+  .apple-squircle {
+    border-radius: 22px;
+  }
+
+  .apple-squircle-sm {
+    border-radius: 12px;
+  }
+
+  .apple-squircle-xs {
+    border-radius: 8px;
+  }
 }

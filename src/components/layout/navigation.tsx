@@ -38,7 +38,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-border/80 dark:border-white/[0.08] bg-background/90 dark:bg-[#0D0E22]/90 backdrop-blur-2xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-lg dark:shadow-2xl">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-[#121b2d]/85 backdrop-blur-3xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-2xl">
       <div className="grid grid-cols-5 w-full max-w-lg mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
