@@ -48,33 +48,33 @@ export function BottomNav() {
               href={href}
               className={cn(
                 "relative flex flex-col items-center justify-center gap-1 py-1 px-1 transition-all duration-200 text-center group",
-                isActive ? "text-[#2F7BFF] dark:text-white font-bold" : "text-muted-foreground dark:text-white/45 hover:text-foreground dark:hover:text-white/80"
+                isActive ? "text-[#38bdf8] font-bold" : "text-white/65 hover:text-white"
               )}
             >
-              {/* Neon Pink/Blue Top Indicator on Active */}
+              {/* Neon Blue Top Indicator on Active */}
               {isActive && (
-                <span className="absolute -top-1.5 h-[2.5px] w-8 rounded-full bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] shadow-[0_0_10px_#E83D84] animate-in fade-in zoom-in-50 duration-200" />
+                <span className="absolute -top-1.5 h-[2.5px] w-8 rounded-full bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#38BDF8] shadow-[0_0_10px_#38BDF8] animate-in fade-in zoom-in-50 duration-200" />
               )}
 
               <div
                 className={cn(
                   "p-1.5 rounded-xl transition-all duration-200 flex items-center justify-center",
                   isActive
-                    ? "bg-gradient-to-tr from-[#2F7BFF]/20 to-[#E83D84]/20 text-[#2F7BFF] dark:text-[#38BDF8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
-                    : "group-hover:bg-muted dark:group-hover:bg-white/[0.04]"
+                    ? "bg-blue-500/20 text-[#38bdf8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
+                    : "group-hover:bg-white/[0.08]"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-5 w-5 transition-transform duration-200",
-                    isActive && "scale-110 text-[#2F7BFF] dark:text-white"
+                    isActive && "scale-110 text-white"
                   )}
                   strokeWidth={isActive ? 2.4 : 1.8}
                 />
               </div>
               <span className={cn(
                 "text-[10px] tracking-tight truncate w-full block text-center leading-none font-medium",
-                isActive ? "text-[#2F7BFF] dark:text-white font-bold" : "text-muted-foreground dark:text-white/50"
+                isActive ? "text-white font-bold" : "text-white/65 group-hover:text-white"
               )}>
                 {label}
               </span>

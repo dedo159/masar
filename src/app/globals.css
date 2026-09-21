@@ -3,6 +3,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --font-sans: var(--font-ibm-arabic), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -98,7 +100,11 @@
   * {
     @apply border-border;
   }
+  html {
+    font-family: var(--font-ibm-arabic), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
   body {
+    font-family: var(--font-ibm-arabic), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     @apply bg-background text-foreground;
   }
 }
@@ -155,15 +161,25 @@
       radial-gradient(ellipse 80% 50% at 80% 85%, rgba(0, 78, 162, 0.45), transparent 70%),
       linear-gradient(135deg, #07132c 0%, #08214d 30%, #004ea2 65%, #003366 100%);
     background-attachment: fixed;
+    color: #ffffff;
+  }
+
+  .apple-fluid-bg .text-foreground {
+    color: #ffffff !important;
+  }
+
+  .apple-fluid-bg .text-muted-foreground {
+    color: rgba(255, 255, 255, 0.72) !important;
   }
 
   .apple-glass-card {
-    background: rgba(20, 26, 43, 0.72);
+    background: rgba(20, 26, 43, 0.75);
     backdrop-filter: blur(32px) saturate(190%);
     -webkit-backdrop-filter: blur(32px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
     border-radius: 24px;
+    color: #ffffff;
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
@@ -171,10 +187,17 @@
     box-shadow: 0 32px 72px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 
+  .apple-glass-card .bg-card {
+    background: rgba(12, 17, 30, 0.65) !important;
+    border-color: rgba(255, 255, 255, 0.10) !important;
+    color: #ffffff !important;
+  }
+
   .apple-inner-card {
-    background: rgba(12, 17, 30, 0.55);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(12, 17, 30, 0.60);
+    border: 1px solid rgba(255, 255, 255, 0.10);
     border-radius: 18px;
+    color: #ffffff;
   }
 
   .apple-squircle {

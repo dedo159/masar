@@ -214,40 +214,41 @@ export function NotificationsDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       {/* Trigger Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="relative"
+      <button
+        type="button"
         onClick={() => {
           if (!isOpen) fetchNotifications();
           setIsOpen((prev) => !prev);
         }}
         aria-label={t.header.notifications}
         aria-expanded={isOpen}
+        className={`relative p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-all focus:outline-none flex items-center justify-center ${
+          isOpen ? "bg-white/15 text-white" : ""
+        }`}
       >
-        <Bell className="h-4 w-4" strokeWidth={1.5} />
+        <Bell className="w-5 h-5 text-white/80 hover:text-white" strokeWidth={1.8} />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
+          <span className="absolute top-1 right-1 flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-[#07132c]" />
           </span>
         )}
-      </Button>
+      </button>
 
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className={`absolute ${isRtl ? "left-0" : "right-0"} mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-card shadow-xl shadow-black/10 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150`}
+          className={`absolute ${isRtl ? "right-0" : "left-0"} mt-2.5 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-3xl bg-[#141b2d]/98 border border-white/15 shadow-2xl backdrop-blur-3xl text-white z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150`}
           dir={isRtl ? "rtl" : "ltr"}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/[0.03]">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-foreground">{t.header.notifications}</h3>
+              <h3 className="text-sm font-bold text-white">{t.header.notifications}</h3>
               {unreadCount > 0 && (
-                <Badge variant="default" className="text-[10px] h-5 px-1.5">
-                  {unreadCount} {language === "en" ? "Unread" : "غير مقروء"}
-                </Badge>
+                <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-semibold font-mono">
+                  {unreadCount} {language === "en" ? "Unread" : "جديد"}
+                </span>
               )}
             </div>
             <div className="flex items-center gap-2">
@@ -255,7 +256,7 @@ export function NotificationsDropdown() {
                 <button
                   type="button"
                   onClick={requestPermission}
-                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
+                  className="text-[11px] bg-white/10 hover:bg-white/20 text-white/90 px-2.5 py-1 rounded-lg border border-white/10 transition-colors font-medium"
                 >
                   {language === "en" ? "Enable Alerts" : "تفعيل التنبيهات"}
                 </button>
@@ -277,7 +278,7 @@ export function NotificationsDropdown() {
                       alert("خطأ: " + e.message);
                     }
                   }}
-                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md hover:bg-primary/20 transition-colors"
+                  className="text-[11px] bg-white/10 hover:bg-white/20 text-white/90 px-2.5 py-1 rounded-lg border border-white/10 transition-colors font-medium"
                 >
                   {language === "en" ? "Test Alert" : "تجربة التنبيه"}
                 </button>
@@ -286,7 +287,7 @@ export function NotificationsDropdown() {
                 <button
                   type="button"
                   onClick={markAllAsRead}
-                  className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 font-medium"
+                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 font-semibold"
                 >
                   <CheckCheck className="h-3.5 w-3.5" />
                   <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
@@ -296,27 +297,27 @@ export function NotificationsDropdown() {
           </div>
 
           {/* List */}
-          <div className="max-h-[380px] overflow-y-auto divide-y divide-border">
+          <div className="max-h-[380px] overflow-y-auto divide-y divide-white/[0.08]">
             {loading ? (
               <div className="py-8 px-4 space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex gap-3 animate-pulse">
-                    <div className="h-8 w-8 rounded-lg bg-secondary flex-shrink-0" />
-                    <div className="flex-1 space-y-1.5">
-                      <div className="h-3 w-36 bg-secondary rounded" />
-                      <div className="h-2.5 w-48 bg-secondary/60 rounded" />
+                    <div className="h-9 w-9 rounded-xl bg-white/10 flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 w-36 bg-white/10 rounded" />
+                      <div className="h-2.5 w-48 bg-white/5 rounded" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center mb-2">
-                  <Check className="h-5 w-5 text-muted-foreground" />
+                <div className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center mb-2.5 text-white/70">
+                  <Check className="h-5 w-5" />
                 </div>
-                <p className="text-sm font-medium text-foreground">{language === "en" ? "No notifications" : "لا توجد إشعارات"}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {language === "en" ? "You are all caught up on updates and deadlines" : "أنت مطلع على جميع التحديثات والمواعيد"}
+                <p className="text-sm font-semibold text-white">{language === "en" ? "No notifications" : "لا توجد إشعارات"}</p>
+                <p className="text-xs text-white/60 mt-1">
+                  {language === "en" ? "You are all caught up on updates and deadlines" : "أنت مطلع على كافة التحديثات والمواعيد"}
                 </p>
               </div>
             ) : (
@@ -330,48 +331,50 @@ export function NotificationsDropdown() {
                       markAsRead(item.id);
                       if (item.link) setIsOpen(false);
                     }}
-                    className={`flex items-start gap-3 p-3.5 transition-colors cursor-pointer hover:bg-secondary/50 group relative ${
-                      !item.read ? "bg-primary/5" : ""
+                    className={`flex items-start gap-3 p-3.5 transition-colors cursor-pointer hover:bg-white/[0.07] group relative ${
+                      !item.read ? "bg-blue-500/[0.09]" : ""
                     }`}
                   >
                     {/* Icon */}
                     <div
-                      className={`h-8 w-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${typeInfo.bg}`}
+                      className={`h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${typeInfo.bg} border border-white/10`}
                     >
-                      <IconComponent className={`h-4 w-4 ${typeInfo.color}`} strokeWidth={1.5} />
+                      <IconComponent className={`h-4 w-4 ${typeInfo.color}`} strokeWidth={1.8} />
                     </div>
 
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-1">
-                        <p
-                          className={`text-xs leading-tight truncate ${
-                            !item.read ? "font-medium text-foreground" : "text-foreground"
+                    {/* Text Container */}
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <h4
+                          className={`text-xs leading-snug font-semibold truncate ${
+                            !item.read ? "text-white" : "text-white/85"
                           }`}
                         >
                           {item.title}
-                        </p>
-                        <span className="text-[10px] text-muted-foreground flex-shrink-0">
+                        </h4>
+                        <span className="text-[10px] text-white/50 shrink-0 font-medium font-mono whitespace-nowrap">
                           {getTimeAgo(item.createdAt, language)}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-white/70 line-clamp-2 leading-relaxed font-normal">
                         {item.body}
                       </p>
                     </div>
 
                     {/* Unread indicator / dismiss */}
-                    <div className="flex flex-col items-center justify-between self-stretch flex-shrink-0">
-                      {!item.read && (
-                        <span className="h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                    <div className="flex flex-col items-center justify-between self-stretch shrink-0 ps-1">
+                      {!item.read ? (
+                        <span className="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                      ) : (
+                        <span className="h-2 w-2" />
                       )}
                       <button
                         type="button"
                         onClick={(e) => clearNotification(e, item.id)}
-                        className="text-muted-foreground hover:text-foreground p-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity mt-auto"
+                        className="text-white/40 hover:text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity mt-auto"
                         title={language === "en" ? "Dismiss notification" : "حذف الإشعار"}
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
@@ -379,7 +382,7 @@ export function NotificationsDropdown() {
 
                 if (item.link) {
                   return (
-                    <Link key={item.id} href={item.link}>
+                    <Link key={item.id} href={item.link} className="block">
                       {notificationContent}
                     </Link>
                   );
@@ -392,11 +395,11 @@ export function NotificationsDropdown() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="p-2 border-t border-border bg-secondary/20 text-center">
+            <div className="p-2.5 border-t border-white/10 bg-white/[0.02] text-center">
               <button
                 type="button"
                 onClick={() => setNotifications([])}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors py-1 px-2 font-medium"
+                className="text-xs text-white/60 hover:text-white transition-colors py-1 px-3 font-medium rounded-lg hover:bg-white/10"
               >
                 {language === "en" ? "Clear all notifications" : "مسح كل الإشعارات"}
               </button>
