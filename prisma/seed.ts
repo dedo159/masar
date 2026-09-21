@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { universities } from "../src/lib/mock-data";
+import { UNIVERSITIES } from "../src/lib/constants/universities";
 
 const prisma = new PrismaClient();
 
@@ -7,7 +7,7 @@ async function main() {
   console.log("🌱 تهيئة قاعدة البيانات (Universities Setup)...");
 
   // إضافة وتحديث الجامعات فقط بدون بيانات وهمية
-  for (const u of universities) {
+  for (const u of UNIVERSITIES) {
     await prisma.university.upsert({
       where: { code: u.id },
       update: {

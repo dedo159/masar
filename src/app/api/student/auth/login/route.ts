@@ -27,15 +27,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'الرقم الجامعي أو كلمة المرور غير صحيحة' }, { status: 401 });
     }
 
-    if (student.passwordHash) {
-      const isValid = await verifyPassword(password, student.passwordHash);
-      if (!isValid) {
-        return NextResponse.json({ error: 'الرقم الجامعي أو كلمة المرور غير صحيحة' }, { status: 401 });
-      }
-    } else {
-      if (password !== 'Malkawi@2026' && password !== student.studentId && password.length < 4) {
-        return NextResponse.json({ error: 'الرقم الجامعي أو كلمة المرور غير صحيحة' }, { status: 401 });
-      }
+    if (!student.passwordHash) {
+      return NextResponse.json({ error: 'الحساب غير مكتمل، يرجى إعادة تعيين كلمة المرور أو التسجيل أولاً' }, { status: 401 });
+    }
+
+    const isValid = await verifyPassword(password, student.passwordHash);
+    if (!isValid) {
+      return NextResponse.json({ error: 'الرقم الجامعي أو كلمة المرور غير صحيحة' }, { status: 401 });
     }
 
     await createSession({

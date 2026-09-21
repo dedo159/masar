@@ -22,12 +22,9 @@ export async function proxy(request: NextRequest) {
         const [username, password] = credentials.split(":");
 
         const expectedUser = process.env.MOODLE_TEST_USER || "admin";
-        const expectedPass = process.env.MOODLE_TEST_PASSWORD || "malkawi1979";
+        const expectedPass = process.env.MOODLE_TEST_PASSWORD;
 
-        const isUserValid = username === expectedUser || username === "202510377" || username === "admin";
-        const isPassValid = password === expectedPass || password === "malkawi1979";
-
-        if (isUserValid && isPassValid) {
+        if (expectedPass && username === expectedUser && password === expectedPass) {
           return NextResponse.next();
         }
       } catch (e) {

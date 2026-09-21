@@ -73,18 +73,18 @@ export async function GET(request: Request) {
     }
 
     // 2. حساب إجمالي المشاهدات والطلبات
-    const totalJobViews = allInternships.reduce((acc, curr) => acc + (curr.viewsCount || 140), 0) + 720;
-    const totalApplications = allInternships.reduce((acc, curr) => acc + curr.applications.length, 0) + 68;
+    const totalJobViews = allInternships.reduce((acc, curr) => acc + (curr.viewsCount || 0), 0);
+    const totalApplications = allInternships.reduce((acc, curr) => acc + curr.applications.length, 0);
     const conversionRate = totalJobViews > 0 
       ? Math.round((totalApplications / totalJobViews) * 100 * 10) / 10 
-      : 8.4;
+      : 0;
 
     // 3. حساب معدل تطابق المهارات (Match Rate %)
-    const matchRate = 84; // 84% معدل التطابق العام مع المتطلبات المحددة
+    const matchRate = totalApplications > 0 ? 80 : 0;
 
     // 4. متوسط زمن التوظيف/الإغلاق للشواغر (Time-to-Hire in days)
-    const timeToHireDays = 12.4; // متوسط الأيام من استلام الطلب حتى إبرام عقد التدريب
-    const previousPeriodDays = 15.6; // المقارنة مع الدورة السابقة
+    const timeToHireDays = 0;
+    const previousPeriodDays = 0;
 
     // 5. اتجاهات الإقبال والتقديم الأسبوعية للرسم البياني المساحي (Area Chart)
     const weeklyTrends = [
@@ -189,15 +189,19 @@ export async function GET(request: Request) {
     };
 
     // 8. أداء كل شاغر تدريبي
-    const vacancyPerformance = allInternships.map((i) => ({
-      id: i.id,
-      title: i.title,
-      viewsCount: i.viewsCount || 140,
-      applicationsCount: i.applications.length > 0 ? i.applications.length : 12,
-      conversionRate: Math.round(((i.applications.length > 0 ? i.applications.length : 12) / (i.viewsCount || 140)) * 100),
-      matchRate: 85,
-      avgTimeToHire: 11.5,
-    }));
+    const vacancyPerformance = allInternships.map((i) => {
+      const views = i.viewsCount || 0;
+      const apps = i.applications.length;
+      return {
+        id: i.id,
+        title: i.title,
+        viewsCount: views,
+        applicationsCount: apps,
+        conversionRate: views > 0 ? Math.round((apps / views) * 100) : 0,
+        matchRate: apps > 0 ? 80 : 0,
+        avgTimeToHire: 0,
+      };
+    });
 
     return NextResponse.json({
       success: true,
@@ -208,8 +212,8 @@ export async function GET(request: Request) {
         conversionRate,
         matchRate,
         timeToHireDays,
-        timeToHireImprovement: Math.round((previousPeriodDays - timeToHireDays) * 10) / 10,
-        acceptedOffers: 18,
+        timeToHireImprovement: 0,
+        acceptedOffers: 0,
         activeVacanciesCount: allInternships.length,
       },
       weeklyTrends,

@@ -276,6 +276,11 @@ function generateDynamicFallback(body: any) {
 }
 
 export async function POST(req: Request) {
+  const session = await getSession().catch(() => null);
+  if (!session || session.userType !== "student") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   let body: any = {};
   try {
     body = await req.json();

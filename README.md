@@ -56,7 +56,9 @@ src/
 │       └── theme-provider.tsx
 ├── lib/
 │   ├── types.ts                  # TypeScript interfaces
-│   ├── mock-data.ts              # بيانات وهمية واقعية
+│   ├── prisma.ts                 # Prisma Client (Neon PostgreSQL)
+│   ├── db-queries.ts             # Direct Database Queries
+│   ├── moodle-sync.ts            # Moodle API Synchronization
 │   └── utils.ts                  # Helper functions
 └── public/
     ├── sw.js                     # Service Worker
@@ -114,6 +116,5 @@ src/
 
 ---
 
-## 🔄 استبدال البيانات الوهمية
-
-كل البيانات في `src/lib/mock-data.ts`. عند جاهزية Moodle API، استبدل هذا الملف فقط — TypeScript interfaces في `src/lib/types.ts` تبقى كما هي.
+## 🔄 معمارية البيانات والمزامنة
+تعتمد المنصة بالكامل على قاعدة بيانات PostgreSQL السحابية (Neon) عبر Prisma ORM، وتتم مزامنة بيانات الطالب ومواده وجداوله وواجباته في الوقت الفعلي مع أنظمة الجامعة الرسمية (Moodle LMS) دون أي بيانات وهمية.

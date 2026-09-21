@@ -127,13 +127,8 @@ export async function POST(request: Request) {
     }
 
     if (!student) {
-      student = await prisma.student.findFirst({
-        where: {
-          OR: [
-            { studentId: username.trim() },
-            { id: "s-001" },
-          ],
-        },
+      student = await prisma.student.findUnique({
+        where: { studentId: username.trim() },
         select: { id: true },
       });
     }

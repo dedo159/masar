@@ -10,19 +10,21 @@ import { getSession } from '@/lib/auth';
 export async function POST(request: Request) {
   try {
     const session = await getSession();
-    const body = await request.json();
-    const { studentId: bodyStudentId, courseId, fileId } = body;
+    if (!session || session.userType !== 'student' || !session.userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    const resolvedStudentId = (session && session.userType === 'student' && session.userId)
-      ? session.userId
-      : bodyStudentId;
+    const body = await request.json().catch(() => ({}));
+    const { courseId, fileId } = body;
 
-    if (!resolvedStudentId || !courseId) {
+    if (!courseId) {
       return NextResponse.json(
-        { error: 'studentId و courseId مطلوبان' },
+        { error: 'courseId مطلوب' },
         { status: 400 }
       );
     }
+
+    const resolvedStudentId = session.userId;
 
     await prisma.contentView.create({
       data: {

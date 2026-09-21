@@ -9,8 +9,13 @@ export async function GET() {
       return NextResponse.json({ error: 'غير مصرح' }, { status: 401 });
     }
 
+    const whereClause: any = { riskFlag: true };
+    if (session.universityId) {
+      whereClause.student = { universityId: session.universityId };
+    }
+
     const atRiskStudents = await prisma.studentEngagementSnapshot.findMany({
-      where: { riskFlag: true },
+      where: whereClause,
       include: { 
         student: {
           select: {

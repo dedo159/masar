@@ -1,18 +1,10 @@
-// ===========================
-// Masar Platform — Mock Data (واقعية عربية)
-// ===========================
+export interface UniversityConstant {
+  id: string;
+  name: string;
+  nameEn: string;
+}
 
-import type {
-  Student,
-  University,
-  Course,
-  Internship,
-  Notification,
-  TodayClass,
-  Assignment,
-} from "./types";
-
-export const universities: University[] = [
+export const UNIVERSITIES: UniversityConstant[] = [
   { id: "aau", name: "جامعة عمان الأهلية", nameEn: "Al-Ahliyya Amman University" },
   { id: "ju", name: "الجامعة الأردنية", nameEn: "University of Jordan" },
   { id: "just", name: "جامعة العلوم والتكنولوجيا الأردنية", nameEn: "JUST" },
@@ -23,10 +15,3 @@ export const universities: University[] = [
   { id: "bau", name: "جامعة البلقاء التطبيقية", nameEn: "Al-Balqa Applied University" },
   { id: "pu", name: "جامعة البترا", nameEn: "University of Petra" },
 ];
-
-export const mockStudent: Student | null = null;
-export const mockCourses: Course[] = [];
-export const mockTodayClasses: TodayClass[] = [];
-export const mockInternships: Internship[] = [];
-export const mockNotifications: Notification[] = [];
-export const urgentAssignments: Assignment[] = [];

@@ -3,47 +3,45 @@ import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import webpush from 'web-push';
 
-const vapidPublicKey = "BEXSYqsumAG8bxVv4JLqPD7wmsfWnOhRCsDHmII9sBgEs_vjTLuIC67bKjbjh2fC6ngharDrfqnjO-IGv04jDdI";
-const vapidPrivateKey = "aHOrks_1saMyiqgMPAC_yu1uUplmpVZ5NOFbxsI0TtE";
-const vapidSubject = 'mailto:dedo159@example.com';
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || process.env.VAPID_PUBLIC_KEY;
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@masar.edu.jo';
 
 if (vapidPublicKey && vapidPrivateKey) {
-  webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+  try {
+    webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey);
+  } catch (e) {
+    console.error('Failed to set VAPID details:', e);
+  }
 }
 
 export async function POST(request: Request) {
   try {
     const session = await getSession();
+    if (!session || session.userType !== 'student' || !session.userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     let body: any = {};
     try {
       body = await request.json();
     } catch {}
 
-    const targetStudentId = (session && session.userType === 'student' && session.userId)
-      ? session.userId
-      : (body.studentId || 's-001');
+    const targetStudentId = session.userId;
 
     if (!vapidPublicKey || !vapidPrivateKey) {
-      return NextResponse.json({ error: 'VAPID keys not configured' }, { status: 500 });
+      return NextResponse.json({ error: 'VAPID keys not configured on server' }, { status: 500 });
     }
 
-    // Get all subscriptions for this user
-    let subscriptions = await prisma.pushSubscription.findMany({
+    // Get all subscriptions for this student strictly
+    const subscriptions = await prisma.pushSubscription.findMany({
       where: { studentId: targetStudentId },
       orderBy: { createdAt: 'desc' },
     });
 
-    // Fallback: if none found for targetStudentId, check any registered push subscriptions
-    if (subscriptions.length === 0) {
-      subscriptions = await prisma.pushSubscription.findMany({
-        take: 3,
-        orderBy: { createdAt: 'desc' },
-      });
-    }
-
     if (subscriptions.length === 0) {
       return NextResponse.json({
-        error: 'لم يتم العثور على أجهزة مسجلة في خدمة الإشعارات. يرجى تفعيل إشعارات الهاتف أولاً.',
+        error: 'لم يتم العثور على أجهزة مسجلة في خدمة الإشعارات لحسابك. يرجى تفعيل إشعارات الهاتف أولاً من الإعدادات.',
         noSubscriptions: true
       }, { status: 404 });
     }
@@ -53,13 +51,13 @@ export async function POST(request: Request) {
       body: body.body || 'هذا إشعار تجريبي ناجح من تطبيق مسار يعمل حتى خارج المتصفح! 🚀',
       icon: '/icons/icon-192.png',
       badge: '/icons/icon-72.png',
-      url: body.url || '/notifications'
+      url: body.url || '/announcements'
     });
 
     let sentCount = 0;
     const errors: string[] = [];
 
-    // Send push to all registered devices
+    // Send push to all registered devices of this student
     for (const sub of subscriptions) {
       try {
         await webpush.sendNotification({
@@ -98,8 +96,4 @@ export async function POST(request: Request) {
     console.error('Test push error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
-}
-
-export async function GET(request: Request) {
-  return POST(request);
 }
