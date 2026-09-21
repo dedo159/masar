@@ -56,24 +56,21 @@ export function AppleNotesWidget() {
           <PenSquare className="h-4 w-4" />
         </Link>
 
-        {/* Right Info: Title + Yellow Apple Notes Icon */}
+        {/* Right Info: Title + Amber Task Squircle Icon */}
         <div className="flex items-center gap-3">
           <div className="text-end">
             <h4 className="text-base font-bold text-white tracking-tight">
-              {isAr ? "الملاحظات والواجبات" : "Notes & Tasks"}
+              {isAr ? "المهام والواجبات" : "Tasks & Deadlines"}
             </h4>
-            <span className="text-[11px] text-amber-400/80 font-medium flex items-center justify-end gap-1">
+            <span className="text-[11px] text-amber-400/90 font-medium flex items-center justify-end gap-1">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              {isAr ? "كل المقررات" : "All Courses"}
+              {isAr ? "المواد المسجلة" : "Enrolled Courses"}
             </span>
           </div>
 
-          {/* Yellow Apple Notes Squircle Icon */}
-          <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#ffd60a] to-[#ff9f0a] p-0.5 shadow-lg shrink-0 flex items-center justify-center text-[#1c1c1e]">
-            {/* Apple Notes Pad Icon SVG */}
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2zm0-4H7V7h10v2z"/>
-            </svg>
+          {/* Amber Academic Tasks Squircle Icon */}
+          <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#ffd60a] to-[#ff9f0a] p-0.5 shadow-lg shrink-0 flex items-center justify-center text-[#161d2d]">
+            <PenSquare className="w-5 h-5 stroke-[2.2]" />
           </div>
         </div>
 

@@ -28,14 +28,11 @@ export function AppleProfileWidget({ student }: AppleProfileWidgetProps) {
       {/* Subtle Cloud Atmospheric Halo */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-[#0071e3]/15 rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-500" />
 
-      {/* Cloud Silhouette SVG Backdrop framing the avatar */}
+      {/* Luminous Academic Halo framing the avatar */}
       <div className="relative mb-5 flex items-center justify-center">
-        {/* Soft Apple Cloud Outline SVG */}
-        <div className="absolute -inset-4 text-blue-500/20 dark:text-blue-400/25 pointer-events-none transition-transform duration-500 group-hover:scale-105">
-          <svg className="w-32 h-32 fill-current opacity-70" viewBox="0 0 24 24">
-            <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
-          </svg>
-        </div>
+        {/* Sleek Dual Concentric Ring Halo */}
+        <div className="absolute -inset-3 rounded-full border border-blue-400/20 shadow-[0_0_35px_rgba(47,123,255,0.2)] pointer-events-none transition-transform duration-500 group-hover:scale-105" />
+        <div className="absolute -inset-6 rounded-full border border-blue-500/10 pointer-events-none" />
 
         {/* Circular Avatar */}
         <div className="relative h-24 w-24 sm:h-26 sm:w-26 rounded-full overflow-hidden border-2 border-white/40 shadow-2xl bg-gradient-to-tr from-blue-600/30 to-purple-600/30 flex items-center justify-center z-10 transition-transform duration-300 group-hover:scale-105">
@@ -78,8 +75,8 @@ export function AppleProfileWidget({ student }: AppleProfileWidgetProps) {
       {/* Bottom Brand Link */}
       <div className="mt-5 pt-3 border-t border-white/10 w-full flex items-center justify-between text-xs text-white/60 relative z-10">
         <div className="flex items-center gap-1.5 text-white/80 font-medium">
-          <Cloud className="h-4 w-4 text-blue-400" />
-          <span>{isAr ? "مسار السحابي" : "Masar Cloud"}</span>
+          <Award className="h-4 w-4 text-blue-400" />
+          <span>{isAr ? "منظومة مسار الجامعية" : "Masar Academic Pass"}</span>
         </div>
 
         <Link

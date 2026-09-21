@@ -98,7 +98,7 @@ export function AppleDriveWidget() {
           href="/courses"
           className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium transition-colors"
         >
-          <span>{isAr ? "فتح المجلدات" : "Open Drive"}</span>
+          <span>{isAr ? "استعراض المواد" : "Browse Courses"}</span>
           <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
 
@@ -106,15 +106,15 @@ export function AppleDriveWidget() {
         <div className="flex items-center gap-3">
           <div className="text-end">
             <h4 className="text-base font-bold text-white tracking-tight">
-              Drive
+              {isAr ? "المحاضرات والملفات" : "Course Materials"}
             </h4>
-            <span className="text-[11px] text-blue-400/80 font-medium flex items-center justify-end gap-1">
+            <span className="text-[11px] text-blue-400/90 font-medium flex items-center justify-end gap-1">
               <Clock className="h-3 w-3" />
-              {isAr ? "الملفات الحديثة" : "Recent"}
+              {isAr ? "الملفات والمستندات الحديثة" : "Recent Files"}
             </span>
           </div>
 
-          {/* Blue Apple Drive Folder Squircle Icon */}
+          {/* Blue Folder Squircle Icon */}
           <div className="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#007aff] to-[#0051ba] p-0.5 shadow-lg shrink-0 flex items-center justify-center text-white">
             <Folder className="w-5 h-5 fill-white/30" />
           </div>

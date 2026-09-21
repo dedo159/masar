@@ -16,23 +16,19 @@ export function AppleReadinessWidget() {
       {/* Header Row: Title + Apple Photos Style Multi-Colored Squircle */}
       <div className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3">
-          {/* Apple Photos Style Multi-Colored Squircle Icon */}
-          <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-pink-500 to-blue-500 p-0.5 shadow-lg shrink-0 flex items-center justify-center">
+          {/* Masar AI Career Icon */}
+          <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-purple-600 p-0.5 shadow-lg shrink-0 flex items-center justify-center">
             <div className="h-full w-full bg-[#161d2d] rounded-[14px] flex items-center justify-center">
-              {/* Petal Starburst SVG */}
-              <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <circle cx="12" cy="12" r="3" fill="currentColor" />
-                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-              </svg>
+              <Sparkles className="w-5 h-5 text-[#38bdf8]" />
             </div>
           </div>
 
           <div>
             <h4 className="text-base font-bold text-white tracking-tight">
-              {isAr ? "المسار المهني" : "Career Readiness"}
+              {isAr ? "المسار المهني الذكي" : "AI Career Readiness"}
             </h4>
-            <span className="text-[11px] text-white/50 block font-medium">
-              {isAr ? "مدعوم بـ AI" : "AI Powered"}
+            <span className="text-[11px] text-blue-400/90 block font-medium">
+              {isAr ? "تحليل الجاهزية والمهارات" : "Skills & Market Match"}
             </span>
           </div>
         </div>
@@ -49,16 +45,16 @@ export function AppleReadinessWidget() {
       {/* Center Content: Large Multi-Colored Title & Description */}
       <div className="my-auto py-6 text-center space-y-3 relative z-10">
         <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-          <span className="text-white">{isAr ? "تشغيل مسار " : "Enable "}</span>
+          <span className="text-white">{isAr ? "فحص الجاهزية " : "Assess Your "}</span>
           <span className="bg-gradient-to-r from-cyan-400 via-blue-400 via-purple-400 to-pink-500 bg-clip-text text-transparent font-black">
-            {isAr ? "الذكاء الاصطناعي" : "AI Career Engine"}
+            {isAr ? "المهنية الذكي" : "Career Readiness"}
           </span>
         </h3>
 
         <p className="text-xs sm:text-sm text-white/75 leading-relaxed max-w-md mx-auto">
           {isAr
-            ? "قم بتشغيل فحص الجاهزية السحابي لتحليل مقرراتك الأكاديمية ومشاريع GitHub وتوليد خطة تدريب متوافقة مع متطلبات سوق العمل وفرص الشركات."
-            : "Run cloud readiness audit analyzing your academic courses and GitHub repos to match live internship criteria."}
+            ? "يقوم محرك مسار بتحليل مقرراتك الأكاديمية ومشاريع GitHub لاستخراج المهارات المحققة وتحديد الفجوات التقنية وربطك بفرص التدريب المناسبة."
+            : "Analyze your university courses and GitHub repositories to verify skills, pinpoint technical gaps, and connect with top internships."}
         </p>
       </div>
 

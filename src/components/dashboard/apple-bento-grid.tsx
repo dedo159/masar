@@ -18,32 +18,32 @@ export function AppleBentoGrid({ student }: AppleBentoGridProps) {
       {/* 1. Top Translucent Announcement / App Download Banner */}
       <AppleBannerWidget />
 
-      {/* 2. Top Bento Row: Readiness Card (6 cols) + User Profile Card (6 cols or 7/5) */}
+      {/* 2. Top Bento Row (In RTL: Profile on Right 5-cols, Readiness on Left 7-cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        {/* Left Card: AI Career Readiness (Equivalent to Photos in iCloud) */}
-        <div className="lg:col-span-7">
-          <AppleReadinessWidget />
+        {/* Right Card (in RTL): Student Cloud Profile */}
+        <div className="lg:col-span-5 order-1">
+          <AppleProfileWidget student={student} />
         </div>
 
-        {/* Right Card: User Cloud Identity (Equivalent to Deyaauldeen Profile in iCloud) */}
-        <div className="lg:col-span-5">
-          <AppleProfileWidget student={student} />
+        {/* Left Card (in RTL): AI Career Readiness */}
+        <div className="lg:col-span-7 order-2">
+          <AppleReadinessWidget />
         </div>
 
       </div>
 
-      {/* 3. Bottom Bento Row: Notes & Tasks (4 cols) + Drive & Files (8 cols) */}
+      {/* 3. Bottom Bento Row (In RTL: Drive on Right 8-cols, Notes on Left 4-cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        {/* Left Card: Assignments / Notes (Equivalent to Apple Notes in iCloud) */}
-        <div className="lg:col-span-4">
-          <AppleNotesWidget />
+        {/* Right Card (in RTL): Course Materials & Lectures */}
+        <div className="lg:col-span-8 order-1">
+          <AppleDriveWidget />
         </div>
 
-        {/* Right Card: Course Materials / Drive (Equivalent to Drive in iCloud) */}
-        <div className="lg:col-span-8">
-          <AppleDriveWidget />
+        {/* Left Card (in RTL): Assignments & Notes */}
+        <div className="lg:col-span-4 order-2">
+          <AppleNotesWidget />
         </div>
 
       </div>
