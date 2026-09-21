@@ -195,58 +195,60 @@ export function ReadinessClient() {
         subtitle={t.readinessclient.key_mjhxrk}
       />
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         
         {/* Input Form Column */}
         <div className="md:col-span-5 space-y-5">
-          <Card className="vercel-card border-border/50">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-[#0070f3]" />
-                {t.readinessclient.key_t1qqxv}
-              </CardTitle>
-              <CardDescription>
-                يتم استخراج لغات ومشاريع GitHub ومهاراتك المعتمدة تلقائياً من حسابك
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              
+          <div className="apple-glass-card p-6 shadow-xl space-y-5">
+            <div className="pb-4 border-b border-white/10 space-y-1">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2.5 tracking-tight">
+                <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                  <Briefcase className="w-4 h-4" />
+                </div>
+                <span>{t.readinessclient.key_t1qqxv}</span>
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                يتم استخراج لغات ومشاريع GitHub ومهاراتك المعتمدة تلقائياً من حسابك لتقييم دقيق.
+              </p>
+            </div>
+
+            <div className="space-y-4">
               {/* Target Role Selector */}
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <Briefcase className="w-4 h-4 text-primary" />
-                  {t.readinessclient.key_ywqfcx}
+                <label className="text-xs font-bold text-slate-200 flex items-center gap-2">
+                  <Briefcase className="w-3.5 h-3.5 text-blue-400" />
+                  <span>{t.readinessclient.key_ywqfcx}</span>
                 </label>
                 <select
                   value={targetRole}
                   onChange={(e) => setTargetRole(e.target.value)}
-                  className="flex h-11 min-h-[44px] w-full rounded-lg border border-input bg-background px-3.5 py-2 text-sm text-foreground ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="flex h-11 min-h-[44px] w-full rounded-xl border border-white/15 bg-white/[0.06] px-3.5 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                 >
-                  <option value="Software Engineer">{t.readinessclient.key_oc39qi}</option>
-                  <option value="Frontend Developer">{t.readinessclient.key_dxblft}</option>
-                  <option value="Backend Developer">{t.readinessclient.key_iwjtu4}</option>
-                  <option value="Full Stack Developer">{t.readinessclient.key_sxnr1z}</option>
-                  <option value="Mobile App Developer">{t.readinessclient.key_ret7r9}</option>
-                  <option value="UI/UX Designer">{t.readinessclient.key_4qr617}</option>
-                  <option value="Data Analyst">{t.readinessclient.key_1puped}</option>
-                  <option value="Data Scientist">{t.readinessclient.key_v07ldw}</option>
-                  <option value="DevOps Engineer">{t.readinessclient.key_wo3szo}</option>
-                  <option value="Cybersecurity Analyst">{t.readinessclient.key_czkscp}</option>
-                  <option value="AI/Machine Learning Engineer">{t.readinessclient.key_tgrs1e}</option>
-                  <option value="Systems Analyst">{t.readinessclient.key_7glvz5}</option>
-                  <option value="Cloud Architect">{t.readinessclient.key_gosnwx}</option>
+                  <option value="Software Engineer" className="bg-[#0f172a] text-white">{t.readinessclient.key_oc39qi}</option>
+                  <option value="Frontend Developer" className="bg-[#0f172a] text-white">{t.readinessclient.key_dxblft}</option>
+                  <option value="Backend Developer" className="bg-[#0f172a] text-white">{t.readinessclient.key_iwjtu4}</option>
+                  <option value="Full Stack Developer" className="bg-[#0f172a] text-white">{t.readinessclient.key_sxnr1z}</option>
+                  <option value="Mobile App Developer" className="bg-[#0f172a] text-white">{t.readinessclient.key_ret7r9}</option>
+                  <option value="UI/UX Designer" className="bg-[#0f172a] text-white">{t.readinessclient.key_4qr617}</option>
+                  <option value="Data Analyst" className="bg-[#0f172a] text-white">{t.readinessclient.key_1puped}</option>
+                  <option value="Data Scientist" className="bg-[#0f172a] text-white">{t.readinessclient.key_v07ldw}</option>
+                  <option value="DevOps Engineer" className="bg-[#0f172a] text-white">{t.readinessclient.key_wo3szo}</option>
+                  <option value="Cybersecurity Analyst" className="bg-[#0f172a] text-white">{t.readinessclient.key_czkscp}</option>
+                  <option value="AI/Machine Learning Engineer" className="bg-[#0f172a] text-white">{t.readinessclient.key_tgrs1e}</option>
+                  <option value="Systems Analyst" className="bg-[#0f172a] text-white">{t.readinessclient.key_7glvz5}</option>
+                  <option value="Cloud Architect" className="bg-[#0f172a] text-white">{t.readinessclient.key_gosnwx}</option>
                 </select>
               </div>
 
               {/* GitHub Auto-Sync Box */}
-              <div className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <GitBranch className="w-4 h-4 text-[#0070f3]" />
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <GitBranch className="w-4 h-4 text-blue-400" />
                     المزامنة التلقائية مع GitHub
                   </span>
                   {scannedMeta?.username && (
-                    <Badge variant="outline" className="text-[11px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 gap-1">
+                    <Badge variant="outline" className="text-[11px] bg-emerald-500/20 text-emerald-300 border-emerald-400/30 gap-1 font-semibold">
                       <Check className="w-3 h-3" />
                       متصل: @{scannedMeta.username}
                     </Badge>
@@ -255,16 +257,16 @@ export function ReadinessClient() {
 
                 {scannedMeta ? (
                   <div className="space-y-2.5">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground bg-background/80 p-2.5 rounded-lg border border-border/60">
-                      <span>المستودعات المرصودة: <strong className="text-foreground">{githubReposCount || 0}</strong></span>
-                      <span>اللغات الأساسية: <strong className="text-foreground">{githubLanguages || "مكتشفة"}</strong></span>
+                    <div className="flex items-center justify-between text-xs text-slate-300 bg-white/[0.04] p-3 rounded-xl border border-white/10">
+                      <span>المستودعات: <strong className="text-white font-bold">{githubReposCount || 0}</strong></span>
+                      <span>اللغات الأساسية: <strong className="text-white font-bold">{githubLanguages || "مكتشفة"}</strong></span>
                     </div>
                     {topProjects && (
-                      <div className="p-2.5 rounded-lg bg-background/80 border border-border/60 text-xs">
-                        <span className="text-[11px] font-semibold text-muted-foreground block mb-1">
-                          أبرز المشاريع المستخرجة تلقائياً:
+                      <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 text-xs">
+                        <span className="text-[11px] font-bold text-slate-300 block mb-1">
+                          أبرز المشاريع المستخرجة:
                         </span>
-                        <p className="text-foreground leading-relaxed text-[11px] max-h-24 overflow-y-auto">
+                        <p className="text-white leading-relaxed text-[11px] max-h-24 overflow-y-auto">
                           {topProjects}
                         </p>
                       </div>
@@ -276,34 +278,34 @@ export function ReadinessClient() {
                         size="sm"
                         disabled={scanningGithub}
                         onClick={() => handleManualScan()}
-                        className="h-7 text-xs gap-1 text-[#0070f3] hover:text-[#0070f3] flex-shrink-0"
+                        className="h-7 text-xs gap-1.5 text-blue-400 hover:text-blue-300 hover:bg-white/10 rounded-lg flex-shrink-0"
                       >
                         <RefreshCw className={`w-3 h-3 ${scanningGithub ? "animate-spin" : ""}`} />
-                        إعادة فحص وتحديث
+                        <span>إعادة فحص وتحديث</span>
                       </Button>
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      أدخل رابط أو اسم مستخدم GitHub لفحص مشاريعك ولغاتك تلقائياً دون الحاجة لكتابتها:
+                  <div className="space-y-2.5">
+                    <p className="text-xs text-slate-300">
+                      أدخل رابط أو اسم مستخدم GitHub لفحص مشاريعك ولغاتك تلقائياً:
                     </p>
                     <div className="flex gap-2">
                       <Input
                         value={githubUrl}
                         onChange={(e) => setGithubUrl(e.target.value)}
                         placeholder="https://github.com/username"
-                        className="text-xs h-9 bg-background"
+                        className="text-xs h-10 bg-white/[0.06] border-white/15 text-white placeholder:text-slate-400 focus:border-blue-400 rounded-xl"
                       />
                       <Button
                         type="button"
                         size="sm"
                         onClick={() => handleManualScan()}
                         disabled={scanningGithub}
-                        className="h-9 text-xs gap-1 bg-[#0070f3] text-white flex-shrink-0"
+                        className="h-10 text-xs gap-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl flex-shrink-0 px-3.5 shadow-md"
                       >
                         {scanningGithub ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                        فحص الآن
+                        <span>فحص</span>
                       </Button>
                     </div>
                   </div>
@@ -311,13 +313,13 @@ export function ReadinessClient() {
               </div>
 
               {/* Profile Skills Box */}
-              <div className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-2">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-emerald-500" />
-                    المهارات المعتمدة في ملفك الشخصي
+                  <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <Layers className="w-4 h-4 text-emerald-400" />
+                    المهارات في ملفك الشخصي
                   </span>
-                  <Link href="/profile" className="text-[11px] text-[#0070f3] hover:underline">
+                  <Link href="/profile" className="text-[11px] text-blue-400 hover:text-blue-300 font-semibold hover:underline">
                     تعديل في الملف
                   </Link>
                 </div>
@@ -325,23 +327,24 @@ export function ReadinessClient() {
                 {profileSkills.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {profileSkills.map((skill, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-[11px] font-normal py-0.5 px-2 bg-background border border-border/80">
+                      <span key={idx} className="text-[11px] font-medium py-1 px-2.5 bg-white/[0.06] border border-white/12 text-slate-200 rounded-lg">
                         {skill}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-muted-foreground pt-1">
+                  <p className="text-xs text-slate-400 pt-1">
                     لم تقم بإضافة مهارات في ملفك بعد. يمكنك إضافتها من صفحة الملف الشخصي لتعزيز دقة التقييم.
                   </p>
                 )}
               </div>
-            </CardContent>
-            <CardFooter className="pt-2 flex flex-col gap-2.5">
+            </div>
+
+            <div className="pt-2 flex flex-col gap-3">
               <Button 
                 onClick={() => handleAudit(false)} 
                 disabled={loading || fetchingProfile || scanningGithub} 
-                className="w-full bg-[#0070f3] hover:bg-[#0070f3]/90 text-white font-semibold h-11 text-sm shadow-sm"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold h-12 text-sm rounded-xl shadow-lg transition-all hover:scale-[1.01] active:scale-[0.99]"
               >
                 {loading ? (
                   <>
@@ -357,8 +360,8 @@ export function ReadinessClient() {
               </Button>
 
               {cooldownRemaining > 0 && (
-                <div className="w-full flex items-center justify-between text-[11px] text-muted-foreground px-1 pt-0.5">
-                  <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-medium">
+                <div className="w-full flex items-center justify-between text-xs text-slate-300 px-1 pt-0.5">
+                  <span className="flex items-center gap-1.5 text-amber-400 font-medium">
                     <Clock className="w-3.5 h-3.5" />
                     فترة التبريد نشطة ({formatCooldown(cooldownRemaining)})
                   </span>
@@ -366,37 +369,41 @@ export function ReadinessClient() {
                     type="button"
                     onClick={() => handleAudit(true)}
                     disabled={loading}
-                    className="text-[#0070f3] hover:underline flex items-center gap-1 font-semibold"
+                    className="text-blue-400 hover:text-blue-300 flex items-center gap-1 font-bold cursor-pointer"
                   >
-                    <Zap className="w-3 h-3" />
+                    <Zap className="w-3.5 h-3.5" />
                     فحص مباشر فوري
                   </button>
                 </div>
               )}
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Results Column */}
         <div className="md:col-span-7">
           {!result && !loading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-muted/20 border-border">
-              <ShieldCheck className="w-16 h-16 text-muted-foreground/30 mb-4" />
-              <h3 className="text-lg font-medium text-foreground">{t.readinessclient.key_uietee}</h3>
-              <p className="text-sm text-muted-foreground max-w-sm mt-2">
-                {t.readinessclient.key_nb66j7}</p>
+            <div className="apple-glass-card h-full min-h-[420px] flex flex-col items-center justify-center text-center p-8 border-dashed shadow-xl">
+              <div className="h-16 w-16 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-blue-400 mb-4 shadow-md">
+                <ShieldCheck className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">{t.readinessclient.key_uietee}</h3>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-sm leading-relaxed">
+                {t.readinessclient.key_nb66j7}
+              </p>
             </div>
           )}
 
           {loading && (
-            <div className="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 border border-dashed rounded-lg bg-muted/20 border-border">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-[#0070f3]/20 rounded-full blur-xl animate-pulse" />
-                <Loader2 className="w-12 h-12 text-[#0070f3] animate-spin relative z-10" />
+            <div className="apple-glass-card h-full min-h-[420px] flex flex-col items-center justify-center text-center p-8 border-dashed shadow-xl">
+              <div className="relative mb-4">
+                <div className="absolute -inset-4 bg-blue-500/20 rounded-full blur-xl animate-pulse" />
+                <Loader2 className="w-12 h-12 text-blue-400 animate-spin relative z-10" />
               </div>
-              <h3 className="text-lg font-medium text-foreground mt-6">{t.readinessclient.key_rsmy05}</h3>
-              <p className="text-sm text-muted-foreground mt-2">
-                {t.readinessclient.key_hbomh7}</p>
+              <h3 className="text-lg font-bold text-white mt-4">{t.readinessclient.key_rsmy05}</h3>
+              <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-sm">
+                {t.readinessclient.key_hbomh7}
+              </p>
             </div>
           )}
 
@@ -404,78 +411,97 @@ export function ReadinessClient() {
             <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
               {/* Notice or Cache banner */}
               {notice && (
-                <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 font-medium">
+                <div className="flex items-center gap-2.5 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-xs text-amber-300 font-medium">
                   <Clock className="w-4 h-4 flex-shrink-0" />
                   <span>{notice}</span>
                 </div>
               )}
               {isCachedResult && !notice && (
-                <div className="flex items-center justify-between p-3 rounded-xl bg-[#0070f3]/10 border border-[#0070f3]/20 text-xs text-[#0070f3] dark:text-[#38BDF8]">
-                  <span className="flex items-center gap-1.5 font-medium">
+                <div className="flex items-center justify-between p-3.5 rounded-2xl bg-blue-500/15 border border-blue-500/30 text-xs text-blue-300">
+                  <span className="flex items-center gap-2 font-semibold">
                     <ShieldCheck className="w-4 h-4 flex-shrink-0" />
                     تم استرجاع تقييمك المحفوظ مسبقاً لحفظ رصيد الذكاء الاصطناعي
                   </span>
                   {cooldownRemaining > 0 && (
-                    <span className="text-[11px] opacity-80 font-mono">
+                    <span className="text-[11px] opacity-90 font-mono">
                       متاح التحديث بعد: {formatCooldown(cooldownRemaining)}
                     </span>
                   )}
                 </div>
               )}
 
-              {/* Score Card */}
-              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-6 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden relative group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#2F7BFF]/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+              {/* 1. Score Card */}
+              <div className="apple-glass-card p-6 shadow-2xl overflow-hidden relative group">
+                <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
                   <div>
-                    <p className="text-xs font-semibold text-muted-foreground mb-1">{t.readinessclient.key_52yk5p}</p>
-                    <h2 className="text-3xl font-extrabold text-foreground flex items-center gap-3">
-                      <span className="font-mono bg-gradient-to-r from-[#00D2FF] via-[#2F7BFF] to-[#E83D84] bg-clip-text text-transparent">
+                    <p className="text-xs font-bold text-slate-300 mb-1.5">{t.readinessclient.key_52yk5p}</p>
+                    <h2 className="text-4xl font-extrabold text-white flex items-center gap-3">
+                      <span className="font-mono bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
                         {result.readiness_score}%
                       </span>
-                      <span className="bg-[#2F7BFF]/15 text-[#2F7BFF] dark:text-[#38BDF8] border border-[#2F7BFF]/30 font-semibold text-xs px-3 py-1 rounded-full">
+                      <span className="bg-blue-500/20 text-blue-300 border border-blue-400/35 font-bold text-xs px-3.5 py-1 rounded-full shadow-xs">
                         {result.readiness_status}
                       </span>
                     </h2>
                   </div>
-                  <div className="text-right w-full md:w-1/2">
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                  <div className="w-full md:w-1/2">
+                    <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal">
                       {result.strengths_summary}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Verified Skills */}
-              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_eys6lg}</h3>
+              {/* 2. Verified Skills (المهارات المعتمدة عملياً) */}
+              <div className="apple-glass-card p-6 shadow-xl space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md">
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                    <h3 className="text-base font-bold text-white tracking-tight">
+                      {t.readinessclient.key_eys6lg}
+                    </h3>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-300 bg-emerald-500/20 border border-emerald-400/30 px-3 py-1 rounded-full">
+                    {result.verified_skills?.length || 0} مهارة موثقة
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {result.verified_skills.map((skill: string, i: number) => (
-                    <span key={i} className="bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 dark:border-emerald-500/30 text-xs px-3 py-1 rounded-full font-medium shadow-xs">
-                      {skill}
+                
+                <div className="flex flex-wrap gap-2.5">
+                  {result.verified_skills?.map((skill: string, i: number) => (
+                    <span 
+                      key={i} 
+                      className="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 text-xs px-3.5 py-1.5 rounded-xl font-semibold shadow-xs flex items-center gap-2 transition-all cursor-default"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+                      <span>{skill}</span>
                     </span>
                   ))}
                 </div>
               </div>
 
-              {/* Critical Gaps */}
-              <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <AlertTriangle className="w-4 h-4 text-[#E83D84]" />
-                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_75megy}</h3>
+              {/* 3. Critical Gaps (الفجوات الحرجة) */}
+              <div className="apple-glass-card p-6 shadow-xl space-y-4">
+                <div className="flex items-center gap-2.5 pb-3 border-b border-white/10">
+                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-md">
+                    <AlertTriangle className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-base font-bold text-white tracking-tight">
+                    {t.readinessclient.key_75megy}
+                  </h3>
                 </div>
+
                 <div className="space-y-3">
-                  {result.critical_gaps.map((gap: any, i: number) => (
-                    <div key={i} className="flex gap-3.5 p-3.5 rounded-xl bg-muted/40 dark:bg-white/[0.03] border border-border/60 dark:border-white/[0.06]">
+                  {result.critical_gaps?.map((gap: any, i: number) => (
+                    <div key={i} className="flex gap-3.5 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
                       <div className="mt-1">
-                        <div className={`w-2 h-2 rounded-full ${gap.priority === 'High' ? 'bg-[#E83D84] shadow-[0_0_8px_#E83D84] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-400' : 'bg-[#38BDF8]'}`} />
+                        <div className={`w-2.5 h-2.5 rounded-full ${gap.priority === 'High' ? 'bg-red-400 shadow-[0_0_10px_#f87171] animate-pulse' : gap.priority === 'Medium' ? 'bg-amber-400' : 'bg-cyan-400'}`} />
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-foreground text-xs">{gap.skill}</h4>
-                        <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
+                      <div className="flex-1">
+                        <h4 className="font-bold text-white text-xs sm:text-sm">{gap.skill}</h4>
+                        <p className="text-xs text-slate-300 mt-1 leading-relaxed font-normal">
                           {gap.reason}
                         </p>
                       </div>
@@ -484,22 +510,47 @@ export function ReadinessClient() {
                 </div>
               </div>
 
-              {/* Actionable Next Step */}
-              <div className="rounded-2xl border border-[#2F7BFF]/30 bg-gradient-to-r from-[#2F7BFF]/10 to-[#E83D84]/10 p-5 shadow-sm dark:shadow-xl backdrop-blur-2xl">
-                <div className="flex items-center gap-2 mb-2">
-                  <ArrowUpRight className="w-4 h-4 text-[#2F7BFF] dark:text-[#38BDF8]" />
-                  <h3 className="text-sm font-bold text-foreground">{t.readinessclient.key_n3bmys}</h3>
-                </div>
-                <div className="p-4 rounded-xl bg-card/90 dark:bg-white/[0.04] border border-border/60 dark:border-white/[0.08]">
-                  <p className="text-foreground text-xs font-medium leading-relaxed">
-                    {result.actionable_next_step.recommended_project}
-                  </p>
-                  <div className="mt-3 flex items-center gap-1.5 text-xs text-[#2F7BFF] dark:text-[#38BDF8] font-semibold bg-[#2F7BFF]/10 dark:bg-[#2F7BFF]/15 border border-[#2F7BFF]/30 w-fit px-3 py-1 rounded-full">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span>{t.readinessclient.key_a06ono}{result.actionable_next_step.project_impact}</span>
+              {/* 4. Actionable Next Step (آخر بطاقة: الخطوات القادمة المقترحة) */}
+              <div className="apple-glass-card p-6 border border-blue-500/35 bg-gradient-to-br from-blue-900/30 via-slate-900/70 to-[#0b152d]/95 relative overflow-hidden shadow-2xl">
+                {/* Ambient soft blue glow */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+                
+                <div className="relative z-10 space-y-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                        <ArrowUpRight className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white tracking-tight">
+                          {t.readinessclient.key_n3bmys}
+                        </h3>
+                        <span className="text-[11px] text-blue-300 font-medium">
+                          توصية مخصصة لرفع جاهزيتك لسوق العمل
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <span className="text-xs font-semibold text-blue-300 bg-blue-500/20 border border-blue-400/30 px-3 py-1 rounded-full">
+                      مشروع مقترح
+                    </span>
+                  </div>
+
+                  <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.05] border border-white/12 space-y-3.5">
+                    <p className="text-white text-sm sm:text-base font-semibold leading-relaxed">
+                      {result.actionable_next_step.recommended_project}
+                    </p>
+                    
+                    <div className="pt-3 border-t border-white/10 flex items-center justify-between flex-wrap gap-2">
+                      <div className="flex items-center gap-2 text-xs text-emerald-300 font-bold bg-emerald-500/20 border border-emerald-400/30 px-3.5 py-1.5 rounded-xl shadow-xs">
+                        <TrendingUp className="w-4 h-4 text-emerald-400" />
+                        <span>{t.readinessclient.key_a06ono} {result.actionable_next_step.project_impact}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
           )}
         </div>

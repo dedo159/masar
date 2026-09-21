@@ -23,10 +23,10 @@ interface Announcement {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  [`عام`]: 'bg-blue-100 text-blue-800 border-blue-200',
-  [`أكاديمي`]: 'bg-purple-100 text-purple-800 border-purple-200',
-  [`فعاليات`]: 'bg-green-100 text-green-800 border-green-200',
-  [`تدريب`]: 'bg-orange-100 text-orange-800 border-orange-200',
+  [`عام`]: 'bg-blue-500/20 text-blue-300 border-blue-400/35',
+  [`أكاديمي`]: 'bg-purple-500/20 text-purple-300 border-purple-400/35',
+  [`فعاليات`]: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/35',
+  [`تدريب`]: 'bg-amber-500/20 text-amber-300 border-amber-400/35',
 };
 
 const CATEGORY_ICONS: Record<string, any> = {
@@ -99,48 +99,60 @@ export default function AnnouncementsPage() {
       <div className="max-w-6xl mx-auto px-4 py-5 md:px-6 md:py-6 space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-xl font-bold flex items-center gap-2 text-foreground">
-              <Megaphone className="w-5 h-5 text-primary" />
+            <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-3 text-white tracking-tight">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                <Megaphone className="w-5 h-5" />
+              </div>
               <span>{language === "en" ? "Official Announcements" : "الإعلانات الرسمية"}</span>
             </h2>
-            <p className="text-muted-foreground mt-0.5 text-xs">
-              {language === "en" ? "Latest news and updates from your university administration" : "أحدث التنبيهات والأخبار المعتمدة من عمادة الكلية"}
+            <p className="text-slate-300 mt-1 text-xs sm:text-sm font-normal">
+              {language === "en" ? "Latest news and updates from your university administration" : "أحدث التنبيهات والأخبار المعتمدة من عمادة الكلية وإدارة الجامعة"}
             </p>
           </div>
         </div>
 
       {!loading && announcements.length > 0 && (
         <div className="flex overflow-x-auto pb-2 gap-2 hide-scrollbar">
-          {categories.map(cat => (
-            <Button
-              key={cat}
-              variant={filter === cat ? "default" : "outline"}
-              size="sm"
-              onClick={() => setFilter(cat)}
-              className="rounded-full whitespace-nowrap"
-            >
-              {cat}
-            </Button>
-          ))}
+          {categories.map(cat => {
+            const isActive = filter === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setFilter(cat)}
+                className={cn(
+                  "rounded-full whitespace-nowrap text-xs font-semibold px-4 py-2 transition-all duration-200 cursor-pointer",
+                  isActive 
+                    ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md border border-blue-400/40" 
+                    : "bg-white/[0.05] hover:bg-white/[0.10] text-slate-200 border border-white/10 hover:border-white/20"
+                )}
+              >
+                {cat}
+              </button>
+            );
+          })}
         </div>
       )}
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-          <Loader2 className="w-8 h-8 animate-spin mb-4" />
-          <p>جاري تحميل الإعلانات...</p>
+        <div className="apple-glass-card flex flex-col items-center justify-center py-20 text-slate-300 shadow-xl">
+          <Loader2 className="w-8 h-8 animate-spin mb-4 text-blue-400" />
+          <p className="text-sm font-medium">جاري تحميل الإعلانات الرسمية...</p>
         </div>
       ) : filteredAnnouncements.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center border rounded-lg bg-secondary/30 border-dashed">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-            <Megaphone className="w-8 h-8 text-muted-foreground" />
+        <div className="apple-glass-card flex flex-col items-center justify-center py-16 px-4 text-center border-dashed shadow-xl">
+          <div className="w-16 h-16 bg-white/[0.06] border border-white/10 rounded-2xl flex items-center justify-center mb-4 text-blue-400 shadow-md">
+            <Megaphone className="w-8 h-8" />
           </div>
-          <h3 className="text-xl font-bold mb-2">لا توجد إعلانات حالياً</h3>
-          <p className="text-muted-foreground max-w-md">
+          <h3 className="text-lg font-bold text-white mb-2">لا توجد إعلانات حالياً</h3>
+          <p className="text-slate-300 text-sm max-w-md">
             لم تقم الجامعة بنشر أي إعلانات في هذا التصنيف بعد. يرجى التحقق لاحقاً.
           </p>
           {filter !== "الكل" && (
-            <Button variant="link" onClick={() => setFilter("الكل")} className="mt-4">
+            <Button 
+              variant="link" 
+              onClick={() => setFilter("الكل")} 
+              className="mt-4 text-blue-400 hover:text-blue-300 font-semibold"
+            >
               عرض كل الإعلانات
             </Button>
           )}
@@ -149,95 +161,113 @@ export default function AnnouncementsPage() {
         <div className="grid gap-4">
           {filteredAnnouncements.map((announcement) => {
             const Icon = CATEGORY_ICONS[announcement.category] || Info;
+            const categoryBadgeStyle = CATEGORY_COLORS[announcement.category] || "bg-slate-500/20 text-slate-300 border-slate-400/35";
+
             return (
-              <Card 
+              <div 
                 key={announcement.id} 
                 className={cn(
-                  "cursor-pointer hover:shadow-md transition-all border-l-4",
-                  announcement.isPinned ? "border-l-primary" : "border-l-transparent hover:border-l-muted-foreground/30"
+                  "apple-glass-card p-5 md:p-6 cursor-pointer hover:border-white/25 active:scale-[0.99] transition-all duration-200 group shadow-xl relative overflow-hidden",
+                  announcement.isPinned && "border-s-4 border-s-blue-400"
                 )}
                 onClick={() => setSelectedAnnouncement(announcement)}
               >
-                <CardContent className="p-4 md:p-5">
-                  <div className="flex justify-between items-start mb-2 gap-4">
-                    <div className="flex items-center gap-2">
-                      {announcement.isPinned && (
-                        <Badge variant="default" className="bg-primary/10 text-primary hover:bg-primary/20 border-0 flex items-center gap-1">
-                          <Pin className="w-3 h-3" />
-                          مثبت
-                        </Badge>
-                      )}
-                      <Badge 
-                        variant="outline" 
-                        className={cn("flex items-center gap-1", CATEGORY_COLORS[announcement.category])}
-                      >
-                        <Icon className="w-3 h-3" />
-                        {announcement.category}
-                      </Badge>
-                    </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {formatDistanceToNow(new Date(announcement.publishedAt), { addSuffix: true, locale: ar })}
+                <div className="flex justify-between items-start mb-2.5 gap-4">
+                  <div className="flex items-center gap-2">
+                    {announcement.isPinned && (
+                      <span className="bg-blue-500/25 text-blue-300 border border-blue-400/40 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs">
+                        <Pin className="w-3 h-3" />
+                        <span>مثبت</span>
+                      </span>
+                    )}
+                    <span 
+                      className={cn("flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full border shadow-xs", categoryBadgeStyle)}
+                    >
+                      <Icon className="w-3.5 h-3.5" />
+                      <span>{announcement.category}</span>
                     </span>
                   </div>
-                  <h3 className="font-bold text-lg mb-2 line-clamp-1">{announcement.title}</h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2 mb-3">
-                    {announcement.body}
-                  </p>
-                  <div className="flex items-center gap-4 text-muted-foreground">
-                    <button 
-                      onClick={(e) => handleLike(e, announcement.id)}
-                      className={cn(
-                        "flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-red-500",
-                        announcement.isLiked && "text-red-500"
-                      )}
-                    >
-                      <Heart className={cn("w-4 h-4", announcement.isLiked && "fill-current")} />
-                      {announcement.likesCount}
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
+                  <span className="text-xs text-slate-400 whitespace-nowrap font-medium">
+                    {formatDistanceToNow(new Date(announcement.publishedAt), { addSuffix: true, locale: ar })}
+                  </span>
+                </div>
+                
+                <h3 className="font-bold text-lg md:text-xl text-white group-hover:text-blue-300 transition-colors line-clamp-1 mb-2 tracking-tight">
+                  {announcement.title}
+                </h3>
+                
+                <p className="text-slate-300 text-sm line-clamp-2 mb-4 leading-relaxed font-normal">
+                  {announcement.body}
+                </p>
+                
+                <div className="flex items-center gap-4 text-slate-300 pt-2 border-t border-white/10">
+                  <button 
+                    onClick={(e) => handleLike(e, announcement.id)}
+                    className={cn(
+                      "flex items-center gap-2 text-xs font-semibold transition-colors hover:text-red-400 cursor-pointer",
+                      announcement.isLiked ? "text-red-400 font-bold" : "text-slate-300"
+                    )}
+                  >
+                    <Heart className={cn("w-4 h-4", announcement.isLiked && "fill-current text-red-400")} />
+                    <span>{announcement.likesCount} إعجاب</span>
+                  </button>
+                </div>
+              </div>
             );
           })}
         </div>
       )}
 
       {selectedAnnouncement && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm" onClick={() => setSelectedAnnouncement(null)}>
-          <div className="bg-background rounded-lg p-6 md:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto relative shadow-2xl border" onClick={e => e.stopPropagation()}>
-            <div className="flex flex-col gap-3 mb-5">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-md" 
+          onClick={() => setSelectedAnnouncement(null)}
+        >
+          <div 
+            className="bg-[#0c152a]/95 border border-white/15 backdrop-blur-3xl rounded-3xl p-6 md:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto relative shadow-2xl text-white space-y-4" 
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex flex-col gap-3">
               <div className="flex items-center gap-2">
                 {selectedAnnouncement.isPinned && (
-                  <Badge variant="default" className="bg-primary/10 text-primary hover:bg-primary/20 border-0 flex items-center gap-1">
+                  <span className="bg-blue-500/25 text-blue-300 border border-blue-400/40 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
                     <Pin className="w-3 h-3" />
-                    مثبت
-                  </Badge>
+                    <span>مثبت</span>
+                  </span>
                 )}
-                <Badge variant="outline" className={cn(CATEGORY_COLORS[selectedAnnouncement.category])}>
+                <span className={cn("text-xs font-semibold px-3 py-1 rounded-full border", CATEGORY_COLORS[selectedAnnouncement.category] || "bg-slate-500/20 text-slate-300 border-slate-400/35")}>
                   {selectedAnnouncement.category}
-                </Badge>
+                </span>
               </div>
-              <h2 className="text-xl md:text-2xl font-bold leading-relaxed">{selectedAnnouncement.title}</h2>
-              <div className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Calendar className="w-4 h-4" />
-                نُشر {formatDistanceToNow(new Date(selectedAnnouncement.publishedAt), { addSuffix: true, locale: ar })}
+              <h2 className="text-xl md:text-2xl font-bold leading-relaxed text-white tracking-tight">
+                {selectedAnnouncement.title}
+              </h2>
+              <div className="text-xs text-slate-300 flex items-center gap-1.5 font-medium">
+                <Calendar className="w-3.5 h-3.5 text-blue-400" />
+                <span>نُشر {formatDistanceToNow(new Date(selectedAnnouncement.publishedAt), { addSuffix: true, locale: ar })}</span>
               </div>
             </div>
-            <div className="mt-2 pt-5 border-t whitespace-pre-wrap leading-relaxed text-foreground/90 text-sm md:text-base">
+
+            <div className="mt-2 pt-4 border-t border-white/10 whitespace-pre-wrap leading-relaxed text-slate-200 text-sm md:text-base font-normal">
               {selectedAnnouncement.body}
             </div>
-            <div className="mt-8 flex items-center justify-between">
+
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
               <button 
                 onClick={(e) => handleLike(e, selectedAnnouncement.id)}
                 className={cn(
-                  "flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-red-500",
-                  selectedAnnouncement.isLiked ? "text-red-500" : "text-muted-foreground"
+                  "flex items-center gap-2 text-sm font-semibold transition-colors hover:text-red-400 cursor-pointer",
+                  selectedAnnouncement.isLiked ? "text-red-400" : "text-slate-300"
                 )}
               >
-                <Heart className={cn("w-5 h-5", selectedAnnouncement.isLiked && "fill-current")} />
-                <span className="text-base">{selectedAnnouncement.likesCount} إعجاب</span>
+                <Heart className={cn("w-5 h-5", selectedAnnouncement.isLiked && "fill-current text-red-400")} />
+                <span>{selectedAnnouncement.likesCount} إعجاب</span>
               </button>
-              <Button variant="outline" onClick={() => setSelectedAnnouncement(null)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setSelectedAnnouncement(null)}
+                className="bg-white/10 hover:bg-white/20 text-white font-semibold border-white/15 rounded-xl text-xs px-5"
+              >
                 إغلاق
               </Button>
             </div>
