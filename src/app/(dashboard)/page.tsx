@@ -26,7 +26,7 @@ export default async function HomePage() {
               <span className="h-2 w-2 rounded-full bg-blue-400" />
               <span>الجدول والمحاضرات اليومية المتزامنة</span>
             </h4>
-            <span className="text-xs text-white/50">Moodle Realtime Sync</span>
+            <span className="text-xs text-slate-300 font-medium">Moodle Realtime Sync</span>
           </div>
           <TodayScheduleSection />
         </div>

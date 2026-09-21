@@ -66,34 +66,34 @@
 }
 
 .dark {
-  /* Masar Official Visual Identity — Dark Theme (#0D0E22) */
-  --background: #0d0e22;
-  --foreground: #f8fafc;
+  /* Masar Official Visual Identity — Dark Theme (#080E1C) */
+  --background: #080e1c;
+  --foreground: #f1f5f9;
   
-  --card: #131530;
-  --card-foreground: #f8fafc;
+  --card: #0f172a;
+  --card-foreground: #f1f5f9;
   
-  --popover: #131530;
-  --popover-foreground: #f8fafc;
+  --popover: #0f172a;
+  --popover-foreground: #f1f5f9;
   
-  --primary: #2f7bff;
-  --primary-foreground: #ffffff;
+  --primary: #38bdf8;
+  --primary-foreground: #020817;
   
-  --secondary: #1a1e42;
-  --secondary-foreground: #f8fafc;
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
   
-  --muted: #171a38;
-  --muted-foreground: #8e95b3;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
   
   --accent: #e83d84;
   --accent-foreground: #ffffff;
   
-  --destructive: #ff4757;
+  --destructive: #f87171;
   --destructive-foreground: #ffffff;
   
-  --border: #21254d;
-  --input: #21254d;
-  --ring: #2f7bff;
+  --border: rgba(255, 255, 255, 0.10);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: #38bdf8;
 }
 
 @layer base {
@@ -155,49 +155,35 @@
   /* =================================================== */
   .apple-fluid-bg {
     background: 
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(20, 126, 251, 0.45), transparent 70%),
-      radial-gradient(ellipse 60% 50% at 90% 20%, rgba(0, 102, 204, 0.4), transparent 60%),
-      radial-gradient(ellipse 70% 60% at 10% 70%, rgba(13, 110, 253, 0.35), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 85%, rgba(0, 78, 162, 0.45), transparent 70%),
-      linear-gradient(135deg, #07132c 0%, #08214d 30%, #004ea2 65%, #003366 100%);
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(28, 78, 173, 0.28), transparent 70%),
+      radial-gradient(ellipse 70% 50% at 90% 15%, rgba(14, 116, 144, 0.20), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 10% 60%, rgba(30, 64, 175, 0.18), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 85%, rgba(15, 45, 115, 0.24), transparent 70%),
+      linear-gradient(160deg, #070d1e 0%, #0b152d 40%, #0d1a38 75%, #081022 100%);
     background-attachment: fixed;
-    color: #ffffff;
-  }
-
-  .apple-fluid-bg .text-foreground {
-    color: #ffffff !important;
-  }
-
-  .apple-fluid-bg .text-muted-foreground {
-    color: rgba(255, 255, 255, 0.72) !important;
+    color: #f1f5f9;
   }
 
   .apple-glass-card {
-    background: rgba(20, 26, 43, 0.75);
-    backdrop-filter: blur(32px) saturate(190%);
-    -webkit-backdrop-filter: blur(32px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.72);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
     border-radius: 24px;
-    color: #ffffff;
+    color: #f1f5f9;
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .apple-glass-card:hover {
-    box-shadow: 0 32px 72px -12px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
-
-  .apple-glass-card .bg-card {
-    background: rgba(12, 17, 30, 0.65) !important;
-    border-color: rgba(255, 255, 255, 0.10) !important;
-    color: #ffffff !important;
+    box-shadow: 0 28px 64px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
   .apple-inner-card {
-    background: rgba(12, 17, 30, 0.60);
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 18px;
-    color: #ffffff;
+    color: #f1f5f9;
   }
 
   .apple-squircle {

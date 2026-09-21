@@ -89,7 +89,7 @@ export function AppleNotesWidget() {
               <h5 className="text-xs sm:text-sm font-semibold text-white group-hover/item:text-amber-300 transition-colors line-clamp-1 leading-snug">
                 {item.title}
               </h5>
-              <p className="text-[11px] text-white/70 truncate mt-0.5 font-medium">
+              <p className="text-[11px] text-slate-300 truncate mt-0.5 font-medium">
                 {item.courseName} • {item.status === "submitted" ? (
                   <span className="text-emerald-400 inline-flex items-center gap-0.5">
                     <CheckCircle2 className="h-3 w-3" /> تم التسليم
@@ -101,7 +101,7 @@ export function AppleNotesWidget() {
             </div>
 
             {/* Timestamp (like in Apple screenshot) */}
-            <span className="text-xs font-mono text-white/70 group-hover/item:text-white transition-colors shrink-0 whitespace-nowrap">
+            <span className="text-xs font-mono text-slate-300 group-hover/item:text-white transition-colors shrink-0 whitespace-nowrap">
               {item.dueDate}
             </span>
           </Link>
@@ -109,8 +109,8 @@ export function AppleNotesWidget() {
       </div>
 
       {/* Bottom Footer */}
-      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-white/70 relative z-10">
-        <span className="text-[11px]">3 مهام نشطة هذا الفصل</span>
+      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 relative z-10">
+        <span className="text-[11px] font-medium">3 مهام نشطة هذا الفصل</span>
         <Link
           href="/courses"
           className="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1 font-medium transition-colors"

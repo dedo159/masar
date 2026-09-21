@@ -9,7 +9,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen apple-fluid-bg text-white relative flex flex-col selection:bg-blue-500/30 selection:text-white">
+    <div className="dark min-h-screen apple-fluid-bg text-slate-100 relative flex flex-col selection:bg-blue-500/30 selection:text-white">
       {/* 1. Apple iCloud Sleek Top Navigation */}
       <AppleTopNav />
 

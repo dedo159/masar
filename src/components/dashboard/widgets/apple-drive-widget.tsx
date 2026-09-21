@@ -144,7 +144,7 @@ export function AppleDriveWidget() {
                 <h5 className="text-xs font-semibold text-white truncate group-hover/file:text-blue-300 transition-colors">
                   {file.name}
                 </h5>
-                <p className="text-[10px] text-white/65 truncate mt-0.5 font-medium">
+                <p className="text-[10px] text-slate-300 truncate mt-0.5 font-medium">
                   {file.course} • {file.date}
                 </p>
               </div>
@@ -154,8 +154,8 @@ export function AppleDriveWidget() {
       </div>
 
       {/* Bottom Footer */}
-      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-white/70 relative z-10">
-        <span className="text-[11px]">مزامنة مباشرة مع سحابة الجامعة و Moodle</span>
+      <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-300 relative z-10">
+        <span className="text-[11px] font-medium">مزامنة مباشرة مع سحابة الجامعة و Moodle</span>
         <Link
           href="/courses"
           className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium transition-colors"

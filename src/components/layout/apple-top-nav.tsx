@@ -147,7 +147,7 @@ export function AppleTopNav() {
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-white truncate">{studentName}</p>
-                    <p className="text-xs text-white/60 truncate font-mono">{studentEmail}</p>
+                    <p className="text-xs text-slate-300 truncate font-mono">{studentEmail}</p>
                     <span className="inline-block mt-1 text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-medium">
                       طالب مسار — جامعة عمان الأهلية
                     </span>
@@ -158,7 +158,7 @@ export function AppleTopNav() {
                   <Link
                     href="/profile"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
                   >
                     <User className="h-4 w-4 text-blue-400" />
                     <span>إعدادات الحساب والبطاقة الجامعية</span>
@@ -167,7 +167,7 @@ export function AppleTopNav() {
                   <Link
                     href="/settings"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
                   >
                     <Settings className="h-4 w-4 text-purple-400" />
                     <span>تفضيلات المنصة والربط</span>
@@ -175,7 +175,7 @@ export function AppleTopNav() {
 
                   <button
                     onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors text-start"
+                    className="w-full flex items-center justify-between px-2.5 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors text-start"
                   >
                     <span className="flex items-center gap-2.5">
                       {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-blue-400" />}
@@ -223,13 +223,13 @@ export function AppleTopNav() {
 
             {/* Apple Launchpad Popover */}
             {showAppLauncher && (
-              <div className="absolute left-0 rtl:left-auto rtl:right-0 mt-2.5 w-80 sm:w-96 rounded-3xl bg-[#141b2d]/95 border border-white/15 p-5 shadow-2xl backdrop-blur-3xl text-white animate-in fade-in zoom-in-95 duration-150 z-50">
+              <div className="absolute left-0 rtl:left-auto rtl:right-0 mt-2.5 w-80 sm:w-96 rounded-3xl bg-[#141b2d]/98 border border-white/15 p-5 shadow-2xl backdrop-blur-3xl text-white animate-in fade-in zoom-in-95 duration-150 z-50">
                 {/* Launchpad Header */}
                 <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-200">
                     تطبيقات وخدمات مسار
                   </span>
-                  <span className="text-[10px] text-blue-400/80 font-medium">منظومة مسار الرقمية</span>
+                  <span className="text-[10px] text-blue-400 font-medium">منظومة مسار الرقمية</span>
                 </div>
 
                 {/* Primary Student Apps Grid */}
@@ -252,7 +252,7 @@ export function AppleTopNav() {
                         <span className="text-xs font-medium text-white truncate w-full">
                           {app.label}
                         </span>
-                        <span className="text-[9px] text-white/50 truncate w-full mt-0.5">
+                        <span className="text-[10px] text-slate-300 truncate w-full mt-0.5 font-normal">
                           {app.desc}
                         </span>
                       </Link>
@@ -262,7 +262,7 @@ export function AppleTopNav() {
 
                 {/* Other Portals Switcher */}
                 <div className="mt-4 pt-3 border-t border-white/10">
-                  <span className="text-[10px] text-white/50 block mb-2 font-medium">بوابات الشركاء والجامعة:</span>
+                  <span className="text-[10px] text-slate-300 block mb-2 font-medium">بوابات الشركاء والجامعة:</span>
                   <div className="grid grid-cols-3 gap-2">
                     {externalPortals.map((portal) => {
                       const Icon = portal.icon;
@@ -271,7 +271,7 @@ export function AppleTopNav() {
                           key={portal.href}
                           href={portal.href}
                           onClick={() => setShowAppLauncher(false)}
-                          className="flex items-center gap-1.5 p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/80 hover:text-white text-[10px] transition-colors"
+                          className="flex items-center gap-1.5 p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white text-[10px] font-medium transition-colors"
                         >
                           <Icon className={`h-3.5 w-3.5 ${portal.color} shrink-0`} />
                           <span className="truncate">{portal.label}</span>
@@ -301,7 +301,7 @@ export function AppleTopNav() {
                 <Link
                   href="/readiness"
                   onClick={() => setShowQuickAdd(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   <Sparkles className="h-4 w-4 text-amber-400" />
                   <span>فحص الجاهزية الآن</span>
@@ -309,7 +309,7 @@ export function AppleTopNav() {
                 <Link
                   href="/courses"
                   onClick={() => setShowQuickAdd(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   <BookOpen className="h-4 w-4 text-blue-400" />
                   <span>تصفح المواد والمحاضرات</span>
@@ -317,7 +317,7 @@ export function AppleTopNav() {
                 <Link
                   href="/schedule"
                   onClick={() => setShowQuickAdd(false)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-200 hover:text-white hover:bg-white/10 transition-colors"
                 >
                   <Calendar className="h-4 w-4 text-emerald-400" />
                   <span>عرض الجدول الدراسي</span>

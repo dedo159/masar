@@ -51,7 +51,7 @@ export function AppleReadinessWidget() {
           </span>
         </h3>
 
-        <p className="text-xs sm:text-sm text-white/75 leading-relaxed max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-md mx-auto font-normal">
           {isAr
             ? "يقوم محرك مسار بتحليل مقرراتك الأكاديمية ومشاريع GitHub لاستخراج المهارات المحققة وتحديد الفجوات التقنية وربطك بفرص التدريب المناسبة."
             : "Analyze your university courses and GitHub repositories to verify skills, pinpoint technical gaps, and connect with top internships."}
@@ -60,7 +60,7 @@ export function AppleReadinessWidget() {
 
       {/* Footer Action Button */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-1.5 text-xs text-white/60">
+        <div className="flex items-center gap-1.5 text-xs text-slate-300 font-medium">
           <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
           <span>{isAr ? "مزامنة مباشرة مع سوق العمل" : "Live Industry Alignment"}</span>
         </div>

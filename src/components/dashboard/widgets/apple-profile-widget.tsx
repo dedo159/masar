@@ -57,13 +57,13 @@ export function AppleProfileWidget({ student }: AppleProfileWidgetProps) {
           <CheckCircle2 className="h-4 w-4 text-[#38bdf8] shrink-0" />
         </h3>
 
-        <p className="text-xs font-mono text-white/65 truncate dir-ltr">
+        <p className="text-xs font-mono text-slate-300 font-medium truncate dir-ltr">
           {displayEmail}
         </p>
 
         {/* Academic Meta Tags */}
-        <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-white/75">
-          <span className="bg-white/10 px-2.5 py-0.5 rounded-full border border-white/10">
+        <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-slate-200">
+          <span className="bg-white/[0.12] text-white font-medium px-2.5 py-0.5 rounded-full border border-white/15">
             {studentMajor}
           </span>
           <span className="bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-semibold font-mono">
@@ -73,8 +73,8 @@ export function AppleProfileWidget({ student }: AppleProfileWidgetProps) {
       </div>
 
       {/* Bottom Brand Link */}
-      <div className="mt-5 pt-3 border-t border-white/10 w-full flex items-center justify-between text-xs text-white/60 relative z-10">
-        <div className="flex items-center gap-1.5 text-white/80 font-medium">
+      <div className="mt-5 pt-3 border-t border-white/10 w-full flex items-center justify-between text-xs text-slate-300 relative z-10">
+        <div className="flex items-center gap-1.5 text-white font-medium">
           <Award className="h-4 w-4 text-blue-400" />
           <span>{isAr ? "منظومة مسار الجامعية" : "Masar Academic Pass"}</span>
         </div>
