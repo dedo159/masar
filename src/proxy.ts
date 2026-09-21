@@ -150,6 +150,7 @@ export async function proxy(request: NextRequest) {
     "/courses",
     "/profile",
     "/readiness",
+    "/schedule",
     "/settings"
   ];
 
@@ -196,7 +197,8 @@ export const config = {
     "/profile/:path*",
     "/readiness",
     "/readiness/:path*",
-    
+    "/schedule",
+    "/schedule/:path*",
     "/settings",
     "/settings/:path*"
   ],

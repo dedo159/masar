@@ -70,7 +70,23 @@ export async function getSession(): Promise<SessionPayload | null> {
 export async function destroySession(): Promise<void> {
   try {
     const cookieStore = await cookies();
-    cookieStore.set(COOKIE_NAME, "", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", maxAge: 0, path: "/" });
+    // Delete the cookie
+    cookieStore.delete(COOKIE_NAME);
+    // Also overwrite with empty value and maxAge=0 as a fallback
+    cookieStore.set(COOKIE_NAME, "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 0,
+      path: "/",
+    });
+    cookieStore.set(COOKIE_NAME, "", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 0,
+      path: "/",
+    });
   } catch {
     // Ignore cookie deletion errors
   }
