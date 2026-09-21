@@ -6,7 +6,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // ================================================
-  // 1. ط­ظ…ط§ظٹط© طµظپط­ط© ظˆظ…ط³ط§ط±ط§طھ ط§ط®طھط¨ط§ط± ظ…ظˆظˆط¯ظ„ (Basic Auth)
+  // 1. حماية صفحة ومسارات اختبار موودل (Basic Auth)
   // ================================================
   if (pathname.startsWith("/moodle-test") || (pathname.startsWith("/api/moodle-test") && !pathname.startsWith("/api/moodle-test/connect"))) {
     if (process.env.MOODLE_TEST_ENABLED === "false") {
@@ -41,7 +41,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 2. ط­ظ…ط§ظٹط© ط¨ظˆط§ط¨ط© ط§ظ„ط¬ط§ظ…ط¹ط© (JWT Session)
+  // 2. حماية بوابة الجامعة (JWT Session)
   // ================================================
   if (pathname.startsWith("/university") && !pathname.startsWith("/university/login")) {
     const token = request.cookies.get("masar_session")?.value;
@@ -56,7 +56,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 3. ط­ظ…ط§ظٹط© API ط¨ظˆط§ط¨ط© ط§ظ„ط¬ط§ظ…ط¹ط© (JWT Session)
+  // 3. حماية API بوابة الجامعة (JWT Session)
   // ================================================
   if (pathname.startsWith("/api/university") && !pathname.startsWith("/api/university/auth")) {
     const token = request.cookies.get("masar_session")?.value;
@@ -71,7 +71,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 4. ط­ظ…ط§ظٹط© ط¨ظˆط§ط¨ط© ط§ظ„ط´ط±ظƒط§طھ (JWT Session)
+  // 4. حماية بوابة الشركات (JWT Session)
   // ================================================
   if (
     pathname.startsWith("/company") &&
@@ -90,7 +90,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 5. ط­ظ…ط§ظٹط© API ط¨ظˆط§ط¨ط© ط§ظ„ط´ط±ظƒط§طھ (JWT Session)
+  // 5. حماية API بوابة الشركات (JWT Session)
   // ================================================
   if (pathname.startsWith("/api/company") && !pathname.startsWith("/api/company/auth")) {
     const token = request.cookies.get("masar_session")?.value;
@@ -105,7 +105,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 6. ط­ظ…ط§ظٹط© ط¨ظˆط§ط¨ط© ط§ظ„ط´ط±ظƒط§ط، ط§ظ„طھط¬ط§ط±ظٹظٹظ† (JWT Session)
+  // 6. حماية بوابة الشركاء التجاريين (JWT Session)
   // ================================================
   if (
     pathname.startsWith("/merchant") &&
@@ -124,7 +124,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 7. ط­ظ…ط§ظٹط© API ط¨ظˆط§ط¨ط© ط§ظ„ط´ط±ظƒط§ط، ط§ظ„طھط¬ط§ط±ظٹظٹظ† (JWT Session)
+  // 7. حماية API بوابة الشركاء التجاريين (JWT Session)
   // ================================================
   if (pathname.startsWith("/api/merchant") && !pathname.startsWith("/api/merchant/auth")) {
     const token = request.cookies.get("masar_session")?.value;
@@ -139,7 +139,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // ================================================
-  // 8. ط­ظ…ط§ظٹط© ظ„ظˆط­ط© طھط­ظƒظ… ط§ظ„ط·ط§ظ„ط¨ (Student Dashboard)
+  // 8. حماية لوحة تحكم الطالب (Student Dashboard)
   // ================================================
   const studentProtectedPaths = [
     "/",
