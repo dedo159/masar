@@ -4,7 +4,7 @@ import { PageHeader } from "@/components/layout/page-header";
 
 export const metadata = {
   title: "الجدول الدراسي — مسار",
-  description: "عرض مواعيد المحاضرات وتكامل تقويم Microsoft Teams وروابط الاجتماعات المباشرة",
+  description: "عرض مواعيد المحاضرات الأسبوعية والقاعات والمدرسين",
 };
 
 export default function SchedulePage() {

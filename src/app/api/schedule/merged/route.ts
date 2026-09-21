@@ -37,21 +37,8 @@ export async function GET() {
 
     const courses = await getEnrolledCourses(studentId);
 
-    let isTeamsConnected = false;
-    let teamsEvents: any[] = [];
-
-    if (studentId) {
-      const conn = await prisma.teamsConnection.findUnique({
-        where: { studentId },
-      });
-      if (conn && conn.syncStatus === "connected") {
-        isTeamsConnected = true;
-        const now = new Date();
-        const startWeek = startOfWeek(now, { weekStartsOn: 0 }).toISOString();
-        const endWeek = endOfWeek(now, { weekStartsOn: 0 }).toISOString();
-        teamsEvents = await fetchTeamsCalendarEvents(studentId, startWeek, endWeek);
-      }
-    }
+    const isTeamsConnected = false;
+    const teamsEvents: any[] = [];
 
     const mergedItems: MergedScheduleItem[] = [];
 

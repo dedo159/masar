@@ -262,9 +262,9 @@ export async function fetchTeamsCalendarEvents(
   const token = await getValidAccessTokenForStudent(studentId);
   if (!token) return [];
 
-  // If token is AAU token, demo token, or connection marked as demo
+  // If token is internal placeholder, return empty array
   if (token.startsWith("aau_") || token.startsWith("demo_") || token.includes("demo_")) {
-    return getStudentAauTeamsEvents(studentId);
+    return [];
   }
 
   try {
@@ -282,15 +282,15 @@ export async function fetchTeamsCalendarEvents(
     });
 
     if (!res.ok) {
-      console.error("[Teams Graph] Error fetching calendarView:", await res.text());
-      return getStudentAauTeamsEvents(studentId);
+      console.warn("[Teams Graph] Could not fetch calendarView from Graph API:", res.status);
+      return [];
     }
 
     const data = await res.json();
     const events: any[] = data.value || [];
 
     if (events.length === 0) {
-      return getRealisticDemoTeamsEvents();
+      return [];
     }
 
     return events.map((ev) => {
@@ -306,7 +306,7 @@ export async function fetchTeamsCalendarEvents(
 
       return {
         id: ev.id,
-        subject: ev.subject || "محاضرة جامعية عبر Teams",
+        subject: ev.subject || "محاضرة جامعية",
         startTime,
         endTime,
         dateStr,
@@ -320,128 +320,8 @@ export async function fetchTeamsCalendarEvents(
       };
     });
   } catch (err) {
-    console.error("[Teams Graph] Exception fetching events:", err);
-    return getRealisticDemoTeamsEvents();
+    console.warn("[Teams Graph] Exception fetching events:", err);
+    return [];
   }
 }
 
-/**
- * Builds realistic live Teams meetings and join links tailored to the student's
- * real enrolled courses from Moodle / AAU database.
- */
-export async function getStudentAauTeamsEvents(studentId?: string): Promise<TeamsCalendarEvent[]> {
-  const today = new Date();
-  const todayStr = formatInTimeZone(today, JORDAN_TIMEZONE, "yyyy-MM-dd");
-  const todayDay = formatInTimeZone(today, JORDAN_TIMEZONE, "eee").toLowerCase() as TeamsCalendarEvent["day"];
-
-  if (studentId) {
-    try {
-      const enrollments = await prisma.enrollment.findMany({
-        where: { studentId },
-        include: { course: true },
-      });
-
-      if (enrollments && enrollments.length > 0) {
-        return enrollments.map((en, idx) => {
-          const c = en.course;
-          const scheduleList = Array.isArray(c.schedule) ? (c.schedule as any[]) : [];
-          const s = scheduleList[0] || null;
-
-          const startTime = s?.startTime || (idx === 0 ? "09:30" : idx === 1 ? "11:00" : idx === 2 ? "12:30" : "14:00");
-          const endTime = s?.endTime || (idx === 0 ? "11:00" : idx === 1 ? "12:30" : idx === 2 ? "14:00" : "15:30");
-          const day = (s?.day as any) || (idx % 2 === 0 ? "sun" : "mon");
-
-          // Clean join URL format for Teams
-          const meetingCode = encodeURIComponent(c.code.replace(/[^a-zA-Z0-9]/g, "").toLowerCase());
-          const joinUrl = `https://teams.microsoft.com/l/meetup-join/19%3ameeting_aau_${meetingCode}%40thread.v2/0?context=%7b%22Tid%22%3a%22ammanu-student%22%7d`;
-
-          return {
-            id: `teams-aau-${c.id}`,
-            subject: `محاضرة ${c.nameAr} (${c.code}) — د. ${c.instructor || "أستاذ المادة"}`,
-            courseCode: c.code,
-            courseName: c.nameAr,
-            startTime,
-            endTime,
-            dateStr: todayStr,
-            day,
-            joinUrl,
-            isCancelled: false,
-            isOnlineMeeting: true,
-            location: `Microsoft Teams / ${c.room || "قاعة دراسية"}`,
-            bodyPreview: `محاضرة تفاعلية عبر Microsoft Teams لمادة ${c.nameAr} مع ${c.instructor || "أستاذ المادة"}.`,
-            lastModified: new Date().toISOString(),
-            isRescheduled: false,
-          };
-        });
-      }
-    } catch (e) {
-      console.error("[Teams Client] Error loading student enrollments for Teams events:", e);
-    }
-  }
-
-  return getRealisticDemoTeamsEvents();
-}
-
-/**
- * Returns realistic Jordan university (AAU) lecture updates for preview / demo
- * with actual Teams join format, reschedule indicators, and live meetings.
- */
-export function getRealisticDemoTeamsEvents(): TeamsCalendarEvent[] {
-  const today = new Date();
-  const todayStr = formatInTimeZone(today, JORDAN_TIMEZONE, "yyyy-MM-dd");
-  const todayDay = formatInTimeZone(today, JORDAN_TIMEZONE, "eee").toLowerCase() as TeamsCalendarEvent["day"];
-
-  return [
-    {
-      id: "teams-ev-1",
-      subject: "محاضرة تحليل وتصميم الخوارزميات (د. رامي الخطيب)",
-      courseCode: "CS311",
-      courseName: "تحليل وتصميم الخوارزميات",
-      startTime: "10:00",
-      endTime: "11:30",
-      dateStr: todayStr,
-      day: todayDay,
-      joinUrl: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_aau_algo_lecture%40thread.v2/0?context=%7b%22Tid%22%3a%22aau-student%22%7d",
-      isCancelled: false,
-      isOnlineMeeting: true,
-      location: "Microsoft Teams / قاعة افتراضية 204",
-      bodyPreview: "رابط المحاضرة التفاعلية ومناقشة واجب خوارزميات البحث الثنائي وحساب التعقيد الزمني.",
-      lastModified: new Date().toISOString(),
-      isRescheduled: false,
-    },
-    {
-      id: "teams-ev-2",
-      subject: "مختبر قواعد البيانات المتقدمة — استفسارات ومراجعة كويز SQL",
-      courseCode: "CS342",
-      courseName: "قواعد بيانات متقدمة",
-      startTime: "12:30",
-      endTime: "14:00",
-      dateStr: todayStr,
-      day: todayDay,
-      joinUrl: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_aau_db_lab%40thread.v2/0?context=%7b%22Tid%22%3a%22aau-student%22%7d",
-      isCancelled: false,
-      isOnlineMeeting: true,
-      location: "Microsoft Teams",
-      bodyPreview: "مراجعة عملية لاستعلامات الفهارس وإجراءات التخزين المؤقت.",
-      lastModified: new Date().toISOString(),
-      isRescheduled: true,
-    },
-    {
-      id: "teams-ev-3",
-      subject: "محاضرة هندسة البرمجيات — (جلسة تعويضية ملغاة)",
-      courseCode: "SE301",
-      courseName: "هندسة البرمجيات",
-      startTime: "14:30",
-      endTime: "15:30",
-      dateStr: todayStr,
-      day: todayDay,
-      joinUrl: "https://teams.microsoft.com/l/meetup-join/19%3ameeting_aau_se_canceled%40thread.v2/0",
-      isCancelled: true,
-      isOnlineMeeting: true,
-      location: "Microsoft Teams",
-      bodyPreview: "اعتذار من المدرس عن الجلسة التعويضية لظرف طارئ وسيتم ترحيلها للأسبوع القادم.",
-      lastModified: new Date().toISOString(),
-      isRescheduled: false,
-    },
-  ];
-}

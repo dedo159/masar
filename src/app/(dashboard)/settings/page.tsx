@@ -146,28 +146,7 @@ export default function SettingsPage() {
       .then(r => r.json())
       .then(d => { if (d.id) setStudentId(d.id); })
       .catch(() => {});
-
-    // Fetch Microsoft Teams connection status
-    fetch("/api/student/teams/status")
-      .then(r => r.json())
-      .then(d => setTeamsStatus(d))
-      .catch(() => setTeamsStatus({ connected: false }));
   }, [t]);
-
-  const [teamsStatus, setTeamsStatus] = useState<{ connected: boolean; email?: string; displayName?: string } | null>(null);
-  const [isDisconnectingTeams, setIsDisconnectingTeams] = useState(false);
-
-  const handleDisconnectTeams = async () => {
-    setIsDisconnectingTeams(true);
-    try {
-      await fetch("/api/student/teams/disconnect", { method: "POST" });
-      setTeamsStatus({ connected: false });
-    } catch (e) {
-      console.error("Disconnect Teams error:", e);
-    } finally {
-      setIsDisconnectingTeams(false);
-    }
-  };
 
   const displayName = translateStudentName(studentName, language);
   const displayMeta = translateMajor(studentMeta, language);
@@ -509,56 +488,6 @@ export default function SettingsPage() {
               )
             }
           />
-
-          {/* Microsoft Teams Integration */}
-          <SettingRow
-            icon={Video}
-            label={language === "ar" ? "تقويم Microsoft Teams" : "Microsoft Teams Calendar"}
-            description={
-              teamsStatus?.connected
-                ? (language === "ar"
-                    ? `متصل (${teamsStatus.email || "حساب الطالب"}) — مزامنة المواعيد وروابط الاجتماعات تلقائياً`
-                    : `Connected (${teamsStatus.email || "Student Account"}) — syncing lecture times & links`)
-                : (language === "ar"
-                    ? "مزامنة المحاضرات وروابط الاجتماعات المباشرة (نطاق الطالب فقط: تقويم شخصي)"
-                    : "Sync lecture times & direct join links (student calendar scope)")
-            }
-            chevron={Chevron}
-            control={
-              teamsStatus?.connected ? (
-                <div className="flex items-center gap-2">
-                  <Badge variant="success" className="gap-1 font-semibold text-xs">
-                    <CheckCircle2 className="h-3 w-3" />
-                    {language === "ar" ? "مُتصل" : "Connected"}
-                  </Badge>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={isDisconnectingTeams}
-                    className="min-h-[44px] text-xs px-3 active:scale-95 transition-transform cursor-pointer text-destructive hover:bg-destructive/10"
-                    onClick={handleDisconnectTeams}
-                  >
-                    {isDisconnectingTeams ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      language === "ar" ? "إلغاء الربط" : "Disconnect"
-                    )}
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="min-h-[44px] text-xs px-4 bg-[#505AC9] hover:bg-[#434baf] text-white active:scale-95 transition-transform cursor-pointer"
-                  onClick={() => {
-                    window.location.href = "/api/auth/microsoft";
-                  }}
-                >
-                  {language === "ar" ? "ربط Teams" : "Connect Teams"}
-                </Button>
-              )
-            }
-          />
         </div>
 
         {/* Notifications */}
@@ -692,10 +621,6 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* Microsoft Teams Integration */}
-        <SectionLabel>{language === "ar" ? "الربط والتكامل" : "Integrations"}</SectionLabel>
-        <TeamsIntegrationCard isAr={language === "ar"} Chevron={Chevron} />
-
         {/* Danger Zone */}
         <SectionLabel>{t.settings.securitySection}</SectionLabel>
         <div className="rounded-lg border border-border bg-card overflow-hidden mb-6 shadow-sm transition-all">
@@ -721,112 +646,3 @@ export default function SettingsPage() {
   );
 }
 
-// ---- Teams Integration Card ----
-function TeamsIntegrationCard({ isAr, Chevron }: { isAr: boolean; Chevron: any }) {
-  const [status, setStatus] = useState<{ connected: boolean; email?: string; displayName?: string; lastSyncedAt?: string } | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [disconnecting, setDisconnecting] = useState(false);
-
-  useEffect(() => {
-    fetch("/api/student/teams/status")
-      .then(res => res.json())
-      .then(data => setStatus(data))
-      .catch(() => setStatus({ connected: false }))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const handleDisconnect = async () => {
-    if (!confirm(isAr ? "هل أنت متأكد من إلغاء ربط Microsoft Teams؟" : "Are you sure you want to disconnect Microsoft Teams?")) return;
-    setDisconnecting(true);
-    try {
-      await fetch("/api/student/teams/disconnect", { method: "POST" });
-      setStatus({ connected: false });
-    } catch { /* ignore */ }
-    setDisconnecting(false);
-  };
-
-  const [connectingAau, setConnectingAau] = useState(false);
-
-  const handleAauConnect = async () => {
-    setConnectingAau(true);
-    try {
-      const res = await fetch("/api/student/teams/connect-aau", { method: "POST" });
-      const data = await res.json();
-      if (data.success) {
-        setStatus({
-          connected: true,
-          email: data.email,
-          displayName: data.displayName,
-          lastSyncedAt: new Date().toISOString(),
-        });
-      }
-    } catch {
-      // ignore
-    } finally {
-      setConnectingAau(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="rounded-lg border border-border bg-card p-4 mb-6 shadow-sm flex items-center justify-center gap-2 text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span className="text-sm">{isAr ? "جاري التحقق..." : "Checking..."}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-lg border border-border bg-card overflow-hidden mb-6 shadow-sm">
-      <div className="p-4 flex items-center gap-4">
-        <div className="h-10 w-10 rounded-lg bg-[#505AC9]/10 text-[#505AC9] dark:text-[#7B83EB] flex items-center justify-center flex-shrink-0">
-          <Video className="h-5 w-5" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold text-sm text-foreground">Microsoft Teams</p>
-          {status?.connected ? (
-            <div className="space-y-0.5">
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3" />
-                {isAr ? "متصل ومُزامن مع جامعة عمان الأهلية" : "Connected & Synced with AAU"}
-              </p>
-              {status.email && (
-                <p className="text-[11px] text-muted-foreground truncate">{status.email}</p>
-              )}
-            </div>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              {isAr ? "اربط حسابك لتلقي مواعيد المحاضرات وروابط الاجتماعات" : "Connect to sync lecture times & meeting links"}
-            </p>
-          )}
-        </div>
-        {status?.connected ? (
-          <button
-            onClick={handleDisconnect}
-            disabled={disconnecting}
-            className="text-xs px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors font-medium disabled:opacity-50"
-          >
-            {disconnecting ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              isAr ? "إلغاء الربط" : "Disconnect"
-            )}
-          </button>
-        ) : (
-          <button
-            onClick={handleAauConnect}
-            disabled={connectingAau}
-            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#505AC9] to-[#6264A7] text-white hover:opacity-95 transition-all font-bold flex items-center gap-1.5 shadow-sm active:scale-95 disabled:opacity-50"
-          >
-            {connectingAau ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <CheckCircle2 className="h-3.5 w-3.5" />
-            )}
-            <span>{isAr ? "ربط الحساب" : "Connect"}</span>
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}

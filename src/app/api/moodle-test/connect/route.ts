@@ -218,35 +218,6 @@ export async function POST(request: Request) {
       console.warn("Moodle data sync error:", syncErr);
     }
 
-    // 8b. تفعيل مزامنة Microsoft Teams التلقائية لحساب الطالب الجامعي مباشرة
-    try {
-      const studentEmail = `${username.trim()}@ammanu.edu.jo`;
-      const studentDisplayName = siteInfoSummary?.fullname || username.trim();
-      const encAccess = encryptToken(`aau_token_${username.trim()}_auto`);
-      const encRefresh = encryptToken(`aau_refresh_${username.trim()}_auto`);
-      await prisma.teamsConnection.upsert({
-        where: { studentId: student.id },
-        update: {
-          teamsEmail: studentEmail,
-          teamsDisplayName: studentDisplayName,
-          syncStatus: "connected",
-          lastSyncedAt: new Date(),
-        },
-        create: {
-          studentId: student.id,
-          encryptedAccessToken: encAccess,
-          encryptedRefreshToken: encRefresh,
-          expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
-          teamsEmail: studentEmail,
-          teamsDisplayName: studentDisplayName,
-          syncStatus: "connected",
-          lastSyncedAt: new Date(),
-        },
-      });
-    } catch (teamsAutoErr) {
-      console.warn("[Moodle Connect] Auto Teams connection non-fatal error:", teamsAutoErr);
-    }
-
     // 9. إنشاء جلسة (Session) للطالب إذا لم يكن لديه واحدة بالفعل (لأنه سجل دخول للتو من موودل)
     if (!session) {
       const fullStudent = await prisma.student.findUnique({
