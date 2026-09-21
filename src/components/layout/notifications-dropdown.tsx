@@ -222,15 +222,15 @@ export function NotificationsDropdown() {
         }}
         aria-label={t.header.notifications}
         aria-expanded={isOpen}
-        className={`relative p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-all focus:outline-none flex items-center justify-center ${
-          isOpen ? "bg-white/15 text-white" : ""
+        className={`relative p-1.5 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-white/80 dark:hover:text-white dark:hover:bg-white/10 transition-all focus:outline-none flex items-center justify-center ${
+          isOpen ? "bg-slate-100 text-slate-900 dark:bg-white/15 dark:text-white" : ""
         }`}
       >
-        <Bell className="w-5 h-5 text-white/80 hover:text-white" strokeWidth={1.8} />
+        <Bell className="w-5 h-5" strokeWidth={1.8} />
         {unreadCount > 0 && (
           <span className="absolute top-1 right-1 flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-[#07132c]" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-white dark:ring-[#07132c]" />
           </span>
         )}
       </button>
@@ -238,86 +238,78 @@ export function NotificationsDropdown() {
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className={`absolute ${isRtl ? "right-0" : "left-0"} mt-2.5 w-80 sm:w-96 max-w-[calc(100vw-2rem)] rounded-3xl bg-[#141b2d]/98 border border-white/15 shadow-2xl backdrop-blur-3xl text-white z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150`}
+          className={`fixed inset-x-3.5 top-16 sm:absolute sm:inset-auto sm:top-full sm:mt-2.5 sm:w-96 ${
+            isRtl ? "rtl:sm:right-0 rtl:sm:left-auto" : "ltr:sm:left-0 ltr:sm:right-auto"
+          } rounded-3xl bg-white/98 dark:bg-[#141b2d]/98 border border-slate-200/90 dark:border-white/15 shadow-2xl backdrop-blur-3xl text-slate-900 dark:text-white z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150`}
           dir={isRtl ? "rtl" : "ltr"}
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-white/[0.03]">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold text-white">{t.header.notifications}</h3>
+          <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-white/[0.03]">
+            <div className="flex items-center gap-2 min-w-0">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white shrink-0">
+                {t.header.notifications}
+              </h3>
               {unreadCount > 0 && (
-                <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-semibold font-mono">
+                <span className="text-[10px] bg-blue-500/15 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/30 font-semibold font-mono shrink-0">
                   {unreadCount} {language === "en" ? "Unread" : "جديد"}
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              {permission === "default" && (
-                <button
-                  type="button"
-                  onClick={requestPermission}
-                  className="text-[11px] bg-white/10 hover:bg-white/20 text-white/90 px-2.5 py-1 rounded-lg border border-white/10 transition-colors font-medium"
-                >
-                  {language === "en" ? "Enable Alerts" : "تفعيل التنبيهات"}
-                </button>
-              )}
-              {permission === "granted" && (
-                <button
-                  type="button"
-                  onClick={async () => {
-                    try {
-                      await subscribeToPush(true);
-                      const res = await fetch("/api/updates/push/test", { method: "POST" });
-                      const data = await res.json().catch(() => ({}));
-                      if (res.ok) {
-                        alert("تم إرسال الإشعار لهاتفك بنجاح! 🚀\nتفقد شريط الإشعارات أعلى الشاشة.");
-                      } else {
-                        alert("تنبيه: " + (data.error || "فشل إرسال الإشعار"));
-                      }
-                    } catch (e: any) {
-                      alert("خطأ: " + e.message);
-                    }
-                  }}
-                  className="text-[11px] bg-white/10 hover:bg-white/20 text-white/90 px-2.5 py-1 rounded-lg border border-white/10 transition-colors font-medium"
-                >
-                  {language === "en" ? "Test Alert" : "تجربة التنبيه"}
-                </button>
-              )}
-              {unreadCount > 0 && (
-                <button
-                  type="button"
-                  onClick={markAllAsRead}
-                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 font-semibold"
-                >
-                  <CheckCheck className="h-3.5 w-3.5" />
-                  <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
-                </button>
-              )}
-            </div>
+
+            {unreadCount > 0 && (
+              <button
+                type="button"
+                onClick={markAllAsRead}
+                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors flex items-center gap-1 font-semibold hover:bg-blue-500/10 px-2 py-1 rounded-lg shrink-0"
+              >
+                <CheckCheck className="h-3.5 w-3.5" />
+                <span>{language === "en" ? "Mark all read" : "قراءة الكل"}</span>
+              </button>
+            )}
           </div>
 
+          {/* Sub-Banner for Permissions (Separated to prevent header crowding and overlap) */}
+          {permission === "default" && (
+            <div className="px-4 py-2.5 bg-blue-500/10 dark:bg-blue-500/[0.12] border-b border-blue-500/20 flex items-center justify-between gap-3 text-xs">
+              <span className="text-blue-800 dark:text-blue-200 font-medium">
+                {language === "en" ? "Enable alerts on this device" : "تفعيل التنبيهات الفورية على هذا الجهاز"}
+              </span>
+              <button
+                type="button"
+                onClick={requestPermission}
+                className="text-[11px] bg-blue-600 hover:bg-blue-500 text-white font-semibold px-3 py-1 rounded-lg transition-colors shadow-sm shrink-0"
+              >
+                {language === "en" ? "Enable" : "تفعيل"}
+              </button>
+            </div>
+          )}
+
           {/* List */}
-          <div className="max-h-[380px] overflow-y-auto divide-y divide-white/[0.08]">
+          <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 dark:divide-white/[0.08]">
             {loading ? (
               <div className="py-8 px-4 space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex gap-3 animate-pulse">
-                    <div className="h-9 w-9 rounded-xl bg-white/10 flex-shrink-0" />
+                    <div className="h-10 w-10 rounded-xl bg-slate-200 dark:bg-white/10 flex-shrink-0" />
                     <div className="flex-1 space-y-2">
-                      <div className="h-3 w-36 bg-white/10 rounded" />
-                      <div className="h-2.5 w-48 bg-white/5 rounded" />
+                      <div className="h-3.5 w-36 bg-slate-200 dark:bg-white/10 rounded" />
+                      <div className="h-2.5 w-48 bg-slate-100 dark:bg-white/5 rounded" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-                <div className="h-11 w-11 rounded-2xl bg-white/10 flex items-center justify-center mb-2.5 text-white/70">
-                  <Check className="h-5 w-5" />
+                <div className="h-12 w-12 rounded-2xl bg-slate-100 dark:bg-white/10 flex items-center justify-center mb-3 text-slate-500 dark:text-white/70 shadow-sm">
+                  <Check className="h-6 w-6" />
                 </div>
-                <p className="text-sm font-semibold text-white">{language === "en" ? "No notifications" : "لا توجد إشعارات"}</p>
-                <p className="text-xs text-white/60 mt-1">
-                  {language === "en" ? "You are all caught up on updates and deadlines" : "أنت مطلع على كافة التحديثات والمواعيد"}
+                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                  {language === "en" ? "No notifications" : "لا توجد إشعارات"}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-white/60 mt-1 max-w-xs font-medium leading-relaxed">
+                  {language === "en"
+                    ? "You are all caught up on updates and deadlines"
+                    : "أنت مطلع على كافة التحديثات والمواعيد"}
                 </p>
               </div>
             ) : (
@@ -331,32 +323,34 @@ export function NotificationsDropdown() {
                       markAsRead(item.id);
                       if (item.link) setIsOpen(false);
                     }}
-                    className={`flex items-start gap-3 p-3.5 transition-colors cursor-pointer hover:bg-white/[0.07] group relative ${
-                      !item.read ? "bg-blue-500/[0.09]" : ""
+                    className={`flex items-start gap-3 p-3.5 transition-colors cursor-pointer hover:bg-slate-50 dark:hover:bg-white/[0.07] group relative ${
+                      !item.read ? "bg-blue-50/60 dark:bg-blue-500/[0.09]" : ""
                     }`}
                   >
-                    {/* Icon */}
+                    {/* Icon Squircle */}
                     <div
-                      className={`h-9 w-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${typeInfo.bg} border border-white/10`}
+                      className={`h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${typeInfo.bg} border border-slate-200/60 dark:border-white/10 shadow-xs`}
                     >
-                      <IconComponent className={`h-4 w-4 ${typeInfo.color}`} strokeWidth={1.8} />
+                      <IconComponent className={`h-4.5 w-4.5 ${typeInfo.color}`} strokeWidth={2} />
                     </div>
 
                     {/* Text Container */}
                     <div className="flex-1 min-w-0 space-y-1">
-                      <div className="flex items-baseline justify-between gap-2">
+                      <div className="flex items-center justify-between gap-2">
                         <h4
-                          className={`text-xs leading-snug font-semibold truncate ${
-                            !item.read ? "text-white" : "text-white/85"
+                          className={`text-xs leading-snug font-bold truncate ${
+                            !item.read
+                              ? "text-slate-900 dark:text-white"
+                              : "text-slate-700 dark:text-white/85"
                           }`}
                         >
                           {item.title}
                         </h4>
-                        <span className="text-[10px] text-white/50 shrink-0 font-medium font-mono whitespace-nowrap">
+                        <span className="text-[10px] text-slate-400 dark:text-white/50 shrink-0 font-medium font-mono whitespace-nowrap">
                           {getTimeAgo(item.createdAt, language)}
                         </span>
                       </div>
-                      <p className="text-xs text-white/70 line-clamp-2 leading-relaxed font-normal">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed font-normal">
                         {item.body}
                       </p>
                     </div>
@@ -364,14 +358,14 @@ export function NotificationsDropdown() {
                     {/* Unread indicator / dismiss */}
                     <div className="flex flex-col items-center justify-between self-stretch shrink-0 ps-1">
                       {!item.read ? (
-                        <span className="h-2 w-2 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                        <span className="h-2 w-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                       ) : (
                         <span className="h-2 w-2" />
                       )}
                       <button
                         type="button"
                         onClick={(e) => clearNotification(e, item.id)}
-                        className="text-white/40 hover:text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity mt-auto"
+                        className="text-slate-400 hover:text-slate-600 dark:text-white/40 dark:hover:text-white p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity mt-auto"
                         title={language === "en" ? "Dismiss notification" : "حذف الإشعار"}
                       >
                         <X className="h-3.5 w-3.5" />
@@ -395,11 +389,11 @@ export function NotificationsDropdown() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="p-2.5 border-t border-white/10 bg-white/[0.02] text-center">
+            <div className="p-2.5 border-t border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] text-center">
               <button
                 type="button"
                 onClick={() => setNotifications([])}
-                className="text-xs text-white/60 hover:text-white transition-colors py-1 px-3 font-medium rounded-lg hover:bg-white/10"
+                className="text-xs text-slate-500 hover:text-slate-900 dark:text-white/60 dark:hover:text-white transition-colors py-1 px-3 font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-white/10"
               >
                 {language === "en" ? "Clear all notifications" : "مسح كل الإشعارات"}
               </button>

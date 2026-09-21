@@ -155,6 +155,19 @@
   /* =================================================== */
   .apple-fluid-bg {
     background: 
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(219, 234, 254, 0.65), transparent 70%),
+      radial-gradient(ellipse 70% 50% at 90% 15%, rgba(224, 242, 254, 0.55), transparent 60%),
+      radial-gradient(ellipse 70% 60% at 10% 60%, rgba(238, 242, 255, 0.55), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 85%, rgba(224, 231, 255, 0.50), transparent 70%),
+      linear-gradient(160deg, #f8fafc 0%, #f1f5f9 45%, #e2e8f0 100%);
+    background-attachment: fixed;
+    color: #0f172a;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .dark .apple-fluid-bg,
+  :is(.dark) .apple-fluid-bg {
+    background: 
       radial-gradient(ellipse 90% 60% at 50% -10%, rgba(28, 78, 173, 0.28), transparent 70%),
       radial-gradient(ellipse 70% 50% at 90% 15%, rgba(14, 116, 144, 0.20), transparent 60%),
       radial-gradient(ellipse 70% 60% at 10% 60%, rgba(30, 64, 175, 0.18), transparent 70%),
@@ -165,25 +178,83 @@
   }
 
   .apple-glass-card {
-    background: rgba(15, 23, 42, 0.72);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    color: #0f172a;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .dark .apple-glass-card,
+  :is(.dark) .apple-glass-card {
+    background: rgba(15, 23, 42, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    border-radius: 24px;
     color: #f1f5f9;
-    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .apple-glass-card:hover {
+    box-shadow: 0 24px 50px -12px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.95);
+  }
+
+  .dark .apple-glass-card:hover,
+  :is(.dark) .apple-glass-card:hover {
     box-shadow: 0 28px 64px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
   }
 
   .apple-inner-card {
+    background: rgba(241, 245, 249, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 18px;
+    color: #0f172a;
+  }
+
+  .dark .apple-inner-card,
+  :is(.dark) .apple-inner-card {
     background: rgba(15, 23, 42, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 18px;
     color: #f1f5f9;
+  }
+
+  /* Typography adaptations for Light Mode to ensure 100% readability with zero invisible text */
+  html:not(.dark) .apple-glass-card h1,
+  html:not(.dark) .apple-glass-card h2,
+  html:not(.dark) .apple-glass-card h3,
+  html:not(.dark) .apple-glass-card h4,
+  html:not(.dark) .apple-glass-card h5,
+  html:not(.dark) .apple-glass-card h6 {
+    color: #0f172a !important;
+  }
+
+  html:not(.dark) .apple-glass-card p.text-slate-200,
+  html:not(.dark) .apple-glass-card p.text-slate-300,
+  html:not(.dark) .apple-glass-card span.text-slate-200,
+  html:not(.dark) .apple-glass-card span.text-slate-300,
+  html:not(.dark) .apple-glass-card div.text-slate-200,
+  html:not(.dark) .apple-glass-card div.text-slate-300 {
+    color: #334155 !important;
+  }
+
+  html:not(.dark) .apple-glass-card span.text-white:not([class*="bg-"]):not([class*="from-"]),
+  html:not(.dark) .apple-glass-card p.text-white:not([class*="bg-"]):not([class*="from-"]) {
+    color: #0f172a !important;
+  }
+
+  html:not(.dark) .apple-glass-card .border-white\/10,
+  html:not(.dark) .apple-glass-card .border-white\/15,
+  html:not(.dark) .apple-glass-card .border-white\/20 {
+    border-color: rgba(226, 232, 240, 0.9) !important;
+  }
+
+  html:not(.dark) .apple-glass-card .bg-white\/\[0\.03\],
+  html:not(.dark) .apple-glass-card .bg-white\/\[0\.04\],
+  html:not(.dark) .apple-glass-card .bg-white\/\[0\.06\],
+  html:not(.dark) .apple-glass-card .bg-white\/\[0\.08\],
+  html:not(.dark) .apple-glass-card .bg-white\/10 {
+    background-color: rgba(241, 245, 249, 0.7) !important;
   }
 
   .apple-squircle {

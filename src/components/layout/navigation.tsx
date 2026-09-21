@@ -38,7 +38,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-[#121b2d]/85 backdrop-blur-3xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-2xl">
+    <nav className="fixed bottom-0 inset-x-0 z-50 border-t border-slate-200/80 dark:border-white/10 bg-white/90 dark:bg-[#121b2d]/85 backdrop-blur-3xl md:hidden pb-[max(env(safe-area-inset-bottom,0px),8px)] pt-1.5 px-1 select-none shadow-2xl transition-colors">
       <div className="grid grid-cols-5 w-full max-w-lg mx-auto items-center">
         {mobileNavItems.map(({ href, icon: Icon, label }) => {
           const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -48,7 +48,7 @@ export function BottomNav() {
               href={href}
               className={cn(
                 "relative flex flex-col items-center justify-center gap-1 py-1 px-1 transition-all duration-200 text-center group",
-                isActive ? "text-[#38bdf8] font-bold" : "text-white/65 hover:text-white"
+                isActive ? "text-blue-600 dark:text-[#38bdf8] font-bold" : "text-slate-600 hover:text-slate-900 dark:text-white/65 dark:hover:text-white"
               )}
             >
               {/* Neon Blue Top Indicator on Active */}
@@ -60,21 +60,21 @@ export function BottomNav() {
                 className={cn(
                   "p-1.5 rounded-xl transition-all duration-200 flex items-center justify-center",
                   isActive
-                    ? "bg-blue-500/20 text-[#38bdf8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
-                    : "group-hover:bg-white/[0.08]"
+                    ? "bg-blue-500/15 text-blue-600 dark:bg-blue-500/20 dark:text-[#38bdf8] shadow-[0_0_12px_rgba(47,123,255,0.3)]"
+                    : "group-hover:bg-slate-100 dark:group-hover:bg-white/[0.08]"
                 )}
               >
                 <Icon
                   className={cn(
                     "h-5 w-5 transition-transform duration-200",
-                    isActive && "scale-110 text-white"
+                    isActive ? "scale-110 text-blue-600 dark:text-white" : "text-slate-600 dark:text-white/70"
                   )}
                   strokeWidth={isActive ? 2.4 : 1.8}
                 />
               </div>
               <span className={cn(
                 "text-[10px] tracking-tight truncate w-full block text-center leading-none font-medium",
-                isActive ? "text-white font-bold" : "text-white/65 group-hover:text-white"
+                isActive ? "text-blue-600 dark:text-white font-bold" : "text-slate-600 group-hover:text-slate-900 dark:text-white/65 dark:group-hover:text-white"
               )}>
                 {label}
               </span>
