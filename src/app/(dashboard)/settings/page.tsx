@@ -692,6 +692,10 @@ export default function SettingsPage() {
           )}
         </div>
 
+        {/* Microsoft Teams Integration */}
+        <SectionLabel>{language === "ar" ? "الربط والتكامل" : "Integrations"}</SectionLabel>
+        <TeamsIntegrationCard isAr={language === "ar"} Chevron={Chevron} />
+
         {/* Danger Zone */}
         <SectionLabel>{t.settings.securitySection}</SectionLabel>
         <div className="rounded-lg border border-border bg-card overflow-hidden mb-6 shadow-sm transition-all">
@@ -717,6 +721,84 @@ export default function SettingsPage() {
   );
 }
 
+// ---- Teams Integration Card ----
+function TeamsIntegrationCard({ isAr, Chevron }: { isAr: boolean; Chevron: any }) {
+  const [status, setStatus] = useState<{ connected: boolean; email?: string; displayName?: string; lastSyncedAt?: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [disconnecting, setDisconnecting] = useState(false);
 
+  useEffect(() => {
+    fetch("/api/student/teams/status")
+      .then(res => res.json())
+      .then(data => setStatus(data))
+      .catch(() => setStatus({ connected: false }))
+      .finally(() => setLoading(false));
+  }, []);
 
+  const handleDisconnect = async () => {
+    if (!confirm(isAr ? "هل أنت متأكد من إلغاء ربط Microsoft Teams؟" : "Are you sure you want to disconnect Microsoft Teams?")) return;
+    setDisconnecting(true);
+    try {
+      await fetch("/api/student/teams/disconnect", { method: "POST" });
+      setStatus({ connected: false });
+    } catch { /* ignore */ }
+    setDisconnecting(false);
+  };
 
+  if (loading) {
+    return (
+      <div className="rounded-lg border border-border bg-card p-4 mb-6 shadow-sm flex items-center justify-center gap-2 text-muted-foreground">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span className="text-sm">{isAr ? "جاري التحقق..." : "Checking..."}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border border-border bg-card overflow-hidden mb-6 shadow-sm">
+      <div className="p-4 flex items-center gap-4">
+        <div className="h-10 w-10 rounded-lg bg-[#505AC9]/10 text-[#505AC9] dark:text-[#7B83EB] flex items-center justify-center flex-shrink-0">
+          <Video className="h-5 w-5" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-sm text-foreground">Microsoft Teams</p>
+          {status?.connected ? (
+            <div className="space-y-0.5">
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3" />
+                {isAr ? "متصل ومُزامن" : "Connected & Synced"}
+              </p>
+              {status.email && (
+                <p className="text-[11px] text-muted-foreground truncate">{status.email}</p>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              {isAr ? "اربط حسابك لتلقي مواعيد المحاضرات وروابط الاجتماعات" : "Connect to sync lecture times & meeting links"}
+            </p>
+          )}
+        </div>
+        {status?.connected ? (
+          <button
+            onClick={handleDisconnect}
+            disabled={disconnecting}
+            className="text-xs px-3 py-1.5 rounded-lg bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors font-medium disabled:opacity-50"
+          >
+            {disconnecting ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              isAr ? "إلغاء الربط" : "Disconnect"
+            )}
+          </button>
+        ) : (
+          <a
+            href="/api/auth/microsoft"
+            className="text-xs px-3 py-1.5 rounded-lg bg-[#505AC9] text-white hover:bg-[#505AC9]/90 transition-colors font-bold"
+          >
+            {isAr ? "ربط الحساب" : "Connect"}
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
