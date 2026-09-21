@@ -119,6 +119,24 @@ export function ScheduleClient() {
     }
   };
 
+  const handleAauQuickConnect = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/student/teams/connect-aau", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setTeamsConnected(true);
+        setShowConnectedToast(true);
+        setTimeout(() => setShowConnectedToast(false), 5000);
+        await loadSchedule();
+      }
+    } catch (err) {
+      console.error("Failed to connect AAU Teams:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadSchedule();
   }, []);
@@ -180,13 +198,14 @@ export function ScheduleClient() {
                 </span>
               </div>
             ) : (
-              <Link
-                href="/api/auth/microsoft"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#505AC9] to-[#6264A7] hover:opacity-95 text-white text-xs font-bold shadow-md active:scale-95 transition-all"
+              <button
+                onClick={handleAauQuickConnect}
+                disabled={isLoading}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#505AC9] to-[#6264A7] hover:opacity-95 text-white text-xs font-bold shadow-md active:scale-95 transition-all disabled:opacity-50"
               >
                 <TeamsIcon className="h-4 w-4" />
                 <span>{isAr ? "ربط تقويم Teams" : "Connect Teams"}</span>
-              </Link>
+              </button>
             )}
 
             <button
@@ -213,13 +232,14 @@ export function ScheduleClient() {
                   : "Connect Microsoft Teams to receive live schedule changes, cancellations, and meeting links."}
               </span>
             </div>
-            <Link
-              href="/api/auth/microsoft"
-              className="text-xs font-bold text-[#505AC9] dark:text-[#7B83EB] hover:underline flex items-center gap-1 flex-shrink-0"
+            <button
+              onClick={handleAauQuickConnect}
+              disabled={isLoading}
+              className="text-xs font-bold text-[#505AC9] dark:text-[#7B83EB] hover:underline flex items-center gap-1 flex-shrink-0 disabled:opacity-50"
             >
               <span>{isAr ? "تفعيل التكامل الآن" : "Enable Integration"}</span>
               <ChevronRight className={cn("h-3.5 w-3.5", isRtl && "rotate-180")} />
-            </Link>
+            </button>
           </div>
         )}
       </div>

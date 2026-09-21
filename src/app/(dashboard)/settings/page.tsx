@@ -745,6 +745,28 @@ function TeamsIntegrationCard({ isAr, Chevron }: { isAr: boolean; Chevron: any }
     setDisconnecting(false);
   };
 
+  const [connectingAau, setConnectingAau] = useState(false);
+
+  const handleAauConnect = async () => {
+    setConnectingAau(true);
+    try {
+      const res = await fetch("/api/student/teams/connect-aau", { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setStatus({
+          connected: true,
+          email: data.email,
+          displayName: data.displayName,
+          lastSyncedAt: new Date().toISOString(),
+        });
+      }
+    } catch {
+      // ignore
+    } finally {
+      setConnectingAau(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="rounded-lg border border-border bg-card p-4 mb-6 shadow-sm flex items-center justify-center gap-2 text-muted-foreground">
@@ -766,7 +788,7 @@ function TeamsIntegrationCard({ isAr, Chevron }: { isAr: boolean; Chevron: any }
             <div className="space-y-0.5">
               <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
                 <CheckCircle2 className="h-3 w-3" />
-                {isAr ? "متصل ومُزامن" : "Connected & Synced"}
+                {isAr ? "متصل ومُزامن مع جامعة عمان الأهلية" : "Connected & Synced with AAU"}
               </p>
               {status.email && (
                 <p className="text-[11px] text-muted-foreground truncate">{status.email}</p>
@@ -791,12 +813,18 @@ function TeamsIntegrationCard({ isAr, Chevron }: { isAr: boolean; Chevron: any }
             )}
           </button>
         ) : (
-          <a
-            href="/api/auth/microsoft"
-            className="text-xs px-3 py-1.5 rounded-lg bg-[#505AC9] text-white hover:bg-[#505AC9]/90 transition-colors font-bold"
+          <button
+            onClick={handleAauConnect}
+            disabled={connectingAau}
+            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#505AC9] to-[#6264A7] text-white hover:opacity-95 transition-all font-bold flex items-center gap-1.5 shadow-sm active:scale-95 disabled:opacity-50"
           >
-            {isAr ? "ربط الحساب" : "Connect"}
-          </a>
+            {connectingAau ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <CheckCircle2 className="h-3.5 w-3.5" />
+            )}
+            <span>{isAr ? "ربط الحساب" : "Connect"}</span>
+          </button>
         )}
       </div>
     </div>
