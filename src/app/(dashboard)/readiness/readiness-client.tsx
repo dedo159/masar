@@ -19,7 +19,9 @@ import {
   TrendingUp, 
   RefreshCw, 
   Layers, 
-  Check
+  Check,
+  Clock,
+  Zap
 } from "lucide-react";
 import { useLanguage } from "@/components/providers/language-provider";
 import Link from "next/link";
@@ -41,9 +43,34 @@ export function ReadinessClient() {
   const [scannedMeta, setScannedMeta] = useState<{ username?: string; reposCount?: number; languages?: string[] } | null>(null);
 
   const [result, setResult] = useState<any>(null);
+  const [isCachedResult, setIsCachedResult] = useState(false);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initial fetch of profile + automatic GitHub scan
+    if (cooldownRemaining <= 0) return;
+    const interval = setInterval(() => {
+      setCooldownRemaining(prev => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [cooldownRemaining]);
+
+  useEffect(() => {
+    // 1. Initial fetch of cached readiness assessment
+    fetch("/api/student/readiness")
+      .then(res => res.json())
+      .then(data => {
+        if (data.hasAudit && data.data) {
+          setResult(data.data);
+          setIsCachedResult(true);
+          if (typeof data.cooldownRemainingSeconds === "number") {
+            setCooldownRemaining(data.cooldownRemainingSeconds);
+          }
+        }
+      })
+      .catch(err => console.warn("Failed to load cached readiness:", err));
+
+    // 2. Initial fetch of profile + automatic GitHub scan
     fetch("/api/student/readiness/scan")
       .then(res => res.json())
       .then(data => {
@@ -103,15 +130,22 @@ export function ReadinessClient() {
     }
   };
 
-  const handleAudit = async () => {
+  const formatCooldown = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handleAudit = async (force: boolean = false) => {
     setLoading(true);
-    setResult(null);
+    setNotice(null);
     try {
       const completedCourses = profile?.completedCredits > 0 
         ? t.readinessclient.key_kgt7q3
         : t.readinessclient.key_kt4wl5;
       
       const payload = {
+        force,
         target_role: targetRole,
         completed_courses_list: completedCourses,
         gpa: profile?.gpa || 3.0,
@@ -135,6 +169,11 @@ export function ReadinessClient() {
       }
       const data = await res.json();
       setResult(data);
+      setIsCachedResult(Boolean(data.cached));
+      if (data.notice) setNotice(data.notice);
+      if (typeof data.cooldownRemainingSeconds === "number") {
+        setCooldownRemaining(data.cooldownRemainingSeconds);
+      }
     } catch (error: any) {
       console.error(error);
       alert(`حدث خطأ أثناء الاتصال بالمدقق الآلي: ${error.message}`);
@@ -298,9 +337,9 @@ export function ReadinessClient() {
                 )}
               </div>
             </CardContent>
-            <CardFooter className="pt-2">
+            <CardFooter className="pt-2 flex flex-col gap-2.5">
               <Button 
-                onClick={handleAudit} 
+                onClick={() => handleAudit(false)} 
                 disabled={loading || fetchingProfile || scanningGithub} 
                 className="w-full bg-[#0070f3] hover:bg-[#0070f3]/90 text-white font-semibold h-11 text-sm shadow-sm"
               >
@@ -312,10 +351,28 @@ export function ReadinessClient() {
                 ) : (
                   <>
                     <Sparkles className="w-4 h-4 mr-2 ml-2" />
-                    بدء التدقيق المهني الذكي
+                    {result ? "إعادة فحص الجاهزية" : "بدء التدقيق المهني الذكي"}
                   </>
                 )}
               </Button>
+
+              {cooldownRemaining > 0 && (
+                <div className="w-full flex items-center justify-between text-[11px] text-muted-foreground px-1 pt-0.5">
+                  <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-medium">
+                    <Clock className="w-3.5 h-3.5" />
+                    فترة التبريد نشطة ({formatCooldown(cooldownRemaining)})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleAudit(true)}
+                    disabled={loading}
+                    className="text-[#0070f3] hover:underline flex items-center gap-1 font-semibold"
+                  >
+                    <Zap className="w-3 h-3" />
+                    فحص مباشر فوري
+                  </button>
+                </div>
+              )}
             </CardFooter>
           </Card>
         </div>
@@ -345,6 +402,27 @@ export function ReadinessClient() {
 
           {result && !loading && (
             <div className="space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Notice or Cache banner */}
+              {notice && (
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-700 dark:text-amber-300 font-medium">
+                  <Clock className="w-4 h-4 flex-shrink-0" />
+                  <span>{notice}</span>
+                </div>
+              )}
+              {isCachedResult && !notice && (
+                <div className="flex items-center justify-between p-3 rounded-xl bg-[#0070f3]/10 border border-[#0070f3]/20 text-xs text-[#0070f3] dark:text-[#38BDF8]">
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <ShieldCheck className="w-4 h-4 flex-shrink-0" />
+                    تم استرجاع تقييمك المحفوظ مسبقاً لحفظ رصيد الذكاء الاصطناعي
+                  </span>
+                  {cooldownRemaining > 0 && (
+                    <span className="text-[11px] opacity-80 font-mono">
+                      متاح التحديث بعد: {formatCooldown(cooldownRemaining)}
+                    </span>
+                  )}
+                </div>
+              )}
+
               {/* Score Card */}
               <div className="rounded-2xl border border-border/80 dark:border-white/10 bg-card/90 dark:bg-gradient-to-b dark:from-white/[0.08] dark:to-white/[0.02] p-6 shadow-sm dark:shadow-2xl backdrop-blur-2xl overflow-hidden relative group">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#2F7BFF]/15 rounded-full blur-3xl pointer-events-none" />

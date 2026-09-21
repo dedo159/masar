@@ -46,10 +46,12 @@ model Student {
   avatar           String?
   github           String?
   portfolio        String?
-  skills           String       @default("[]") // JSON string of string[]: '["Python","React"]'
-  passwordHash     String?      // Hashed password for student auth
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
+  skills               String       @default("[]") // JSON string of string[]: '["Python","React"]'
+  passwordHash         String?      // Hashed password for student auth
+  readinessData        String?      @db.Text
+  lastReadinessScanAt  DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
 
   universityId     String
   university       University   @relation(fields: [universityId], references: [id], onDelete: Cascade)

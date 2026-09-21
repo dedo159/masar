@@ -6,6 +6,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { getStudentProfile } from "@/lib/db-queries";
 import { getSession } from "@/lib/auth";
 import { scanGitHubUser } from "@/lib/github-scanner";
+import { prisma } from "@/lib/prisma";
 
 const systemPrompt = `أنت مدقق مسار مهني تقني (Technical Career Auditor) لتقييم جاهزية طلاب هندسة البرمجيات وتكنولوجيا المعلومات لسوق العمل وفرص التدريب (Internships / Junior Roles).
 
@@ -275,15 +276,89 @@ function generateDynamicFallback(body: any) {
   };
 }
 
+const COOLDOWN_MS = 15 * 60 * 1000; // 15 minutes window
+
+async function cacheStudentReadiness(studentId: string, result: any) {
+  try {
+    await prisma.student.update({
+      where: { id: studentId },
+      data: {
+        readinessData: JSON.stringify(result),
+        lastReadinessScanAt: new Date(),
+      },
+    });
+  } catch (err: any) {
+    console.warn("Failed to cache student readiness:", err?.message);
+  }
+}
+
+export async function GET() {
+  const session = await getSession().catch(() => null);
+  if (!session || session.userType !== "student" || !session.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const student = await prisma.student.findUnique({
+    where: { id: session.userId },
+    select: { readinessData: true, lastReadinessScanAt: true },
+  });
+
+  if (!student || !student.readinessData) {
+    return NextResponse.json({ hasAudit: false });
+  }
+
+  try {
+    const data = JSON.parse(student.readinessData);
+    const elapsed = student.lastReadinessScanAt ? Date.now() - new Date(student.lastReadinessScanAt).getTime() : Infinity;
+    const cooldownRemaining = Math.max(0, Math.ceil((COOLDOWN_MS - elapsed) / 1000));
+
+    return NextResponse.json({
+      hasAudit: true,
+      cached: true,
+      lastScanAt: student.lastReadinessScanAt,
+      cooldownRemainingSeconds: cooldownRemaining,
+      data,
+    });
+  } catch {
+    return NextResponse.json({ hasAudit: false });
+  }
+}
+
 export async function POST(req: Request) {
   const session = await getSession().catch(() => null);
-  if (!session || session.userType !== "student") {
+  if (!session || session.userType !== "student" || !session.userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: any = {};
   try {
     body = await req.json();
+    const isForced = Boolean(body.force);
+
+    // Rate Limiting & Cooldown Check
+    const existingStudent = await prisma.student.findUnique({
+      where: { id: session.userId },
+      select: { readinessData: true, lastReadinessScanAt: true },
+    });
+
+    if (!isForced && existingStudent?.lastReadinessScanAt && existingStudent?.readinessData) {
+      const elapsed = Date.now() - new Date(existingStudent.lastReadinessScanAt).getTime();
+      if (elapsed < COOLDOWN_MS) {
+        const cooldownRemaining = Math.ceil((COOLDOWN_MS - elapsed) / 1000);
+        try {
+          const cachedData = JSON.parse(existingStudent.readinessData);
+          return NextResponse.json({
+            ...cachedData,
+            cached: true,
+            cooldownRemainingSeconds: cooldownRemaining,
+            notice: `تم استرجاع تقييمك المحفوظ مسبقاً لحماية الرصيد. يمكنك طلب فحص جديد بعد ${Math.ceil(cooldownRemaining / 60)} دقيقة.`,
+          });
+        } catch {
+          // If parse fails, continue to fresh scan
+        }
+      }
+    }
+
     const { 
       target_role, 
       completed_courses_list, 
@@ -414,13 +489,21 @@ export async function POST(req: Request) {
           };
         }
 
-        return NextResponse.json({
+        const finalResult = {
           readiness_score: readinessScore,
           readiness_status: readinessStatus,
           verified_skills: verifiedSkills,
           strengths_summary: strengthsSummary,
           critical_gaps: criticalGaps || [],
           actionable_next_step: actionableNextStep
+        };
+
+        await cacheStudentReadiness(session.userId, finalResult);
+
+        return NextResponse.json({
+          ...finalResult,
+          cached: false,
+          cooldownRemainingSeconds: Math.ceil(COOLDOWN_MS / 1000),
         });
       } catch (parseError) {
         console.warn("Failed to parse LLM response, falling back to dynamic rule generator:", parseError);
@@ -429,9 +512,19 @@ export async function POST(req: Request) {
 
     // 3. Dynamic Rule-Based Analyzer if LLM failed or parsed invalid JSON
     const dynamicResult = generateDynamicFallback(body);
-    return NextResponse.json(dynamicResult);
+    await cacheStudentReadiness(session.userId, dynamicResult);
+    return NextResponse.json({
+      ...dynamicResult,
+      cached: false,
+      cooldownRemainingSeconds: Math.ceil(COOLDOWN_MS / 1000),
+    });
   } catch (error: any) {
     console.error("Readiness AI Route Error:", error.message || error);
-    return NextResponse.json(generateDynamicFallback(body));
+    const dynamicResult = generateDynamicFallback(body);
+    return NextResponse.json({
+      ...dynamicResult,
+      cached: false,
+      cooldownRemainingSeconds: Math.ceil(COOLDOWN_MS / 1000),
+    });
   }
 }
