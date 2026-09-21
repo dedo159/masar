@@ -27,7 +27,7 @@ export function QuickStatsClient({
       value: coursesCount,
       unit: t.dashboard.stats.coursesUnit,
       icon: BookOpen,
-      iconStyle: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+      squircleBg: "bg-gradient-to-br from-[#007aff] to-[#0051ba] shadow-[0_4px_16px_rgba(0,122,255,0.4)]",
       href: "/courses",
     },
     {
@@ -35,7 +35,7 @@ export function QuickStatsClient({
       value: todayDueCount,
       unit: t.dashboard.stats.tasksUnit,
       icon: Clock,
-      iconStyle: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+      squircleBg: "bg-gradient-to-br from-[#ffd60a] to-[#ff9f0a] shadow-[0_4px_16px_rgba(255,159,10,0.4)]",
       href: "/courses",
     },
     {
@@ -43,7 +43,7 @@ export function QuickStatsClient({
       value: totalAssignmentsCount,
       unit: isAr ? "تكليف" : "Items",
       icon: CheckSquare,
-      iconStyle: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      squircleBg: "bg-gradient-to-br from-[#30d158] to-[#00a843] shadow-[0_4px_16px_rgba(48,209,88,0.4)]",
       href: "/courses",
     },
     {
@@ -51,14 +51,14 @@ export function QuickStatsClient({
       value: totalCredits,
       unit: isAr ? "ساعة" : "Credits",
       icon: GraduationCap,
-      iconStyle: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+      squircleBg: "bg-gradient-to-br from-[#bf5af2] to-[#8e44ad] shadow-[0_4px_16px_rgba(191,90,242,0.4)]",
       href: "/courses",
     },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-3.5 sm:gap-4 sm:grid-cols-4">
-      {stats.map(({ label, value, unit, icon: Icon, iconStyle, href }) => (
+      {stats.map(({ label, value, unit, icon: Icon, squircleBg, href }) => (
         <Link
           key={href + label}
           href={href}
@@ -72,11 +72,12 @@ export function QuickStatsClient({
           <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent group-hover:via-blue-400/60 transition-colors" />
 
           <div className="flex items-center justify-between">
-            <div className={cn("h-10 w-10 sm:h-11 sm:w-11 rounded-xl border flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shadow-sm", iconStyle)}>
-              <Icon className="h-5 w-5" strokeWidth={2.2} />
+            {/* Apple Squircle Icon matching widgets above */}
+            <div className={cn("h-10 w-10 sm:h-11 sm:w-11 rounded-2xl p-0.5 shadow-lg shrink-0 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105", squircleBg)}>
+              <Icon className="w-5 h-5 stroke-[2.2]" />
             </div>
-            <div className="h-7 w-7 rounded-full bg-white/[0.06] flex items-center justify-center group-hover:bg-blue-500/20 transition-all">
-              <ArrowUpRight className="h-3.5 w-3.5 text-slate-300 group-hover:text-blue-300 transition-colors" />
+            <div className="h-7 w-7 rounded-full bg-white/[0.08] hover:bg-white/[0.15] flex items-center justify-center transition-all">
+              <ArrowUpRight className="h-3.5 w-3.5 text-slate-300 group-hover:text-white transition-colors" />
             </div>
           </div>
           <div className="mt-3.5">

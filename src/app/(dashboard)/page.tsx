@@ -32,6 +32,13 @@ export default async function HomePage() {
         </div>
 
         <div className="apple-glass-card p-5 sm:p-6">
+          <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+            <h4 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              <span>المؤشرات والإحصائيات الأكاديمية</span>
+            </h4>
+            <span className="text-xs text-slate-300 font-medium">نظرة عامة على الفصل</span>
+          </div>
           <QuickStatsSection />
         </div>
       </div>
